@@ -1,6 +1,4 @@
-# EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/41f0acdbcba84e26a47ede5c57d62910/badge.svg)](https://www.quantifiedcode.com/app/project/41f0acdbcba84e26a47ede5c57d62910)
-
-![Python Geometrical Morphing](readme/logo_EZyRB_small.png)
+# EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/117cf59ced024d8cb09a9131a9c3bec1/badge.svg)](https://www.quantifiedcode.com/app/project/117cf59ced024d8cb09a9131a9c3bec1)
 
 ## Description
 **EZyRB** is a python library
