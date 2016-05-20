@@ -1,0 +1,50 @@
+
+language: python
+
+matrix:
+    include:
+        - os: linux
+          python: 2.7
+          env: TOXENV=py27
+
+before_install:
+    # We do this conditionally because it saves us some downloading if the
+    # version is the same.
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+      else
+        brew update;
+        brew install python;
+        wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+      fi
+    - chmod +x miniconda.sh
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - export PATH="$HOME/miniconda/bin:$HOME/miniconda/lib:$PATH"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+    # Useful for debugging any issues with conda
+    - conda info -a
+
+install:
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        conda create --yes -n test python=$TRAVIS_PYTHON_VERSION;
+      else
+        conda create --yes -n test python="2.7";
+      fi
+    - source activate test
+    - conda install --yes numpy scipy matplotlib pip nose vtk
+    - pip install setuptools
+    - pip install enum34
+    - pip install coveralls
+    - pip install coverage
+    - python setup.py install
+
+script: coverage run test.py
+
+after_success:
+    - coveralls
+
+branches:
+    only:
+        - master
