@@ -27,7 +27,7 @@ class MatlabHandler(fh.FileHandler):
 	def parse(self, filename, output_name=None):
 		"""
 		Method to parse the `filename`. It returns a vector (matrix with one column) with all the values of the chosen output.
-		If `output_name` is not given it try to extract `self.output_name` from the mat structures.
+		If `output_name` is not given it is set to the default value.
 
 		:param string filename: name of the input file.
 		
