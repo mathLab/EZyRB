@@ -1,0 +1,4 @@
+
+import nose
+
+nose.main()
