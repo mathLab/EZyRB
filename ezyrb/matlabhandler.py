@@ -63,8 +63,6 @@ class MatlabHandler(fh.FileHandler):
 		self._check_filename_type(filename)
 		self._check_extension(filename)
 		self._check_infile_instantiation(self.infile)
-
-		self.outfile = filename
 		
 		sio.savemat(filename, dict(output=output_values))
 		

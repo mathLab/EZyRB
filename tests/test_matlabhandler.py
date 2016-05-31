@@ -92,13 +92,13 @@ class TestStlHandler(TestCase):
  			mat_handler.write(output, 'tests/test_datasets/matlab_output_test_out.mat')
 
 
-	def test_mat_write_outfile(self):
+	'''def test_mat_write_outfile(self):
 		mat_handler = mh.MatlabHandler()
 		output = mat_handler.parse('tests/test_datasets/matlab_output_test.mat')
 		outfilename = 'tests/test_datasets/matlab_output_test_out.mat'
 		mat_handler.write(output, outfilename)
 		assert mat_handler.outfile == outfilename
-		os.remove(outfilename)
+		os.remove(outfilename)'''
 
 
 	def test_stl_write_comparison(self):
