@@ -8,13 +8,11 @@ class FileHandler(object):
 	A base class for file handling.
 
 	:cvar string infile: name of the input file to be processed.
-	:cvar string outfile: name of the output file where to write in.
 	:cvar string extension: extension of the input/output files. It is specific for each
 		subclass.
 	"""
 	def __init__(self):
 		self.infile = None
-		self.outfile = None
 		self.extension = None
 
 

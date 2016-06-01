@@ -15,11 +15,6 @@ class TestFilehandler(TestCase):
 		assert file_handler.infile == None
 
 
-	def test_base_class_outfile(self):
-		file_handler = fh.FileHandler()
-		assert file_handler.outfile == None
-
-
 	def test_base_class_extension(self):
 		file_handler = fh.FileHandler()
 		assert file_handler.extension == None

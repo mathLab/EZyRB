@@ -19,11 +19,6 @@ class TestStlHandler(TestCase):
 		assert mat_handler.infile == None
 
 
-	def test_mat_default_outfile_member(self):
-		mat_handler = mh.MatlabHandler()
-		assert mat_handler.outfile == None
-
-
 	def test_mat_default_extension_member(self):
 		mat_handler = mh.MatlabHandler()
 		assert mat_handler.extension == '.mat'

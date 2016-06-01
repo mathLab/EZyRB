@@ -11,7 +11,6 @@ class MatlabHandler(fh.FileHandler):
 	Matlab format file handler class
 
 	:cvar string infile: name of the input file to be processed.
-	:cvar string outfile: name of the output file where to write in.
 	:cvar string extension: extension of the input/output files. It is equal to '.mat'.
 	:cvar string output_name: name of the output of interest inside the mat file. Default value is output.
 	
