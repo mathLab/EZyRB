@@ -30,6 +30,8 @@ class MatlabHandler(fh.FileHandler):
 		If `output_name` is not given it is set to the default value.
 
 		:param string filename: name of the input file.
+		:param string output_name: name of the output of interest inside the mat file. 
+			If it is not passed, it is equal to self.output_name.
 		
 		:return: output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output
 		:rtype: numpy.ndarray
