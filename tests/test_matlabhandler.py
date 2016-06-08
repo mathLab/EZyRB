@@ -7,7 +7,7 @@ import filecmp
 import os
 
 
-class TestStlHandler(TestCase):
+class TestMatlabHandler(TestCase):
 
 
 	def test_mat_instantiation(self):
