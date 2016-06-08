@@ -87,6 +87,17 @@ class TestVtkHandler(TestCase):
  			vtk_handler.write(output, 'tests/test_datasets/matlab_field_test_out.vtk')
 
 
+	def test_vtk_write_default_output_name(self):
+		import vtk
+		vtk_handler = vh.VtkHandler()
+		output = vtk_handler.parse('tests/test_datasets/matlab_field_test_bin.vtk', 'Pressure')
+
+		outfilename = 'tests/test_datasets/matlab_field_test_out_bin.vtk'
+			
+		vtk_handler.write(output, outfilename, write_bin=True)
+		os.remove(outfilename)
+
+
 	def test_vtk_write_comparison_bin(self):
 		import vtk
 		vtk_handler = vh.VtkHandler()
