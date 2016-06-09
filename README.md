@@ -1,7 +1,13 @@
 # EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/117cf59ced024d8cb09a9131a9c3bec1/badge.svg)](https://www.quantifiedcode.com/app/project/117cf59ced024d8cb09a9131a9c3bec1)
 
+Easy Reduced Basis method.
+
+![Easy Reduced Basis method](readme/logo_EZyRB_small.png)
+
 ## Description
-**EZyRB** is a python library
+**EZyRB** is a python library for the Model Order Reduction based on **baricentric triangulation** for the selection of the parameter points and on **Proper Orthogonal Decomposition** for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.
+
+See the **Examples** section below to have an idea of the potential of this package.
 
 
 ## Dependencies and installation
@@ -60,7 +66,9 @@ To run tests locally:
 
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it).
 
-Contact us by email for further information or questions about **PyGeM**, or suggest pull requests. **EZyRB** is at an early development stage, so contributions improving either the code or the documentation are welcome!
+Contact us by email for further information or questions about **EZyRB**, or suggest pull requests. **EZyRB** is at an early development stage, so contributions improving either the code or the documentation are welcome!
+
+## Examples
 
 
 ## How to contribute
