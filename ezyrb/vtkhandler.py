@@ -15,6 +15,8 @@ class VtkHandler(fh.FileHandler):
 	:cvar string infile: name of the input file to be processed.
 	:cvar string extension: extension of the input/output files. It is equal to '.vtk'.
 	:cvar string output_name: name of the output of interest inside the mat file. Default value is output.
+	:cvar bool cell_data: boolean that is True if the output of interest is a cell data array in the vtk file. 
+		If it is False, it is a point data array.
 	
 	..todo:
 		Exception if output name is not a variable of vtk file.
@@ -23,6 +25,7 @@ class VtkHandler(fh.FileHandler):
 		super(VtkHandler, self).__init__()
 		self.extension = '.vtk'
 		self.output_name = 'output'
+		self.cell_data = None
 
 
 	def parse(self, filename, output_name=None):
@@ -55,9 +58,15 @@ class VtkHandler(fh.FileHandler):
 		reader.Update()
 		data = reader.GetOutput()
 
-		# TODO: insert a switch to decide if we have cell data oppure point data
-		#extracted_data = data.GetCellData().GetArray(output_name)
-		extracted_data = data.GetPointData().GetArray(output_name)
+		extracted_data_cell  = data.GetCellData().GetArray(output_name)
+		extracted_data_point = data.GetPointData().GetArray(output_name)
+		
+		if extracted_data_cell is None:
+			extracted_data = extracted_data_point
+			self.cell_data = False
+		else:
+			extracted_data = extracted_data_cell
+			self.cell_data = True
 		
 		# TODO: check if the output is a scalar or vector
 		data_dim = extracted_data.GetSize()
@@ -99,10 +108,11 @@ class VtkHandler(fh.FileHandler):
 	
 		output_array = ns.numpy_to_vtk(num_array=output_values,array_type=vtk.VTK_DOUBLE)
 		output_array.SetName(output_name)
-		# TODO: insert a switch to decide if we have cell data oppure point data
-		#data.GetCellData().AddArray(output_array)
-		data.GetPointData().AddArray(output_array)
-	
+		
+		if self.cell_data is True:
+			data.GetCellData().AddArray(output_array)
+		else:
+			data.GetPointData().AddArray(output_array)	
 	
 		writer = vtk.vtkDataSetWriter()
 		

@@ -52,6 +52,18 @@ class TestVtkHandler(TestCase):
 		vtk_handler = vh.VtkHandler()
 		output = vtk_handler.parse('tests/test_datasets/matlab_field_test_bin.vtk', 'Pressure')
 		assert output.shape == (2500, 1)
+		
+		
+	def test_vtk_parse_check_data_format_1(self):
+		vtk_handler = vh.VtkHandler()
+		output = vtk_handler.parse('tests/test_datasets/matlab_field_test_bin.vtk', 'Pressure')
+		assert vtk_handler.cell_data == False
+		
+		
+	def test_vtk_parse_check_data_format_2(self):
+		vtk_handler = vh.VtkHandler()
+		output = vtk_handler.parse('tests/test_datasets/openfoam_output_test.vtk', 'p')
+		assert vtk_handler.cell_data == True
 
 
 	def test_vtk_parse_coords_1(self):
@@ -98,7 +110,7 @@ class TestVtkHandler(TestCase):
 		os.remove(outfilename)
 
 
-	def test_vtk_write_comparison_bin(self):
+	def test_vtk_write_comparison_bin_1(self):
 		import vtk
 		vtk_handler = vh.VtkHandler()
 		output = vtk_handler.parse('tests/test_datasets/matlab_field_test_bin.vtk', 'Pressure')
@@ -120,6 +132,32 @@ class TestVtkHandler(TestCase):
 			outfilename_expected = 'tests/test_datasets/matlab_field_test_out_true_bin_version6.vtk'
 			
 		vtk_handler.write(output, outfilename, 'Pressure', write_bin=True)
+		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+		os.remove(outfilename)
+		
+		
+	def test_vtk_write_comparison_bin_ascii(self):
+		import vtk
+		vtk_handler = vh.VtkHandler()
+		output = vtk_handler.parse('tests/test_datasets/openfoam_output_test.vtk', 'p')
+		output[0] = [1.1]
+		output[1] = [1.1]
+		output[2] = [1.1]
+		output[11] = [1.1]
+		output[12] = [1.1]
+		output[13] = [1.1]
+		output[30] = [1.1]
+		output[31] = [1.1]
+		output[32] = [1.1]
+
+		outfilename = 'tests/test_datasets/openfoam_output_test_out.vtk'
+
+		if vtk.VTK_MAJOR_VERSION <= 5:
+			outfilename_expected = 'tests/test_datasets/openfoam_output_test_out_true_version5.vtk'
+		else:
+			outfilename_expected = 'tests/test_datasets/openfoam_output_test_out_true_version6.vtk'
+			
+		vtk_handler.write(output, outfilename, 'p')
 		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
 		os.remove(outfilename)
 		
