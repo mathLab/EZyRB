@@ -236,7 +236,7 @@ class TestCvt(TestCase):
 		pod_handler.write_structures()
 		expected_outfilename = 'tests/test_datasets/expected_coefs_tria_Pressure.npy'
 		self.assertTrue(filecmp.cmp('coefs_tria_Pressure.npy', expected_outfilename))
-		os.remove('pod_basis_Pressure.npy')
+		#os.remove('pod_basis_Pressure.npy')
 		os.remove('coefs_tria_Pressure.npy')
 		
 		

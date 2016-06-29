@@ -3,7 +3,6 @@ Class for the Centroidal Voronoi Tesseletion
 """
 import numpy as np
 import math
-from matplotlib import cm
 from scipy.spatial import Delaunay
 
 class Cvt(object):
