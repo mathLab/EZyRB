@@ -3,8 +3,6 @@ Class for the Centroidal Voronoi Tesseletion
 """
 import numpy as np
 import math
-import copy
-from scipy import interpolate
 from matplotlib import cm
 from scipy.spatial import Delaunay
 
@@ -123,7 +121,7 @@ class Cvt(object):
 			volume = self._compute_simplex_volume(points_of_simplex)
 			error_on_simplex[i] = np.sum(l2_error[simplex[i]])*volume
 
-		worst_tria_ind = np.argmax(error_on_simplex)
+		worst_tria_ind    = np.argmax(error_on_simplex)
 		worst_tria_points = self.mu_values[:,simplex[worst_tria_ind]]
 		worst_tria_err    = l2_error[simplex[worst_tria_ind]]
 		new_point = np.zeros(self.dim_mu)
