@@ -26,6 +26,7 @@ class Pod(object):
 	:cvar numpy.ndarray weights: array of the weights for the computation of the error between
 		high fidelity and reconstructed error. Tipically, it is the area/volume of each cell of
 		the domain.
+	:cvar Cvt cvt_handler: handler for the tesselation.	
 	
 	::warning:
 			The files containing the snapshots must be stored in the same directory and must have
@@ -40,11 +41,12 @@ class Pod(object):
 		self.weights_name = weights_name
 		self.namefile_prefix = namefile_prefix
 		self.file_format  = file_format
-		
 		self.mu_values = None
 		self.pod_basis = None
 		self.snapshots = None
 		self.weights   = None
+		
+		self.cvt_handler = None
 		
 		
 	def start(self):
@@ -78,36 +80,41 @@ class Pod(object):
 			weights = 0.*snapshot + 1.
 			
 		self.weights = weights[:,0]
+		
+		self.print_info()
 	
 
-	def enrich_database(self):
+	def print_info(self):
 		"""
-		This method compute the new parameter point for the next simulation, waits for the solution to be computed and
-		placed in the proper directory and then add the parameter values and snapshot to the database. The user can stop
-		the iteration typing False when the error is below the prescribed tolerance.
+		This method compute and print the new parameter point for the next simulation and the maximum error
+		in the tesselation.
 		"""
 		
-		flag = True
+		weighted_snapshots = np.sqrt(self.weights)*self.snapshots.T
+		eigenvectors,eigenvalues,__ = np.linalg.svd(weighted_snapshots.T, full_matrices=False)
+		self.pod_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
+		
+		self.cvt_handler = cvt.Cvt(self.mu_values, self.pod_basis, self.snapshots, self.weights)
+		self.cvt_handler.add_new_point()
+			
+		print ('Maximum error on the tassellation: ' + str(self.cvt_handler.max_error))
+		print ('New baricentric parameter value added to the triangulation ' + str(self.cvt_handler.mu_values[:,-1]) + '\n')
+				
+				
+	def add_snapshot(self):
+		"""
+		This methos adds the new solution to the database and the new parameter values to the parameter points. 
+		This can be done only after the new solution has be computed and placed in the proper directory.
+		"""
+		
 		vtk_handler = vh.VtkHandler()
+		self.mu_values = self.cvt_handler.mu_values
+		dim_mu = self.mu_values.shape[1]
+		aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(dim_mu-1) + self.file_format, self.output_name)
+		snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
+		self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
-		while flag != False:
-			weighted_snapshots = np.sqrt(self.weights)*self.snapshots.T
-			eigenvectors,eigenvalues,__ = np.linalg.svd(weighted_snapshots.T, full_matrices=False)
-			self.pod_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
-		
-			cvt_handler = cvt.Cvt(self.mu_values, self.pod_basis, self.snapshots, self.weights)
-			cvt_handler.add_new_point()
-			
-			print ('Maximum error on the tassellation: ' + str(cvt_handler.max_error))
-			print ('New baricentric parameter value added to the triangulation ' + str(cvt_handler.mu_values[:,-1]) + '\n')
-			flag = input('Add a new snapshot to the database: ')
-			
-			if flag != False:
-				self.mu_values = cvt_handler.mu_values
-				dim_mu = self.mu_values.shape[1]
-				aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(dim_mu-1) + self.file_format, self.output_name)
-				snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
-				self.snapshots = np.append(self.snapshots, snapshot, 1)
+		self.print_info()
 	
 	
 	def write_structures(self, plot_singular_values=False, directory='.'):
