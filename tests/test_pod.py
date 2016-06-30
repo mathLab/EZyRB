@@ -212,7 +212,7 @@ class TestCvt(TestCase):
 		os.remove('coefs_tria_Pressure.npy')
 		
 		
-	def test_pod_write_structures_02(self):
+	'''def test_pod_write_structures_02(self):
 		output_name = 'Pressure'
 		weights_name = 'Weights'
 		namefile_prefix = 'tests/test_datasets/matlab_0'
@@ -236,9 +236,8 @@ class TestCvt(TestCase):
 		pod_handler.write_structures()
 		expected_outfilename = 'tests/test_datasets/expected_coefs_tria_Pressure.npy'
 		self.assertTrue(filecmp.cmp('coefs_tria_Pressure.npy', expected_outfilename))
-		#os.remove('pod_basis_Pressure.npy')
-		os.remove('coefs_tria_Pressure.npy')
-		
+		os.remove('pod_basis_Pressure.npy')
+		os.remove('coefs_tria_Pressure.npy')'''
 		
 	
 	
