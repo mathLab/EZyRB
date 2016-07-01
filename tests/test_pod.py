@@ -5,6 +5,7 @@ import ezyrb.pod as pod
 import numpy as np
 import filecmp
 import os
+from matplotlib.testing.decorators import cleanup
 
 
 class TestCvt(TestCase):
@@ -238,10 +239,62 @@ class TestCvt(TestCase):
 		self.assertTrue(filecmp.cmp('coefs_tria_Pressure.npy', expected_outfilename))
 		os.remove('pod_basis_Pressure.npy')
 		os.remove('coefs_tria_Pressure.npy')'''
+	
+	
+	def test_pod_print_info(self):
+		output_name = 'Velocity'
+		weights_name = 'fake_weights'
+		namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.vtk'
+		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+		pod_handler.start()
+		pod_handler.print_info()
 		
-	
-	
-	
-	
-
+		
+	def test_pod_add_snapshot_01(self):
+		output_name = 'Pressure'
+		weights_name = 'Weights'
+		namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.vtk'
+		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+		pod_handler.start()
+		pod_handler.add_snapshot()
+		mu_1 = np.array([-.5, .5,  .5, -.5, -0.29334384])
+		mu_2 = np.array([-.5, -.5, .5,  .5, -0.2312056])
+		expected_mu_values = np.array([mu_1, mu_2])
+		np.testing.assert_array_almost_equal(pod_handler.mu_values, expected_mu_values)
+		
+		
+	def test_pod_add_snapshot_02(self):
+		output_name = 'Pressure'
+		weights_name = 'Weights'
+		namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.vtk'
+		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+		pod_handler.start()
+		pod_handler.add_snapshot()
+		print pod_handler.snapshots[0,-1]
+		np.testing.assert_almost_equal(pod_handler.snapshots[0,-1], 12.1921539307)
+		
+		
+	def test_pod_add_snapshot_03(self):
+		output_name = 'Pressure'
+		weights_name = 'Weights'
+		namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.vtk'
+		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+		pod_handler.start()
+		pod_handler.add_snapshot()
+		np.testing.assert_almost_equal(pod_handler.snapshots[30,-1], 4.09717798233)
+		
+		
+	def test_pod_add_snapshot_04(self):
+		output_name = 'Pressure'
+		weights_name = 'Weights'
+		namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.vtk'
+		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+		pod_handler.start()
+		pod_handler.add_snapshot()
+		np.testing.assert_almost_equal(pod_handler.snapshots[-1,-1], 0.571366786957)
 	
