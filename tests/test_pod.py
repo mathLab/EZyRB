@@ -8,7 +8,7 @@ import os
 from matplotlib.testing.decorators import cleanup
 
 
-class TestCvt(TestCase):
+class TestPod(TestCase):
 
 
 	def test_pod_attributes_01(self):

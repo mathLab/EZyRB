@@ -4,6 +4,7 @@ Class for the Proper Orthogonal Decomposition
 
 import numpy as np
 import ezyrb.vtkhandler as vh
+import ezyrb.matlabhandler as mh
 import ezyrb.cvt as cvt
 import matplotlib.pyplot as plt
 from scipy import interpolate
@@ -33,6 +34,9 @@ class Pod(object):
 			the same prefix, with a increasing numeration (from 0) in the same order as the parameter points.
 			For example, in the directory tests/test_datasets/ you can find the files (matlab_00.vtk, 
 			matlab_01.vtk, ... , matlab_05.vtk)
+			
+	::todo:
+		insert the switch for matlab handler.
 	
 	"""
 	
@@ -45,7 +49,6 @@ class Pod(object):
 		self.pod_basis = None
 		self.snapshots = None
 		self.weights   = None
-		
 		self.cvt_handler = None
 		
 		
@@ -58,7 +61,7 @@ class Pod(object):
 		mu_2 = np.array([-.5, -.5, .5,  .5])
 		self.mu_values = np.array([mu_1, mu_2])
 		
-		dim_mu, dim_set = self.mu_values.shape
+		dim_set = self.mu_values.shape[1]
 		
 		vtk_handler = vh.VtkHandler()
 
@@ -94,7 +97,7 @@ class Pod(object):
 		eigenvectors,eigenvalues,__ = np.linalg.svd(weighted_snapshots.T, full_matrices=False)
 		self.pod_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
 		
-		self.cvt_handler = cvt.Cvt(self.mu_values, self.pod_basis, self.snapshots, self.weights)
+		self.cvt_handler = cvt.Cvt(self.mu_values, self.snapshots, self.pod_basis, self.weights)
 		self.cvt_handler.add_new_point()
 			
 		print ('Maximum error on the tassellation: ' + str(self.cvt_handler.max_error))
