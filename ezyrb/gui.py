@@ -32,6 +32,7 @@ class Gui(object):
 	::todo:
 		Insert a button to decide if plot or not the singular values.
 		Insert a button to decide the path where to save the structures at the end of the procedure.
+		Use grid instead of pack
 	
 	
 	"""
@@ -58,7 +59,7 @@ class Gui(object):
 		"""
 		The private method starts the ezyrb algorithm.
 		"""
-		self.pod_handler = ez.pod.Pod(self.output_name, self.weights_name, self.namefile_prefix, self.file_format)
+		self.pod_handler = ez.pod.Pod(self.output_name.get(), self.weights_name.get(), self.namefile_prefix.get(), self.file_format.get())
 		'''output_name = 'Pressure'
 		weights_name = 'Weights'
 		namefile_prefix = 'tests/test_datasets/matlab_0'
@@ -106,54 +107,64 @@ class Gui(object):
 		self.img = ImageTk.PhotoImage(image)
 		self.logo_panel.configure(image = self.img)
 
-		text_input_frame = Tkinter.Frame(self.root)
-		text_input_frame.pack(anchor=Tkinter.W)
+		text_input_frame = Tkinter.Frame(self.root, relief=Tkinter.GROOVE, borderwidth=1)
+		text_input_frame.pack(padx = 5, pady = 5, anchor=Tkinter.W)
 
 		# Buttons 1
 		label_prefix = Tkinter.Label(text_input_frame, text="Path and prefix")
-		label_prefix.pack(anchor=Tkinter.NW)
+		label_prefix.grid(row=0, column=0)
 		entry_prefix = Tkinter.Entry(text_input_frame, bd =5, textvariable=self.namefile_prefix)
-		entry_prefix.pack()
+		entry_prefix.grid(row=0, column=1)
 
 		# Button 2
 		label_output = Tkinter.Label(text_input_frame, text="Output of interest")
-		label_output.pack(anchor=Tkinter.W)
+		label_output.grid(row=1, column=0)
 		entry_output = Tkinter.Entry(text_input_frame, bd =5, textvariable=self.output_name)
-		entry_output.pack()
+		entry_output.grid(row=1, column=1)
 		
 		# Button 3
 		label_weights = Tkinter.Label(text_input_frame, text="Weight name")
-		label_weights.pack(anchor=Tkinter.SW)
+		label_weights.grid(row=2, column=0)
 		entry_weights = Tkinter.Entry(text_input_frame, bd =5, textvariable=self.weights_name)
-		entry_weights.pack()
+		entry_weights.grid(row=2, column=1)
 		
 		# Button 4
-		format_frame = Tkinter.Frame(self.root)
-		format_frame.pack(anchor=Tkinter.W)
+		format_frame = Tkinter.Frame(text_input_frame)
+		format_frame.grid(row=3, column=1)
 		
 		label_format = Tkinter.Label(text_input_frame, text="Select file format")
-		label_format.pack(anchor=Tkinter.W)
+		label_format.grid(row=3, column=0)
 		
 		vtk_radiobutton = Tkinter.Radiobutton(format_frame, text=".vtk", variable=self.file_format, value='.vtk')
 		vtk_radiobutton.pack(side=Tkinter.LEFT)
 		mat_radiobutton = Tkinter.Radiobutton(format_frame, text=".mat", variable=self.file_format, value='.mat')
-		mat_radiobutton.pack(side=Tkinter.LEFT)
+		mat_radiobutton.pack(side=Tkinter.RIGHT)
+		
+		start_frame = Tkinter.Frame(self.root)
+		start_frame.pack(padx = 10, pady = 10)
 		
 		# Start button
-		button_run = Tkinter.Button(self.root, text ="Start EZyRB", command = self._start_ezyrb, bg='#065893', fg='#f19625', font='bold')
-		button_run.pack()
-		self.label_new_mu = Tkinter.Label(self.root, text='Start EZyRB to find the new parameter value')
-		self.label_new_mu.pack()
-		self.label_error= Tkinter.Label(self.root, text='Start EZyRB to find the maximum error')
-		self.label_error.pack()
+		button_run = Tkinter.Button(start_frame, text ="Start EZyRB", command = self._start_ezyrb, bg='#065893', fg='#f19625', font='bold')
+		button_run.pack(padx = 5, pady = 5)
+		
+		display_frame = Tkinter.Frame(self.root, relief=Tkinter.GROOVE, borderwidth=1)
+		display_frame.pack()
+		
+		self.label_new_mu = Tkinter.Label(display_frame, text='Start EZyRB to find the new parameter value')
+		self.label_new_mu.pack(padx = 0, pady = 2, anchor=Tkinter.W)
+		self.label_error= Tkinter.Label(display_frame, text='Start EZyRB to find the maximum error')
+		self.label_error.pack(padx = 0, pady = 0, anchor=Tkinter.W)
+		
+		chose_frame = Tkinter.Frame(self.root)
+		chose_frame.pack(padx = 5, pady = 5)
 		
 		# Enrich database button
-		button_run = Tkinter.Button(self.root, text ="Enrich", command = self._add_snapshot, bg='green', fg='white', font='bold')
-		button_run.pack()
+		button_run = Tkinter.Button(chose_frame, text ="Enrich", command = self._add_snapshot, bg='green', fg='white', font='bold')
+		button_run.pack(side=Tkinter.LEFT,padx = 5, pady = 5)
 		
-		# Enrich database button
-		button_finish = Tkinter.Button(self.root, text ="Finish", command = self._finish, bg='red', fg='white', font='bold')
-		button_finish.pack()
+		# Finish button
+		button_finish = Tkinter.Button(chose_frame, text ="Finish", command = self._finish, bg='red', fg='white', font='bold')
+		button_finish.pack(side=Tkinter.RIGHT, padx = 5, pady = 5)
 
 		# Menu
 		menubar = Tkinter.Menu(self.root)
