@@ -4,9 +4,7 @@ Class for the Interpolation of the scalar output of interest on the parameter sp
 
 import numpy as np
 import ezyrb.matlabhandler as mh
-import ezyrb.vtkhandler as vh
 import ezyrb.cvt as cvt
-import matplotlib.pyplot as plt
 from scipy import interpolate
 
 class Interp(object):

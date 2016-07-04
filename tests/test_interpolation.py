@@ -5,7 +5,6 @@ import ezyrb.interpolation as interp
 import numpy as np
 import filecmp
 import os
-from matplotlib.testing.decorators import cleanup
 
 
 class TestInterpolation(TestCase):
@@ -89,7 +88,7 @@ class TestInterpolation(TestCase):
 		np.testing.assert_array_almost_equal(interp_handler.snapshots, expected_snapshots)
 		
 		
-	'''	def test_interp_write_structures_01(self):
+	'''def test_interp_write_structures_01(self):
 		output_name = 'Pressure'
 		weights_name = 'Weights'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
@@ -101,6 +100,16 @@ class TestInterpolation(TestCase):
 		self.assertTrue(filecmp.cmp('coefs_tria_Pressure.npy', expected_outfilename))
 		os.remove('interp_basis_Pressure.npy')
 		os.remove('coefs_tria_Pressure.npy')'''
+		
+		
+	def test_interp_write_structures_01(self):
+		output_name = 'Pressure'
+		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
+		file_format = '.mat'
+		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
+		interp_handler.start()
+		interp_handler.write_structures()
+		os.remove('triangulation_scalar.npy')
 	
 	
 	def test_interp_print_info(self):

@@ -4,7 +4,6 @@ Class for the Proper Orthogonal Decomposition
 
 import numpy as np
 import ezyrb.vtkhandler as vh
-import ezyrb.matlabhandler as mh
 import ezyrb.cvt as cvt
 import matplotlib.pyplot as plt
 from scipy import interpolate
