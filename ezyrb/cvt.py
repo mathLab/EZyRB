@@ -4,6 +4,7 @@ Class for the Centroidal Voronoi Tesseletion
 import numpy as np
 import math
 from scipy.spatial import Delaunay
+from scipy import interpolate
 
 class Cvt(object):
 	"""
@@ -19,7 +20,8 @@ class Cvt(object):
 	:cvar int dim_out: dimension of the output of interest.
 	:cvar int dim_db: number of the output of interest on the snapshot matrix (dimension of the database).
 	:cvar float rel_error: coefficient to make the computed errors relative to the magnitude of the output.
-		It is computed as the L2 value of the first snapshot.
+		If the output is a field, it is computed as the L2 value of the first snapshot, if the output is a
+		scalar, it is the absolute value of the first snapshot.
 	:cvar float max_error: max error of the leave-one-out strategy on the present outputs in the snapshots
 		array.
 	:cvar int dim_mu: dimension of the parametric space.
@@ -28,7 +30,7 @@ class Cvt(object):
 		add the show method
 	"""
 	
-	def __init__(self, mu_values, pod_basis, snapshots, weights):
+	def __init__(self, mu_values, snapshots, pod_basis=None, weights=None):
 		self.mu_values = mu_values
 		self.pod_basis = pod_basis
 		self.snapshots = snapshots
@@ -36,7 +38,10 @@ class Cvt(object):
 		self.dim_out, self.dim_db = self.snapshots.shape
 		
 		ref_solution = self.snapshots[:,0]
-		self.rel_error = np.sqrt(np.sum(np.power(ref_solution* self.weights,2)))
+		if self.weights is not None:
+			self.rel_error = np.sqrt(np.sum(np.power(ref_solution* self.weights,2)))
+		else:
+			self.rel_error = np.abs(ref_solution)
 		
 		self.max_error = None
 		self.dim_mu    = mu_values.shape[0]
@@ -74,25 +79,38 @@ class Cvt(object):
 		
 		:return: l2_error: error array of the leave-one-out strategy.
 		:rtype: numpy.ndarray
+		
+		::todo:
+			find a more suitable error estimator for the scalar tringulation.
 		"""
 		
 		l2_error = np.zeros(self.dim_db)
 
 		for j in range(0,self.dim_db):
-	
-			remaining_snaps = np.delete(self.snapshots, j, 1)
-			weighted_remaining_snaps = np.sqrt(self.weights)*remaining_snaps.T
-			eigenvectors,__,__ = np.linalg.svd(weighted_remaining_snaps.T, full_matrices=False)
-			loo_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
 			
-			projection = np.zeros(self.dim_out)
-			snapshot   = self.snapshots[:,j]
+			remaining_snaps = np.delete(self.snapshots, j, 1)
+			
+			if self.weights is not None:
+				weighted_remaining_snaps = np.sqrt(self.weights)*remaining_snaps.T
+				eigenvectors,__,__ = np.linalg.svd(weighted_remaining_snaps.T, full_matrices=False)
+				loo_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
+			
+				projection = np.zeros(self.dim_out)
+				snapshot   = self.snapshots[:,j]
 
-			for i in range(0,self.dim_db-1):
-				projection += np.dot(snapshot*self.weights, loo_basis[:,i])*loo_basis[:,i]
+				for i in range(0,self.dim_db-1):
+					projection += np.dot(snapshot*self.weights, loo_basis[:,i])*loo_basis[:,i]
 
-			error = (snapshot - projection) * self.weights
-			l2_error[j] = np.sqrt(np.sum(np.power(error,2)))/self.rel_error
+				error = (snapshot - projection) * self.weights
+				l2_error[j] = np.sqrt(np.sum(np.power(error,2)))/self.rel_error
+			else:
+				remaining_mu = np.delete(self.mu_values, j, 1)
+				remaining_tria = interpolate.LinearNDInterpolator(np.transpose(remaining_mu[:,:]), remaining_snaps[0,:])
+				projection = remaining_tria.__call__(self.mu_values[:,j])
+				
+				if projection is not float:
+					projection = np.sum(remaining_snaps)/(self.dim_db-1)
+				l2_error[j] = np.abs(self.snapshots[:,j] - projection)/self.rel_error
 
 		return l2_error
 		
@@ -112,7 +130,7 @@ class Cvt(object):
 		
 		tria = Delaunay(np.transpose(self.mu_values))
 		simplex = tria.simplices
-		simp_dim_n, simp_dim_m = simplex.shape
+		simp_dim_n = simplex.shape[0]
 		error_on_simplex = np.zeros(simp_dim_n)
 	
 		for i in range(0,simp_dim_n):
@@ -124,7 +142,7 @@ class Cvt(object):
 		worst_tria_points = self.mu_values[:,simplex[worst_tria_ind]]
 		worst_tria_err    = l2_error[simplex[worst_tria_ind]]
 		new_point = np.zeros(self.dim_mu)
-
+		
 		for i in range (0,self.dim_mu):
 			new_point[i] = np.sum(np.dot(worst_tria_points[i,:], worst_tria_err))/np.sum(worst_tria_err)
 			

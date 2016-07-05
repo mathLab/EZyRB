@@ -33,6 +33,9 @@ class Pod(object):
 			the same prefix, with a increasing numeration (from 0) in the same order as the parameter points.
 			For example, in the directory tests/test_datasets/ you can find the files (matlab_00.vtk, 
 			matlab_01.vtk, ... , matlab_05.vtk)
+			
+	::todo:
+		insert the switch for matlab handler.
 	
 	"""
 	
@@ -43,9 +46,11 @@ class Pod(object):
 		self.file_format  = file_format
 		self.mu_values = None
 		self.pod_basis = None
-		self.snapshots = None
-		self.weights   = None
 		
+		vtk_handler = vh.VtkHandler()
+		aux_snapshot = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.output_name)
+		self.snapshots = aux_snapshot.reshape(aux_snapshot.shape[0],1)
+		self.weights   = None
 		self.cvt_handler = None
 		
 		
@@ -58,18 +63,15 @@ class Pod(object):
 		mu_2 = np.array([-.5, -.5, .5,  .5])
 		self.mu_values = np.array([mu_1, mu_2])
 		
-		dim_mu, dim_set = self.mu_values.shape
+		dim_set = self.mu_values.shape[1]
 		
 		vtk_handler = vh.VtkHandler()
 
 		# TODO: insert an assert if the number of dim_set is different from the number of files for the extraction of the output
-		for i in range(0,dim_set):
+		for i in range(1,dim_set):
 			aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(i) + self.file_format, self.output_name)
 			snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
-			if i != 0:
-				self.snapshots = np.append(self.snapshots, snapshot, 1)
-			else:
-				self.snapshots = snapshot
+			self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
 		try:		
 			weights = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.weights_name)
@@ -94,7 +96,7 @@ class Pod(object):
 		eigenvectors,eigenvalues,__ = np.linalg.svd(weighted_snapshots.T, full_matrices=False)
 		self.pod_basis = np.transpose(np.power(self.weights,-0.5)*eigenvectors.T)
 		
-		self.cvt_handler = cvt.Cvt(self.mu_values, self.pod_basis, self.snapshots, self.weights)
+		self.cvt_handler = cvt.Cvt(self.mu_values, self.snapshots, self.pod_basis, self.weights)
 		self.cvt_handler.add_new_point()
 			
 		print ('Maximum error on the tassellation: ' + str(self.cvt_handler.max_error))
@@ -117,7 +119,7 @@ class Pod(object):
 		self.print_info()
 	
 	
-	def write_structures(self, plot_singular_values=False, directory='.'):
+	def write_structures(self, plot_singular_values=False, directory='./'):
 		"""
 		This method and the offline step and writes out the structures necessary for the online step, that is,
 		the pod basis and the triangulations for the coefficients for the interpolation of the pod basis.
@@ -151,8 +153,8 @@ class Pod(object):
 			coefs_surf = interpolate.LinearNDInterpolator(np.transpose(self.mu_values),coefs[i,:])
 			coefs_tria = np.append(coefs_tria, coefs_surf)
 
-		np.save('coefs_tria_' + self.output_name, coefs_tria)
-		np.save('pod_basis_' + self.output_name, self.pod_basis)
+		np.save(directory + 'coefs_tria_' + self.output_name, coefs_tria)
+		np.save(directory + 'pod_basis_' + self.output_name, self.pod_basis)
 
 		
 		

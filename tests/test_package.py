@@ -16,12 +16,17 @@ class TestPackage(TestCase):
 		
 	def test_import_ez_2(self):
 		import ezyrb as ez
-		fh = ez.matlabhandler.MatlabHandler()
+		mh = ez.matlabhandler.MatlabHandler()
 		
 		
 	def test_import_ez_3(self):
 		import ezyrb as ez
 		vh = ez.vtkhandler.VtkHandler()
+		
+		
+	def test_import_ez_4(self):
+		import ezyrb as ez
+		interface = ez.gui.Gui()
 	
 
 	def test_modules_name(self):
