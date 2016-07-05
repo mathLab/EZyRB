@@ -47,7 +47,7 @@ class TestInterpolation(TestCase):
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
-		assert interp_handler.snapshots == None
+		assert isinstance(interp_handler.snapshots, np.ndarray)
 		
 			
 	def test_interp_start_mu_values_01(self):

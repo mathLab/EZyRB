@@ -31,8 +31,10 @@ class Interp(object):
 		self.output_name  = output_name
 		self.namefile_prefix = namefile_prefix
 		self.file_format  = file_format
-		self.mu_values = None	
-		self.snapshots = None
+		self.mu_values = None
+		
+		matlab_handler = mh.MatlabHandler()
+		self.snapshots = matlab_handler.parse(self.namefile_prefix + '0' + self.file_format, self.output_name)
 		
 		
 	def start(self):
@@ -49,13 +51,9 @@ class Interp(object):
 		matlab_handler = mh.MatlabHandler()
 
 		# TODO: insert an assert if the number of dim_set is different from the number of files for the extraction of the output
-		for i in range(0,dim_set):
+		for i in range(1,dim_set):
 			snapshot = matlab_handler.parse(self.namefile_prefix + str(i) + self.file_format, self.output_name)
-			
-			if i != 0:
-				self.snapshots = np.append(self.snapshots, snapshot, 1)
-			else:
-				self.snapshots = snapshot
+			self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
 		self.print_info()
 	
@@ -89,7 +87,7 @@ class Interp(object):
 		self.print_info()
 	
 	
-	def write_structures(self, directory='.'):
+	def write_structures(self, directory='./'):
 		"""
 		This method and the offline step and writes out the structures necessary for the online step, that is,
 		the pod basis and the triangulations for the coefficients for the interpolation of the pod basis.
@@ -100,7 +98,7 @@ class Interp(object):
 		
 		tria_surf = interpolate.LinearNDInterpolator(np.transpose(self.mu_values[:,:]), self.snapshots[0,:])
 		
-		np.save('triangulation_scalar', tria_surf)
+		np.save(directory + 'triangulation_scalar', tria_surf)
 
 		
 		

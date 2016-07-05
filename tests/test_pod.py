@@ -71,7 +71,7 @@ class TestPod(TestCase):
 		namefile_prefix = 'tests/test_datasets/matlab_0'
 		file_format = '.vtk'
 		pod_handler = pod.Pod(output_name, weights_name, namefile_prefix, file_format)
-		assert pod_handler.snapshots == None
+		assert isinstance(pod_handler.snapshots, np.ndarray)
 		
 		
 	def test_pod_attributes_08(self):

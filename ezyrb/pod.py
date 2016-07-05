@@ -46,7 +46,10 @@ class Pod(object):
 		self.file_format  = file_format
 		self.mu_values = None
 		self.pod_basis = None
-		self.snapshots = None
+		
+		vtk_handler = vh.VtkHandler()
+		aux_snapshot = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.output_name)
+		self.snapshots = aux_snapshot.reshape(aux_snapshot.shape[0],1)
 		self.weights   = None
 		self.cvt_handler = None
 		
@@ -65,13 +68,10 @@ class Pod(object):
 		vtk_handler = vh.VtkHandler()
 
 		# TODO: insert an assert if the number of dim_set is different from the number of files for the extraction of the output
-		for i in range(0,dim_set):
+		for i in range(1,dim_set):
 			aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(i) + self.file_format, self.output_name)
 			snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
-			if i != 0:
-				self.snapshots = np.append(self.snapshots, snapshot, 1)
-			else:
-				self.snapshots = snapshot
+			self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
 		try:		
 			weights = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.weights_name)
@@ -119,7 +119,7 @@ class Pod(object):
 		self.print_info()
 	
 	
-	def write_structures(self, plot_singular_values=False, directory='.'):
+	def write_structures(self, plot_singular_values=False, directory='./'):
 		"""
 		This method and the offline step and writes out the structures necessary for the online step, that is,
 		the pod basis and the triangulations for the coefficients for the interpolation of the pod basis.
@@ -153,8 +153,8 @@ class Pod(object):
 			coefs_surf = interpolate.LinearNDInterpolator(np.transpose(self.mu_values),coefs[i,:])
 			coefs_tria = np.append(coefs_tria, coefs_surf)
 
-		np.save('coefs_tria_' + self.output_name, coefs_tria)
-		np.save('pod_basis_' + self.output_name, self.pod_basis)
+		np.save(directory + 'coefs_tria_' + self.output_name, coefs_tria)
+		np.save(directory + 'pod_basis_' + self.output_name, self.pod_basis)
 
 		
 		
