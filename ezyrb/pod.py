@@ -4,6 +4,7 @@ Class for the Proper Orthogonal Decomposition
 
 import numpy as np
 import ezyrb.vtkhandler as vh
+import ezyrb.matlabhandler as mh
 import ezyrb.cvt as cvt
 import matplotlib.pyplot as plt
 from scipy import interpolate
@@ -26,16 +27,14 @@ class Pod(object):
 	:cvar numpy.ndarray weights: array of the weights for the computation of the error between
 		high fidelity and reconstructed error. Tipically, it is the area/volume of each cell of
 		the domain.
-	:cvar Cvt cvt_handler: handler for the tesselation.	
+	:cvar Cvt cvt_handler: handler for the tesselation.
+	:cvar FileHandler file_hanldler: handler for the file to be read and written.
 	
 	::warning:
 			The files containing the snapshots must be stored in the same directory and must have
 			the same prefix, with a increasing numeration (from 0) in the same order as the parameter points.
 			For example, in the directory tests/test_datasets/ you can find the files (matlab_00.vtk, 
 			matlab_01.vtk, ... , matlab_05.vtk)
-			
-	::todo:
-		insert the switch for matlab handler.
 	
 	"""
 	
@@ -47,8 +46,14 @@ class Pod(object):
 		self.mu_values = None
 		self.pod_basis = None
 		
-		vtk_handler = vh.VtkHandler()
-		aux_snapshot = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.output_name)
+		self.file_handler = vh.VtkHandler()
+		
+		if self.file_format == '.vtk':
+			self.file_handler = vh.VtkHandler()
+		elif self.file_format == '.mat':
+			self.file_handler = mh.MatlabHandler()
+			
+		aux_snapshot = self.file_handler.parse(self.namefile_prefix + '0' + self.file_format, self.output_name)
 		self.snapshots = aux_snapshot.reshape(aux_snapshot.shape[0],1)
 		self.weights   = None
 		self.cvt_handler = None
@@ -64,17 +69,15 @@ class Pod(object):
 		self.mu_values = np.array([mu_1, mu_2])
 		
 		dim_set = self.mu_values.shape[1]
-		
-		vtk_handler = vh.VtkHandler()
 
 		# TODO: insert an assert if the number of dim_set is different from the number of files for the extraction of the output
 		for i in range(1,dim_set):
-			aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(i) + self.file_format, self.output_name)
+			aux_snapshot = self.file_handler.parse(self.namefile_prefix + str(i) + self.file_format, self.output_name)
 			snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
 			self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
 		try:		
-			weights = vtk_handler.parse(self.namefile_prefix + '0' + self.file_format, self.weights_name)
+			weights = self.file_handler.parse(self.namefile_prefix + '0' + self.file_format, self.weights_name)
 			
 			if weights.shape[0] != snapshots.shape[0]: #vectorial field: to be improved for n-dimensional fields
 				weights = np.append(weights, np.append(weights,weights,0), 0)
@@ -108,11 +111,10 @@ class Pod(object):
 		This methos adds the new solution to the database and the new parameter values to the parameter points. 
 		This can be done only after the new solution has be computed and placed in the proper directory.
 		"""
-		
-		vtk_handler = vh.VtkHandler()
+
 		self.mu_values = self.cvt_handler.mu_values
 		dim_mu = self.mu_values.shape[1]
-		aux_snapshot = vtk_handler.parse(self.namefile_prefix + str(dim_mu-1) + self.file_format, self.output_name)
+		aux_snapshot = self.file_handler.parse(self.namefile_prefix + str(dim_mu-1) + self.file_format, self.output_name)
 		snapshot = aux_snapshot.reshape(aux_snapshot.shape[0],1)
 		self.snapshots = np.append(self.snapshots, snapshot, 1)
 		
