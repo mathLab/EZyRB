@@ -67,7 +67,7 @@ class Gui(object):
 		weights_name = 'Weights'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		#namefile_prefix = 'tests/test_datasets/matlab_0'
-		file_format = '.mat''''
+		file_format = '.mat'''
 		
 		if self.is_scalar_switch.get() != True:
 			#self.ezyrb_handler = ez.pod.Pod(output_name, weights_name, namefile_prefix, file_format)
