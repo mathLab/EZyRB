@@ -27,7 +27,9 @@ class Gui(object):
 	:cvar string url: url of the github page of PyGeM.
 	:cvar Tkinter.Label label_new_mu: label where to print the new parameter value.
 	:cvar Tkinter.Label label_error: label where to print the maximum error on the tesselation.
-	:cvar Pod pod_handler: class for the proper orthogonal decomposition.
+	:cvar Pod/Interp ezyrb_handler: class for the model reduction. It can be both a Pod and a 
+		Interp class (it depends on the is_scalar_switch boolean).
+	:cvar bool is_scalar_switch: switch to decide is the output of interest is a scalar or a field.
 	
 	::todo:
 		Insert a button to decide if plot or not the singular values.
@@ -49,7 +51,8 @@ class Gui(object):
 		self.url = 'https://github.com/mathLab/EZyRB'
 		self.label_new_mu = None
 		self.label_error = None
-		self.pod_handler = None
+		self.ezyrb_handler = None
+		self.is_scalar_switch = Tkinter.BooleanVar()
 		
 		self.logo_label = None
 		self.img = None
@@ -59,31 +62,39 @@ class Gui(object):
 		"""
 		The private method starts the ezyrb algorithm.
 		"""
-		self.pod_handler = ez.pod.Pod(self.output_name.get(), self.weights_name.get(), self.namefile_prefix.get(), self.file_format.get())
-		'''output_name = 'Pressure'
+		'''output_name = 'Pressure_drop'
+		#output_name = 'Pressure'
 		weights_name = 'Weights'
-		namefile_prefix = 'tests/test_datasets/matlab_0'
-		file_format = '.vtk
-		self.pod_handler = ez.pod.Pod(output_name, weights_name, namefile_prefix, file_format)'''
-		self.pod_handler.start()
-		self.label_new_mu.configure(text='New parameter value ' + str(self.pod_handler.cvt_handler.mu_values[:,-1]))
-		self.label_error.configure(text='Error ' + str(self.pod_handler.cvt_handler.max_error))
+		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
+		#namefile_prefix = 'tests/test_datasets/matlab_0'
+		file_format = '.mat'''
+		
+		if self.is_scalar_switch.get() != True:
+			#self.ezyrb_handler = ez.pod.Pod(output_name, weights_name, namefile_prefix, file_format)
+			self.ezyrb_handler = ez.pod.Pod(self.output_name.get(), self.weights_name.get(), self.namefile_prefix.get(), self.file_format.get())
+		else:
+			#self.ezyrb_handler = ez.interpolation.Interp(output_name, namefile_prefix, file_format)
+			self.ezyrb_handler = ez.interp.Interp(self.output_name.get(), self.namefile_prefix.get(), self.file_format.get())
+		
+		self.ezyrb_handler.start()
+		self.label_new_mu.configure(text='New parameter value ' + str(self.ezyrb_handler.cvt_handler.mu_values[:,-1]))
+		self.label_error.configure(text='Error ' + str(self.ezyrb_handler.cvt_handler.max_error))
 		
 		
 	def _add_snapshot(self):
 		"""
 		The private method adds a snapshot to the database.
 		"""
-		self.pod_handler.add_snapshot()
-		self.label_new_mu.configure(text='New parameter value' + str(self.pod_handler.cvt_handler.mu_values[:,-1]))
-		self.label_error.configure(text='Error ' + str(self.pod_handler.cvt_handler.max_error))
+		self.ezyrb_handler.add_snapshot()
+		self.label_new_mu.configure(text='New parameter value' + str(self.ezyrb_handler.cvt_handler.mu_values[:,-1]))
+		self.label_error.configure(text='Error ' + str(self.ezyrb_handler.cvt_handler.max_error))
 		
 		
 	def _finish(self):
 		"""
 		The private method to stop the iterations and save the structures necessary for the online step.
 		"""
-		self.pod_handler.write_structures()
+		self.ezyrb_handler.write_structures()
 		self.root.destroy()
 		
 		
@@ -122,18 +133,27 @@ class Gui(object):
 		entry_output = Tkinter.Entry(text_input_frame, bd =5, textvariable=self.output_name)
 		entry_output.grid(row=1, column=1)
 		
+		label_output = Tkinter.Label(text_input_frame, text="Output is a")
+		label_output.grid(row=2, column=0)
+		switch_frame = Tkinter.Frame(text_input_frame)
+		switch_frame.grid(row=2, column=1)
+		vtk_radiobutton = Tkinter.Radiobutton(switch_frame, text="Scalar", variable=self.is_scalar_switch, value=True)
+		vtk_radiobutton.pack(side=Tkinter.LEFT)
+		mat_radiobutton = Tkinter.Radiobutton(switch_frame, text="Field", variable=self.is_scalar_switch, value=False)
+		mat_radiobutton.pack(side=Tkinter.RIGHT)
+		
 		# Button 3
 		label_weights = Tkinter.Label(text_input_frame, text="Weight name")
-		label_weights.grid(row=2, column=0)
+		label_weights.grid(row=3, column=0)
 		entry_weights = Tkinter.Entry(text_input_frame, bd =5, textvariable=self.weights_name)
-		entry_weights.grid(row=2, column=1)
+		entry_weights.grid(row=3, column=1)
 		
 		# Button 4
 		format_frame = Tkinter.Frame(text_input_frame)
-		format_frame.grid(row=3, column=1)
+		format_frame.grid(row=4, column=1)
 		
 		label_format = Tkinter.Label(text_input_frame, text="Select file format")
-		label_format.grid(row=3, column=0)
+		label_format.grid(row=4, column=0)
 		
 		vtk_radiobutton = Tkinter.Radiobutton(format_frame, text=".vtk", variable=self.file_format, value='.vtk')
 		vtk_radiobutton.pack(side=Tkinter.LEFT)

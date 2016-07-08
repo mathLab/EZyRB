@@ -48,7 +48,7 @@ class TestGui(TestCase):
 		
 	def test_gui_init_none_3(self):
 		gui_handler = gui.Gui()
-		assert gui_handler.pod_handler == None
+		assert gui_handler.ezyrb_handler == None
 		
 		
 	def test_gui_init_none_4(self):
@@ -59,6 +59,11 @@ class TestGui(TestCase):
 	def test_gui_init_none_5(self):
 		gui_handler = gui.Gui()
 		assert gui_handler.img == None
+		
+		
+	def test_gui_init_none_6(self):
+		gui_handler = gui.Gui()
+		assert gui_handler.is_scalar_switch.get() == False
 		
 		
 	def test_gui_init_all(self):
