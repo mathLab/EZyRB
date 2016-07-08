@@ -11,7 +11,7 @@ class TestInterpolation(TestCase):
 
 
 	def test_interp_attributes_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -19,7 +19,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_attributes_02(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -27,7 +27,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_attributes_03(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -35,7 +35,7 @@ class TestInterpolation(TestCase):
 		
 	
 	def test_interp_attributes_04(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -43,7 +43,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_attributes_05(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -51,7 +51,7 @@ class TestInterpolation(TestCase):
 		
 			
 	def test_interp_start_mu_values_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -60,7 +60,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_start_mu_values_02(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -70,7 +70,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_start_snapshots_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -79,7 +79,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_start_snapshots_02(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -89,7 +89,7 @@ class TestInterpolation(TestCase):
 		
 		
 	'''def test_interp_write_structures_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		weights_name = 'Weights'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
@@ -103,7 +103,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_write_structures_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -113,7 +113,7 @@ class TestInterpolation(TestCase):
 	
 	
 	def test_interp_print_info(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -122,7 +122,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_add_snapshot_01(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -135,7 +135,7 @@ class TestInterpolation(TestCase):
 		
 		
 	def test_interp_add_snapshot_02(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
@@ -146,7 +146,7 @@ class TestInterpolation(TestCase):
 		
 			
 	def test_interp_add_snapshot_03(self):
-		output_name = 'Pressure'
+		output_name = 'Pressure_drop'
 		namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		file_format = '.mat'
 		interp_handler = interp.Interp(output_name, namefile_prefix, file_format)
