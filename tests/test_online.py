@@ -68,8 +68,10 @@ class TestOnline(TestCase):
 		output_name = 'Pressure'
 		directory = 'tests/test_datasets/'
 		is_scalar = False
+		expected_output = np.load('tests/test_datasets/new_field_output_test.npy')
 		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
 		online_handler.run()
+		np.testing.assert_almost_equal(online_handler.output, expected_output)
 		
 		
 		
