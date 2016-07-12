@@ -30,7 +30,7 @@ class Pod(object):
 	:cvar Cvt cvt_handler: handler for the tesselation.
 	:cvar FileHandler file_hanldler: handler for the file to be read and written.
 	
-	::warning:
+	.. warning::
 			The files containing the snapshots must be stored in the same directory and must have
 			the same prefix, with a increasing numeration (from 0) in the same order as the parameter points.
 			For example, in the directory tests/test_datasets/ you can find the files (matlab_00.vtk, 

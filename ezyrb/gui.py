@@ -2,7 +2,11 @@
 Utilities for handling the Graphic Unit Interface.
 
 .. todo::
-	Switch to Ttk instead of Tk for a better look of the GUI
+	- Switch to Ttk instead of Tk for a better look of the GUI.
+	- Insert a button to decide if plot or not the singular values.
+	- Insert a button to decide the path where to save the structures at the end of the procedure.
+	- Use grid instead of pack
+		
 """
 
 import Tkinter
@@ -25,18 +29,12 @@ class Gui(object):
 		the same prefix, plus an increasing numeration (from 0) in the same order as the parameter points.
 	:cvar string file_format: format of the solution files.
 	:cvar string url: url of the github page of PyGeM.
-	:cvar Tkinter.Label label_new_mu: label where to print the new parameter value.
-	:cvar Tkinter.Label label_error: label where to print the maximum error on the tesselation.
+	:cvar tkinter.Label label_new_mu: label where to print the new parameter value.
+	:cvar tkinter.Label label_error: label where to print the maximum error on the tesselation.
 	:cvar Pod/Interp ezyrb_handler: class for the model reduction. It can be both a Pod and a 
 		Interp class (it depends on the is_scalar_switch boolean).
 	:cvar bool is_scalar_switch: switch to decide is the output of interest is a scalar or a field.
-	
-	::todo:
-		Insert a button to decide if plot or not the singular values.
-		Insert a button to decide the path where to save the structures at the end of the procedure.
-		Use grid instead of pack
-	
-	
+		
 	"""
 	
 	def __init__(self):

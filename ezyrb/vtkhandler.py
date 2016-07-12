@@ -18,7 +18,7 @@ class VtkHandler(fh.FileHandler):
 	:cvar bool cell_data: boolean that is True if the output of interest is a cell data array in the vtk file. 
 		If it is False, it is a point data array.
 	
-	..todo:
+	.. todo::
 		Exception if output name is not a variable of vtk file.
 	"""
 	def __init__(self):
@@ -87,7 +87,7 @@ class VtkHandler(fh.FileHandler):
 		:param string filename: name of the output file.
 		:param string output_name: name of the output of interest inside the mat file. 
 			If it is not passed, it is equal to self.output_name.
-		:param boolean write_bin: flag to write in the binary format. Default is False.
+		:param bool write_bin: flag to write in the binary format. Default is False.
 		"""
 		
 		self._check_filename_type(filename)

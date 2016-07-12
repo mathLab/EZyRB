@@ -10,5 +10,7 @@ Code Documentation
    pod
    filehandler
    matlabhandler
+   vtkhandler
    gui
+   online
 
