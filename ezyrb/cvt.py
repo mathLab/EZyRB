@@ -1,5 +1,10 @@
 """
 Class for the Centroidal Voronoi Tesseletion
+
+.. todo::
+	- add the show method
+	- find a more suitable error estimator for the scalar triangulation
+
 """
 import numpy as np
 import math
@@ -26,8 +31,6 @@ class Cvt(object):
 		array.
 	:cvar int dim_mu: dimension of the parametric space.
 	
-	::todo:
-		add the show method
 	"""
 	
 	def __init__(self, mu_values, snapshots, pod_basis=None, weights=None):
@@ -80,8 +83,6 @@ class Cvt(object):
 		:return: l2_error: error array of the leave-one-out strategy.
 		:rtype: numpy.ndarray
 		
-		::todo:
-			find a more suitable error estimator for the scalar triangulation.
 		"""
 		
 		l2_error = np.zeros(self.dim_db)
@@ -122,7 +123,7 @@ class Cvt(object):
 		by the already computed pod basis.
 		
 		:return: tria: Delaunay triangulation of the parametric points and leave-one-out error.
-		:rtype: Delaunay
+		:rtype: scipy.spatial.Delaunay
 		"""
 		
 		l2_error = self.loo_error()

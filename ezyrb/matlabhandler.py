@@ -14,7 +14,7 @@ class MatlabHandler(fh.FileHandler):
 	:cvar string extension: extension of the input/output files. It is equal to '.mat'.
 	:cvar string output_name: name of the output of interest inside the mat file. Default value is output.
 	
-	..todo:
+	.. todo::
 		Exception if output name is not a variable of mat file.
 	"""
 	def __init__(self):
