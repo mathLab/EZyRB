@@ -74,7 +74,71 @@ class TestOnline(TestCase):
 		np.testing.assert_almost_equal(online_handler.output, expected_output)
 		
 		
+	def test_online_run_check_dim_scalar(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure'
+		directory = 'tests/test_datasets/'
+		online_handler = on.Online(mu_value, output_name, directory=directory)
+		online_handler.run()
+		assert online_handler.output.shape == (1,)
 		
 		
+	def test_online_run_check_dim_scalar(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure'
+		directory = 'tests/test_datasets/'
+		is_scalar = False
+		expected_output = np.load('tests/test_datasets/new_field_output_test.npy')
+		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
+		online_handler.run()
+		assert online_handler.output.shape == (2500,)
+		
+		
+	def test_online_write_mat_scalar(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure_drop'
+		directory = 'tests/test_datasets/'
+		is_scalar = True
+		filename = 'online_evaluation_mat_scalar.mat'
+		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
+		online_handler.run()
+		online_handler.write_file(filename, infile='tests/test_datasets/matlab_scalar_00.mat')
+		os.remove(filename)
+		
+		
+	def test_online_write_mat_field(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure'
+		directory = 'tests/test_datasets/'
+		is_scalar = False
+		filename = 'online_evaluation_mat.mat'
+		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
+		online_handler.run()
+		online_handler.write_file(filename, infile='tests/test_datasets/matlab_00.mat')
+		os.remove(filename)
+		
+		
+	def test_online_write_vtk(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure'
+		directory = 'tests/test_datasets/'
+		is_scalar = False
+		filename = 'online_evaluation_vtk.vtk'
+		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
+		online_handler.run()
+		online_handler.write_file(filename, infile='tests/test_datasets/matlab_00.vtk')
+		os.remove(filename)
+		
+		
+	def test_online_write_wrong_format(self):
+		mu_value = np.array([.0, .0])
+		output_name = 'Pressure'
+		directory = 'tests/test_datasets/'
+		is_scalar = False
+		filename = 'online_evaluation_vtk.stl'
+		online_handler = on.Online(mu_value, output_name, directory=directory, is_scalar=is_scalar)
+		online_handler.run()
+		with self.assertRaises(NotImplementedError):
+			online_handler.write_file(filename, infile='tests/test_datasets/matlab_00.vtk')
 		
 		

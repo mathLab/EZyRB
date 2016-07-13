@@ -15,6 +15,14 @@ class Cvt(object):
 	"""
 	Documentation
 	
+	:param numpy.ndarray mu_values: values of the parameters representing the vertices 
+		of the triangulation of the parametric domain.
+	:param numpy.ndarray pod_basis: basis extracted from the proper orthogonal decomposition.
+	:param numpy.ndarray snapshots: database of the output of interest.
+	:param numpy.ndarray weights: array of the weights for the computation of the error between
+		high fidelity and reconstructed error. Tipically, it is the area/volume of each cell of
+		the domain.
+	
 	:cvar numpy.ndarray mu_values: values of the parameters representing the vertices 
 		of the triangulation of the parametric domain.
 	:cvar numpy.ndarray pod_basis: basis extracted from the proper orthogonal decomposition.

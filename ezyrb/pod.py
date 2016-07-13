@@ -13,6 +13,14 @@ class Pod(object):
 	"""
 	Documentation
 	
+	:param string output_name: name of the variable (or output) we want to extract from the solution file.
+	:param string weights_name: name of the weights to be extracted  from the solution file for the computation
+		of the errors. If the solution files does not contain any weight (like volume or area of the cells) 
+		the weight is set to 1 for all the cells.
+	:param string namefile_prefix: path and prefix of the solution files. The files are supposed to be named with
+		the same prefix, plus an increasing numeration (from 0) in the same order as the parameter points.
+	:param string file_format: format of the solution files.
+	
 	:cvar string output_name: name of the variable (or output) we want to extract from the solution file.
 	:cvar string weights_name: name of the weights to be extracted  from the solution file for the computation
 		of the errors. If the solution files does not contain any weight (like volume or area of the cells) 

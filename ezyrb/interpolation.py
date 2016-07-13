@@ -11,6 +11,11 @@ class Interp(object):
 	"""
 	Documentation
 	
+	:param string output_name: name of the variable (or output) we want to extract from the solution file.
+	:param string namefile_prefix: path and prefix of the solution files. The files are supposed to be named with
+		the same prefix, plus an increasing numeration (from 0) in the same order as the parameter points.
+	:param string file_format: format of the solution files.
+	
 	:cvar string output_name: name of the variable (or output) we want to extract from the solution file.
 	:cvar string namefile_prefix: path and prefix of the solution files. The files are supposed to be named with
 		the same prefix, plus an increasing numeration (from 0) in the same order as the parameter points.
