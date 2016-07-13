@@ -2,16 +2,25 @@
 Utilities for the online evaluation of the output of interest
 """
 import numpy as np
+import ezyrb.vtkhandler as vh
+import ezyrb.matlabhandler as mh
+import os
 
 class Online(object):
 	"""
 	Documentation
+	
+	:param numpy.ndarray mu_value: values of the parameters for the new evaluation of the output.
+	:param string output_name: suffix of the files containing the structures for the online phase.
+	:param string directory: directory where the structures are stored.
+	:param bool is_scalar: boolean to set if the output of interest is a scalar or a field.
 	
 	:cvar numpy.ndarray mu_value: values of the parameters for the new evaluation of the output.
 	:cvar string output_name: suffix of the files containing the structures for the online phase.
 	:cvar string directory: directory where the structures are stored.
 	:cvar bool is_scalar: boolean to set if the output of interest is a scalar or a field.
 	:cvar numpy.ndarray output: new evaluation of the output of interest.
+	:cvar string file_extension: extension of the output_file.
 
 	"""
 	
@@ -21,6 +30,7 @@ class Online(object):
 		self.is_scalar = is_scalar
 		self.output_name  = output_name
 		self.output = None
+		self.file_extension = None
 		
 
 	def perform_scalar(self):
@@ -61,6 +71,31 @@ class Online(object):
 			self.perform_scalar()
 		else:
 			self.perform_field()
+			
+			
+	def write_file(self, filename, infile):
+		"""
+		This method writes out the solution in the proper format. In this way, you can view the results
+		with the viewer you like.
+		
+		:param string filename: name of the output file.
+		:param string infile: name of the input file. For the mat file this is simply necessary for the parse function.
+			for the vtk is necessary for having the correct grid for the new output field.
+		
+		"""
+		__, file_ext = os.path.splitext(filename)
+		
+		if file_ext == '.mat':
+			mat_handler = mh.MatlabHandler()
+			mat_handler.parse(infile, self.output_name)
+			mat_handler.write(self.output, filename)
+		elif file_ext == '.vtk':
+			vtk_handler = vh.VtkHandler()
+			vtk_handler.parse(infile, self.output_name)
+			vtk_handler.write(self.output, filename, output_name=self.output_name)
+		else:
+			raise NotImplementedError(file_ext + " file extension is not implemented yet.")
+		
 		
 		
 	
