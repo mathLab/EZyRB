@@ -9,6 +9,12 @@ Easy Reduced Basis method.
 
 See the **Examples** section below to have an idea of the potential of this package.
 
+## Graphic Unit Interface
+**EZyRB** is now provided with a very basic Graphic Unit Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-2.ipynb).
+
+![EZyRB gui](readme/EZyRB_gui.png)
+
+Up to now, EZyRB GUI works on linux computers. For Mac OS X, some arrangements are requested for some libraries problems.
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`.
