@@ -10,7 +10,7 @@ Easy Reduced Basis method.
 See the **Examples** section below to have an idea of the potential of this package.
 
 ## Graphic Unit Interface
-**EZyRB** is now provided with a very basic Graphic Unit Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-2.ipynb).
+**EZyRB** is now provided with a very basic Graphic Unit Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-3.ipynb).
 
 ![EZyRB gui](readme/EZyRB_gui.png)
 
