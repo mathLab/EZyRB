@@ -8,7 +8,7 @@ def readme():
 		return f.read()
 
 setup(name='ezyrb',
-	  version='0.1',
+	  version='0.2',
 	  description='POD',
 	  long_description=readme(),
 	  classifiers=[
