@@ -11,7 +11,6 @@ Utilities for handling the Graphic Unit Interface.
 
 import Tkinter
 from tkFileDialog import askopenfilename
-#from PIL import ImageTk, Image
 import ezyrb as ez
 import numpy as np
 import sys
