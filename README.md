@@ -14,7 +14,7 @@ See the **Examples** section below to have an idea of the potential of this pack
 
 ![EZyRB gui](readme/EZyRB_gui.png)
 
-Up to now, EZyRB GUI works on linux computers. For Mac OS X, some arrangements are requested for some libraries problems.
+Up to now, EZyRB GUI works on linux and Mac OS X computers.
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`.

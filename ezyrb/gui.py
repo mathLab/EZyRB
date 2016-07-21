@@ -11,7 +11,7 @@ Utilities for handling the Graphic Unit Interface.
 
 import Tkinter
 from tkFileDialog import askopenfilename
-from PIL import ImageTk, Image
+#from PIL import ImageTk, Image
 import ezyrb as ez
 import numpy as np
 import sys
@@ -186,15 +186,13 @@ class Gui(object):
 		The method inizializes and visualizes the window.
 		"""
 		
+		self.logo_panel = Tkinter.Canvas(self.root, height=60 , width=60)
+		self.logo_panel.pack(side = "bottom", padx = 5, pady = 5,anchor=Tkinter.SE)
+		self.img = Tkinter.PhotoImage(master=self.logo_panel, file='readme/logo_EZyRB_gui.gif')
+		self.logo_panel.create_image(35,35, image=self.img)
+		
 		online_offline_frame = Tkinter.Frame(self.root)
 		online_offline_frame.pack()
-		
-		self.logo_panel = Tkinter.Label()
-		self.logo_panel.pack(side = "bottom", padx=5, pady=5,anchor=Tkinter.SE)
-		image = Image.open('readme/logo_EZyRB_small.png')
-		image = image.resize((50, 50), Image.ANTIALIAS)
-		self.img = ImageTk.PhotoImage(image)
-		self.logo_panel.configure(image = self.img)
 		
 		## OFFLINE
 		offline_frame = Tkinter.Frame(online_offline_frame, relief=Tkinter.GROOVE, borderwidth=1, bg='#c1d0f0')
