@@ -1,5 +1,4 @@
 # EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/117cf59ced024d8cb09a9131a9c3bec1/badge.svg)](https://www.quantifiedcode.com/app/project/117cf59ced024d8cb09a9131a9c3bec1)
-
 Easy Reduced Basis method.
 
 ![Easy Reduced Basis method](readme/logo_EZyRB_small.png)
@@ -9,10 +8,15 @@ Easy Reduced Basis method.
 
 See the **Examples** section below to have an idea of the potential of this package.
 
-## Graphic Unit Interface
-**EZyRB** is now provided with a very basic Graphic Unit Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-3.ipynb).
+## Graphical User Interface
+**EZyRB** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-3.ipynb). For the laziest, also a [video tutorial on YouTube](https://youtu.be/PPlRHu53VRA) is available.
 
-![EZyRB gui](readme/EZyRB_gui.png)
+<p align="center">
+<img src="readme/EZyRB_gui.png" alt>
+</p>
+<p align="center">
+<em>EZyRB GUI: how it appears when it pops up.</em>
+</p>
 
 Up to now, EZyRB GUI works on linux and Mac OS X computers.
 
@@ -76,6 +80,22 @@ Contact us by email for further information or questions about **EZyRB**, or sug
 
 ## Examples
 
+You can find useful tutorials on how to use the package in the `tutorials` folder.
+Here we show an applications taken from the **automotive** engineering fields
+
+<p align="center">
+<img src="readme/pod_modes.png" alt>
+</p>
+<p align="center">
+<em>The first POD modes of the pressure field on the DrivAer model.</em>
+</p>
+
+<p align="center">
+<img src="readme/errors.png" alt>
+</p>
+<p align="center">
+<em>DrivAer model online evaluation: pressure (left) and wall shear stress (right) fields and errors.</em>
+</p>
 
 ## How to contribute
 We'd love to accept your patches and contributions to this project. There are
