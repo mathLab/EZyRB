@@ -3,7 +3,7 @@ Derived module from filehandler.py to handle Matlab files.
 """
 import numpy as np
 import scipy.io as sio
-import ezyrb.filehandler as fh	
+import ezyrb.filehandler as fh
 
 
 class MatlabHandler(fh.FileHandler):
@@ -17,11 +17,11 @@ class MatlabHandler(fh.FileHandler):
 	.. todo::
 		Exception if output name is not a variable of mat file.
 	"""
+
 	def __init__(self):
 		super(MatlabHandler, self).__init__()
 		self.extension = '.mat'
 		self.output_name = 'output'
-
 
 	def parse(self, filename, output_name=None):
 		"""
@@ -35,12 +35,12 @@ class MatlabHandler(fh.FileHandler):
 		:return: output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output
 		:rtype: numpy.ndarray
 		"""
-		
+
 		if output_name is None:
 			output_name = self.output_name
 		else:
 			self._check_filename_type(output_name)
-		
+
 		self._check_filename_type(filename)
 		self._check_extension(filename)
 
@@ -51,7 +51,6 @@ class MatlabHandler(fh.FileHandler):
 
 		return output_values
 
-
 	def write(self, output_values, filename):
 		"""
 		Writes a mat file, called filename. output_values is a matrix that contains the new values of the output 
@@ -60,10 +59,9 @@ class MatlabHandler(fh.FileHandler):
 		:param numpy.ndarray output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output.
 		:param string filename: name of the output file.
 		"""
-		
+
 		self._check_filename_type(filename)
 		self._check_extension(filename)
 		self._check_infile_instantiation(self.infile)
-		
+
 		sio.savemat(filename, dict(output=output_values))
-		
