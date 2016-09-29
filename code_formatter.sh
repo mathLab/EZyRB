@@ -55,6 +55,6 @@ for file in $python_files; do
 					coalesce_brackets = true,
 					column_limit = 80
 			  	  }' -i $file
-	unexpand --tabs=4 $file > tmp.py
+	unexpand -t 4 $file > tmp.py
 	mv tmp.py $file
 done

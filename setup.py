@@ -30,7 +30,8 @@ setup(name='ezyrb',
 	  		'matplotlib',
 	  		'enum34',
 	  		'Sphinx>=1.4',
-	  		'sphinx_rtd_theme'
+	  		'sphinx_rtd_theme',
+	  		'yapf'
 	  ],
 	  test_suite='nose.collector',
 	  tests_require=['nose'],

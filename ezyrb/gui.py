@@ -16,7 +16,6 @@ except:
 	import Tkinter as tkinter
 	from tkFileDialog import askopenfilename
 
-import ezyrb as ez
 import numpy as np
 import os
 import webbrowser
@@ -57,7 +56,6 @@ class Gui(object):
 	"""
 
 	def __init__(self):
-
 		self.root = tkinter.Tk()
 		self.root.title('EZyRB')
 		self.output_name = tkinter.StringVar()
@@ -66,9 +64,7 @@ class Gui(object):
 		self.file_format = tkinter.StringVar()
 		self.url = 'https://github.com/mathLab/EZyRB'
 		self.tria_path = tkinter.StringVar()
-
 		self.basis_path = tkinter.StringVar()
-
 		self.parsing_file_path = tkinter.StringVar()
 		self.new_mu = tkinter.StringVar()
 		self.outfilename = tkinter.StringVar()
@@ -76,9 +72,7 @@ class Gui(object):
 		self.label_new_mu = None
 		self.label_error = None
 		self.label_tria = None
-
 		self.label_basis = None
-
 		self.label_parsing_file = None
 		self.label_finish_online = None
 		self.ezyrb_handler = None
@@ -90,13 +84,15 @@ class Gui(object):
 		"""
 		The private method starts the ezyrb algorithm. Offline Step.
 		"""
-		'''#output_name = 'Pressure_drop'
+		'''
+		#output_name = 'Pressure_drop'
 		output_name = 'Pressure'
 		weights_name = 'Weights'
 		#namefile_prefix = 'tests/test_datasets/matlab_scalar_0'
 		namefile_prefix = 'tests/test_datasets/matlab_0'
-		file_format = '.vtk'''
-
+		file_format = '.vtk
+		'''
+		import ezyrb as ez
 		if self.is_scalar_switch.get() != True:
 			#self.ezyrb_handler = ez.pod.Pod(output_name, weights_name, namefile_prefix, file_format)
 			self.ezyrb_handler = ez.pod.Pod(
@@ -123,6 +119,7 @@ class Gui(object):
 		"""
 		The private method starts the ezyrb algorithm. Online Step.
 		"""
+		import ezyrb as ez
 		mu_value = np.fromstring(self.new_mu.get(), dtype=float, sep=',')
 		directory = (os.path.dirname(self.basis_path.get()) + '/')
 
@@ -201,16 +198,20 @@ class Gui(object):
 		"""
 		webbrowser.open(self.url)
 
-	def main(self):
+	def _main(self):
 		"""
-		The method inizializes and visualizes the window.
+		The private method inizializes and visualizes the window.
 		"""
-
 		self.logo_panel = tkinter.Canvas(self.root, height=60, width=60)
 		self.logo_panel.pack(side="bottom", padx=5, pady=5, anchor=tkinter.SE)
-		self.img = tkinter.PhotoImage(
-			master=self.logo_panel, file='readme/logo_EZyRB_gui.gif'
-		)
+		try:
+			self.img = tkinter.PhotoImage(
+				master=self.logo_panel, file='readme/logo_EZyRB_gui.gif'
+			)
+		except:
+			self.img = tkinter.PhotoImage(
+				master=self.logo_panel, file='../readme/logo_EZyRB_gui.gif'
+			)
 		self.logo_panel.create_image(35, 35, image=self.img)
 
 		online_offline_frame = tkinter.Frame(self.root)
@@ -525,5 +526,13 @@ class Gui(object):
 		self.root.config(menu=menubar)
 
 	def start(self):
-
+		"""
+		This method inizializes and starts the GUI. 
+		"""
+		self._main()
 		self.root.mainloop()
+
+
+if __name__ == "__main__":
+	app = Gui()
+	app.start()

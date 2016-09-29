@@ -29,7 +29,7 @@ class Pod(object):
 		does not contain any weight (like volume or area of the cells) the
 		weight is set to 1 for all the cells.
 	:param string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with	the same prefix, plus an
+		The files are supposed to be named with the same prefix, plus an
 		increasing numeration (from 0) in the same order as the parameter
 		points.
 	:param string file_format: format of the solution files.
@@ -41,7 +41,7 @@ class Pod(object):
 		does not contain any weight (like volume or area of the cells) the
 		weight is set to 1 for all the cells.
 	:cvar string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with	the same prefix, plus an
+		The files are supposed to be named with the same prefix, plus an
 		increasing numeration (from 0) in the same order as the parameter
 		points.
 	:cvar string file_format: format of the solution files.
