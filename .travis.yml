@@ -6,8 +6,8 @@ matrix:
         - os: linux
           python: 2.7
           env: TOXENV=py27
-          
-          
+
+
 before_script:
     - "export DISPLAY=:99.0"
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
