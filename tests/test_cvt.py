@@ -1,4 +1,3 @@
-
 from unittest import TestCase
 import unittest
 import ezyrb.cvt as cvt
@@ -8,151 +7,140 @@ import os
 
 
 class TestCvt(TestCase):
-
-
 	def test_cvt_attributes_01(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		np.testing.assert_array_almost_equal(cvt_handler.mu_values, mu_values)
-		
-		
+
 	def test_cvt_attributes_02(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		np.testing.assert_array_almost_equal(cvt_handler.pod_basis, pod_basis)
-		
 
 	def test_cvt_attributes_03(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		np.testing.assert_array_almost_equal(cvt_handler.snapshots, snapshots)
-	
-		
+
 	def test_cvt_attributes_04(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		np.testing.assert_array_almost_equal(cvt_handler.weights, weights)
-		
-		
+
 	def test_cvt_attributes_05(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		assert cvt_handler.dim_out == 2500
-		
-		
+
 	def test_cvt_attributes_06(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		assert cvt_handler.dim_db == 4
-		
-		
+
 	def test_cvt_attributes_07a(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		expected_rel_error = 780.142129403
-		np.testing.assert_almost_equal(cvt_handler.rel_error, expected_rel_error)
-		
-		
+		np.testing.assert_almost_equal(
+			cvt_handler.rel_error, expected_rel_error
+		)
+
 	def test_cvt_attributes_07b(self):
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test_scalar.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots)
 		expected_rel_error = 36.3507969
-		np.testing.assert_almost_equal(cvt_handler.rel_error, expected_rel_error)
-		
-		
+		np.testing.assert_almost_equal(
+			cvt_handler.rel_error, expected_rel_error
+		)
+
+	'''
 	def test_cvt_attributes_08(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights	  = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
-		assert cvt_handler.max_error == None
-		
-		
+		assert cvt_handler.get_max_error() == None
+	'''
+
 	def test_cvt_attributes_09(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		assert cvt_handler.dim_mu == 2
-
 
 	def test_cvt_compute_volume_1(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
 		points_x = np.array([0., 1., 0.])
 		points_y = np.array([0., 0., 1.])
 		simplex_vertices = np.array([points_x, points_y])
 		volume = cvt_handler._compute_simplex_volume(simplex_vertices)
 		assert volume == 0.5
-		
-		
+
 	def test_cvt_compute_leave_one_out_error_01(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
-		error = cvt_handler.loo_error()
-		expected_error = np.array([0.14913012, 0.05875263, 0.04603026, 0.07641862])
+		error = cvt_handler.compute_errors()
+		expected_error = np.array(
+			[0.14913012, 0.05875263, 0.04603026, 0.07641862]
+		)
 		np.testing.assert_array_almost_equal(error, expected_error)
-		
-		
+
 	def test_cvt_compute_leave_one_out_error_02(self):
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test_scalar.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots)
-		error = cvt_handler.loo_error()
-		expected_error = np.array([0.718888,  0.28908 ,  0.394886,  0.034921])
+		error = cvt_handler.compute_errors()
+		expected_error = np.array([0.718888, 0.28908, 0.394886, 0.034921])
 		np.testing.assert_array_almost_equal(error, expected_error)
-		
-		
+
 	def test_cvt_compute_new_point(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
-		cvt_handler.add_new_point()
+		new_mu = cvt_handler.get_optimal_new_mu()
 		expected_value = np.array([-0.29334384, -0.2312056])
-		np.testing.assert_array_almost_equal(cvt_handler.mu_values[:,-1], expected_value)
-		
-		
+		np.testing.assert_array_almost_equal(new_mu, expected_value)
+
 	def test_cvt_compute_max_error(self):
 		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
 		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
 		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
-		weights   = np.load('tests/test_datasets/weights_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
 		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
-		cvt_handler.add_new_point()
+		max_error = cvt_handler.get_max_error()
 		expected_value = 0.14913012395372877
-		np.testing.assert_almost_equal(cvt_handler.max_error, expected_value)
-	
-
-	
+		np.testing.assert_almost_equal(max_error, expected_value)

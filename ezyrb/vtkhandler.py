@@ -21,12 +21,12 @@ class VtkHandler(fh.FileHandler):
 	.. todo::
 		Exception if output name is not a variable of vtk file.
 	"""
+
 	def __init__(self):
 		super(VtkHandler, self).__init__()
 		self.extension = '.vtk'
 		self.output_name = 'output'
 		self.cell_data = None
-
 
 	def parse(self, filename, output_name=None):
 		"""
@@ -40,12 +40,12 @@ class VtkHandler(fh.FileHandler):
 		:return: output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output
 		:rtype: numpy.ndarray
 		"""
-		
+
 		if output_name is None:
 			output_name = self.output_name
 		else:
 			self._check_filename_type(output_name)
-		
+
 		self._check_filename_type(filename)
 		self._check_extension(filename)
 
@@ -58,25 +58,20 @@ class VtkHandler(fh.FileHandler):
 		reader.Update()
 		data = reader.GetOutput()
 
-		extracted_data_cell  = data.GetCellData().GetArray(output_name)
+		extracted_data_cell = data.GetCellData().GetArray(output_name)
 		extracted_data_point = data.GetPointData().GetArray(output_name)
-		
+
 		if extracted_data_cell is None:
 			extracted_data = extracted_data_point
 			self.cell_data = False
 		else:
 			extracted_data = extracted_data_cell
 			self.cell_data = True
-		
-		# TODO: check if the output is a scalar or vector
-		data_dim = extracted_data.GetSize()
-		output_values = np.zeros([data_dim,1])
 
-		for i in range (0,data_dim):
-			output_values[i] = extracted_data.GetValue(i)
+		# TODO: check if the output is a scalar or vector
+		output_values = ns.vtk_to_numpy(extracted_data).reshape((-1, 1))
 
 		return output_values
-
 
 	def write(self, output_values, filename, output_name=None, write_bin=False):
 		"""
@@ -89,42 +84,43 @@ class VtkHandler(fh.FileHandler):
 			If it is not passed, it is equal to self.output_name.
 		:param bool write_bin: flag to write in the binary format. Default is False.
 		"""
-		
+
 		self._check_filename_type(filename)
 		self._check_extension(filename)
 		self._check_infile_instantiation(self.infile)
-		
+
 		if output_name is None:
 			output_name = self.output_name
 		else:
 			self._check_filename_type(output_name)
-		
+
 		reader = vtk.vtkDataSetReader()
 		reader.SetFileName(self.infile)
 		reader.ReadAllVectorsOn()
 		reader.ReadAllScalarsOn()
 		reader.Update()
 		data = reader.GetOutput()
-	
-		output_array = ns.numpy_to_vtk(num_array=output_values,array_type=vtk.VTK_DOUBLE)
+
+		output_array = ns.numpy_to_vtk(
+			num_array=output_values, array_type=vtk.VTK_DOUBLE
+		)
 		output_array.SetName(output_name)
-		
+
 		if self.cell_data is True:
 			data.GetCellData().AddArray(output_array)
 		else:
-			data.GetPointData().AddArray(output_array)	
-	
+			data.GetPointData().AddArray(output_array)
+
 		writer = vtk.vtkDataSetWriter()
-		
+
 		if write_bin:
 			writer.SetFileTypeToBinary()
-		
+
 		writer.SetFileName(filename)
-		
+
 		if vtk.VTK_MAJOR_VERSION <= 5:
 			writer.SetInput(data)
 		else:
 			writer.SetInputData(data)
-	
+
 		writer.Write()
-		
