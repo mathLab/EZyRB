@@ -104,10 +104,10 @@ class StlHandler(object):
 		data = self._read_polydata()
 
 		n_points = data.GetNumberOfPoints()
-		n_cells  = data.GetNumberOfCells()
+		n_cells = data.GetNumberOfCells()
 
 		points = np.array([data.GetPoint(i) for i in np.arange(n_points)])
-		cells  = None
+		cells = None
 
 		if get_cells:
 			cells = [[
