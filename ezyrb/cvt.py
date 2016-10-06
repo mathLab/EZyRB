@@ -3,7 +3,6 @@ Class for the Centroidal Voronoi Tesseletion
 
 .. todo::
 	- add the show method
-	- find a more suitable error estimator for the scalar triangulation
 
 """
 import math
@@ -43,6 +42,9 @@ class Cvt(object):
 	:cvar float max_error: max error of the leave-one-out strategy on the
 		present outputs in the snapshots array.
 	:cvar int dim_mu: dimension of the parametric space.
+	:cvar boolean _offline_using_pod: indicate which method was used
+		(Pod/Interpolation) to perform offline phase
+	:cvar function __error_estimator_func: the function to estimate error
 
 	"""
 
@@ -52,14 +54,15 @@ class Cvt(object):
 		self.snapshots = snapshots
 		self.weights = weights
 		self.dim_out, self.dim_db = self.snapshots.shape
-		self._errors = None
+		self.__error_estimator_func = lambda x: np.linalg.norm(x, 2)
 
 		ref_solution = self.snapshots[:, 0]
-		if self.weights is not None:
-			self.rel_error = np.sqrt(
-				np.sum(np.power(ref_solution * self.weights, 2))
-			)
-		else:
+
+		self._offline_using_pod = False if self.weights is None else True
+
+		if self._offline_using_pod:
+			self.rel_error = np.linalg.norm(ref_solution * self.weights, 2)
+		else:  # offline_using_interpolation
 			self.rel_error = np.abs(ref_solution)
 
 		self.dim_mu = mu_values.shape[0]
@@ -90,10 +93,68 @@ class Cvt(object):
 
 		return volume
 
-	def compute_errors(self):
+	@property
+	def error_estimator(self):
+		"""
+		Function to estimate error in compute_error method
+		"""
+		return self.__error_estimator
+
+
+	@error_estimator.setter
+	def error_estimator(self, func):
+		"""
+		Allows the user to specify a custom function to estimate error in
+		loo compute error procedure.
+
+		:param function func: the function to use as error estimator: it has
+			to take as input a 1D numpy array and return a float
+		"""
+		if not callable(func):
+			raise TypeError("Not valid estimator error function.")
+
+		self.__error_estimator_func = func
+
+	def compute_errors_pod(self):
 		"""
 		Compute the error for each parametric point as projection of the
 		snapshot onto the POD basis with a leave-one-out (loo) strategy.
+		To use when offline phase was computed using Pod class.
+
+		:return: error: error array of the leave-one-out strategy.
+		:rtype: numpy.ndarray
+		"""
+		loo_error = np.zeros(self.dim_db)
+
+		for j in np.arange(self.dim_db):
+
+			remaining_snaps = np.delete(self.snapshots, j, 1)
+
+			weighted_remaining_snaps = np.sqrt(self.weights) * remaining_snaps.T
+			eigenvectors, __, __ = np.linalg.svd(
+				weighted_remaining_snaps.T, full_matrices=False
+			)
+			loo_basis = np.transpose(
+				np.power(self.weights, -0.5) * eigenvectors.T
+			)
+
+			projection = np.zeros(self.dim_out)
+			snapshot = self.snapshots[:, j]
+
+			for i in range(0, self.dim_db - 1):
+				projection += np.dot(snapshot * self.weights,
+									 loo_basis[:, i]) * loo_basis[:, i]
+
+			error = (snapshot - projection) * self.weights
+			loo_error[j] = self.__error_estimator_func(error) / self.rel_error
+
+		return loo_error
+
+	def compute_errors_interpolation(self):
+		"""
+		Compute the error for each parametric point as projection 
+		interpolated using snapshots with a leave-one-out (loo) strategy.
+		To use when offline phase was computed using Interpolation class.
 
 		:return: error: error array of the leave-one-out strategy.
 		:rtype: numpy.ndarray
@@ -102,46 +163,37 @@ class Cvt(object):
 
 		loo_error = np.zeros(self.dim_db)
 
-		for j in range(0, self.dim_db):
+		for j in np.arange(self.dim_db):
 
 			remaining_snaps = np.delete(self.snapshots, j, 1)
+			remaining_mu = np.delete(self.mu_values, j, 1)
+			remaining_tria = interpolate.LinearNDInterpolator(
+				np.transpose(remaining_mu[:, :]), remaining_snaps[0, :]
+			)
 
-			if self.weights is not None:
-				weighted_remaining_snaps = np.sqrt(
-					self.weights
-				) * remaining_snaps.T
-				eigenvectors, __, __ = np.linalg.svd(
-					weighted_remaining_snaps.T, full_matrices=False
-				)
-				loo_basis = np.transpose(
-					np.power(self.weights, -0.5) * eigenvectors.T
-				)
+			projection = remaining_tria.__call__(self.mu_values[:, j])
 
-				projection = np.zeros(self.dim_out)
-				snapshot = self.snapshots[:, j]
-
-				for i in range(0, self.dim_db - 1):
-					projection += np.dot(
-						snapshot * self.weights, loo_basis[:, i]
-					) * loo_basis[:, i]
-
-				error = (snapshot - projection) * self.weights
-				loo_error[j] = np.sqrt(np.sum(np.power(error, 2))
-									   ) / self.rel_error
-			else:
-
-				remaining_mu = np.delete(self.mu_values, j, 1)
-				remaining_tria = interpolate.LinearNDInterpolator(
-					np.transpose(remaining_mu[:, :]), remaining_snaps[0, :]
-				)
-				projection = remaining_tria.__call__(self.mu_values[:, j])
-
-				if projection is not float:
-					projection = np.sum(remaining_snaps) / (self.dim_db - 1)
-				loo_error[j] = np.abs(self.snapshots[:, j] - projection
-									  ) / self.rel_error
+			if projection is not float:
+				projection = np.sum(remaining_snaps) / (self.dim_db - 1)
+			loo_error[j] = np.abs(self.snapshots[:, j] - projection
+								  ) / self.rel_error
 
 		return loo_error
+
+	def compute_errors(self):
+		"""
+		Compute the error for each parametric point using the appropriate
+		method according to the offline phase.
+
+		:return: error: error array of the leave-one-out strategy.
+		:rtype: numpy.ndarray
+		"""
+		if self._offline_using_pod:
+			func = self.compute_errors_pod
+		else:  # offline_using_interpolation
+			func = self.compute_errors_interpolation
+
+		return func()
 
 	def get_max_error(self):
 		"""

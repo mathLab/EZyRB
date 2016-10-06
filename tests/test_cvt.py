@@ -144,3 +144,30 @@ class TestCvt(TestCase):
 		max_error = cvt_handler.get_max_error()
 		expected_value = 0.14913012395372877
 		np.testing.assert_almost_equal(max_error, expected_value)
+
+	def test_cvt_custom_error_estimator_lambda(self):
+		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
+		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
+		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
+		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
+		func = lambda x: np.linalg.norm(x, 1)
+		cvt_handler.error_estimator = func
+		max_error = cvt_handler.get_max_error()
+		expected_value = 4.0919009906626309
+		np.testing.assert_almost_equal(max_error, expected_value)
+
+	def test_cvt_custom_error_estimator_func(self):
+		pod_basis = np.load('tests/test_datasets/pod_basis_test.npy')
+		mu_values = np.load('tests/test_datasets/mu_values_test.npy')
+		snapshots = np.load('tests/test_datasets/snapshots_test.npy')
+		weights = np.load('tests/test_datasets/weights_test.npy')
+		cvt_handler = cvt.Cvt(mu_values, snapshots, pod_basis, weights)
+
+		def func(x):
+			return np.max(x**3)
+
+		cvt_handler.error_estimator = func
+		max_error = cvt_handler.get_max_error()
+		expected_value = 33.110157502269765
+		np.testing.assert_almost_equal(max_error, expected_value)
