@@ -44,7 +44,7 @@ class Cvt(object):
 	:cvar int dim_mu: dimension of the parametric space.
 	:cvar boolean _offline_using_pod: indicate which method was used
 		(Pod/Interpolation) to perform offline phase
-	:cvar function __error_estimator_func: the function to estimate error
+	:cvar private __error_estimator_func: the function to estimate error
 
 	"""
 
@@ -97,19 +97,16 @@ class Cvt(object):
 	def error_estimator(self):
 		"""
 		Function to estimate error in compute_error method
-		"""
-		return self.__error_estimator
 
+		:setter: Returns error estimator function
+		:getter: Sets error estimator function
+		:type: function
+		"""
+		return self.__error_estimator_func
 
 	@error_estimator.setter
 	def error_estimator(self, func):
-		"""
-		Allows the user to specify a custom function to estimate error in
-		loo compute error procedure.
 
-		:param function func: the function to use as error estimator: it has
-			to take as input a 1D numpy array and return a float
-		"""
 		if not callable(func):
 			raise TypeError("Not valid estimator error function.")
 
