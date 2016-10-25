@@ -8,15 +8,15 @@ from os import path
 class TestPackage(TestCase):
 	def test_import_ez_1(self):
 		import ezyrb as ez
-		fh = ez.filehandler.FileHandler()
+		fh = ez.filehandler.FileHandler('inexistent.vtk')
 
 	def test_import_ez_2(self):
 		import ezyrb as ez
-		mh = ez.matlabhandler.MatlabHandler()
+		mh = ez.matlabhandler.MatlabHandler('inexistent.mat')
 
 	def test_import_ez_3(self):
 		import ezyrb as ez
-		vh = ez.vtkhandler.VtkHandler()
+		vh = ez.vtkhandler.VtkHandler('inexistent.vtk')
 
 	def test_import_ez_4(self):
 		import ezyrb as ez

@@ -1,67 +1,64 @@
 """
-Derived module from filehandler.py to handle Matlab files.
+Module to handle Matlab files.
 """
+import os
 import numpy as np
 import scipy.io as sio
-import ezyrb.filehandler as fh
 
 
-class MatlabHandler(fh.FileHandler):
+class MatlabHandler(object):
 	"""
-	Matlab format file handler class
+	Matlab format file handler class.
+	You are NOT supposed to call directly this class constructor (use
+			Filehandler constructor instead)
 
-	:cvar string infile: name of the input file to be processed.
-	:cvar string extension: extension of the input/output files. It is equal to '.mat'.
-	:cvar string output_name: name of the output of interest inside the mat file. Default value is output.
+	:cvar string _filename: name of file to handler
+	:cvar dicts _cached_data: private attribute to save a copy of last
+		data processed; it allows to reduce IO operation on the same file.
+		Initial value is None.
 	
-	.. todo::
-		Exception if output name is not a variable of mat file.
 	"""
 
-	def __init__(self):
-		super(MatlabHandler, self).__init__()
-		self.extension = '.mat'
-		self.output_name = 'output'
+	def __init__(self, filename):
 
-	def parse(self, filename, output_name=None):
+		self._filename = filename
+		self._cached_data = None
+
+	def get_dataset(self, output_name):
 		"""
-		Method to parse the `filename`. It returns a vector (matrix with one column) with all the values of the chosen output.
-		If `output_name` is not given it is set to the default value.
+		Method to parse the `filename`. It returns a matrix with all the values
+		of the chosen output.
 
-		:param string filename: name of the input file.
-		:param string output_name: name of the output of interest inside the mat file. 
-			If it is not passed, it is equal to self.output_name.
+		:param string output_name: name of the output of interest inside the
+			mat file. 
 		
-		:return: output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output
+		:return: a *n_points*-by-*n_components* matrix containing the values of
+			the chosen output
 		:rtype: numpy.ndarray
 		"""
+		if self._cached_data is None:
+			if not os.path.isfile(self._filename):
+				raise RuntimeError(
+					"{0!s} doesn't exist".
+					format(os.path.abspath(self._filename))
+				)
 
-		if output_name is None:
-			output_name = self.output_name
-		else:
-			self._check_filename_type(output_name)
+			self._cached_data = sio.loadmat(self._filename)
 
-		self._check_filename_type(filename)
-		self._check_extension(filename)
+		if not output_name in self._cached_data:
+			raise RuntimeError("File has no " + output_name + " field.")
 
-		self.infile = filename
+		return np.array(self._cached_data[output_name])
 
-		loaded_struct = sio.loadmat(self.infile)
-		output_values = np.array(loaded_struct[output_name])
-
-		return output_values
-
-	def write(self, output_values, filename):
+	def set_dataset(self, output_values, output_name):
 		"""
-		Writes a mat file, called filename. output_values is a matrix that contains the new values of the output 
-		to write in the mat file.
+		Writes to filename the given output. `output_values` is a matrix that
+		contains the new values of output to write, `output_name` is a string
+		that indicates name of output to write.
 
-		:param numpy.ndarray output_values: it is a `n_points`-by-1 matrix containing the values of the chosen output.
-		:param string filename: name of the output file.
+		:param numpy.ndarray output_values: it is a *n_points* -by-
+			*n_components* matrix containing the output values.
+		:param string output_name: name of the output.
 		"""
-
-		self._check_filename_type(filename)
-		self._check_extension(filename)
-		self._check_infile_instantiation(self.infile)
-
-		sio.savemat(filename, dict(output=output_values))
+		sio.savemat(self._filename, {output_name: output_values})
+		self._cached_data = None

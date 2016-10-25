@@ -11,6 +11,7 @@ Code Documentation
    filehandler
    matlabhandler
    vtkhandler
+   stlhandler
    gui
    online
-
+   mapper

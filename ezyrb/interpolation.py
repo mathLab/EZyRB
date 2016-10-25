@@ -3,8 +3,9 @@ Class for the Proper Orthogonal Decomposition
 """
 
 import os
+import glob
 import numpy as np
-import ezyrb.matlabhandler as mh
+from ezyrb.filehandler import FileHandler
 import ezyrb.cvt as cvt
 from scipy import interpolate
 
@@ -23,7 +24,7 @@ class Interp(object):
 	:param string output_name: name of the variable (or output) we want to
 		extract from the solution file.
 	:param string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with the same prefix, plus an
+		The files are supposed to be named with	the same prefix, plus an
 		increasing numeration (from 0) in the same order as the parameter
 		points.
 	:param string file_format: format of the solution files.
@@ -31,7 +32,7 @@ class Interp(object):
 	:cvar string output_name: name of the variable (or output) we want to
 		extract from the solution file.
 	:cvar string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with the same prefix, plus an
+		The files are supposed to be named with	the same prefix, plus an
 		increasing numeration (from 0) in the same order as the parameter
 		points.
 	:cvar string file_format: format of the solution files.
@@ -51,7 +52,7 @@ class Interp(object):
 
 	"""
 
-	def __init__(self, output_name, namefile_prefix, file_format):
+	def __init__(self, output_name, snapshot_files_regex):
 
 		self._config_file = './setting.conf'
 		self._num_mu = 0
@@ -62,11 +63,8 @@ class Interp(object):
 		self._new_optimal_mu = None
 		self._max_error = None
 		self.output_name = output_name
-		self.namefile_prefix = namefile_prefix
-		self.file_format = file_format
+		self.snapshot_files_regex = snapshot_files_regex
 		self.mu_values = None
-
-		self.file_handler = mh.MatlabHandler()
 
 		self.snapshots = None
 		self.cvt_handler = None
@@ -113,11 +111,7 @@ class Interp(object):
 		# Read the first `self._dimension_mu` columns to build
 		# ndarray containing mu_values
 		mu_col = tuple(range(self._dimension_mu))
-		self.mu_values = np.genfromtxt(
-			self._mu_file, dtype=np.float, usecols=mu_col
-		).T
-
-		self._num_mu_values = self.mu_values.shape[1]
+		to_add_mu = np.genfromtxt(self._mu_file, dtype=np.float, usecols=mu_col)
 
 		# if last column contains name of snapshot files, take them;
 		# if not, create a sequence using namefile prefix
@@ -126,22 +120,12 @@ class Interp(object):
 				self._mu_file, usecols=tuple(self._dimension_mu)
 			)
 		except:
-			self._snapshot_files = np.array([
-				self.namefile_prefix + str(i) + self.file_format
-				for i in np.arange(self._num_mu_values)
-			])
-
-		aux_snapshot = self.file_handler.parse(
-			self._snapshot_files[0], self.output_name
-		)
-		self.snapshots = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
-
-		for i in np.arange(1, self._num_mu_values):
-			aux_snapshot = self.file_handler.parse(
-				self._snapshot_files[i], self.output_name
+			self._snapshot_files = np.sort(
+				np.array(glob.glob(self.snapshot_files_regex))
 			)
-			snapshot = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
-			self.snapshots = np.append(self.snapshots, snapshot, 1)
+
+		for i in np.arange(to_add_mu.shape[0]):
+			self.add_snapshot(to_add_mu[i], self._snapshot_files[i])
 
 	def get_cvt_handler(self):
 		"""
@@ -185,7 +169,7 @@ class Interp(object):
 			self.cvt_handler.get_optimal_new_mu()
 		)
 
-	def add_snapshot(self, new_mu=None, snapshot_file=None):
+	def add_snapshot(self, new_mu, snapshot_file):
 		"""
 		This methos adds the new solution to the database and the new parameter
 		values to the parameter points; this can be done only after the new
@@ -195,31 +179,17 @@ class Interp(object):
 		:param snapshot_file string
 		"""
 
-		if new_mu is None:
-			new_mu = self.find_optimal_mu()
-
 		# mu_values are stored by column, so need to transpose it
 		new_mu = new_mu.reshape((-1, 1))
 
-		if snapshot_file is None:
-			if self.namefile_prefix:
-				snapshot_file = self.namefile_prefix + str(
-					self._num_mu_values
-				) + self.file_format
-			else:
-				raise RuntimeError(
-					"You need to specify a namefile prefix"
-					" or specific file for new snapshot"
-				)
-
 		if not os.path.isfile(snapshot_file):
-			raise RuntimeError(
+			raise IOError(
 				"File {0!s} not found".format(os.path.abspath(snapshot_file))
 			)
 
 		# Add snapshot
-		aux_snapshot = self.file_handler.parse(snapshot_file, self.output_name)
-		snapshot = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
+		snapshot = FileHandler(snapshot_file).get_dataset(self.output_name
+														  ).reshape((-1, 1))
 		if self.snapshots is not None:
 			self.snapshots = np.append(self.snapshots, snapshot, axis=1)
 		else:

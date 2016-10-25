@@ -3,12 +3,12 @@ Class for the Proper Orthogonal Decomposition
 """
 
 import os
+import glob
 import numpy as np
-import ezyrb.vtkhandler as vh
-import ezyrb.matlabhandler as mh
 import ezyrb.cvt as cvt
 import matplotlib.pyplot as plt
 from scipy import interpolate
+from ezyrb.filehandler import FileHandler
 
 ##
 ## Python 2 vs Python 3 conflicts
@@ -28,23 +28,22 @@ class Pod(object):
 		solution file for the computation of the errors. If the solution files
 		does not contain any weight (like volume or area of the cells) the
 		weight is set to 1 for all the cells.
-	:param string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with the same prefix, plus an
+	:param string snapshot_file_regex: path and prefix of the solution files.
+		The files are supposed to be named with	the same prefix, plus an
 		increasing numeration (from 0) in the same order as the parameter
 		points.
-	:param string file_format: format of the solution files.
 
+	:cvar private _config_file: name of configuration file.
+	:cvar private _mu_file: name of file where mu values are saved.
+	:cvar private _snapshot_files: names of snapshot files
+	:cvar private _new_optimal_mu: the ideal mu to add to database
+	:cvar private _max_error: maximum error computed from `cvt_handler`
 	:cvar string output_name: name of the variable (or output) we want to
 		extract from the solution file.
 	:cvar string weights_name: name of the weights to be extracted	from the
 		solution file for the computation of the errors. If the solution files
 		does not contain any weight (like volume or area of the cells) the
 		weight is set to 1 for all the cells.
-	:cvar string namefile_prefix: path and prefix of the solution files.
-		The files are supposed to be named with the same prefix, plus an
-		increasing numeration (from 0) in the same order as the parameter
-		points.
-	:cvar string file_format: format of the solution files.
 	:cvar numpy.ndarray mu_values: values of the parameters representing the
 		vertices of the triangulation of the parametric domain.
 	:cvar numpy.ndarray pod_basis: basis extracted from the proper orthogonal
@@ -54,41 +53,24 @@ class Pod(object):
 		the error between high fidelity and reconstructed error. Tipically, it
 		is the area/volume of each cell of the domain.
 	:cvar Cvt cvt_handler: handler for the tesselation.
-	:cvar FileHandler file_hanldler: handler for the file to be read and
-		written.
-
-	.. warning::
-		The files containing the snapshots must be stored in the same directory
-		and must have the same prefix, with a increasing numeration (from 0) in
-		the same order as the parameter points. For example, in the directory
-		tests/test_datasets/ you can find the files (matlab_00.vtk,
-		matlab_01.vtk, ..., matlab_05.vtk)
 
 	"""
 
-	def __init__(self, output_name, weights_name, namefile_prefix, file_format):
+	def __init__(
+		self, output_name, weights_name=None, snapshot_files_regex=None
+	):
 
 		self._config_file = './setting.conf'
-		self._num_mu = 0
-		self._dimension_mu = 0	# dimension of mu values
 		self._mu_file = './mu.conf'
-		self._num_mu_values = 0
 		self._snapshot_files = None
 		self._new_optimal_mu = None
 		self._max_error = None
 		self.output_name = output_name
 		self.weights_name = weights_name
-		self.namefile_prefix = namefile_prefix
-		self.file_format = file_format
+		self.snapshot_files_regex = snapshot_files_regex
 		self.mu_values = None
 		self.pod_basis = None
-
-		if self.file_format == '.vtk':
-			self.file_handler = vh.VtkHandler()
-		elif self.file_format == '.mat':
-			self.file_handler = mh.MatlabHandler()
-		else:
-			raise RuntimeError("file_format is not supported")
+		self._dimension_mu = None
 
 		self.snapshots = None
 		self.weights = None
@@ -136,54 +118,48 @@ class Pod(object):
 		# Read the first `self._dimension_mu` columns to build
 		# ndarray containing mu_values
 		mu_col = tuple(range(self._dimension_mu))
-		self.mu_values = np.genfromtxt(
-			self._mu_file, dtype=np.float, usecols=mu_col
-		).T
-
-		self._num_mu_values = self.mu_values.shape[1]
+		to_add_mu = np.genfromtxt(self._mu_file, dtype=np.float, usecols=mu_col)
 
 		# if last column contains name of snapshot files, take them;
 		# if not, create a sequence using namefile prefix
 		try:
 			self._snapshot_files = np.genfromtxt(
-				self._mu_file, usecols=tuple(self._dimension_mu)
+				self._mu_file, usecols=self._dimension_mu
 			)
 		except:
-			self._snapshot_files = np.array([
-				self.namefile_prefix + str(i) + self.file_format
-				for i in np.arange(self._num_mu_values)
-			])
-
-		aux_snapshot = self.file_handler.parse(
-			self._snapshot_files[0], self.output_name
-		)
-		self.snapshots = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
-
-		for i in np.arange(1, self._num_mu_values):
-			aux_snapshot = self.file_handler.parse(
-				self._snapshot_files[i], self.output_name
+			print(self.snapshot_files_regex)
+			self._snapshot_files = np.sort(
+				np.array(glob.glob(self.snapshot_files_regex))
 			)
-			snapshot = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
-			self.snapshots = np.append(self.snapshots, snapshot, 1)
+			print(self._snapshot_files)
 
-		try:
-			weights = self.file_handler.parse(
-				self._snapshot_files[0], self.weights_name
-			)
+		### ----------------- ###
+		###	 Snapshot		  ###		
+		### ----------------- ###
+		for i in np.arange(to_add_mu.shape[0]):
+			self.add_snapshot(to_add_mu[i], self._snapshot_files[i])
+
+		### ----------------- ###
+		###	 Weights		  ###
+		### ----------------- ###
+		if self.weights_name:
+			weights = FileHandler(self._snapshot_files[0]
+								  ).get_dataset(self.weights_name)
 
 			#vectorial field: to be improved for n-dimensional fields
 			if weights.shape[0] != snapshots.shape[0]:
-				weights = np.append(weights, np.append(weights, weights, 0), 0)
+				self.weights = np.append(
+					weights, np.append(weights, weights, 0), 0
+				)
 
-		except:
-			weights = 0. * snapshot + 1.
-
-		self.weights = weights[:, 0]
+		else:
+			self.weights = np.ones((self.snapshots.shape[0], ))
 
 	def compute_pod_basis(self):
 		"""
 		Return POD basis; if basis is not computed yes, compute them
 		"""
+		# TODO make more readable
 		weighted_snapshots = np.sqrt(self.weights) * self.snapshots.T
 		eigenvectors, eigenvalues, __ = np.linalg.svd(
 			weighted_snapshots.T, full_matrices=False
@@ -198,6 +174,9 @@ class Pod(object):
 		"""
 		Return Central Voronoi Tasselation object; if object is not
 		initialize yet, create it.
+
+		:return: cvt object
+		:rtype: Cvt
 		"""
 		if not self.cvt_handler:
 			self.compute_pod_basis()
@@ -209,9 +188,44 @@ class Pod(object):
 
 		return self.cvt_handler
 
+	def get_num_mu_values(self):
+		"""
+		Return the number of mu values stored.
+
+		:return: number of mu values
+		:rtype: int
+		"""
+
+		try:
+			num = self.mu_values.shape[1]
+		except AttributeError:
+			num = 0
+
+		return num
+
+	def get_dim_mu_values(self):
+		"""
+		Return the dimension of mu values.
+
+		:return: mu values dimension
+		:rtpe: int
+		"""
+
+		try:
+			num = self.mu_values.shape[0]
+		except AttributeError:
+			num = 0
+
+		return num
+
 	def find_optimal_mu(self):
 		"""
 		This method compute the new parameter point for the next simulation.
+		If optimal mu for current configuration was allready found, return the
+		cached value.
+
+		:return: best new parameter to add to database
+		:rtype: numpy.array
 		"""
 		if not self._new_optimal_mu:
 			self._new_optimal_mu = self.get_cvt_handler().get_optimal_new_mu()
@@ -219,7 +233,11 @@ class Pod(object):
 
 	def find_max_error(self):
 		"""
-		This method compute the maximum error in tasselation.
+		This method compute the maximum error in tasselation. If error
+		estimation was allready done, return the cached value.
+
+		:return: max error in tasselation
+		:rtype: float
 		"""
 		if not self._max_error:
 			self._max_error = self.get_cvt_handler().get_max_error()
@@ -229,6 +247,7 @@ class Pod(object):
 		"""
 		Simply print all information of class
 		"""
+		# TODO Add more information
 		print(
 			'Maximum error on the tassellation: {0!s}'.
 			format(self.find_max_error())
@@ -239,7 +258,7 @@ class Pod(object):
 			self.cvt_handler.get_optimal_new_mu()
 		)
 
-	def add_snapshot(self, new_mu=None, snapshot_file=None):
+	def add_snapshot(self, new_mu, snapshot_file):
 		"""
 		This methos adds the new solution to the database and the new parameter
 		values to the parameter points; this can be done only after the new
@@ -249,31 +268,20 @@ class Pod(object):
 		:param snapshot_file string
 		"""
 
-		if new_mu is None:
-			new_mu = self.find_optimal_mu()
-
 		# mu_values are stored by column, so need to transpose it
 		new_mu = new_mu.reshape((-1, 1))
 
-		if snapshot_file is None:
-			if self.namefile_prefix:
-				snapshot_file = self.namefile_prefix + str(
-					self._num_mu_values
-				) + self.file_format
-			else:
-				raise RuntimeError(
-					"You need to specify a namefile prefix"
-					" or specific file for new snapshot"
-				)
-
 		if not os.path.isfile(snapshot_file):
-			raise RuntimeError(
+			raise IOError(
 				"File {0!s} not found".format(os.path.abspath(snapshot_file))
 			)
 
 		# Add snapshot
-		aux_snapshot = self.file_handler.parse(snapshot_file, self.output_name)
-		snapshot = aux_snapshot.reshape(aux_snapshot.shape[0], 1)
+		#aux_snapshot = self.file_handler.get_dataset(
+		#	snapshot_file, self.output_name
+		#)
+		snapshot = FileHandler(snapshot_file).get_dataset(self.output_name
+														  ).reshape((-1, 1))
 		if self.snapshots is not None:
 			self.snapshots = np.append(self.snapshots, snapshot, axis=1)
 		else:
@@ -303,7 +311,7 @@ class Pod(object):
 			coefficients. The default is the current directory.
 		"""
 
-		__, eigenvalues = self.compute_pod_basis()
+		eigenvalues = self.compute_pod_basis()[1]
 
 		if plot_singular_values:
 			plt.semilogy(
@@ -312,22 +320,15 @@ class Pod(object):
 			)
 			plt.show()
 
-		n_points = self.mu_values.shape[1]
-		n_basis = self.pod_basis.shape[1]
-		coefs_tria = np.array([])
-		coefs = np.zeros([n_basis, n_points])
+		coefs = np.transpose([
+			np.dot(np.transpose(self.pod_basis), snap * self.weights)
+			for snap in self.snapshots.T
+		])
 
-		for i in range(0, n_points):
-			coefs[:, i] = np.dot(
-				np.transpose(self.pod_basis),
-				self.snapshots[:, i] * self.weights
-			)
-
-		for i in range(0, n_basis):
-			coefs_surf = interpolate.LinearNDInterpolator(
-				np.transpose(self.mu_values), coefs[i, :]
-			)
-			coefs_tria = np.append(coefs_tria, coefs_surf)
+		coefs_tria = np.array([
+			interpolate.LinearNDInterpolator(self.mu_values.T, coef)
+			for coef in coefs
+		])
 
 		np.save(directory + 'coefs_tria_' + self.output_name, coefs_tria)
 		np.save(directory + 'pod_basis_' + self.output_name, self.pod_basis)

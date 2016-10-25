@@ -3,80 +3,38 @@ Base module with the base class for reading and writing different files.
 """
 import os
 import sys
+import ezyrb.stlhandler
+import ezyrb.vtkhandler
+import ezyrb.matlabhandler
 
 
 class FileHandler(object):
 	"""
 	A base class for file handling.
 
-	:cvar string infile: name of the input file to be processed.
-	:cvar string extension: extension of the input/output files. It is specific for each
-		subclass.
 	"""
 
-	def __init__(self):
-		self.infile = None
-		self.extension = None
-
-	def parse(self, *args):
+	def __new__(cls, filename):
 		"""
-		Abstract method to parse a specific file.
-
-		Not implemented, it has to be implemented in subclasses.
+		Generic file handler. When you create a new instance of FilaHandler, it
+		returns specialized file handler (`MatlabHandler`, `VtkHandler`, ...)
+		instance.
+		
+		:param string filename: name of file
 		"""
-		raise NotImplementedError("Subclass must implement abstract method " \
-		 + self.__class__.__name__ + ".parse")
 
-	def write(self, *args):
-		"""
-		Abstract method to write a specific file.
+		if not isinstance(filename, str):
+			raise TypeError("Filename must be a string")
 
-		Not implemented, it has to be implemented in subclasses.
-		"""
-		raise NotImplementedError("Subclass must implement abstract method " \
-		 + self.__class__.__name__ + ".write")
+		ext = {
+			".vtk": ezyrb.vtkhandler.VtkHandler,
+			".stl": ezyrb.stlhandler.StlHandler,
+			".mat": ezyrb.matlabhandler.MatlabHandler,
+		}
 
-	def _check_extension(self, filename):
-		"""
-		This private method checks if the given `filename` has the proper `extension` set
-		in the child class. If not it raises a ValueError.
+		specialized_handler = ext.get(os.path.splitext(filename)[1])
 
-		:param string filename: file to check.
-		"""
-		__, file_ext = os.path.splitext(filename)
-		if not file_ext in self.extension:
-			raise ValueError(
-				'The input file does not have the proper extension. \
-				It is {0!s}, instead of {1!s}.'.format(file_ext, self.extension)
-			)
+		if specialized_handler is None:
+			raise TypeError("Not supported file")
 
-	@staticmethod
-	def _check_filename_type(filename):
-		"""
-		This private static method checks if `filename` is a string. If not it raises a TypeError.
-
-		:param string filename: file to check.
-		"""
-		if sys.version_info >= (3, 0):
-			string = str
-		else:
-			string = basestring
-
-		if not isinstance(filename, string):
-			raise TypeError(
-				'The given filename ({0!s}) must be a string'.format(filename)
-			)
-
-	@staticmethod
-	def _check_infile_instantiation(infile):
-		"""
-		This private static method checks if the input file `infile` is instantiated. If not it means
-		that nobody called the parse method, i.e. `self.infile` is None. If the check fails
-		it raises a RuntimeError.
-
-		:param string infile: file to check.
-		"""
-		if not infile:
-			raise RuntimeError(
-				"You can not write a file without having parsed one."
-			)
+		return specialized_handler(filename)

@@ -7,21 +7,14 @@ import os
 
 
 class TestFilehandler(TestCase):
-	def test_base_class_infile(self):
-		file_handler = fh.FileHandler()
-		assert file_handler.infile == None
+	def test_file_filename(self):
+		handler = fh.FileHandler('inexistent_file.vtk')
+		assert (handler._filename == 'inexistent_file.vtk')
 
-	def test_base_class_extension(self):
-		file_handler = fh.FileHandler()
-		assert file_handler.extension == None
+	def test_file_wrong_type_filename(self):
+		with self.assertRaises(TypeError):
+			handler = fh.FileHandler([3])
 
-	def test_base_class_parse(self):
-		file_handler = fh.FileHandler()
-		with self.assertRaises(NotImplementedError):
-			file_handler.parse('input')
-
-	def test_base_class_write(self):
-		file_handler = fh.FileHandler()
-		mesh_points = np.zeros((3, 3))
-		with self.assertRaises(NotImplementedError):
-			file_handler.write(mesh_points, 'output')
+	def test_file_available_ext(self):
+		with self.assertRaises(TypeError):
+			handler = fh.FileHandler('inexistent_file.pdf')

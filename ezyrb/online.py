@@ -2,24 +2,29 @@
 Utilities for the online evaluation of the output of interest
 """
 import numpy as np
-import ezyrb.vtkhandler as vh
-import ezyrb.matlabhandler as mh
 import os
+from ezyrb.filehandler import FileHandler
 
 
 class Online(object):
 	"""
 	Documentation
 	
-	:param numpy.ndarray mu_value: values of the parameters for the new evaluation of the output.
-	:param string output_name: suffix of the files containing the structures for the online phase.
+	:param numpy.ndarray mu_value: values of the parameters for the new evaluation
+		of the output.
+	:param string output_name: suffix of the files containing the structures for
+		the online phase.
 	:param string directory: directory where the structures are stored.
-	:param bool is_scalar: boolean to set if the output of interest is a scalar or a field.
+	:param bool is_scalar: boolean to set if the output of interest is a scalar
+		or a field.
 	
-	:cvar numpy.ndarray mu_value: values of the parameters for the new evaluation of the output.
-	:cvar string output_name: suffix of the files containing the structures for the online phase.
+	:cvar numpy.ndarray mu_value: values of the parameters for the new
+		evaluation of the output.
+	:cvar string output_name: suffix of the files containing the structures for
+		the online phase.
 	:cvar string directory: directory where the structures are stored.
-	:cvar bool is_scalar: boolean to set if the output of interest is a scalar or a field.
+	:cvar bool is_scalar: boolean to set if the output of interest is a scalar
+		or a field.
 	:cvar numpy.ndarray output: new evaluation of the output of interest.
 	:cvar string file_extension: extension of the output_file.
 
@@ -31,11 +36,11 @@ class Online(object):
 		self.is_scalar = is_scalar
 		self.output_name = output_name
 		self.output = None
-		self.file_extension = None
 
 	def perform_scalar(self):
 		"""
-		This method performs the online evaluation of the output if it is a scalar.
+		This method performs the online evaluation of the output if it is a
+		scalar.
 		"""
 
 		## TODO Check if encoding option works well
@@ -44,11 +49,12 @@ class Online(object):
 		)
 		surf = hyper_surf.all()
 
-		self.output = surf.__call__([self.mu_value])
+		self.output = surf(self.mu_value)
 
 	def perform_field(self):
 		"""
-		This method performs the online evaluation of the output if it is a field.
+		This method performs the online evaluation of the output if it is a
+		field.
 		"""
 
 		hyper_surf = np.load(
@@ -60,12 +66,7 @@ class Online(object):
 			encoding='latin1'
 		)
 
-		n_coefs = hyper_surf.shape[0]
-		new_coefs = np.zeros(n_coefs)
-
-		for i in range(0, n_coefs):
-			surf = hyper_surf[i]
-			new_coefs[i] = surf.__call__([self.mu_value])
+		new_coefs = np.array([surf(self.mu_value)[0] for surf in hyper_surf])
 
 		self.output = np.dot(pod_basis, new_coefs)
 
@@ -79,29 +80,18 @@ class Online(object):
 		else:
 			self.perform_field()
 
-	def write_file(self, filename, infile):
+	def write_file(self, filename, geometry_file=None):
 		"""
-		This method writes out the solution in the proper format. In this way, you can view the results
-		with the viewer you like.
+		This method writes out the solution in the proper format. In this way,
+		you can view the results with the viewer you like.
 		
 		:param string filename: name of the output file.
-		:param string infile: name of the input file. For the mat file this is simply necessary for the parse function.
-			for the vtk is necessary for having the correct grid for the new output field.
-		
+		:param string geometry_file: name of file from which get the geometry.
 		"""
-		__, file_ext = os.path.splitext(filename)
 
-		if file_ext == '.mat':
-			mat_handler = mh.MatlabHandler()
-			mat_handler.parse(infile, self.output_name)
-			mat_handler.write(self.output, filename)
-		elif file_ext == '.vtk':
-			vtk_handler = vh.VtkHandler()
-			vtk_handler.parse(infile, self.output_name)
-			vtk_handler.write(
-				self.output, filename, output_name=self.output_name
-			)
-		else:
-			raise NotImplementedError(
-				file_ext + " file extension is not implemented yet."
-			)
+		writer = FileHandler(filename)
+		if geometry_file:
+			points, cells = FileHandler(geometry_file).get_geometry(True)
+			writer.set_geometry(points, cells)
+
+		writer.set_dataset(self.output, self.output_name)
