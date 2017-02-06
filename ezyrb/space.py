@@ -17,6 +17,7 @@ class Space(object):
 		"""
 		raise NotImplemented
 
+	@staticmethod
 	def save(self, filename):
 		"""
 		Abstract method to save the space to a specific file.
@@ -25,6 +26,7 @@ class Space(object):
 		"""
 		raise NotImplemented
 
+	@staticmethod
 	def load(self, filename):
 		"""
 		Abstract method to load the space from a specific file.
