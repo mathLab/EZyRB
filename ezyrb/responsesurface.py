@@ -1,5 +1,5 @@
 """
-Class for the generation of
+Class for the response surface methodology.
 """
 
 from ezyrb.space import Space
@@ -12,10 +12,8 @@ class ResponseSurface(Space):
 	"""
 	Documentation
 
-	:cvar numpy.ndarray pod_basis: basis extracted from the proper orthogonal
-		decomposition.
 	:cvar scipy.interpolate.LinearNDInterpolator interpolator: interpolating
-		object for the pod basis interpolation
+		object for the basis interpolation
 	"""
 
 	def __init__(self):
@@ -41,7 +39,7 @@ class ResponseSurface(Space):
 		"""
 		Project a new parametric point onto the reduced space and a new
 		approximated solution is provided.
-		
+
 		:param numpy.ndarray value: the new parametric point
 		"""
 		return self.interpolator(value)
@@ -67,7 +65,7 @@ class ResponseSurface(Space):
 	@staticmethod
 	def loo_error(points, snapshots, func=np.linalg.norm):
 		"""
-		Compute the error for each parametric point with a leave-one-out (loo) 
+		Compute the error for each parametric point with a leave-one-out (loo)
 		strategy.
 
 		:param Points points: the points where snapshots were computed.

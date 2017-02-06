@@ -10,6 +10,9 @@ import scipy
 class Points(object):
 	"""
 	Documentation
+
+	:cvar numpy.ndarray _values: the matrix that contains the points stored
+		by column.
 	"""
 
 	def __init__(self):
@@ -57,5 +60,8 @@ class Points(object):
 	@property
 	def triangulation(self):
 		"""
+		The Delaunay tasselation built from the points.
+
+		:type: scipy.spatial.Delaunay
 		"""
 		return scipy.spatial.Delaunay(self.values.T)
