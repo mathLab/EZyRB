@@ -1,6 +1,5 @@
 """
-Module for the generation of the reduced space by using the Proper Orthogonal
-Decomposition
+Class for the response surface methodology.
 """
 
 from ezyrb.space import Space
@@ -9,19 +8,16 @@ import numpy as np
 import os
 
 
-class Pod(Space):
+class ResponseSurface(Space):
 	"""
 	Documentation
 
-	:cvar numpy.ndarray pod_basis: basis extracted from the proper orthogonal
-		decomposition.
 	:cvar scipy.interpolate.LinearNDInterpolator interpolator: interpolating
-		object for the pod basis interpolation
+		object for the basis interpolation
 	"""
 
 	def __init__(self):
 
-		self.pod_basis = None
 		self.interpolator = None
 
 	def generate(self, points, snapshots):
@@ -32,17 +28,11 @@ class Pod(Space):
 		is built combining this basis.
 
 		:param Snapshots snapshots: the snapshots.
-		:param Points points: the parametric points where snapshots were 
+		:param Points points: the parametric points where snapshots were
 			computed.
 		"""
-		eig_vec, eig_val = np.linalg.svd(
-			snapshots.weighted, full_matrices=False
-		)[0:2]
-
-		self.pod_basis = np.sqrt(snapshots.weights) * eig_vec
-		coefs = self.pod_basis.T.dot(snapshots.weighted)
 		self.interpolator = interpolate.LinearNDInterpolator(
-			points.values.T, coefs
+			points.values.T, snapshots.values[0, :]
 		)
 
 	def __call__(self, value):
@@ -52,7 +42,7 @@ class Pod(Space):
 
 		:param numpy.ndarray value: the new parametric point
 		"""
-		return self.pod_basis.dot(self.interpolator(value).T)
+		return self.interpolator(value)
 
 	def save(self, filename):
 		"""
@@ -60,9 +50,7 @@ class Pod(Space):
 
 		:param string filename: the name of the file.
 		"""
-		np.savez(
-			filename, pod_basis=self.pod_basis, interpolator=self.interpolator
-		)
+		np.savez(filename, interpolator=self.interpolator)
 		os.rename(filename + '.npz', filename)
 
 	def load(self, filename):
@@ -72,14 +60,13 @@ class Pod(Space):
 		:param string filename: the name of the file.
 		"""
 		structure = np.load(filename)
-		self.pod_basis = structure["pod_basis"]
 		self.interpolator = structure["interpolator"]
 
 	@staticmethod
 	def loo_error(points, snapshots, func=np.linalg.norm):
 		"""
-		Compute the error for each parametric point as projection of the
-		snapshot onto the POD basis with a leave-one-out (loo) strategy.
+		Compute the error for each parametric point with a leave-one-out (loo)
+		strategy.
 
 		:param Points points: the points where snapshots were computed.
 		:param Snapshots snapshots: the snapshots.
@@ -92,22 +79,15 @@ class Pod(Space):
 
 			remaining_index = list(range(j)) + list(range(j + 1, points.size))
 			remaining_snaps = snapshots[remaining_index]
+			remaining_pts = points[remaining_index]
 
-			eigvec = np.linalg.svd(
-				remaining_snaps.weighted, full_matrices=False
-			)[0]
+			subspace = ResponseSurface()
+			subspace.generate(remaining_pts, remaining_snaps)
+			projection = subspace(points[j].values)
+			if projection is not float:
+				projection = np.sum(remaining_snaps.values) / (points.size - 1)
 
-			loo_basis = np.sqrt(remaining_snaps.weights) * eigvec
-
-			projection = np.sum(
-				np.array([
-					np.dot(snapshots[j].weighted, basis) * basis
-					for basis in loo_basis.T
-				]),
-				axis=0
-			)
-
-			error = (snapshots[j].values - projection) * snapshots.weights
-			loo_error[j] = func(error) / func(snapshots[0].values)
+			loo_error[j] = func(snapshots[j].values - projection)
+			loo_error[j] /= func(snapshots[0].values)
 
 		return loo_error

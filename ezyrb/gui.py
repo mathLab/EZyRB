@@ -96,14 +96,15 @@ class Gui(object):
 		if self.is_scalar_switch.get() != True:
 			#self.ezyrb_handler = ez.pod.Pod(output_name, weights_name, namefile_prefix, file_format)
 			self.ezyrb_handler = ez.pod.Pod(
-				self.output_name.get(), self.weights_name.get(),
+				self.output_name.get(),
+				self.weights_name.get(),
 				self.namefile_prefix.get(), self.file_format.get()
 			)
 		else:
 			#self.ezyrb_handler = ez.interpolation.Interp(output_name, namefile_prefix, file_format)
 			self.ezyrb_handler = ez.interpolation.Interp(
-				self.output_name.get(), self.namefile_prefix.get(),
-				self.file_format.get()
+				self.output_name.get(),
+				self.namefile_prefix.get(), self.file_format.get()
 			)
 
 		self.ezyrb_handler.start()

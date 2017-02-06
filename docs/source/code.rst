@@ -5,8 +5,8 @@ Code Documentation
 .. toctree::
    :maxdepth: 2
 
-   cvt
-   interpolation
+   points
+   snapshots
    pod
    filehandler
    matlabhandler
@@ -14,4 +14,5 @@ Code Documentation
    stlhandler
    gui
    online
+   offline
    mapper

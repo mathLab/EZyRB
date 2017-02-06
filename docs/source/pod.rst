@@ -1,4 +1,4 @@
-POD
+POD Space Generation
 =====================
 
 .. automodule:: ezyrb.pod
