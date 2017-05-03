@@ -30,68 +30,25 @@ class Online(object):
 
 	"""
 
-	def __init__(self, mu_value, output_name, directory='./', is_scalar=True):
-		self.mu_value = mu_value
-		self.directory = directory
-		self.is_scalar = is_scalar
+	def __init__(self, output_name, space_type, rb_space_filename):
 		self.output_name = output_name
-		self.output = None
+		self.space = space_type()
+		self.space.load(rb_space_filename)
 
-	def perform_scalar(self):
-		"""
-		This method performs the online evaluation of the output if it is a
-		scalar.
-		"""
-
-		## TODO Check if encoding option works well
-		hyper_surf = np.load(
-			self.directory + 'triangulation_scalar.npy', encoding='latin1'
-		)
-		surf = hyper_surf.all()
-
-		self.output = surf(self.mu_value)
-
-	def perform_field(self):
-		"""
-		This method performs the online evaluation of the output if it is a
-		field.
-		"""
-
-		hyper_surf = np.load(
-			self.directory + 'coefs_tria_' + self.output_name + '.npy',
-			encoding='latin1'
-		)
-		pod_basis = np.load(
-			self.directory + 'pod_basis_' + self.output_name + '.npy',
-			encoding='latin1'
-		)
-
-		new_coefs = np.array([surf(self.mu_value)[0] for surf in hyper_surf])
-
-		self.output = np.dot(pod_basis, new_coefs)
-
-	def run(self):
+	def run(self, value):
 		"""
 		This method runs the online evaluation.
 		"""
+		return self.space(value)
 
-		if self.is_scalar is True:
-			self.perform_scalar()
-		else:
-			self.perform_field()
-
-	def write_file(self, filename, geometry_file=None):
+	def run_and_store(self, value, filename, geometry_file=None):
 		"""
-		This method writes out the solution in the proper format. In this way,
-		you can view the results with the viewer you like.
-		
-		:param string filename: name of the output file.
-		:param string geometry_file: name of file from which get the geometry.
+		This method runs the online evaluation.
 		"""
-
+		output = self.space(value)
 		writer = FileHandler(filename)
 		if geometry_file:
 			points, cells = FileHandler(geometry_file).get_geometry(True)
 			writer.set_geometry(points, cells)
 
-		writer.set_dataset(self.output, self.output_name)
+		writer.set_dataset(output, self.output_name)

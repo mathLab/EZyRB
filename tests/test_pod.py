@@ -26,7 +26,7 @@ class TestPod(TestCase):
 		snap.append("tests/test_datasets/matlab_02.vtk")
 		snap.append("tests/test_datasets/matlab_03.vtk")
 		space.generate(mu, snap)
-		assert space.pod_basis.shape == (2500, 4)
+		assert space.state['pod_basis'].shape == (2500, 4)
 
 	def test_call(self):
 		mu = Points()
@@ -35,11 +35,11 @@ class TestPod(TestCase):
 		mu.append([-.5, -.5])
 		mu.append([.5, -.5])
 		mu.append([.5, .5])
-		mu.append([-.5, .5])
+		#mu.append([-.5, .5])
 		snap.append("tests/test_datasets/matlab_00.vtk")
 		snap.append("tests/test_datasets/matlab_01.vtk")
 		snap.append("tests/test_datasets/matlab_02.vtk")
-		snap.append("tests/test_datasets/matlab_03.vtk")
+		#snap.append("tests/test_datasets/matlab_03.vtk")
 		space.generate(mu, snap)
 		solution = space([0, 0])
 		assert solution.shape == (2500, 1)
@@ -59,7 +59,7 @@ class TestPod(TestCase):
 		space.generate(mu, snap)
 		space.save("tests/test_datasets/podspace")
 		assert os.path.isfile("tests/test_datasets/podspace")
-		os.remove("tests/test_datasets/podspace")
+#os.remove("tests/test_datasets/podspace")
 
 	def test_load(self):
 		mu = Points()
@@ -77,7 +77,7 @@ class TestPod(TestCase):
 		space.save("tests/test_datasets/podspace")
 		another_space = Pod()
 		another_space.load("tests/test_datasets/podspace")
-		assert another_space.pod_basis.shape == (2500, 4)
+		assert another_space.state['pod_basis'].shape == (2500, 4)
 		os.remove("tests/test_datasets/podspace")
 
 	def test_loo_error(self):
@@ -109,3 +109,4 @@ class TestPod(TestCase):
 		snap.append("tests/test_datasets/matlab_03.vtk")
 		error = space.loo_error(mu, snap)
 		np.testing.assert_almost_equal(max(error), 0.149130165577, decimal=4)
+

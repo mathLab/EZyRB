@@ -21,8 +21,23 @@ class Pod(Space):
 
 	def __init__(self):
 
-		self.pod_basis = None
-		self.interpolator = None
+		self.state = dict()
+
+	@property
+	def pod_basis(self):
+		return self.state['pod_basis']
+
+	@pod_basis.setter
+	def pod_basis(self, pod_basis):
+		self.state['pod_basis'] = pod_basis
+
+	@property
+	def interpolator(self):
+		return self.state['interpolator']
+
+	@interpolator.setter
+	def interpolator(self, interpolator):
+		self.state['interpolator'] = interpolator
 
 	def generate(self, points, snapshots):
 		"""
@@ -53,27 +68,6 @@ class Pod(Space):
 		:param numpy.ndarray value: the new parametric point
 		"""
 		return self.pod_basis.dot(self.interpolator(value).T)
-
-	def save(self, filename):
-		"""
-		Save the space to a specific file.
-
-		:param string filename: the name of the file.
-		"""
-		np.savez(
-			filename, pod_basis=self.pod_basis, interpolator=self.interpolator
-		)
-		os.rename(filename + '.npz', filename)
-
-	def load(self, filename):
-		"""
-		Load the space from a specific file.
-
-		:param string filename: the name of the file.
-		"""
-		structure = np.load(filename)
-		self.pod_basis = structure["pod_basis"]
-		self.interpolator = structure["interpolator"]
 
 	@staticmethod
 	def loo_error(points, snapshots, func=np.linalg.norm):
