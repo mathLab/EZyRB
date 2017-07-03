@@ -105,7 +105,7 @@ def compute_normals(filename, datatype='cell'):
 	"""
 	points, cells = FileHandler(filename).get_geometry(get_cells=True)
 	normals = np.array([
-		self.normalize(self.normal(*points[cell][0:3])) for cell in cells
+		normalize(normal(*points[cell][0:3])) for cell in cells
 	])
 
 	if datatype is 'point':

@@ -1,6 +1,7 @@
 """
 Module with the base class for a generic space.
 """
+import pickle
 
 class Space(object):
 	"""
@@ -17,20 +18,14 @@ class Space(object):
 		"""
 		raise NotImplemented
 
-	@staticmethod
 	def save(self, filename):
 		"""
-		Abstract method to save the space to a specific file.
-
-		Not implemented, it has to be implemented in subclasses.
 		"""
-		raise NotImplemented
+		with open(filename, 'w') as f:
+			pickle.dump(self.state, f, pickle.HIGHEST_PROTOCOL)
 
-	@staticmethod
 	def load(self, filename):
 		"""
-		Abstract method to load the space from a specific file.
-
-		Not implemented, it has to be implemented in subclasses.
 		"""
-		raise NotImplemented
+		with open(filename, 'r') as f:
+			self.state = pickle.load(f)

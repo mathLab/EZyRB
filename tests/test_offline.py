@@ -81,7 +81,7 @@ class TestOffline(TestCase):
 		offline.generate_rb_space()
 		offline.save_rb_space('space')
 		assert os.path.isfile('space')
-		os.remove('space')
+#os.remove('space')
 
 	def test_loo_error(self):
 		conf_file = 'tests/test_datasets/mu.conf'

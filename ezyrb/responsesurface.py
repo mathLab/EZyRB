@@ -18,7 +18,15 @@ class ResponseSurface(Space):
 
 	def __init__(self):
 
-		self.interpolator = None
+		self.state = dict()
+	
+	@property
+	def interpolator(self):
+		return self.state['interpolator']
+
+	@interpolator.setter
+	def interpolator(self, interpolator):
+		self.state['interpolator'] = interpolator
 
 	def generate(self, points, snapshots):
 		"""
@@ -32,7 +40,7 @@ class ResponseSurface(Space):
 			computed.
 		"""
 		self.interpolator = interpolate.LinearNDInterpolator(
-			points.values.T, snapshots.values[0, :]
+			points.values.T, snapshots.values.T
 		)
 
 	def __call__(self, value):
@@ -43,24 +51,6 @@ class ResponseSurface(Space):
 		:param numpy.ndarray value: the new parametric point
 		"""
 		return self.interpolator(value)
-
-	def save(self, filename):
-		"""
-		Save the space to a specific file.
-
-		:param string filename: the name of the file.
-		"""
-		np.savez(filename, interpolator=self.interpolator)
-		os.rename(filename + '.npz', filename)
-
-	def load(self, filename):
-		"""
-		Load the space from a specific file.
-
-		:param string filename: the name of the file.
-		"""
-		structure = np.load(filename)
-		self.interpolator = structure["interpolator"]
 
 	@staticmethod
 	def loo_error(points, snapshots, func=np.linalg.norm):

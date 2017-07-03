@@ -45,8 +45,7 @@ class TestResponseSurface(TestCase):
 		snap.append("tests/test_datasets/matlab_03.vtk")
 		space.generate(mu, snap)
 		solution = space([0, 0])
-		print(solution)
-		assert solution.shape == (1, )
+		assert solution.shape == (1, 2500)
 
 	def test_save(self):
 		mu = Points()
