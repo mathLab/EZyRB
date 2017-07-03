@@ -71,10 +71,10 @@ To run tests locally:
 
 ## Authors and contributors
 **EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
-* [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com)
 * [Marco Tezzele](mailto:marcotez@gmail.com)
+* [Nicola Demo](mailto:demo.nicola@gmail.com)
 
-under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it).
+under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
 
 Contact us by email for further information or questions about **EZyRB**, or suggest pull requests. **EZyRB** is at an early development stage, so contributions improving either the code or the documentation are welcome!
 
