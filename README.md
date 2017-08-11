@@ -1,4 +1,4 @@
-# EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/117cf59ced024d8cb09a9131a9c3bec1/badge.svg)](https://www.quantifiedcode.com/app/project/117cf59ced024d8cb09a9131a9c3bec1)
+# EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/045ccb10d2ff470f98f8e2baac8bd5cd)](https://www.codacy.com/app/mathLab/EZyRB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/EZyRB&amp;utm_campaign=Badge_Grade) 
 Easy Reduced Basis method.
 
 ![Easy Reduced Basis method](readme/logo_EZyRB_small.png)
