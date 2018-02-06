@@ -1,12 +1,45 @@
-# EZyRB[![Build Status](https://travis-ci.org/mathLab/EZyRB.svg)](https://travis-ci.org/mathLab/EZyRB) [![Coverage Status](https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg?branch=master)](https://coveralls.io/github/mathLab/EZyRB?branch=master)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/045ccb10d2ff470f98f8e2baac8bd5cd)](https://www.codacy.com/app/mathLab/EZyRB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/EZyRB&amp;utm_campaign=Badge_Grade) 
-Easy Reduced Basis method.
+<p align="center">
+  <a href="http://github.com/mathLab/PyDMD/" target="_blank" >
+    <img alt="Python Dynamic Mode Decomposition" src="readme/logo_EZyRB_small.png" width="200" />
+  </a>
+</p>
+<p align="center">
+    <a href="https://github.com/mathLab/EZyRB/blob/master/LICENSE.rst" target="_blank">
+        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+    </a>
+    <a href="https://travis-ci.org/mathLab/EZyRB" target="_blank">
+        <img alt="Build Status" src="https://travis-ci.org/mathLab/EZyRB.svg">
+    </a>
+    <a href="https://coveralls.io/github/mathLab/EZyRB" target="_blank">
+        <img alt="Coverage Status" src="https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg">
+    </a>
+    <a class="badge-align" href="https://www.codacy.com/app/mathLab/EZyRB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/EZyRB&amp;utm_campaign=Badge_Grade">
+        <img src="https://api.codacy.com/project/badge/Grade/045ccb10d2ff470f98f8e2baac8bd5cd"/>
+    </a>
+</p>
 
-![Easy Reduced Basis method](readme/logo_EZyRB_small.png)
+
+**EZyRB**: Easy Reduced Basis method
+
+## Table of contents
+* [Description](#description)
+* [GUI](#graphical-user-interface)
+* [Dependencies and installation](#dependencies-and-installation)
+* [Documentation](#documentation)
+* [Testing](#testing)
+* [Examples](#examples)
+* [How to cite](#how-to-cite)
+<!--	* [References](#references)-->
+	* [Recent works with PyDMD](#recent-works-with-pydmd)
+* [Authors and contributors](#authors-and-contributors)
+* [How to contribute](#how-to-contribute)
+	* [Submitting a patch](#submitting-a-patch) 
+* [License](#license)
 
 ## Description
 **EZyRB** is a python library for the Model Order Reduction based on **baricentric triangulation** for the selection of the parameter points and on **Proper Orthogonal Decomposition** for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.
 
-See the **Examples** section below to have an idea of the potential of this package.
+See the [**Examples**](#examples) section below and the **Tutorials** to have an idea of the potential of this package.
 
 ## Graphical User Interface
 **EZyRB** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-3.ipynb). For the laziest, also a [video tutorial on YouTube](https://youtu.be/PPlRHu53VRA) is available.
@@ -69,14 +102,6 @@ To run tests locally:
 ```
 
 
-## Authors and contributors
-**EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
-* [Marco Tezzele](mailto:marcotez@gmail.com)
-* [Nicola Demo](mailto:demo.nicola@gmail.com)
-
-under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
-
-Contact us by email for further information or questions about **EZyRB**, or suggest pull requests. **EZyRB** is at an early development stage, so contributions improving either the code or the documentation are welcome!
 
 ## Examples
 
@@ -96,6 +121,29 @@ Here we show an applications taken from the **automotive** engineering fields
 <p align="center">
 <em>DrivAer model online evaluation: pressure (left) and wall shear stress (right) fields and errors.</em>
 </p>
+
+
+## How to cite
+If you use this package in your publications please cite the package as follows:
+
+```tex
+\bibitem{ezyrb}
+{EZyRB: Easy Reduced Basis method. Available at}: \href{https://github.com/mathLab/EZyRB}{https://github.com/mathLab/EZyRB}.
+```
+
+### Recent works with PyDMD
+Here there is a list of the scientific works involving **PyDMD** you can consult and/or cite. If you want to add one, please open a PR.
+
+
+## Authors and contributors
+**EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
+* [Marco Tezzele](mailto:marcotez@gmail.com)
+* [Nicola Demo](mailto:demo.nicola@gmail.com)
+
+under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
+
+Contact us by email for further information or questions about **EZyRB**, or suggest pull requests. **EZyRB** is at an early development stage, so contributions improving either the code or the documentation are welcome!
+
 
 ## How to contribute
 We'd love to accept your patches and contributions to this project. There are
