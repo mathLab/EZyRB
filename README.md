@@ -29,8 +29,7 @@
 * [Testing](#testing)
 * [Examples](#examples)
 * [How to cite](#how-to-cite)
-<!--	* [References](#references)-->
-	* [Recent works with PyDMD](#recent-works-with-pydmd)
+	* [Recent works with EZyRB](#recent-works-with-ezyrb)
 * [Authors and contributors](#authors-and-contributors)
 * [How to contribute](#how-to-contribute)
 	* [Submitting a patch](#submitting-a-patch) 
@@ -42,7 +41,7 @@
 See the [**Examples**](#examples) section below and the **Tutorials** to have an idea of the potential of this package.
 
 ## Graphical User Interface
-**EZyRB** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 3](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-3.ipynb). For the laziest, also a [video tutorial on YouTube](https://youtu.be/PPlRHu53VRA) is available.
+**EZyRB** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 4](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-4-gui.ipynb). For the laziest, also a [video tutorial on YouTube](https://youtu.be/PPlRHu53VRA) is available.
 
 <p align="center">
 <img src="readme/EZyRB_gui.png" alt>
@@ -131,14 +130,14 @@ If you use this package in your publications please cite the package as follows:
 {EZyRB: Easy Reduced Basis method. Available at}: \href{https://github.com/mathLab/EZyRB}{https://github.com/mathLab/EZyRB}.
 ```
 
-### Recent works with PyDMD
-Here there is a list of the scientific works involving **PyDMD** you can consult and/or cite. If you want to add one, please open a PR.
+### Recent works with EZyRB
+Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
 
 ## Authors and contributors
 **EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
-* [Marco Tezzele](mailto:marcotez@gmail.com)
 * [Nicola Demo](mailto:demo.nicola@gmail.com)
+* * [Marco Tezzele](mailto:marcotez@gmail.com)
 
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
 

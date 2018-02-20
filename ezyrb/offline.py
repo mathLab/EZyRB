@@ -148,7 +148,7 @@ class Offline(object):
 		:return: a numpy.array with the error estimated for each snapshot.
 		:rtype: numpy.ndarray
 		"""
-		return self.space.loo_error(self.mu, self.snapshots)
+		return self.space.loo_error(self.mu, self.snapshots, func)
 
 	def optimal_mu(self, error=None, k=1):
 		"""
