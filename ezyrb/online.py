@@ -8,26 +8,15 @@ from ezyrb.filehandler import FileHandler
 
 class Online(object):
     """
-    Documentation
+    Online phase
     
-    :param numpy.ndarray mu_value: values of the parameters for the new evaluation
-        of the output.
-    :param string output_name: suffix of the files containing the structures for
-        the online phase.
-    :param string directory: directory where the structures are stored.
-    :param bool is_scalar: boolean to set if the output of interest is a scalar
-        or a field.
+    :param string output_name: the name of the output of interest.
+    :param ezyrb.space space_type: the type of space used for the online phase.
+    :param string rb_space_filename: the name of the file where the space has
+        been saved.
     
-    :cvar numpy.ndarray mu_value: values of the parameters for the new
-        evaluation of the output.
-    :cvar string output_name: suffix of the files containing the structures for
-        the online phase.
-    :cvar string directory: directory where the structures are stored.
-    :cvar bool is_scalar: boolean to set if the output of interest is a scalar
-        or a field.
-    :cvar numpy.ndarray output: new evaluation of the output of interest.
-    :cvar string file_extension: extension of the output_file.
-
+    :cvar string output_name: the name of the output of interest.
+    :cvar ezyrb.space space_type: the type of space used for the online phase.
     """
 
     def __init__(self, output_name, space_type, rb_space_filename):
@@ -37,13 +26,30 @@ class Online(object):
 
     def run(self, value):
         """
-        This method runs the online evaluation.
+        This method evaluates the new point `value` in the parametric space and
+        returns the approximated solution.
+
+        :param array_like value: the point where the approximated solution has
+            to be evaluated.
+
+        :return: the approximated solution.
+        :rtype: numpy.ndarray
         """
         return self.space(value)
 
     def run_and_store(self, value, filename, geometry_file=None):
         """
-        This method runs the online evaluation.
+        This method evaluates the new point `value` in the parametric space and
+        save the approximated solution on `filename`. It is possible to pass as
+        optional argument the `geometry_file` that contains the topology on
+        which the solution is projected.
+
+        :param array_like value: the point where the approximated solution has
+            to be evaluated.
+        :param string filename: the file where the approximated solution is
+            projected.
+        :param string geometry_filename: the file that contains the topology to
+            use for the solution projection.
         """
         output = self.space(value)
         writer = FileHandler(filename)
