@@ -9,32 +9,31 @@ import ezyrb.matlabhandler
 
 
 class FileHandler(object):
-	"""
-	A base class for file handling.
+    """
+    A base class for file handling.
+    """
 
-	"""
+    def __new__(cls, filename):
+        """
+        Generic file handler. When you create a new instance of FilaHandler, it
+        returns specialized file handler (`MatlabHandler`, `VtkHandler`, ...)
+        instance.
+        
+        :param string filename: name of file
+        """
 
-	def __new__(cls, filename):
-		"""
-		Generic file handler. When you create a new instance of FilaHandler, it
-		returns specialized file handler (`MatlabHandler`, `VtkHandler`, ...)
-		instance.
-		
-		:param string filename: name of file
-		"""
+        if not isinstance(filename, str):
+            raise TypeError("Filename must be a string")
 
-		if not isinstance(filename, str):
-			raise TypeError("Filename must be a string")
+        ext = {
+            ".vtk": ezyrb.vtkhandler.VtkHandler,
+            ".stl": ezyrb.stlhandler.StlHandler,
+            ".mat": ezyrb.matlabhandler.MatlabHandler,
+        }
 
-		ext = {
-			".vtk": ezyrb.vtkhandler.VtkHandler,
-			".stl": ezyrb.stlhandler.StlHandler,
-			".mat": ezyrb.matlabhandler.MatlabHandler,
-		}
+        specialized_handler = ext.get(os.path.splitext(filename)[1])
 
-		specialized_handler = ext.get(os.path.splitext(filename)[1])
+        if specialized_handler is None:
+            raise TypeError("Not supported file")
 
-		if specialized_handler is None:
-			raise TypeError("Not supported file")
-
-		return specialized_handler(filename)
+        return specialized_handler(filename)

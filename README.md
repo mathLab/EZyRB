@@ -161,7 +161,7 @@ just a few small guidelines you need to follow.
      separate branches in order to ensure that a pull request only includes the
      commits related to that bug or feature.
 
-  3. To ensure properly formatted code, please make sure to use a tab of 4
+  3. To ensure properly formatted code, please make sure to use 4
      spaces to indent the code. The easy way is to run on your bash the provided
      script: ./code_formatter.sh. You should also run [pylint][] over your code.
      It's not strictly necessary that your code be completely "lint-free",

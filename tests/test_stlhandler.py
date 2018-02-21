@@ -11,92 +11,88 @@ stl_bin_file = 'tests/test_datasets/test_sphere_bin.stl'
 
 
 class TestStlHandler(TestCase):
-	def test_stl_instantiation(self):
-		stl_handler = sh.StlHandler(stl_file)
-		assert (isinstance(stl_handler, sh.StlHandler))
+    def test_stl_instantiation(self):
+        stl_handler = sh.StlHandler(stl_file)
+        assert (isinstance(stl_handler, sh.StlHandler))
 
-	def test_stl_instantiation(self):
-		stl_handler = fh.FileHandler(stl_file)
-		assert (isinstance(stl_handler, sh.StlHandler))
+    def test_stl_instantiation(self):
+        stl_handler = fh.FileHandler(stl_file)
+        assert (isinstance(stl_handler, sh.StlHandler))
 
-	def test_stl_failing_filename_type(self):
-		with self.assertRaises(TypeError):
-			fh.FileHandler(5.2)
+    def test_stl_failing_filename_type(self):
+        with self.assertRaises(TypeError):
+            fh.FileHandler(5.2)
 
-	def test_stl_shape_point(self):
-		mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
-		assert mesh_points.shape == (197, 3)
+    def test_stl_shape_point(self):
+        mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
+        assert mesh_points.shape == (197, 3)
 
-	def test_stl_shape_cell(self):
-		cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)[1]
-		assert len(cells) == 390
+    def test_stl_shape_cell(self):
+        cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)[1]
+        assert len(cells) == 390
 
-	def test_stl_coords_1(self):
-		mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
-		np.testing.assert_almost_equal(mesh_points[33, 0], 0.198186)
+    def test_stl_coords_1(self):
+        mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
+        np.testing.assert_almost_equal(mesh_points[33, 0], 0.198186)
 
-	def test_stl_get_geometry_coords_2(self):
-		mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
-		expected_coordinates = np.array([-0.25, -0.433012992, 0])
-		np.testing.assert_array_almost_equal(
-			mesh_points[147], expected_coordinates
-		)
+    def test_stl_get_geometry_coords_2(self):
+        mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
+        expected_coordinates = np.array([-0.25, -0.433012992, 0])
+        np.testing.assert_array_almost_equal(mesh_points[147],
+                                             expected_coordinates)
 
-	def test_stl_get_geometry_coords_3(self):
-		cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)[1]
-		expected_list = [19, 17, 20]
-		assert (expected_list == cells[17])
+    def test_stl_get_geometry_coords_3(self):
+        cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)[1]
+        expected_list = [19, 17, 20]
+        assert (expected_list == cells[17])
 
-	def test_stl_get_geometry_coords_5_bin(self):
-		mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
-		np.testing.assert_almost_equal(mesh_points[-1, 2], -0.45048400)
+    def test_stl_get_geometry_coords_5_bin(self):
+        mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
+        np.testing.assert_almost_equal(mesh_points[-1, 2], -0.45048400)
 
-	def test_stl_set_geometry_comparison(self):
-		mesh_points, cells = fh.FileHandler(stl_file).get_geometry(
-			get_cells=True
-		)
-		mesh_points[0] = [-40.2, -20.5, 60.9]
-		mesh_points[1] = [-40.2, -10.5, 60.9]
-		mesh_points[2] = [-40.2, -10.5, 60.9]
-		mesh_points[50] = [-40.2, -20.5, 60.9]
-		mesh_points[51] = [-40.2, -10.5, 60.9]
-		mesh_points[52] = [-40.2, -10.5, 60.9]
-		mesh_points[126] = [-40.2, -20.5, 60.9]
-		mesh_points[127] = [-40.2, -10.5, 60.9]
-		mesh_points[128] = [-40.2, -10.5, 60.9]
+    def test_stl_set_geometry_comparison(self):
+        mesh_points, cells = fh.FileHandler(stl_file).get_geometry(
+            get_cells=True)
+        mesh_points[0] = [-40.2, -20.5, 60.9]
+        mesh_points[1] = [-40.2, -10.5, 60.9]
+        mesh_points[2] = [-40.2, -10.5, 60.9]
+        mesh_points[50] = [-40.2, -20.5, 60.9]
+        mesh_points[51] = [-40.2, -10.5, 60.9]
+        mesh_points[52] = [-40.2, -10.5, 60.9]
+        mesh_points[126] = [-40.2, -20.5, 60.9]
+        mesh_points[127] = [-40.2, -10.5, 60.9]
+        mesh_points[128] = [-40.2, -10.5, 60.9]
 
-		outfilename = 'tests/test_datasets/test_sphere_out.stl'
-		outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
+        outfilename = 'tests/test_datasets/test_sphere_out.stl'
+        outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
 
-		fh.FileHandler(outfilename).set_geometry(mesh_points, cells)
-		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-		os.remove(outfilename)
+        fh.FileHandler(outfilename).set_geometry(mesh_points, cells)
+        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        os.remove(outfilename)
 
-	def test_stl_set_geometry_binary_from_binary(self):
-		mesh_points, cells = fh.FileHandler(stl_bin_file).get_geometry(
-			get_cells=True
-		)
-		mesh_points[0] = [-40.2, -20.5, 60.9]
-		mesh_points[1] = [-40.2, -10.5, 60.9]
-		mesh_points[2] = [-40.2, -10.5, 60.9]
-		mesh_points[50] = [-40.2, -20.5, 60.9]
-		mesh_points[51] = [-40.2, -10.5, 60.9]
-		mesh_points[52] = [-40.2, -10.5, 60.9]
-		mesh_points[126] = [-40.2, -20.5, 60.9]
-		mesh_points[127] = [-40.2, -10.5, 60.9]
-		mesh_points[128] = [-40.2, -10.5, 60.9]
+    def test_stl_set_geometry_binary_from_binary(self):
+        mesh_points, cells = fh.FileHandler(stl_bin_file).get_geometry(
+            get_cells=True)
+        mesh_points[0] = [-40.2, -20.5, 60.9]
+        mesh_points[1] = [-40.2, -10.5, 60.9]
+        mesh_points[2] = [-40.2, -10.5, 60.9]
+        mesh_points[50] = [-40.2, -20.5, 60.9]
+        mesh_points[51] = [-40.2, -10.5, 60.9]
+        mesh_points[52] = [-40.2, -10.5, 60.9]
+        mesh_points[126] = [-40.2, -20.5, 60.9]
+        mesh_points[127] = [-40.2, -10.5, 60.9]
+        mesh_points[128] = [-40.2, -10.5, 60.9]
 
-		outfilename = 'tests/test_datasets/test_sphere_out_bin.stl'
-		outfilename_expected = 'tests/test_datasets/test_sphere_out_bin_true.stl'
+        outfilename = 'tests/test_datasets/test_sphere_out_bin.stl'
+        outfilename_expected = 'tests/test_datasets/test_sphere_out_bin_true.stl'
 
-		fh.FileHandler(outfilename).set_geometry(
-			mesh_points, cells, write_bin=True
-		)
-		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-		os.remove(outfilename)
+        fh.FileHandler(outfilename).set_geometry(
+            mesh_points, cells, write_bin=True)
+        self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+        os.remove(outfilename)
 
-	# TODO Check these test: it fails but it shouldn't do
-	'''
+    # TODO Check these test: it fails but it shouldn't do
+    '''
 	def test_stl_set_geometry_binary_from_ascii(self):
 		mesh_points, cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)
 		mesh_points[0] = [-40.2, -20.5, 60.9]
