@@ -18,7 +18,6 @@ class TestPackage(TestCase):
         import ezyrb as ez
         vh = ez.vtkhandler.VtkHandler('inexistent.vtk')
 
-
     def test_modules_name(self):
         # it checks that __all__ includes all the .py files in ezyrb folder
         import ezyrb

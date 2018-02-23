@@ -169,9 +169,8 @@ class Mapper(object):
             coordinates, self._n_neighbors)
 
         return np.concatenate(
-            (np.array(id_neighbour).reshape(
-                (-1, self._n_neighbors)), np.array(distance).reshape(
-                    (-1, self._n_neighbors))),
+            (np.array(id_neighbour).reshape((-1, self._n_neighbors)),
+             np.array(distance).reshape((-1, self._n_neighbors))),
             axis=1)
 
     @property

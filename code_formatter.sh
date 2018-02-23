@@ -45,7 +45,7 @@ done
 # - second, convert 4 spaces to tab character
 # - third, you can look a very pretty code 
 for file in $python_files; do
-	echo "Making beatiful $file..."
+	echo "Making beautiful $file..."
 	[[ ! -f $file ]] && echo "$file does not exist; $0 -h for more info" && exit
 	
 	yapf --style='{

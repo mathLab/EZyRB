@@ -2,7 +2,6 @@
 Derived module from filehandler.py to handle Vtk files.
 """
 import numpy as np
-import scipy.io as sio
 import vtk
 import vtk.util.numpy_support as ns
 import os
@@ -18,7 +17,6 @@ class VtkHandler(object):
     :cvar string _filename: name of file to handle
     :cvar vtkPolyData _cached_data: private attribute to store the last polydata
         processed
-    
     """
 
     def __init__(self, filename):
@@ -169,8 +167,8 @@ class VtkHandler(object):
             extracted_data = data.GetCellData().GetArray(output_name)
 
         if extracted_data is None:
-            raise RuntimeError(
-                datatype + " data has no " + output_name + " field.")
+            raise RuntimeError(datatype + " data has no " + output_name +
+                               " field.")
 
         output_values = ns.vtk_to_numpy(extracted_data)
 

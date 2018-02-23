@@ -13,22 +13,11 @@ The class provides methods for:
 """
 
 import os
-import glob
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy import interpolate
-from ezyrb.filehandler import FileHandler
 from ezyrb.pod import Pod
 from ezyrb.points import Points
 from ezyrb.snapshots import Snapshots
 from ezyrb.utilities import simplex_volume
-
-##
-## Python 2 vs Python 3 conflicts
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
 
 
 class Offline(object):
@@ -63,13 +52,15 @@ class Offline(object):
         """
         Initialize the database with the passed parameter values and snapshot
         files: the *i*-th parameter has to be the parametric point of the
-        solution stored in the *i*-th file. 
+        solution stored in the *i*-th file.
 
         :param array_like values: the list of parameter values.
         :param array_like files: the list of the solution files.
         """
-        [self.mu.append(mu) for mu in values]
-        [self.snapshots.append(fl) for fl in files]
+        for mu in values:
+            self.mu.append(mu)
+        for fl in files:
+            self.snapshots.append(fl)
 
     def init_database_from_file(self, filename):
         """
@@ -182,6 +173,7 @@ class Offline(object):
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(
+                    worst_tria_pts, axis=0, weights=worst_tria_err))
 
         return barycentric_point

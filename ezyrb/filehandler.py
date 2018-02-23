@@ -2,7 +2,6 @@
 Base module with the base class for reading and writing different files.
 """
 import os
-import sys
 import ezyrb.stlhandler
 import ezyrb.vtkhandler
 import ezyrb.matlabhandler
