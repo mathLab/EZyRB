@@ -96,7 +96,7 @@ class TestStlHandler(TestCase):
         os.remove(outfilename)
 
     # TODO Check these test: it fails but it shouldn't do
-    
+
     # def test_stl_set_geometry_binary_from_ascii(self):
     #     mesh_points, cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)
     #     mesh_points[0] = [-40.2, -20.5, 60.9]
@@ -136,4 +136,3 @@ class TestStlHandler(TestCase):
     #     mesh_points2, cells2 = stl_handler.get_geometry(outfilename_expected, get_cells=True)
     #     self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
     #     os.remove(outfilename)
-    

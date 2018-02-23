@@ -2,7 +2,6 @@
 Utilities for the online evaluation of the output of interest
 """
 import numpy as np
-import os
 from ezyrb.filehandler import FileHandler
 
 

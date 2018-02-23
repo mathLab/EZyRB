@@ -1,7 +1,7 @@
 __all__ = [
-    'filehandler', 'matlabhandler', 'vtkhandler', 'pod', 'online',
-    'stlhandler', 'mapper', 'offline', 'utilities', 'points', 'snapshots',
-    'space', 'responsesurface'
+    'filehandler', 'matlabhandler', 'vtkhandler', 'pod', 'online', 'stlhandler',
+    'mapper', 'offline', 'utilities', 'points', 'snapshots', 'space',
+    'responsesurface'
 ]
 
 try:

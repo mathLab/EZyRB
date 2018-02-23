@@ -5,7 +5,6 @@ Class for the response surface methodology.
 from ezyrb.space import Space
 from scipy import interpolate
 import numpy as np
-import os
 
 
 class ResponseSurface(Space):
@@ -39,8 +38,8 @@ class ResponseSurface(Space):
         :param Points points: the parametric points where snapshots were
             computed.
         """
-        self.interpolator = interpolate.LinearNDInterpolator(
-            points.values.T, snapshots.values.T)
+        self.interpolator = interpolate.LinearNDInterpolator(points.values.T,
+                                                             snapshots.values.T)
 
     def __call__(self, value):
         """
