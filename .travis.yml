@@ -6,7 +6,9 @@ matrix:
         - os: linux
           python: 2.7
           env: TOXENV=py27
-
+        - os: osx
+          language: generic
+          env: TOXENV=py27
 
 before_script:
     - "export DISPLAY=:99.0"
@@ -34,6 +36,7 @@ before_install:
     - conda update -q conda
     # Useful for debugging any issues with conda
     - conda info -a
+    - conda config --add channels conda-forge
 
 install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -49,7 +52,8 @@ install:
     - pip install coverage
     - python setup.py install
 
-script: coverage run test.py
+script: 
+    - coverage run test.py
 
 after_success:
     - coveralls
