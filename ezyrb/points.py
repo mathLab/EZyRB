@@ -4,7 +4,7 @@ Module for the Points class.
 It provides an easy interface to collect parametric points.
 """
 import numpy as np
-import scipy
+from scipy.spatial import Delaunay
 
 
 class Points(object):
@@ -64,4 +64,4 @@ class Points(object):
 
         :type: scipy.spatial.Delaunay
         """
-        return scipy.spatial.Delaunay(self.values.T)
+        return Delaunay(self.values.T)

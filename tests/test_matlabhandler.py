@@ -26,6 +26,10 @@ class TestMatlabHandler(TestCase):
         with self.assertRaises(TypeError):
             output = fh.FileHandler(mat_file).get_dataset(5.2)
 
+    def test_mat_get_dataset_wrong_filename(self):
+        with self.assertRaises(RuntimeError):
+            mesh_points = fh.FileHandler('nonexistent.mat').get_dataset('output')
+
     def test_mat_get_dataset_shape(self):
         output = fh.FileHandler(mat_file).get_dataset('output')
         assert output.shape == (64, 1)
