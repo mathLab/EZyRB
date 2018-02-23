@@ -32,13 +32,13 @@ class TestPoints(TestCase):
         pts.append([3, 4, 5])
         assert pts.size == 2
 
-    def test_dimension(self):
+    def test_dimension_1(self):
         pts = Points()
         pts.append([0, 1, 2])
         pts.append([3, 4, 5])
         assert pts.dimension == 3
 
-    def test_dimension(self):
+    def test_dimension_2(self):
         pts = Points()
         pts.append([0, 1, 2])
         pts.append([3, 4, 5])

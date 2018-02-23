@@ -159,7 +159,7 @@ class VtkHandler(object):
         :rtype: numpy.ndarray
         """
         if datatype not in ['cell', 'point']:
-            raise RuntimeError("datatype MUST be 'cell' or 'point'")
+            raise ValueError("datatype MUST be 'cell' or 'point'")
 
         data = self._read_polydata()
 

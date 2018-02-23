@@ -27,6 +27,23 @@ class TestVtkHandler(TestCase):
             output = fh.FileHandler(
                 'tests/test_datasets/openfoam_output_test.vtk').get_dataset(5.2)
 
+    def test_vtk_get_geometry_wrong_filename(self):
+        with self.assertRaises(RuntimeError):
+            mesh_points = fh.FileHandler('nonexistent.vtk').get_geometry()
+
+    def test_vtk_get_dataset_wrong_filename(self):
+        with self.assertRaises(RuntimeError):
+            mesh_points = fh.FileHandler('nonexistent.vtk').get_dataset('output')
+
+    def test_vtk_get_dataset_wrong_datatype(self):
+        with self.assertRaises(ValueError):
+            mesh_points = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk').get_dataset('Pressure', 'cells')
+
+    def test_vtk_set_dataset_wrong_datatype(self):
+        mesh_points = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk').get_dataset('Pressure')
+        with self.assertRaises(ValueError):
+            fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk').set_dataset(mesh_points, 'Pressure', 'faces')
+
     def test_vtk_parse_shape(self):
         output = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk'
                                 ).get_dataset('Pressure')

@@ -11,11 +11,11 @@ stl_bin_file = 'tests/test_datasets/test_sphere_bin.stl'
 
 
 class TestStlHandler(TestCase):
-    def test_stl_instantiation(self):
+    def test_stl_instantiation_1(self):
         stl_handler = sh.StlHandler(stl_file)
         assert (isinstance(stl_handler, sh.StlHandler))
 
-    def test_stl_instantiation(self):
+    def test_stl_instantiation_2(self):
         stl_handler = fh.FileHandler(stl_file)
         assert (isinstance(stl_handler, sh.StlHandler))
 
@@ -34,6 +34,10 @@ class TestStlHandler(TestCase):
     def test_stl_coords_1(self):
         mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
         np.testing.assert_almost_equal(mesh_points[33, 0], 0.198186)
+
+    def test_stl_get_geometry_wrong_filename(self):
+        with self.assertRaises(RuntimeError):
+            mesh_points = fh.FileHandler('nonexistent.stl').get_geometry()
 
     def test_stl_get_geometry_coords_2(self):
         mesh_points = fh.FileHandler(stl_file).get_geometry()[0]
@@ -92,45 +96,44 @@ class TestStlHandler(TestCase):
         os.remove(outfilename)
 
     # TODO Check these test: it fails but it shouldn't do
-    '''
-	def test_stl_set_geometry_binary_from_ascii(self):
-		mesh_points, cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)
-		mesh_points[0] = [-40.2, -20.5, 60.9]
-		mesh_points[1] = [-40.2, -10.5, 60.9]
-		mesh_points[2] = [-40.2, -10.5, 60.9]
-		mesh_points[50] = [-40.2, -20.5, 60.9]
-		mesh_points[51] = [-40.2, -10.5, 60.9]
-		mesh_points[52] = [-40.2, -10.5, 60.9]
-		mesh_points[126] = [-40.2, -20.5, 60.9]
-		mesh_points[127] = [-40.2, -10.5, 60.9]
-		mesh_points[128] = [-40.2, -10.5, 60.9]
+    
+    # def test_stl_set_geometry_binary_from_ascii(self):
+    #     mesh_points, cells = fh.FileHandler(stl_file).get_geometry(get_cells=True)
+    #     mesh_points[0] = [-40.2, -20.5, 60.9]
+    #     mesh_points[1] = [-40.2, -10.5, 60.9]
+    #     mesh_points[2] = [-40.2, -10.5, 60.9]
+    #     mesh_points[50] = [-40.2, -20.5, 60.9]
+    #     mesh_points[51] = [-40.2, -10.5, 60.9]
+    #     mesh_points[52] = [-40.2, -10.5, 60.9]
+    #     mesh_points[126] = [-40.2, -20.5, 60.9]
+    #     mesh_points[127] = [-40.2, -10.5, 60.9]
+    #     mesh_points[128] = [-40.2, -10.5, 60.9]
 
-		outfilename = 'tests/test_datasets/test_sphere_out_bin.stl'
-		outfilename_expected = 'tests/test_datasets/test_sphere_out_bin_true.stl'
+    #     outfilename = 'tests/test_datasets/test_sphere_out_bin.stl'
+    #     outfilename_expected = 'tests/test_datasets/test_sphere_out_bin_true.stl'
 
-		fh.FileHandler(outfilename).set_geometry(mesh_points, cells, write_bin=True)
-		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-		os.remove(outfilename)
+    #     fh.FileHandler(outfilename).set_geometry(mesh_points, cells, write_bin=True)
+    #     self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+    #     os.remove(outfilename)
 
-	def test_stl_set_geometry_ascii_from_binary(self):
-		stl_handler = sh.StlHandler()
-		mesh_points, cells = stl_handler.get_geometry(stl_bin_file,
-				get_cells=True)
-		mesh_points[0] = [-40.2, -20.5, 60.9]
-		mesh_points[1] = [-40.2, -10.5, 60.9]
-		mesh_points[2] = [-40.2, -10.5, 60.9]
-		mesh_points[50] = [-40.2, -20.5, 60.9]
-		mesh_points[51] = [-40.2, -10.5, 60.9]
-		mesh_points[52] = [-40.2, -10.5, 60.9]
-		mesh_points[126] = [-40.2, -20.5, 60.9]
-		mesh_points[127] = [-40.2, -10.5, 60.9]
-		mesh_points[128] = [-40.2, -10.5, 60.9]
+    # def test_stl_set_geometry_ascii_from_binary(self):
+    #     stl_handler = sh.StlHandler(stl_bin_file)
+    #     mesh_points, cells = stl_handler.get_geometry(get_cells=True)
+    #     mesh_points[0] = [-40.2, -20.5, 60.9]
+    #     mesh_points[1] = [-40.2, -10.5, 60.9]
+    #     mesh_points[2] = [-40.2, -10.5, 60.9]
+    #     mesh_points[50] = [-40.2, -20.5, 60.9]
+    #     mesh_points[51] = [-40.2, -10.5, 60.9]
+    #     mesh_points[52] = [-40.2, -10.5, 60.9]
+    #     mesh_points[126] = [-40.2, -20.5, 60.9]
+    #     mesh_points[127] = [-40.2, -10.5, 60.9]
+    #     mesh_points[128] = [-40.2, -10.5, 60.9]
 
-		outfilename = 'tests/test_datasets/test_sphere_out.stl'
-		outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
+    #     outfilename = 'tests/test_datasets/test_sphere_out.stl'
+    #     outfilename_expected = 'tests/test_datasets/test_sphere_out_true.stl'
 
-		stl_handler.set_geometry(outfilename, mesh_points, cells, write_bin=False)
-		mesh_points2, cells2 = stl_handler.get_geometry(outfilename_expected, get_cells=True)
-		self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
-		os.remove(outfilename)
-	'''
+    #     stl_handler.set_geometry(outfilename, mesh_points, cells, write_bin=False)
+    #     mesh_points2, cells2 = stl_handler.get_geometry(outfilename_expected, get_cells=True)
+    #     self.assertTrue(filecmp.cmp(outfilename, outfilename_expected))
+    #     os.remove(outfilename)
+    
