@@ -3,12 +3,13 @@ Module for the generation of the reduced space by using the Proper Orthogonal
 Decomposition
 """
 
-from ezyrb.space import Space
-from scipy import interpolate
+from ezyrb.parametricspace import ParametricSpace
+from scipy.interpolate import LinearNDInterpolator
 import numpy as np
+import os
 
 
-class Pod(Space):
+class PODInterpolation(ParametricSpace):
     """
     Documentation
 
@@ -20,25 +21,14 @@ class Pod(Space):
 
     def __init__(self):
 
-        self.state = dict()
+        self._interpolator = None
+        self._pod_basis = None
 
     @property
     def pod_basis(self):
-        return self.state['pod_basis']
+        return self._pod_basis
 
-    @pod_basis.setter
-    def pod_basis(self, pod_basis):
-        self.state['pod_basis'] = pod_basis
-
-    @property
-    def interpolator(self):
-        return self.state['interpolator']
-
-    @interpolator.setter
-    def interpolator(self, interpolator):
-        self.state['interpolator'] = interpolator
-
-    def generate(self, points, snapshots):
+    def generate(self, points, snapshots, interpolator=LinearNDInterpolator):
         """
         Generate the reduced space using the proper orthogonal decomposition:
         the matrix that contains the `snapshots` computed for the `points` is
@@ -46,15 +36,15 @@ class Pod(Space):
         is built combining this basis.
 
         :param Snapshots snapshots: the snapshots.
-        :param Points points: the parametric points where snapshots were
+        :param Points points: the parametric points where snapshots were 
             computed.
         """
-        eig_vec = np.linalg.svd(snapshots.weighted, full_matrices=False)[0]
+        eig_vec, eig_val = np.linalg.svd(
+            snapshots.weighted, full_matrices=False)[0:2]
 
-        self.pod_basis = np.sqrt(snapshots.weights) * eig_vec
-        coefs = self.pod_basis.T.dot(snapshots.weighted)
-        self.interpolator = interpolate.LinearNDInterpolator(points.values.T,
-                                                             coefs)
+        self._pod_basis = np.sqrt(snapshots.weights) * eig_vec
+        coefs = self._pod_basis.T.dot(snapshots.weighted)
+        self._interpolator = interpolator(points.values.T, coefs)
 
     def __call__(self, value):
         """
@@ -63,7 +53,7 @@ class Pod(Space):
 
         :param numpy.ndarray value: the new parametric point
         """
-        return self.pod_basis.dot(self.interpolator(value).T)
+        return self._pod_basis.dot(self._interpolator(value).T)
 
     @staticmethod
     def loo_error(points, snapshots, func=np.linalg.norm):
@@ -83,16 +73,17 @@ class Pod(Space):
             remaining_index = list(range(j)) + list(range(j + 1, points.size))
             remaining_snaps = snapshots[remaining_index]
 
-            eigvec = np.linalg.svd(remaining_snaps.weighted,
-                                   full_matrices=False)[0]
+            eigvec = np.linalg.svd(
+                remaining_snaps.weighted, full_matrices=False)[0]
 
             loo_basis = np.sqrt(remaining_snaps.weights) * eigvec
 
-            projection = np.sum(np.array([
-                np.dot(snapshots[j].weighted, basis) * basis
-                for basis in loo_basis.T
-            ]),
-                                axis=0)
+            projection = np.sum(
+                np.array([
+                    np.dot(snapshots[j].weighted, basis) * basis
+                    for basis in loo_basis.T
+                ]),
+                axis=0)
 
             error = (snapshots[j].values - projection) * snapshots.weights
             loo_error[j] = func(error) / func(snapshots[0].values)
