@@ -2,12 +2,13 @@
 Class for the response surface methodology.
 """
 
-from ezyrb.space import Space
-from scipy import interpolate
+from ezyrb.parametricspace import ParametricSpace
+from scipy.interpolate import LinearNDInterpolator
 import numpy as np
+import os
 
 
-class ResponseSurface(Space):
+class Interpolation(ParametricSpace):
     """
     Documentation
 
@@ -17,17 +18,9 @@ class ResponseSurface(Space):
 
     def __init__(self):
 
-        self.state = dict()
+        self._interpolator = None
 
-    @property
-    def interpolator(self):
-        return self.state['interpolator']
-
-    @interpolator.setter
-    def interpolator(self, interpolator):
-        self.state['interpolator'] = interpolator
-
-    def generate(self, points, snapshots):
+    def generate(self, points, snapshots, interpolator=LinearNDInterpolator):
         """
         Generate the reduced space using the proper orthogonal decomposition:
         the matrix that contains the `snapshots` computed for the `points` is
@@ -38,12 +31,11 @@ class ResponseSurface(Space):
         :param Points points: the parametric points where snapshots were
             computed.
         """
-        self.interpolator = interpolate.LinearNDInterpolator(points.values.T,
-                                                             snapshots.values.T)
+        self.interpolator = interpolator(points.values.T, snapshots.values.T)
 
     def __call__(self, value):
         """
-        Project a new parametric point onto the reduced space and a new
+        Project a new parametric point onto the space and a new
         approximated solution is provided.
 
         :param numpy.ndarray value: the new parametric point
@@ -69,7 +61,7 @@ class ResponseSurface(Space):
             remaining_snaps = snapshots[remaining_index]
             remaining_pts = points[remaining_index]
 
-            subspace = ResponseSurface()
+            subspace = Interpolation()
             subspace.generate(remaining_pts, remaining_snaps)
             projection = subspace(points[j].values)
             if projection is not float:

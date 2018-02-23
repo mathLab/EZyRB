@@ -4,7 +4,7 @@ Module with the base class for a generic space.
 import pickle
 
 
-class Space(object):
+class ParametricSpace(object):
     """
     Abstract class.
     """
@@ -24,10 +24,11 @@ class Space(object):
         """
         """
         with open(filename, 'w') as f:
-            pickle.dump(self.state, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
-    def load(self, filename):
+    @staticmethod
+    def load(filename):
         """
         """
         with open(filename, 'r') as f:
-            self.state = pickle.load(f)
+            return pickle.load(f)
