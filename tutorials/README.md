@@ -11,9 +11,6 @@ In this tutorial we show the workflow for the online evaluation of the output of
 #### [Tutorial 3 - Output interpolation](tutorial-3-interpolation.ipynb)
 Here we show how use the module mapper in order to interpolate the solutions (computed on meshes with different dimensions) on a new fixed dimension mesh.
 
-#### [Tutorial 4 - GUI](tutorial-4-gui.ipynb)
-Here we show the typical workflow for the model order reduction using the GUI.
-
 
 #### More to come...
 We plan to add more tutorials but the time is often against us. If you want to contribute with a notebook on a feature not covered yet we will be very happy and give you support on editing!

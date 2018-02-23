@@ -1,5 +1,5 @@
 __all__ = [
-    'filehandler', 'matlabhandler', 'vtkhandler', 'pod', 'gui', 'online',
+    'filehandler', 'matlabhandler', 'vtkhandler', 'pod', 'online',
     'stlhandler', 'mapper', 'offline', 'utilities', 'points', 'snapshots',
     'space', 'responsesurface'
 ]
@@ -11,7 +11,6 @@ try:
     from . import vtkhandler
     from . import stlhandler
     from . import pod
-    from . import gui
     from . import online
     from . import offline
     from . import mapper
@@ -25,7 +24,6 @@ except:
     import vtkhandler
     import stlhandler
     import pod
-    import gui
     import online
     import offline
     import utilities

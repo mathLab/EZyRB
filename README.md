@@ -23,7 +23,6 @@
 
 ## Table of contents
 * [Description](#description)
-* [GUI](#graphical-user-interface)
 * [Dependencies and installation](#dependencies-and-installation)
 * [Documentation](#documentation)
 * [Testing](#testing)
@@ -39,18 +38,6 @@
 **EZyRB** is a python library for the Model Order Reduction based on **baricentric triangulation** for the selection of the parameter points and on **Proper Orthogonal Decomposition** for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.
 
 See the [**Examples**](#examples) section below and the **Tutorials** to have an idea of the potential of this package.
-
-## Graphical User Interface
-**EZyRB** is now provided with a very basic Graphical User Interface (GUI) that, in Ubuntu environment, looks like the one depicted below. This feature can be easily used even by the pythonists beginners with not much effort. Just see the [tutorial 4](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-4-gui.ipynb). For the laziest, also a [video tutorial on YouTube](https://youtu.be/PPlRHu53VRA) is available.
-
-<p align="center">
-<img src="readme/EZyRB_gui.png" alt>
-</p>
-<p align="center">
-<em>EZyRB GUI: how it appears when it pops up.</em>
-</p>
-
-Up to now, EZyRB GUI works on linux and Mac OS X computers.
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`.
@@ -137,7 +124,7 @@ Here there is a list of the scientific works involving **EZyRB** you can consult
 ## Authors and contributors
 **EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
 * [Nicola Demo](mailto:demo.nicola@gmail.com)
-* * [Marco Tezzele](mailto:marcotez@gmail.com)
+* [Marco Tezzele](mailto:marcotez@gmail.com)
 
 under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it). We thank [Filippo Salmoiraghi](mailto:filippo.salmoiraghi@gmail.com) for the original idea behind this package and the major contributions.
 

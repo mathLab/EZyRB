@@ -12,7 +12,6 @@ Code Documentation
    matlabhandler
    vtkhandler
    stlhandler
-   gui
    online
    offline
    mapper
