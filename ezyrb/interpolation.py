@@ -34,7 +34,7 @@ class Interpolation(ParametricSpace):
             computed.
         """
         self._interpolator = LinearNDInterpolator(points.values.T,
-                snapshots.values.T)
+                                                  snapshots.values.T)
 
     def __call__(self, value):
         """
@@ -43,7 +43,7 @@ class Interpolation(ParametricSpace):
 
         :param numpy.ndarray value: the new parametric point
         """
-        return self.interpolator(value)
+        return self._interpolator(value)
 
     @staticmethod
     def loo_error(points, snapshots, func=np.linalg.norm):

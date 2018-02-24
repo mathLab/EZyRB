@@ -17,6 +17,7 @@ try:
     from . import points
     from . import snapshots
     from . import utilities
+    from .ndinterpolator import rbf
 except:
     import filehandler
     import matlabhandler
@@ -30,3 +31,4 @@ except:
     import mapper
     import points
     import snapshots
+    import ndinterpolator.rbf
