@@ -4,7 +4,7 @@ Module with the base class for a generic space.
 import pickle
 
 
-class Space(object):
+class ParametricSpace(object):
     """
     Abstract class.
     """
@@ -22,12 +22,21 @@ class Space(object):
 
     def save(self, filename):
         """
+        Save the space on file.
+
+        :param str filename: the filename where the space has to be saved.
         """
         with open(filename, 'w') as f:
-            pickle.dump(self.state, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
-    def load(self, filename):
+    @staticmethod
+    def load(filename):
         """
+        Load the space from a file.
+
+        :param str filename: the filename where the space has been saved.
+        :return: the space instance.
+        :return: ezyrb.parametricspace.ParametricSpace
         """
         with open(filename, 'r') as f:
-            self.state = pickle.load(f)
+            return pickle.load(f)

@@ -3,58 +3,53 @@ Module for the generation of the reduced space by using the Proper Orthogonal
 Decomposition
 """
 
-from ezyrb.space import Space
-from scipy import interpolate
+from ezyrb.parametricspace import ParametricSpace
+from scipy.interpolate import LinearNDInterpolator
 import numpy as np
 
 
-class Pod(Space):
+class PODInterpolation(ParametricSpace):
     """
     Documentation
 
-    :cvar numpy.ndarray pod_basis: basis extracted from the proper orthogonal
+    :cvar numpy.ndarray _pod_basis: basis extracted from the proper orthogonal
         decomposition.
-    :cvar scipy.interpolate.LinearNDInterpolator interpolator: interpolating
+    :cvar object _interpolator: interpolating
         object for the pod basis interpolation
     """
 
     def __init__(self):
 
-        self.state = dict()
+        self._pod_basis = None
+        self._interpolator = None
 
     @property
     def pod_basis(self):
-        return self.state['pod_basis']
-
-    @pod_basis.setter
-    def pod_basis(self, pod_basis):
-        self.state['pod_basis'] = pod_basis
+        return self._pod_basis
 
     @property
     def interpolator(self):
-        return self.state['interpolator']
+        return self._interpolator
 
-    @interpolator.setter
-    def interpolator(self, interpolator):
-        self.state['interpolator'] = interpolator
-
-    def generate(self, points, snapshots):
+    def generate(self, points, snapshots, interpolator=LinearNDInterpolator):
         """
-        Generate the reduced space using the proper orthogonal decomposition:
-        the matrix that contains the `snapshots` computed for the `points` is
-        decomposed using SVD tecnique to obtain the POD basis. The interpolator
-        is built combining this basis.
+        Generate the reduced space using the proper orthogonal decomposition
+        interpolation: the matrix that contains the `snapshots` computed for
+        the `points` is decomposed using SVD tecnique to obtain the POD basis.
+        The POD basis are used to compute the modal coefficients. The
+        interpolator combines this coefficients.
 
         :param Snapshots snapshots: the snapshots.
         :param Points points: the parametric points where snapshots were
             computed.
+        :param objec interpolator: the interpolator used to interpolate the
+            coefficients.
         """
         eig_vec = np.linalg.svd(snapshots.weighted, full_matrices=False)[0]
 
-        self.pod_basis = np.sqrt(snapshots.weights) * eig_vec
-        coefs = self.pod_basis.T.dot(snapshots.weighted)
-        self.interpolator = interpolate.LinearNDInterpolator(points.values.T,
-                                                             coefs)
+        self._pod_basis = np.sqrt(snapshots.weights) * eig_vec
+        coefs = self._pod_basis.T.dot(snapshots.weighted)
+        self._interpolator = LinearNDInterpolator(points.values.T, coefs)
 
     def __call__(self, value):
         """

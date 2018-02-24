@@ -1,16 +1,16 @@
 __all__ = [
-    'filehandler', 'matlabhandler', 'vtkhandler', 'pod', 'online', 'stlhandler',
-    'mapper', 'offline', 'utilities', 'points', 'snapshots', 'space',
-    'responsesurface'
+    'filehandler', 'matlabhandler', 'vtkhandler', 'podinterpolation', 'online',
+    'stlhandler', 'mapper', 'offline', 'utilities', 'points', 'snapshots',
+    'parametricspace', 'interpolation', 'rbf'
 ]
 
 try:
     from . import filehandler
     from . import matlabhandler
-    from . import responsesurface
+    from . import interpolation
     from . import vtkhandler
     from . import stlhandler
-    from . import pod
+    from . import podinterpolation
     from . import online
     from . import offline
     from . import mapper
@@ -20,10 +20,10 @@ try:
 except:
     import filehandler
     import matlabhandler
-    import responsesurface
+    import interpolation
     import vtkhandler
     import stlhandler
-    import pod
+    import podinterpolation
     import online
     import offline
     import utilities

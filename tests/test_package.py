@@ -33,4 +33,6 @@ class TestPackage(TestCase):
             if file_name != '__init__' and file_ext == '.py':
                 f.append(file_name)
 
+        print(f)
+        print(package.__all__)
         assert (sorted(package.__all__) == sorted(f))
