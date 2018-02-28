@@ -52,27 +52,24 @@ class TestVtkHandler(TestCase):
                     mesh_points, 'Pressure', 'faces')
 
     def test_vtk_parse_shape(self):
-        output = fh.FileHandler(
-            'tests/test_datasets/matlab_field_test_bin.vtk').get_dataset(
-                'Pressure')
+        output = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk'
+                                ).get_dataset('Pressure')
         assert output.shape == (2500, 1)
 
     def test_vtk_parse_check_data_format_2(self):
         output = fh.FileHandler(
-            'tests/test_datasets/openfoam_output_test.vtk').get_dataset('p',
-                                                                        'cell')
+            'tests/test_datasets/openfoam_output_test.vtk').get_dataset(
+                'p', 'cell')
         assert output.shape == (400, 1)
 
     def test_vtk_parse_coords_1(self):
-        output = fh.FileHandler(
-            'tests/test_datasets/matlab_field_test_bin.vtk').get_dataset(
-                'Pressure')
+        output = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk'
+                                ).get_dataset('Pressure')
         np.testing.assert_almost_equal(output[33, 0], 3.7915385)
 
     def test_vtk_parse_coords_2(self):
-        output = fh.FileHandler(
-            'tests/test_datasets/matlab_field_test_bin.vtk').get_dataset(
-                'Pressure')
+        output = fh.FileHandler('tests/test_datasets/matlab_field_test_bin.vtk'
+                                ).get_dataset('Pressure')
         np.testing.assert_almost_equal(output[0], 8.2308226)
 
     def test_vtk_write_failing_filename_type(self):

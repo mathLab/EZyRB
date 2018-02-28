@@ -3,6 +3,7 @@ Utilities for the online evaluation of the output of interest
 """
 import numpy as np
 from ezyrb.filehandler import FileHandler
+from ezyrb.parametricspace import ParametricSpace
 
 
 class Online(object):
@@ -10,18 +11,16 @@ class Online(object):
     Online phase
     
     :param string output_name: the name of the output of interest.
-    :param ezyrb.space space_type: the type of space used for the online phase.
-    :param string rb_space_filename: the name of the file where the space has
-        been saved.
+    :param string space_filename: the name of the file where the space has been
+        saved.
     
     :cvar string output_name: the name of the output of interest.
     :cvar ezyrb.space space_type: the type of space used for the online phase.
     """
 
-    def __init__(self, output_name, space_type, rb_space_filename):
+    def __init__(self, output_name, space_filename):
         self.output_name = output_name
-        self.space = space_type()
-        self.space.load(rb_space_filename)
+        self.space = ParametricSpace.load(space_filename)
 
     def run(self, value):
         """

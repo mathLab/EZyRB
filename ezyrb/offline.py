@@ -14,7 +14,7 @@ The class provides methods for:
 
 import os
 import numpy as np
-from ezyrb.pod import Pod
+from ezyrb.podinterpolation import PODInterpolation
 from ezyrb.points import Points
 from ezyrb.snapshots import Snapshots
 from ezyrb.utilities import simplex_volume
@@ -40,7 +40,7 @@ class Offline(object):
 
     def __init__(self,
                  output_name,
-                 space_type=Pod,
+                 space_type=PODInterpolation,
                  weight_name=None,
                  dformat='cell'):
 
@@ -173,7 +173,6 @@ class Offline(object):
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(
-                    worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
 
         return barycentric_point
