@@ -11,6 +11,7 @@ try:
     from . import vtkhandler
     from . import stlhandler
     from . import podinterpolation
+    from . import parametricspace
     from . import online
     from . import offline
     from . import mapper
@@ -25,6 +26,7 @@ except:
     import vtkhandler
     import stlhandler
     import podinterpolation
+    import parametricspace
     import online
     import offline
     import utilities
