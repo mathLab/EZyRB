@@ -6,10 +6,10 @@ MatlabHandler
 .. automodule:: ezyrb.matlabhandler
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    MatlabHandler.__init__
+    MatlabHandler
     MatlabHandler.get_dataset
     MatlabHandler.set_dataset
 

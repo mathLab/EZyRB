@@ -16,3 +16,5 @@ Code Documentation
     online
     offline
     mapper
+    utilities
+

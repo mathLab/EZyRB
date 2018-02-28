@@ -6,10 +6,10 @@ StlHandler
 .. automodule:: ezyrb.stlhandler
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    StlHandler.__init__
+    StlHandler
     StlHandler._read_polydata
     StlHandler._save_polydata
     StlHandler.get_geometry

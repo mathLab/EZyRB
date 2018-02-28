@@ -6,10 +6,10 @@ Snapshots
 .. automodule:: ezyrb.snapshots
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    Snapshots.__init__
+    Snapshots
     Snapshots.__getitem__
     Snapshots.files
     Snapshots.values

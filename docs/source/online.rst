@@ -6,10 +6,10 @@ Online
 .. automodule:: ezyrb.online
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    Online.__init__
+    Online
     Online.run
     Online.run_and_store
 

@@ -6,10 +6,10 @@ FileHandler
 .. automodule:: ezyrb.filehandler
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    FileHandler.__new__
+    FileHandler
 
 .. autoclass:: FileHandler
     :members:

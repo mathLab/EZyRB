@@ -6,9 +6,10 @@ Offline
 .. automodule:: ezyrb.offline
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
+    Offline
     Offline.init_database
     Offline.init_database_from_file
     Offline.add_snapshot

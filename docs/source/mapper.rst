@@ -6,10 +6,10 @@ Mapper
 .. automodule:: ezyrb.mapper
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    Mapper.__init__
+    Mapper
     Mapper.get_cell_centroid
     Mapper.default_interpolate_func
     Mapper.output_name

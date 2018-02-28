@@ -6,10 +6,10 @@ VtkHandler
 .. automodule:: ezyrb.vtkhandler
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    VtkHandler.__init__
+    VtkHandler
     VtkHandler._read_polydata
     VtkHandler._save_polydata
     VtkHandler.get_geometry

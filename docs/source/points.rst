@@ -6,10 +6,10 @@ Points
 .. automodule:: ezyrb.points
 
 .. autosummary::
-    :toctree:_summaries
+    :toctree: _summaries
     :nosignatures:
 
-    Points.__init__
+    Points
     Points.append
     Points.__getitem__
     Points.values
