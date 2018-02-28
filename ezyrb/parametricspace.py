@@ -10,7 +10,7 @@ class ParametricSpace(object):
     """
 
     def __init__(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def __call__(self, value):
         """
@@ -18,7 +18,7 @@ class ParametricSpace(object):
 
         Not implemented, it has to be implemented in subclasses.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def save(self, filename):
         """
