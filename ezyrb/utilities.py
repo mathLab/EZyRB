@@ -1,9 +1,8 @@
 """
 Module implementing some utilities for EZyRB
 """
-
-import numpy as np
 import math
+import numpy as np
 from ezyrb.filehandler import FileHandler
 
 
@@ -33,7 +32,7 @@ def normalize(v):
 
 def polygon_area(points):
     """
-    Compute the area of a planar non-self-intersecting polygon defined by 
+    Compute the area of a planar non-self-intersecting polygon defined by
     `points`.
 
     :param numpy.ndarray points: a matrix that contains the vertices coordinates
@@ -46,12 +45,11 @@ def polygon_area(points):
     if num_points < 3:
         return 0.0
 
-    total = np.sum(
-        [
-            np.cross(points[i], points[(i + 1) % num_points])
-            for i in np.arange(num_points)
-        ],
-        axis=0)
+    total = np.sum([
+        np.cross(points[i], points[(i + 1) % num_points])
+        for i in np.arange(num_points)
+    ],
+                   axis=0)
 
     unit_vector = normalize(normal(*points[0:3]))
 
@@ -109,12 +107,13 @@ def compute_normals(filename, datatype='cell'):
     normals = np.array(
         [normalize(normal(*points[cell][0:3])) for cell in cells])
 
-    if datatype is 'point':
+    if datatype == 'point':
         normals_cell = np.empty((points.shape[0], 3))
         for i_point in np.arange(points.shape[0]):
             cell_adiacent = [cells.index(c) for c in cells if i_point in c]
             normals_cell[i_point] = normalize(
-                np.mean(normals[cell_adiacent], axis=0))
+                np.mean(
+                    normals[cell_adiacent], axis=0))
         normals = normals_cell
 
     return normals

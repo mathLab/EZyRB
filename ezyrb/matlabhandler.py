@@ -30,7 +30,7 @@ class MatlabHandler(object):
         of the chosen output.
 
         :param str output_name: name of the output of interest inside the
-            mat file. 
+            mat file.
         
         :return: a *n_points*-by-*n_components* matrix containing the values of
             the chosen output.

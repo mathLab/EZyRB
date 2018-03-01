@@ -61,7 +61,6 @@ class TestPODInterpolation(TestCase):
         space.save("tests/test_datasets/podspace")
         assert os.path.isfile("tests/test_datasets/podspace")
 
-
 #os.remove("tests/test_datasets/podspace")
 
     def test_load(self):

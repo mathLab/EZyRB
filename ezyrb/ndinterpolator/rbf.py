@@ -9,7 +9,6 @@ class RBFInterpolator:
 
     def __init__(self, points, values, radius=1.0, norm='euclidean',
                  basis=None):
-
         self.basis = basis
         self.points = points
         self.radius = radius
