@@ -62,13 +62,14 @@ def simplex_volume(vertices):
     """
     Method implementing the computation of the volume of a N dimensional
     simplex.
-    Source from wikipedia https://en.wikipedia.org/wiki/Simplex
+    Source from: `wikipedia.org/wiki/Simplex
+    <https://en.wikipedia.org/wiki/Simplex>`_.
 
     :param numpy.ndarray simplex_vertices: Nx3 array containing the
         parameter values representing the vertices of a simplex. N is the
         dimensionality of the parameters.
 
-    :return: volume: N dimensional volume of the simplex.
+    :return: N dimensional volume of the simplex.
     :rtype: float
     """
     distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
@@ -80,7 +81,7 @@ def compute_area(filename):
     Given a file, this method computes the area for each cell of the mesh stored
     in the file and returns it. It uses :func:`polygon_area`.
 
-    :param string filename: the name of the file to parse in order to extract
+    :param str filename: the name of the file to parse in order to extract
         the necessary information about the cells.
     :return: the array that contains the area of each cells.
     :rtype: numpy.ndarray
@@ -96,9 +97,9 @@ def compute_normals(filename, datatype='cell'):
     The normal computed in a point is the interpolation of the cell normals of
     the cells adiacent to the point.
 
-    :param string filename: the name of the file to parse in order to extract
+    :param str filename: the name of the file to parse in order to extract
         the geometry information.
-    :param string datatype: indicate if the normals have to be computed for the
+    :param str datatype: indicate if the normals have to be computed for the
         points or the cells. The allowed values are: 'cell', 'point'. Default
         value is 'cell'.
     :return: the array that contains the normals.
@@ -124,9 +125,9 @@ def write_area(filename, output_name='Area'):
     Given a file, this method computes the area for each cell of the mesh stored
     in the file and save it as new dataset.
 
-    :param string filename: the name of the file to parse in order to extract
+    :param str filename: the name of the file to parse in order to extract
         the geometry information.
-    :param string output_name: the name of the new dataset that contains the
+    :param str output_name: the name of the new dataset that contains the
         cells area.
     """
     FileHandler(filename).set_dataset(
@@ -138,11 +139,11 @@ def write_normals(filename, output_name='Normals', datatype='cell'):
     Given a file, this method computes the surface normals of the mesh stored
     in the file and save it as new dataset.
 
-    :param string filename: the name of the file to parse in order to extract
+    :param str filename: the name of the file to parse in order to extract
         the geometry information.
-    :param string output_name: the name of the new dataset that contains the
+    :param str output_name: the name of the new dataset that contains the
         normals.
-    :param string datatype: indicate if the normals have to be computed for the
+    :param str datatype: indicate if the normals have to be computed for the
         points or the cells. The allowed values are: 'cell', 'point'. Default
         value is 'cell'.
     """

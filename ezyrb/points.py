@@ -9,8 +9,6 @@ from scipy.spatial import Delaunay
 
 class Points(object):
     """
-    Documentation
-
     :cvar numpy.ndarray _values: the matrix that contains the points stored
         by column.
     """
@@ -40,20 +38,26 @@ class Points(object):
     def values(self):
         """
         The matrix that contains all the points, stored by column.
+
+        :type: numpy.ndarray
         """
         return self._values
 
     @property
     def size(self):
         """
-        The number of the points
+        The number of the points.
+
+        :type: int
         """
         return self.values.shape[1]
 
     @property
     def dimension(self):
         """
-        The dimension of the points
+        The dimension of the points.
+
+        :type: int
         """
         return self.values.shape[0]
 

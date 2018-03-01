@@ -11,20 +11,17 @@ class VtkHandler(object):
     """
     Vtk format file handler class.
     You are NOT supposed to call directly this class constructor (use
-            Filehandler constructor instead)
+    :class:`.FileHandler` constructor instead)
 
+    :param str filename: the name of the file to handle.
 
-    :cvar string _filename: name of file to handle
+    :cvar str _filename: name of file to handle
     :cvar vtkPolyData _cached_data: private attribute to store the last polydata
         processed
     """
 
     def __init__(self, filename):
-        """
-        VtkHandler constructor
 
-        :param string filename: name of file
-        """
         self._filename = filename
         self._cached_data = None
 
@@ -36,7 +33,7 @@ class VtkHandler(object):
         and if user ask for this file, the polydata previously stored is
         returned.
 
-        :return: data: polydata containing information about file.
+        :return: polydata containing information about file.
         :rtype: vtkPolyData
         """
         # Polydata from `filename` is allready loaded; return it
@@ -65,7 +62,7 @@ class VtkHandler(object):
         operations.
 
         :param vtkPolyData data: polydatat to save.
-        :param boolean write_bin: for binary format file.
+        :param bool write_bin: for binary format file.
         """
         self._cached_data = data
 
@@ -84,18 +81,18 @@ class VtkHandler(object):
 
     def get_geometry(self, get_cells=False):
         """
-        This method reads the given `filename` and returns points and cells of
-        file.
+        This method reads the given filename and returns points and cells of
+        file. If get_cells is True, it computes the list that contain index of
+        points defining cells, otherwise the list is not computed and set to
+        None (less expensive).
 
         :param bool get_cells: flag to compute cells list or not. Default is
             false.
 
-        :return: points: it is a `n_points`-by-3 matrix containing the
-            coordinates of each point
-        :rtype: numpy.ndarray
-        :return: cells: it is a `n_cells` list containing, for each cell, id of
-            points that define the cell.
-        :rtype: list
+        :return: the `n_points`-by-3 matrix containing the coordinates of the
+            points, the `n_cells` list containing, for each cell, the iindex
+            of the points that define the cell (if computed).
+        :rtype: numpy.ndarray, list(numpy.ndarray)
         """
         data = self._read_polydata()
 
@@ -118,9 +115,9 @@ class VtkHandler(object):
         This method writes to `filename` a new data defined by `points` and
         `cells`.
         
-        :param numpy.ndarray points: matrix *n_points* -by- 3 containing coordinates
-            of all points.
-        :param list(list(int)) cell: list that contains for each cell the list
+        :param numpy.ndarray points: matrix *n_points*-by-3 containing
+            coordinates of all points.
+        :param list(array_like) cell: list that contains for each cell the list
             of the indices of points that define the cell.
         :param bool write_bin: flag to write in the binary format. Default is
             false.
@@ -147,13 +144,12 @@ class VtkHandler(object):
         or for each cell (if datatype is 'cell').
         If `output_name` is not a field in file, it raises exception.
 
-        :param string output_name: the name of the output of interest to extract
+        :param str output_name: the name of the output of interest to extract
             from file.
-        :param string datatype: a string to specify if point data or cell data
-            should be returned.
-        :return: it is a matrix where each row contains value for
-            points or cells; the number of columns is the extracted output
-            number of componenets 
+        :param str datatype: a string to specify if point data or cell data
+            should be returned. Default value is `point`.
+        :return: the matrix `n_components`-by-`n_elements` containing the
+            extracted output.
         :rtype: numpy.ndarray
         """
         if datatype not in ['cell', 'point']:
@@ -190,11 +186,11 @@ class VtkHandler(object):
         contains the new values of output to write, `output_name` is a string
         that indicates name of output to write.
 
-        :param numpy.ndarray output_values: it is a *n_points* -by-
-            *n_components* matrix containing the output values.
-        :param string output_name: name of the output.
-        :param string datatype: a string to specify if point data or cell data
-            should be returned.
+        :param numpy.ndarray output_values: the
+            *n_points*-by-*n_components* matrix containing the output values.
+        :param str output_name: name of the output.
+        :param str datatype: a string to specify if point data or cell data
+            should be returned. Default value is 'point'.
         :param bool write_bin: flag to write in the binary format. Default is
             false.
         """

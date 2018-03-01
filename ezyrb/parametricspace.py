@@ -36,7 +36,7 @@ class ParametricSpace(object):
 
         :param str filename: the filename where the space has been saved.
         :return: the space instance.
-        :return: ezyrb.parametricspace.ParametricSpace
+        :rtype: ParametricSpace
         """
         with open(filename, 'r') as f:
             return pickle.load(f)

@@ -7,22 +7,22 @@ import numpy as np
 
 class Snapshots(object):
     """
-    :param string output_name: the name of the output to extract from the
-    solution files; it has to be the same for all the solution files.
-    :param string weight_name: the name of the weights.
-    :param string dformat: it allows to choose if the solutions are stored by
-    points or by cells; allowed strings are 'cell' or 'point'. Default value is
-    'cell'.
+    :param str output_name: the name of the output to extract from the solution
+        files; it has to be the same for all the solution files.
+    :param str weight_name: the name of the weights.
+    :param str dformat: it allows to choose if the solutions are stored by
+        points or by cells; allowed strings are 'cell' or 'point'. Default
+        value is 'cell'.
 
-    :cvar string _o_name: the output name.
-    :cvar string _w_name: the weight name.
+    :cvar str _o_name: the output name.
+    :cvar str _w_name: the weight name.
     :cvar numpy.ndarray _values: the solutions extracted from files, stored by
         column.
     :cvar numpy.ndarray _weighted: the weighted solutions extracted from files,
         stored by column.
     :cvar numpy.ndarray or int _weights: the weights extracted from a file.
-    :cvar string _dformat: the flag to select the data type.
-    :cvar list(string) _files: the files from which to extract the solutions.
+    :cvar str _dformat: the flag to select the data type.
+    :cvar list(str) _files: the files from which to extract the solutions.
 
     """
 
@@ -55,6 +55,8 @@ class Snapshots(object):
     def files(self):
         """
         The list of file from which to extract the snapshots.
+
+        :type: list(str)
         """
         return self._files
 
@@ -64,6 +66,8 @@ class Snapshots(object):
         The snapshots; it is a *n* x *m* matrix that contains the snapshots
         stored by column; *n* is the output dimension, *m* is the number of
         snapshots.
+
+        :type: numpy.ndarray
         """
         return self._values
 
@@ -73,6 +77,8 @@ class Snapshots(object):
         The weighted snapshots; it is a *n* x *m* matrix that contains the
         snapshots stored by column; *n* is the output dimension, *m* is the
         number of snapshots.
+
+        :type: numpy.ndarray
         """
         return self._weighted
 
@@ -80,6 +86,8 @@ class Snapshots(object):
     def weights(self):
         """
         The weights extracted.
+
+        :type: int or array_like
         """
         return self._weights
 
@@ -87,6 +95,8 @@ class Snapshots(object):
     def size(self):
         """
         The number of the snapshots.
+
+        :type: int
         """
         return self.values.shape[1]
 
@@ -94,6 +104,8 @@ class Snapshots(object):
     def dimension(self):
         """
         The dimension of the snapshots.
+
+        :type: int
         """
         return self.values.shape[0]
 
@@ -102,8 +114,7 @@ class Snapshots(object):
         Append the `filename` to the list of the solution files; update the
         values and the weighted values with the extracted solution.
 
-        :param string filename: the name of file to append to the solution
-            files.
+        :param str filename: the name of file to append to the solution files.
         """
         if not isinstance(filename, str):
             raise TypeError

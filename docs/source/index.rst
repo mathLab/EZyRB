@@ -2,9 +2,9 @@ Welcome to EZyRB's documentation!
 ===================================================
 
 .. image:: _static/logo_EZyRB.png
-   :height: 150px
-   :width: 150 px
-   :align: right
+    :height: 150px
+    :width: 150 px
+    :align: right
 
 Easy Reduced Basis method.
 
@@ -19,12 +19,12 @@ Guide
 ^^^^^
 
 .. toctree::
-   :maxdepth: 3
+    :maxdepth: 3
 
-   code
-   contact
-   contributing
-   LICENSE
+    code
+    contact
+    contributing
+    LICENSE
 
 
 Tutorials

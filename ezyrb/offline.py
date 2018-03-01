@@ -1,8 +1,5 @@
 """
-Class for computation of the Offline part.
-==========================================
-
-The class provides methods for:
+Class for computation of the Offline part. It provides methods for:
     - import the `snapshots` and the parameter values
       correlated(:func:`init_database <ezyrb.offline.Offline.init_database>` ,
       :func:`init_database_from_file
@@ -22,20 +19,22 @@ from ezyrb.utilities import simplex_volume
 
 class Offline(object):
     """
-    Documentation
+    Offline phase.
 
-    :param: Space spacetype: the method used for the reduced space generation
-    :param: string output_name: the name of the output of interest
-    :param: string weight_name: the name of the output to consider as weight
-    :param: string dformat: the data format to extract from the snapshot files:
+    :param ParametricSpace spacetype: the method used for the reduced space
+        generation. Default is :class:`.PODInterpolation`.
+    :param str output_name: the name of the output of interest.
+    :param str weight_name: the name of the output to consider as weight.
+    :param str dformat: the data format to extract from the snapshot files:
         if the parameter is "cell", the snapshot values refer to the cell data,
         if the parameter is "point", the snapshot values refer to the point
         data. These are the only options available.
 
-    :cvar: Points mu_values: the object that contains the parameter values
-    :cvar: Snapshots snapshots: the object that contains the snapshots extracted
-        from the chosen files
-    :cvar: Space spacetype: the method used for the reduced space generation
+    :cvar Points mu_values: the object that contains the parameter values
+    :cvar Snapshots snapshots: the object that contains the snapshots extracted
+        from the chosen files.
+    :cvar ParametricSpace spacetype: the method used for
+        the reduced space generation.
     """
 
     def __init__(self,
@@ -66,7 +65,7 @@ class Offline(object):
         """
         Initialize the database by reading the parameter values and the
         snapshot files from a given filename; this file has to be format as
-        following: first *N* columns indicate the parameter values, the *N*+1
+        following: first *N* columns indicate the parameter values, the *N+1*
         column indicates the corresponding snapshot file.
 
         Example of a generic file::
@@ -75,8 +74,8 @@ class Offline(object):
             par1    par2    ...     solution_file2
             par1    par2    ...     solution_file3
 
-        :param: string filename: name of file where parameter values and
-            snapshot files are stored.
+        :param str filename: name of file where parameter values and snapshot
+            files are stored.
         """
         if not os.path.isfile(filename):
             raise IOError("File {0!s} not found".format(
@@ -103,7 +102,7 @@ class Offline(object):
         solution has be computed and placed in the proper directory.
 
         :param array_like new_mu: the parameter value to add to database.
-        :param string new_file: the name of snapshot file to add to
+        :param str new_file: the name of snapshot file to add to
             database.
         """
         self.mu.append(new_mu)
@@ -120,7 +119,7 @@ class Offline(object):
         """
         Save the reduced basis space to `filename`.
 
-        :param: string filename: the file where the space will be stored.
+        :param str filename: the file where the space will be stored.
         """
         self.space.save(filename)
 
@@ -134,10 +133,11 @@ class Offline(object):
         The `func` is applied on each vector of error to obtained a float
         number.
 
-        :param: function func: the function used to assign at each vector of
+        :param function func: the function used to assign at each vector of
             error a float number. It has to take as input a 'numpy.ndarray` and
             returns a float. Default value is the L2 norm.
-        :return: a numpy.array with the error estimated for each snapshot.
+        :return: the vector that contains the errors estimated for all
+            parametric points.
         :rtype: numpy.ndarray
         """
         return self.space.loo_error(self.mu, self.snapshots, func)
@@ -149,10 +149,10 @@ class Offline(object):
         points are the barycentric center of the region (simplex) with higher
         error.
 
-        :param: numpy.ndarray error: the estimated error evaluated for each
+        :param numpy.ndarray error: the estimated error evaluated for each
             snapshot; if error array is not passed, it is computed using
             :func:`loo_error` with the default function. Default value is None.
-        :param: int k: the number of optimal points to return. Default value is
+        :param int k: the number of optimal points to return. Default value is
             1.
         :return: the optimal points
         :rtype: list(numpy.ndarray)

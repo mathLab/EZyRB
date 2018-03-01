@@ -10,20 +10,17 @@ class StlHandler(object):
     """
     Vtk format file handler class.
     You are NOT supposed to call directly this class constructor (use
-                        Filehandler constructor instead)
+    :class:`~.FileHandler` constructor instead)
 
-    :cvar string _filename: name of file to handle
+    :param str filename: name of file
+
+    :cvar str _filename: name of file to handle
     :cvar vtkPolyData _cached_data: private attribute to store the last
         polydata processed
     
     """
 
     def __init__(self, filename):
-        """
-        StlHandler constructor
-
-        :param string filename: name of file
-        """
 
         self._filename = filename
         self._cached_data = None
@@ -36,7 +33,7 @@ class StlHandler(object):
         and if user ask for this file, the polydata previously stored is
         returned.
 
-        :return: data: polydata containing information about file.
+        :return: polydata containing information about file.
         :rtype: vtkPolyData
         """
         # Polydata from `filename` is allready loaded; return it
@@ -88,17 +85,15 @@ class StlHandler(object):
         This method reads the given `filename` and returns points and cells of
         file. If `get_cells` is True, it computes the list that contain index of
         points defining cells, otherwise the list is not computed and set to
-        *None* (less expensive).
+        **None** (less expensive).
 
         :param bool get_cells: flag to compute cells list or not. Default is
             false.
 
-        :return: points: it is a `n_points`-by-3 matrix containing the
-            coordinates of each point.
-        :rtype: numpy.ndarray
-        :return: cells: it is a `n_cells` list containing, for each cell, id of
-            points that define the cell.
-        :rtype: list
+        :return: the `n_points`-by-3 matrix containing the coordinates of the
+            points, the n_cells list containing, for each cell, the index of
+            the points that define the cell (if computed).
+        :rtype: numpy.ndarray, list(numpy.ndarray) or None
         """
         data = self._read_polydata()
 

@@ -18,7 +18,7 @@ class FileHandler(object):
         returns specialized file handler (`MatlabHandler`, `VtkHandler`, ...)
         instance.
         
-        :param string filename: name of file
+        :param str filename: name of file
         """
 
         if not isinstance(filename, str):

@@ -1,6 +1,6 @@
 """
 Module for the generation of the reduced space by using the Proper Orthogonal
-Decomposition
+Decomposition Interpolation
 """
 
 from ezyrb.parametricspace import ParametricSpace
@@ -14,8 +14,8 @@ class PODInterpolation(ParametricSpace):
 
     :cvar numpy.ndarray _pod_basis: basis extracted from the proper orthogonal
         decomposition.
-    :cvar object _interpolator: interpolating
-        object for the pod basis interpolation
+    :cvar object _interpolator: interpolating object for the pod basis
+        interpolation
     """
 
     def __init__(self):
@@ -25,10 +25,21 @@ class PODInterpolation(ParametricSpace):
 
     @property
     def pod_basis(self):
+        """
+        The basis found by proper orthogonal decomposition.
+
+        :type: numpy.ndarray
+        """
         return self._pod_basis
 
     @property
     def interpolator(self):
+        """
+        The multidimensional interpolator that combines the saved snapshots for
+        the parametric space creation.
+
+        :type: object
+        """
         return self._interpolator
 
     def generate(self, points, snapshots, interpolator=LinearNDInterpolator):
@@ -42,7 +53,7 @@ class PODInterpolation(ParametricSpace):
         :param Snapshots snapshots: the snapshots.
         :param Points points: the parametric points where snapshots were
             computed.
-        :param objec interpolator: the interpolator used to interpolate the
+        :param object interpolator: the interpolator used to interpolate the
             coefficients.
         """
         eig_vec = np.linalg.svd(snapshots.weighted, full_matrices=False)[0]
@@ -69,7 +80,7 @@ class PODInterpolation(ParametricSpace):
         :param Points points: the points where snapshots were computed.
         :param Snapshots snapshots: the snapshots.
         :param function func: the function to estimate error; default is the
-            numpy.linalg.norm
+            :func:`numpy.linalg.norm`.
         """
         loo_error = np.zeros(points.size)
 
