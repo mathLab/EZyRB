@@ -47,6 +47,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
+	@echo "  rst        to generate the .rst file for documentation"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -190,3 +191,9 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+rst:
+	@./make_rst.sh
+	@echo
+	@echo "Created new .RST files."
+	@echo "Run \`sphinx-autogen\` in order to populate the summary directory."
