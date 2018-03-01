@@ -15,15 +15,14 @@ from ezyrb.podinterpolation import PODInterpolation
 from ezyrb.points import Points
 from ezyrb.snapshots import Snapshots
 from ezyrb.utilities import simplex_volume
-from ezyrb.parametricspace import ParametricSpace
 
 
 class Offline(object):
     """
-    Documentation
+    Offline phase.
 
-    :param ezyrb.parametricspace.ParametricSpace spacetype: the method used for
-        the reduced space generation. Default is :class:`PODInterpolation`
+    :param ParametricSpace spacetype: the method used for the reduced space
+        generation. Default is :class:`.PODInterpolation`.
     :param str output_name: the name of the output of interest.
     :param str weight_name: the name of the output to consider as weight.
     :param str dformat: the data format to extract from the snapshot files:
@@ -66,7 +65,7 @@ class Offline(object):
         """
         Initialize the database by reading the parameter values and the
         snapshot files from a given filename; this file has to be format as
-        following: first *N* columns indicate the parameter values, the *N* +1
+        following: first *N* columns indicate the parameter values, the *N+1*
         column indicates the corresponding snapshot file.
 
         Example of a generic file::

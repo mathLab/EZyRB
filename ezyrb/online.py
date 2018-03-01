@@ -10,15 +10,16 @@ class Online(object):
     """
     Online phase
     
-    :param string output_name: the name of the output of interest.
-    :param string space_filename: the name of the file where the space has been
+    :param str output_name: the name of the output of interest.
+    :param str space_filename: the name of the file where the space has been
         saved.
     
-    :cvar string output_name: the name of the output of interest.
-    :cvar ezyrb.space space_type: the type of space used for the online phase.
+    :cvar str output_name: the name of the output of interest.
+    :cvar ParametricSpace space_type: the type of space used for the online phase.
     """
 
     def __init__(self, output_name, space_filename):
+
         self.output_name = output_name
         self.space = ParametricSpace.load(space_filename)
 
@@ -44,9 +45,9 @@ class Online(object):
 
         :param array_like value: the point where the approximated solution has
             to be evaluated.
-        :param string filename: the file where the approximated solution is
+        :param str filename: the file where the approximated solution is
             projected.
-        :param string geometry_filename: the file that contains the topology to
+        :param str geometry_filename: the file that contains the topology to
             use for the solution projection.
         """
         output = self.space(value)

@@ -1,5 +1,5 @@
 """
-Class for the response surface methodology.
+Module for the generation of the reduced space by using Interpolation.
 """
 
 from ezyrb.parametricspace import ParametricSpace
@@ -11,7 +11,7 @@ class Interpolation(ParametricSpace):
     """
     Documentation
 
-    :cvar object interpolator: interpolating object for the basis interpolation.
+    :cvar object _interpolator: interpolating object for the basis interpolation.
     """
 
     def __init__(self):
@@ -20,6 +20,12 @@ class Interpolation(ParametricSpace):
 
     @property
     def interpolator(self):
+        """
+        The multidimensional interpolator that combines the saved snapshots for
+        the parametric space creation.
+
+        :type: object
+        """
         return self._interpolator
 
     def generate(self, points, snapshots):

@@ -11,20 +11,13 @@ class Mapper(object):
     """
     Documentation
 
-    :cvar _output_name: the list of output names to map.
-    :vartype _output_name: list(str)
-
-    :cvar _mode: indicate if new file will be interpolated using point
+    :cvar list(str) _output_name: the list of output names to map.
+    :cvar str _mode: indicate if new file will be interpolated using point
         data or cell data.
-    :vartype _mode: string
-
-    :cvar _n_neighbors: number of neighbors to use to interpolate new
+    :cvar int _n_neighbors: number of neighbors to use to interpolate new
         value.
-    :vartype _n_neighbors: int
-
-    :cvar _interpolate_func: function to interpolate new value starting from
-        neighbors value.
-    :vartype _interpolate_func: function
+    :cvar function _interpolate_func: function to interpolate new value
+        starting from neighbors value.
     """
 
     def __init__(self):
@@ -40,9 +33,9 @@ class Mapper(object):
         Compute the centroid of the cell defined by `vertices`; the centroid is
         computed as the `vertices` coordinates average.
 
-        :param numpy.ndarray vertices: a *n_vertices* -by- 3 matrix where vertices
+        :param numpy.ndarray vertices: a *n_vertices*-by-3 matrix where vertices
             coordinates are store by row.
-        :return: cell centroid coordinates 
+        :return: cell centroid coordinates
         :rtype: numpy.ndarray
         """
         centroid = np.mean(vertices, axis=0)
@@ -59,7 +52,7 @@ class Mapper(object):
 
         :param numpy.ndarray values: a matrix *number_of_neighbors* -by-
             *number_of_components* containing neighbors values.
-        :param numpy.array distance: a vector containing distance between
+        :param numpy.narray distance: a vector containing distance between
             to-interpolate point and neighbors.
         """
         if not distance.all():
@@ -156,7 +149,7 @@ class Mapper(object):
         locator have to build before looking for operation.
 
         :param numpy.array coordinates: coordinates of the point to query
-        :return: a 2*n_neighbors* -by- *n_query_points*; it contains in the
+        :return: a 2 *n_neighbors*-by-*n_query_points*; it contains in the
             first `number_neighbors` columns the index of neighbors , and in
             last *number_neighbors* columns the distance from query points to
             neighbors.
@@ -205,12 +198,11 @@ class Mapper(object):
         to-interpolate points are taken from geometry_file and the interpolated
         solution is write on output_file.
 
-        :param string output_file: name of file where interpolated solution will 
+        :param str output_file: name of file where interpolated solution will
             be stored. Only vtk file are supported.
-        :param string solution_file: name of file where real solution is stored.
-        :param string geometry_file: name of file where geometry information is
+        :param str solution_file: name of file where real solution is stored.
+        :param str geometry_file: name of file where geometry information is
             stored.
-
         """
 
         if not geometry_file:

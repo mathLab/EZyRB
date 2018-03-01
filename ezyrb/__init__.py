@@ -33,4 +33,3 @@ except:
     import mapper
     import points
     import snapshots
-    import ndinterpolator.rbf

@@ -10,12 +10,12 @@ class MatlabHandler(object):
     """
     Matlab format file handler class.
     You are NOT supposed to call directly this class constructor (use
-            Filehandler constructor instead)
+    :class:`.FileHandler` constructor instead).
 
-    :cvar string _filename: name of file to handler
-    :cvar dicts _cached_data: private attribute to save a copy of last
-        data processed; it allows to reduce IO operation on the same file.
-        Initial value is None.
+    :cvar str _filename: name of file to handle.
+    :cvar dict _cached_data: private attribute to save a copy of last data
+        processed; it allows to reduce IO operation on the same file. Initial
+        value is None.
     
     """
 
@@ -29,11 +29,11 @@ class MatlabHandler(object):
         Method to parse the `filename`. It returns a matrix with all the values
         of the chosen output.
 
-        :param string output_name: name of the output of interest inside the
+        :param str output_name: name of the output of interest inside the
             mat file. 
         
         :return: a *n_points*-by-*n_components* matrix containing the values of
-            the chosen output
+            the chosen output.
         :rtype: numpy.ndarray
         """
         if self._cached_data is None:
@@ -54,9 +54,9 @@ class MatlabHandler(object):
         contains the new values of output to write, `output_name` is a string
         that indicates name of output to write.
 
-        :param numpy.ndarray output_values: it is a *n_points* -by-
-            *n_components* matrix containing the output values.
-        :param string output_name: name of the output.
+        :param numpy.ndarray output_values: it is a
+            *n_points*-by-*n_components* matrix containing the output values.
+        :param str output_name: name of the output.
         """
         sio.savemat(self._filename, {output_name: output_values})
         self._cached_data = None
