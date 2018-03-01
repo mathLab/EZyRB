@@ -17,10 +17,9 @@ class FileHandler(object):
         Generic file handler. When you create a new instance of FilaHandler, it
         returns specialized file handler (`MatlabHandler`, `VtkHandler`, ...)
         instance.
-        
+
         :param str filename: name of file
         """
-
         if not isinstance(filename, str):
             raise TypeError("Filename must be a string")
 

@@ -82,7 +82,6 @@ class TestOffline(TestCase):
         offline.save_rb_space('space')
         assert os.path.isfile('space')
 
-
 #os.remove('space')
 
     def test_loo_error(self):

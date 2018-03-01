@@ -1,7 +1,6 @@
 """
 Utilities for the online evaluation of the output of interest
 """
-import numpy as np
 from ezyrb.filehandler import FileHandler
 from ezyrb.parametricspace import ParametricSpace
 
@@ -19,7 +18,6 @@ class Online(object):
     """
 
     def __init__(self, output_name, space_filename):
-
         self.output_name = output_name
         self.space = ParametricSpace.load(space_filename)
 

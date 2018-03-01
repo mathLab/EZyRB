@@ -163,8 +163,8 @@ class VtkHandler(object):
             extracted_data = data.GetCellData().GetArray(output_name)
 
         if extracted_data is None:
-            raise RuntimeError(
-                datatype + " data has no " + output_name + " field.")
+            raise RuntimeError(datatype + " data has no " + output_name +
+                               " field.")
 
         output_values = ns.vtk_to_numpy(extracted_data)
 

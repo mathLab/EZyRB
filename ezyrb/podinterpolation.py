@@ -60,7 +60,7 @@ class PODInterpolation(ParametricSpace):
 
         self._pod_basis = np.sqrt(snapshots.weights) * eig_vec
         coefs = self._pod_basis.T.dot(snapshots.weighted)
-        self._interpolator = LinearNDInterpolator(points.values.T, coefs)
+        self._interpolator = interpolator(points.values.T, coefs)
 
     def __call__(self, value):
         """
@@ -89,17 +89,16 @@ class PODInterpolation(ParametricSpace):
             remaining_index = list(range(j)) + list(range(j + 1, points.size))
             remaining_snaps = snapshots[remaining_index]
 
-            eigvec = np.linalg.svd(
-                remaining_snaps.weighted, full_matrices=False)[0]
+            eigvec = np.linalg.svd(remaining_snaps.weighted,
+                                   full_matrices=False)[0]
 
             loo_basis = np.sqrt(remaining_snaps.weights) * eigvec
 
-            projection = np.sum(
-                np.array([
-                    np.dot(snapshots[j].weighted, basis) * basis
-                    for basis in loo_basis.T
-                ]),
-                axis=0)
+            projection = np.sum(np.array([
+                np.dot(snapshots[j].weighted, basis) * basis
+                for basis in loo_basis.T
+            ]),
+                                axis=0)
 
             error = (snapshots[j].values - projection) * snapshots.weights
             loo_error[j] = func(error) / func(snapshots[0].values)

@@ -1,9 +1,9 @@
 """
 Module to handle STL files.
 """
+import os
 import numpy as np
 import vtk
-import os
 
 
 class StlHandler(object):
@@ -17,11 +17,9 @@ class StlHandler(object):
     :cvar str _filename: name of file to handle
     :cvar vtkPolyData _cached_data: private attribute to store the last
         polydata processed
-    
     """
 
     def __init__(self, filename):
-
         self._filename = filename
         self._cached_data = None
 
@@ -36,7 +34,7 @@ class StlHandler(object):
         :return: polydata containing information about file.
         :rtype: vtkPolyData
         """
-        # Polydata from `filename` is allready loaded; return it
+        # Polydata from `filename` is already loaded; return it
         if self._cached_data is not None:
             return self._cached_polydata
 
@@ -64,7 +62,6 @@ class StlHandler(object):
         :param vtkPolyData data: polydatat to save.
         :param bool write_bin: for binary format file.
         """
-
         self._cached_data = data
 
         writer = vtk.vtkSTLWriter()
