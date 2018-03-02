@@ -16,7 +16,7 @@ class MatlabHandler(object):
     :cvar dict _cached_data: private attribute to save a copy of last data
         processed; it allows to reduce IO operation on the same file. Initial
         value is None.
-    
+
     """
 
     def __init__(self, filename):
@@ -31,7 +31,7 @@ class MatlabHandler(object):
 
         :param str output_name: name of the output of interest inside the
             mat file.
-        
+
         :return: a *n_points*-by-*n_components* matrix containing the values of
             the chosen output.
         :rtype: numpy.ndarray

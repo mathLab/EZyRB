@@ -102,8 +102,8 @@ class StlHandler(object):
 
         if get_cells:
             cells = [[
-                data.GetCell(i).GetPointIds().GetId(id)
-                for id in np.arange(data.GetCell(i).GetNumberOfPoints())
+                data.GetCell(i).GetPointIds().GetId(idx)
+                for idx in np.arange(data.GetCell(i).GetNumberOfPoints())
             ] for i in np.arange(n_cells)]
 
         return points, cells
@@ -112,11 +112,11 @@ class StlHandler(object):
         """
         This method save into `filename` a new data defined by `points` and
         `cells`.
-        
+
         :param numpy.ndarray points: matrix *n_points*-by-3 containing
             coordinates of all points.
-        :param list(list(int)) cell: a list of lists that contains, for each cell,
-            the index of points defining the cell.
+        :param list(list(int)) cell: a list of lists that contains, for each
+            cell, the index of points defining the cell.
         :param bool write_bin: flag to write in the binary format. Default is
             false.
         """

@@ -31,7 +31,9 @@ class Points(object):
 
     def __getitem__(self, val):
         ret = Points()
-        ret._values = self._values[:, val]
+        for point in self.values[:, val].T:
+            ret.append(point)
+
         return ret
 
     @property

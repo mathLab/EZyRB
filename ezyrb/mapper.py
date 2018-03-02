@@ -25,7 +25,7 @@ class Mapper(object):
         self._neighbour_locator = None
         self._mode = "point"
         self._n_neighbors = 1
-        self._interpolate_func = Mapper.default_interpolate_func
+        self.__interpolate_func = Mapper.default_interpolate_func
 
     @staticmethod
     def get_cell_centroid(vertices):
@@ -46,9 +46,10 @@ class Mapper(object):
         """
         Default function for the point interpolation. Take as argument
         the neighbors values and the respective distance between
-        to-interpolate point and neighbors, and return the values weighted average
-        (weights are the reciprocal of the distances). If to-interpolate point
-        coincides with one of the neighbors, return that neighbour value.
+        to-interpolate point and neighbors, and return the values weighted
+        average (weights are the reciprocal of the distances). If
+        to-interpolate point coincides with one of the neighbors, return that
+        neighbour value.
 
         :param numpy.ndarray values: a matrix *number_of_neighbors* -by-
             *number_of_components* containing neighbors values.
@@ -162,8 +163,9 @@ class Mapper(object):
             coordinates, self._n_neighbors)
 
         return np.concatenate(
-            (np.array(id_neighbour).reshape((-1, self._n_neighbors)),
-             np.array(distance).reshape((-1, self._n_neighbors))),
+            (np.array(id_neighbour).reshape(
+                (-1, self._n_neighbors)), np.array(distance).reshape(
+                    (-1, self._n_neighbors))),
             axis=1)
 
     @property
@@ -258,8 +260,8 @@ class Mapper(object):
             distance = neighbors[:, self.number_neighbors:]
 
             mapped_output = np.array([
-                self._interpolate_func(output_array[index_near[id_neigh]],
-                                       distance[id_neigh])
+                self.interpolate_function(output_array[index_near[id_neigh]],
+                                          distance[id_neigh])
                 for id_neigh in np.arange(neighbors.shape[0])
             ])
 

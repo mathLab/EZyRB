@@ -6,7 +6,7 @@ import numpy as np
 from scipy.spatial.distance import cdist as distance_matrix
 
 
-class RBFInterpolator:
+class RBFInterpolator(object):
     """
     Multidimensional interpolator using Radial Basis Function.
 

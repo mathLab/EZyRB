@@ -134,7 +134,7 @@ class Snapshots(object):
     def _append_values(self, values):
         """
         Private method to append an output.
-        
+
         :param array_like values: the output.
         """
 
@@ -147,7 +147,7 @@ class Snapshots(object):
     def _append_weighted(self, values):
         """
         Private method to append a weighted output.
-        
+
         :param array_like values: the output.
         """
         array = np.asarray(np.sqrt(self._weights) * values).reshape(-1, 1)
