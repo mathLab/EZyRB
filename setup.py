@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def readme():
     """
@@ -23,7 +23,7 @@ setup(name='ezyrb',
       author='Filippo Salmoiraghi, Marco Tezzele',
       author_email='filippo.salmoiraghi@gmail.com, marcotez@gmail.com',
       license='MIT',
-      packages=['ezyrb'],
+      packages=find_packages(),
       install_requires=[
             'numpy',
             'scipy',
