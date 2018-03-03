@@ -11,7 +11,8 @@ class Interpolation(ParametricSpace):
     """
     Documentation
 
-    :cvar object _interpolator: interpolating object for the basis interpolation.
+    :cvar object _interpolator: interpolating object for the basis
+        interpolation.
     """
 
     def __init__(self):

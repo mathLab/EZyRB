@@ -8,13 +8,14 @@ from ezyrb.parametricspace import ParametricSpace
 class Online(object):
     """
     Online phase
-    
+
     :param str output_name: the name of the output of interest.
     :param str space_filename: the name of the file where the space has been
         saved.
-    
+
     :cvar str output_name: the name of the output of interest.
-    :cvar ParametricSpace space_type: the type of space used for the online phase.
+    :cvar ParametricSpace space_type: the type of space used for the online
+        phase.
     """
 
     def __init__(self, output_name, space_filename):

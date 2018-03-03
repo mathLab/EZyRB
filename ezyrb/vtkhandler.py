@@ -1,10 +1,10 @@
 """
 Derived module from filehandler.py to handle Vtk files.
 """
+import os
 import numpy as np
 import vtk
 import vtk.util.numpy_support as ns
-import os
 
 
 class VtkHandler(object):
@@ -102,8 +102,8 @@ class VtkHandler(object):
         points = np.array([data.GetPoint(i) for i in np.arange(n_points)])
         if get_cells:
             cells = [[
-                data.GetCell(i).GetPointIds().GetId(id)
-                for id in np.arange(data.GetCell(i).GetNumberOfPoints())
+                data.GetCell(i).GetPointIds().GetId(idx)
+                for idx in np.arange(data.GetCell(i).GetNumberOfPoints())
             ] for i in np.arange(n_cells)]
         else:
             cells = None
@@ -114,7 +114,7 @@ class VtkHandler(object):
         """
         This method writes to `filename` a new data defined by `points` and
         `cells`.
-        
+
         :param numpy.ndarray points: matrix *n_points*-by-3 containing
             coordinates of all points.
         :param list(array_like) cell: list that contains for each cell the list
@@ -157,7 +157,7 @@ class VtkHandler(object):
 
         data = self._read_polydata()
 
-        if datatype is 'point':
+        if datatype == 'point':
             extracted_data = data.GetPointData().GetArray(output_name)
         else:
             extracted_data = data.GetCellData().GetArray(output_name)
@@ -172,7 +172,7 @@ class VtkHandler(object):
         # (400, ) --> (400,1)
         try:
             cols = output_values.shape[1]
-        except:
+        except IndexError:
             cols = 1
         return output_values.reshape((-1, cols))
 
@@ -203,7 +203,7 @@ class VtkHandler(object):
             num_array=output_values, array_type=vtk.VTK_DOUBLE)
         output_array.SetName(output_name)
 
-        if datatype is 'point':
+        if datatype == 'point':
             data.GetPointData().AddArray(output_array)
         else:
             data.GetCellData().AddArray(output_array)
