@@ -12,14 +12,26 @@ class Online(object):
     :param str output_name: the name of the output of interest.
     :param str space_filename: the name of the file where the space has been
         saved.
+    :param str dformat: the data format to use for save the output to new file:
+        if the parameter is "cell", the approximated output will be saved to
+        cell data, if the parameter is "point", the approximated output will be
+        saved to the point data.  These are the only options available. Default
+        is 'cell'.
 
     :cvar str output_name: the name of the output of interest.
     :cvar ParametricSpace space_type: the type of space used for the online
         phase.
+    :cvar str dformat: the data format to use for save the output to new file:
+        if the parameter is "cell", the approximated output will be saved to
+        cell data, if the parameter is "point", the approximated output will be
+        saved to the point data.  These are the only options available. Default
+        is 'cell'.
     """
 
-    def __init__(self, output_name, space_filename):
+    def __init__(self, output_name, space_filename, dformat='cell'):
+        
         self.output_name = output_name
+        self.dformat = dformat
         self.space = ParametricSpace.load(space_filename)
 
     def run(self, value):
@@ -55,4 +67,4 @@ class Online(object):
             points, cells = FileHandler(geometry_file).get_geometry(True)
             writer.set_geometry(points, cells)
 
-        writer.set_dataset(output, self.output_name)
+        writer.set_dataset(output, self.output_name, datatype=self.dformat)
