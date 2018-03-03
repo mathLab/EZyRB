@@ -34,7 +34,7 @@ We made some tutorial examples:
 
 - `Tutorial 1 <tutorial1.html>`_ shows how to deal with a pressure field in vtk files (offline phase)
 - `Tutorial 2 <tutorial2.html>`_ shows how to deal with a pressure field in vtk files (online phase)
-- `Tutorial 3 <tutorial3.html>`_ shows how to deal with the GUI
+- `Tutorial 3 <tutorial3.html>`_ shows how to interpolate the solution on a new mesh.
 
 
 Indices and tables
