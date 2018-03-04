@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Offline &mdash; EZyRB 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EZyRB 0.1 documentation" href="index.html"/>
+        <link rel="up" title="Code Documentation" href="code.html"/>
+        <link rel="next" title="ezyrb.offline.Offline" href="_summaries/ezyrb.offline.Offline.html"/>
+        <link rel="prev" title="ezyrb.online.Online.run_and_store" href="_summaries/ezyrb.online.Online.run_and_store.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EZyRB
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshots.html">Snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="podinterpolation.html">PODInterpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricspace.html">ParametricSpace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filehandler.html">FileHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlabhandler.html">MatlabHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">VtkHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">StlHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="online.html">Online</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Offline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.html">ezyrb.offline.Offline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database.html">ezyrb.offline.Offline.init_database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database_from_file.html">ezyrb.offline.Offline.init_database_from_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.add_snapshot.html">ezyrb.offline.Offline.add_snapshot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.generate_rb_space.html">ezyrb.offline.Offline.generate_rb_space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.save_rb_space.html">ezyrb.offline.Offline.save_rb_space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.loo_error.html">ezyrb.offline.Offline.loo_error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.optimal_mu.html">ezyrb.offline.Offline.optimal_mu</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mapper.html">Mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBFInterpolator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EZyRB</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+        
+      <li>Offline</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/offline.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ezyrb.offline">
+<span id="offline"></span><h1>Offline<a class="headerlink" href="#module-ezyrb.offline" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>Class for computation of the Offline part. It provides methods for:</dt>
+<dd><ul class="first last simple">
+<li>import the <cite>snapshots</cite> and the parameter values
+correlated(<a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database.html#ezyrb.offline.Offline.init_database" title="ezyrb.offline.Offline.init_database"><code class="xref py py-func docutils literal notranslate"><span class="pre">init_database</span></code></a> ,
+<a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database_from_file.html#ezyrb.offline.Offline.init_database_from_file" title="ezyrb.offline.Offline.init_database_from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">init_database_from_file</span></code></a>);</li>
+<li>generate the reduced space with the method chosen by the user;</li>
+<li>estimate the error using the <cite>leave-one-out</cite> strategy;</li>
+<li>save the reduced space to a specific file.</li>
+</ul>
+</dd>
+</dl>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.html#ezyrb.offline.Offline" title="ezyrb.offline.Offline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline</span></code></a></td>
+<td>Offline phase.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database.html#ezyrb.offline.Offline.init_database" title="ezyrb.offline.Offline.init_database"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.init_database</span></code></a></td>
+<td>Initialize the database with the passed parameter values and snapshot files: the <em>i</em>-th parameter has to be the parametric point of the solution stored in the <em>i</em>-th file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database_from_file.html#ezyrb.offline.Offline.init_database_from_file" title="ezyrb.offline.Offline.init_database_from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.init_database_from_file</span></code></a></td>
+<td>Initialize the database by reading the parameter values and the snapshot files from a given filename; this file has to be format as following: first <em>N</em> columns indicate the parameter values, the <em>N+1</em> column indicates the corresponding snapshot file.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.add_snapshot.html#ezyrb.offline.Offline.add_snapshot" title="ezyrb.offline.Offline.add_snapshot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.add_snapshot</span></code></a></td>
+<td>This methos adds the new solution to the database and the new parameter values to the parameter points; this can be done only after the new solution has be computed and placed in the proper directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.generate_rb_space.html#ezyrb.offline.Offline.generate_rb_space" title="ezyrb.offline.Offline.generate_rb_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.generate_rb_space</span></code></a></td>
+<td>Generate the reduced basis space by combining the snapshots.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.save_rb_space.html#ezyrb.offline.Offline.save_rb_space" title="ezyrb.offline.Offline.save_rb_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.save_rb_space</span></code></a></td>
+<td>Save the reduced basis space to <cite>filename</cite>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.loo_error.html#ezyrb.offline.Offline.loo_error" title="ezyrb.offline.Offline.loo_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.loo_error</span></code></a></td>
+<td>Estimate the approximation error using <em>leave-one-out</em> strategy.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.offline.Offline.optimal_mu.html#ezyrb.offline.Offline.optimal_mu" title="ezyrb.offline.Offline.optimal_mu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offline.optimal_mu</span></code></a></td>
+<td>Return the parametric points where new high-fidelity solutions have to be computed in ordere to globaly reduce the estimated error.</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">Offline</code><span class="sig-paren">(</span><em>output_name</em>, <em>space_type=&lt;class 'ezyrb.podinterpolation.PODInterpolation'&gt;</em>, <em>weight_name=None</em>, <em>dformat='cell'</em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Offline phase.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spacetype</strong> (<a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.html#ezyrb.parametricspace.ParametricSpace" title="ezyrb.parametricspace.ParametricSpace"><em>ParametricSpace</em></a>) – the method used for the reduced space
+generation. Default is <a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.html#ezyrb.podinterpolation.PODInterpolation" title="ezyrb.podinterpolation.PODInterpolation"><code class="xref py py-class docutils literal notranslate"><span class="pre">PODInterpolation</span></code></a>.</li>
+<li><strong>output_name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the name of the output of interest.</li>
+<li><strong>weight_name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the name of the output to consider as weight.</li>
+<li><strong>dformat</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the data format to extract from the snapshot files:
+if the parameter is “cell”, the snapshot values refer to the cell data,
+if the parameter is “point”, the snapshot values refer to the point
+data. These are the only options available.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mu_values</strong> (<a class="reference internal" href="_summaries/ezyrb.points.Points.html#ezyrb.points.Points" title="ezyrb.points.Points"><em>Points</em></a>) – the object that contains the parameter values</li>
+<li><a class="reference internal" href="snapshots.html#module-ezyrb.snapshots" title="ezyrb.snapshots"><strong>snapshots</strong></a> (<a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.html#ezyrb.snapshots.Snapshots" title="ezyrb.snapshots.Snapshots"><em>Snapshots</em></a>) – the object that contains the snapshots extracted
+from the chosen files.</li>
+<li><strong>spacetype</strong> (<a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.html#ezyrb.parametricspace.ParametricSpace" title="ezyrb.parametricspace.ParametricSpace"><em>ParametricSpace</em></a>) – the method used for
+the reduced space generation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt>
+<code class="descname">add_snapshot</code><span class="sig-paren">(</span><em>new_mu</em>, <em>new_file</em><span class="sig-paren">)</span></dt>
+<dd><p>This methos adds the new solution to the database and the new parameter
+values to the parameter points; this can be done only after the new
+solution has be computed and placed in the proper directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>new_mu</strong> (<em>array_like</em>) – the parameter value to add to database.</li>
+<li><strong>new_file</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the name of snapshot file to add to
+database.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">generate_rb_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Generate the reduced basis space by combining the snapshots. It
+uses the chosen method for the generation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">init_database</code><span class="sig-paren">(</span><em>values</em>, <em>files</em><span class="sig-paren">)</span></dt>
+<dd><p>Initialize the database with the passed parameter values and snapshot
+files: the <em>i</em>-th parameter has to be the parametric point of the
+solution stored in the <em>i</em>-th file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>values</strong> (<em>array_like</em>) – the list of parameter values.</li>
+<li><strong>files</strong> (<em>array_like</em>) – the list of the solution files.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">init_database_from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span></dt>
+<dd><p>Initialize the database by reading the parameter values and the
+snapshot files from a given filename; this file has to be format as
+following: first <em>N</em> columns indicate the parameter values, the <em>N+1</em>
+column indicates the corresponding snapshot file.</p>
+<p>Example of a generic file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">par1</span>    <span class="n">par2</span>    <span class="o">...</span>     <span class="n">solution_file1</span>
+<span class="n">par1</span>    <span class="n">par2</span>    <span class="o">...</span>     <span class="n">solution_file2</span>
+<span class="n">par1</span>    <span class="n">par2</span>    <span class="o">...</span>     <span class="n">solution_file3</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – name of file where parameter values and snapshot
+files are stored.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">loo_error</code><span class="sig-paren">(</span><em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span></dt>
+<dd><p>Estimate the approximation error using <em>leave-one-out</em> strategy. The
+main idea is to create several reduced spaces by combining all the
+snapshots except one. The error vector is computed as the difference
+between the removed snapshot and the projection onto the properly
+reduced space. The procedure repeats for each snapshot in the database.
+The <cite>func</cite> is applied on each vector of error to obtained a float
+number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>function</em>) – the function used to assign at each vector of
+error a float number. It has to take as input a ‘numpy.ndarray` and
+returns a float. Default value is the L2 norm.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the vector that contains the errors estimated for all
+parametric points.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)">numpy.ndarray</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">optimal_mu</code><span class="sig-paren">(</span><em>error=None</em>, <em>k=1</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the parametric points where new high-fidelity solutions have to
+be computed in ordere to globaly reduce the estimated error. These
+points are the barycentric center of the region (simplex) with higher
+error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>error</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
+snapshot; if error array is not passed, it is computed using
+<a class="reference internal" href="_summaries/ezyrb.offline.Offline.loo_error.html#ezyrb.offline.Offline.loo_error" title="ezyrb.offline.Offline.loo_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code></a> with the default function. Default value is None.</li>
+<li><strong>k</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of optimal points to return. Default value is
+1.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the optimal points</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)">numpy.ndarray</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">save_rb_space</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span></dt>
+<dd><p>Save the reduced basis space to <cite>filename</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the file where the space will be stored.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="_summaries/ezyrb.offline.Offline.html" class="btn btn-neutral float-right" title="ezyrb.offline.Offline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="_summaries/ezyrb.online.Online.run_and_store.html" class="btn btn-neutral" title="ezyrb.online.Online.run_and_store" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

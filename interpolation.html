@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Interpolation &mdash; EZyRB 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EZyRB 0.1 documentation" href="index.html"/>
+        <link rel="up" title="Code Documentation" href="code.html"/>
+        <link rel="next" title="ezyrb.interpolation.Interpolation" href="_summaries/ezyrb.interpolation.Interpolation.html"/>
+        <link rel="prev" title="ezyrb.podinterpolation.PODInterpolation.loo_error" href="_summaries/ezyrb.podinterpolation.PODInterpolation.loo_error.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EZyRB
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshots.html">Snapshots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="podinterpolation.html">PODInterpolation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interpolation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.html">ezyrb.interpolation.Interpolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.interpolator.html">ezyrb.interpolation.Interpolation.interpolator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.generate.html">ezyrb.interpolation.Interpolation.generate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.__call__.html">ezyrb.interpolation.Interpolation.__call__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.loo_error.html">ezyrb.interpolation.Interpolation.loo_error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parametricspace.html">ParametricSpace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filehandler.html">FileHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matlabhandler.html">MatlabHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">VtkHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">StlHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="online.html">Online</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offline.html">Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapper.html">Mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBFInterpolator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EZyRB</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+        
+      <li>Interpolation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/interpolation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ezyrb.interpolation">
+<span id="interpolation"></span><h1>Interpolation<a class="headerlink" href="#module-ezyrb.interpolation" title="Permalink to this headline">¶</a></h1>
+<p>Module for the generation of the reduced space by using Interpolation.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.html#ezyrb.interpolation.Interpolation" title="ezyrb.interpolation.Interpolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interpolation</span></code></a></td>
+<td>Documentation</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.interpolator.html#ezyrb.interpolation.Interpolation.interpolator" title="ezyrb.interpolation.Interpolation.interpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interpolation.interpolator</span></code></a></td>
+<td>The multidimensional interpolator that combines the saved snapshots for the parametric space creation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.generate.html#ezyrb.interpolation.Interpolation.generate" title="ezyrb.interpolation.Interpolation.generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interpolation.generate</span></code></a></td>
+<td>Generate the reduced space using the proper orthogonal decomposition: the matrix that contains the <cite>snapshots</cite> computed for the <cite>points</cite> is decomposed using SVD tecnique to obtain the POD basis.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.__call__.html#ezyrb.interpolation.Interpolation.__call__" title="ezyrb.interpolation.Interpolation.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interpolation.__call__</span></code></a></td>
+<td>Project a new parametric point onto the reduced space and a new approximated solution is provided.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.loo_error.html#ezyrb.interpolation.Interpolation.loo_error" title="ezyrb.interpolation.Interpolation.loo_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interpolation.loo_error</span></code></a></td>
+<td>Compute the error for each parametric point with a leave-one-out (loo) strategy.</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">Interpolation</code></dt>
+<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.html#ezyrb.parametricspace.ParametricSpace" title="ezyrb.parametricspace.ParametricSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.parametricspace.ParametricSpace</span></code></a></p>
+<p>Documentation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>_interpolator</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – interpolating object for the basis
+interpolation.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt>
+<code class="descname">generate</code><span class="sig-paren">(</span><em>points</em>, <em>snapshots</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate the reduced space using the proper orthogonal decomposition:
+the matrix that contains the <cite>snapshots</cite> computed for the <cite>points</cite> is
+decomposed using SVD tecnique to obtain the POD basis. The interpolator
+is built combining this basis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>snapshots</strong> (<a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.html#ezyrb.snapshots.Snapshots" title="ezyrb.snapshots.Snapshots"><em>Snapshots</em></a>) – the snapshots.</li>
+<li><strong>points</strong> (<a class="reference internal" href="_summaries/ezyrb.points.Points.html#ezyrb.points.Points" title="ezyrb.points.Points"><em>Points</em></a>) – the parametric points where snapshots were
+computed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">interpolator</code></dt>
+<dd><p>The multidimensional interpolator that combines the saved snapshots for
+the parametric space creation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">loo_error</code><span class="sig-paren">(</span><em>snapshots</em>, <em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span></dt>
+<dd><p>Compute the error for each parametric point with a leave-one-out (loo)
+strategy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> (<a class="reference internal" href="_summaries/ezyrb.points.Points.html#ezyrb.points.Points" title="ezyrb.points.Points"><em>Points</em></a>) – the points where snapshots were computed.</li>
+<li><strong>snapshots</strong> (<a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.html#ezyrb.snapshots.Snapshots" title="ezyrb.snapshots.Snapshots"><em>Snapshots</em></a>) – the snapshots.</li>
+<li><strong>func</strong> (<em>function</em>) – the function to estimate error; default is the
+numpy.linalg.norm</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="_summaries/ezyrb.interpolation.Interpolation.html" class="btn btn-neutral float-right" title="ezyrb.interpolation.Interpolation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="_summaries/ezyrb.podinterpolation.PODInterpolation.loo_error.html" class="btn btn-neutral" title="ezyrb.podinterpolation.PODInterpolation.loo_error" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
