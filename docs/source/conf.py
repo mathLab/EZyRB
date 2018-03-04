@@ -69,8 +69,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'EZyRB'
-copyright = u'2016, Filippo Salmoiraghi, Marco Tezzele'
-author = u'Filippo Salmoiraghi, Marco Tezzele'
+copyright = u'2016-2018, EZyRB contributors'
+author = u'EZyRB contributors'
 
 # autoclass
 autoclass_content = 'both'
@@ -80,7 +80,7 @@ autoclass_content = 'both'
 # built documents.
 #
 # The short X.Y version.
-version = '0.1'
+version = '0.2'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -172,7 +172,7 @@ html_extra_path = ['_tutorials']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
@@ -249,7 +249,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   (master_doc, 'ezyrb.tex', u'ezyrb Documentation',
-   u'Filippo Salmoiraghi, Marco Tezzele', 'manual'),
+   u'EZyRB contributors', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

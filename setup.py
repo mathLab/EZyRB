@@ -9,19 +9,19 @@ def readme():
 
 setup(name='ezyrb',
       version='0.2',
-      description='POD',
+      description='Easy Reduced Basis method',
       long_description=readme(),
       classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics'
       ],
-      keywords='dimension_reduction mathematics vtk pod',
+      keywords='dimension_reduction mathematics vtk pod podi',
       url='https://github.com/mathLab/EZyRB',
-      author='Filippo Salmoiraghi, Marco Tezzele',
-      author_email='filippo.salmoiraghi@gmail.com, marcotez@gmail.com',
+      author='Nicola Demo, Marco Tezzele',
+      author_email='demo.nicola@gmail.com, marcotez@gmail.com',
       license='MIT',
       packages=find_packages(),
       install_requires=[

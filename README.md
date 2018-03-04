@@ -40,7 +40,7 @@
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
-**EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`.
+**EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`. The code is compatible with Python 2.7.
 Please see the table below for instructions on how to satisfy the requirements.
 
 | Package | Version  | Comment                                                                    |
