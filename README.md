@@ -37,7 +37,7 @@
 ## Description
 **EZyRB** is a python library for the Model Order Reduction based on **baricentric triangulation** for the selection of the parameter points and on **Proper Orthogonal Decomposition** for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.
 
-See the [**Examples**](#examples) section below and the **Tutorials** to have an idea of the potential of this package.
+See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`.
@@ -91,7 +91,7 @@ To run tests locally:
 
 ## Examples
 
-You can find useful tutorials on how to use the package in the `tutorials` folder.
+You can find useful tutorials on how to use the package in the [tutorials](tutorials/README.md) folder.
 Here we show an applications taken from the **automotive** engineering fields
 
 <p align="center">
