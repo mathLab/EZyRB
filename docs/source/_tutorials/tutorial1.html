@@ -11900,18 +11900,48 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 
 </div>
 </div>
-</div># %load tests/test_datasets/mu.conf
-# ================================================= # 
-# Mu file											#
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">!</span>cat ../tests/test_datasets/mu.conf
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre># ================================================= # 
+# Mu file                                           #
 # ================================================= # 
 
-# Lines starting with '#' are comments, they will be ignored.
+# Lines starting with &#39;#&#39; are comments, they will be ignored.
 
-# mu0	mu1		file
--.5    -.5  	tests/test_datasets/matlab_00.vtk
- .5    -.5		tests/test_datasets/matlab_01.vtk
- .5     .5		tests/test_datasets/matlab_02.vtk
--.5     .5		tests/test_datasets/matlab_03.vtk
+# mu0   mu1     file
+-.5    -.5      tests/test_datasets/matlab_00.vtk
+ .5    -.5      tests/test_datasets/matlab_01.vtk
+ .5     .5      tests/test_datasets/matlab_02.vtk
+-.5     .5      tests/test_datasets/matlab_03.vtk
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11923,7 +11953,7 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">offline_phase</span><span class="o">.</span><span class="n">loo_error</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
@@ -11939,7 +11969,7 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[4]:</div>
+<div class="prompt output_prompt">Out[5]:</div>
 
 
 
@@ -11965,7 +11995,7 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">offline_phase</span><span class="o">.</span><span class="n">optimal_mu</span><span class="p">(</span>
@@ -11984,7 +12014,7 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[5]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
 
@@ -12010,7 +12040,7 @@ You can view the pressure field (computed with the high-fidelity method) corresp
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">error</span> <span class="o">=</span> <span class="n">offline_phase</span><span class="o">.</span><span class="n">loo_error</span><span class="p">()</span>
@@ -12087,7 +12117,7 @@ Solution file for point [-0.293344   -0.23120537]: &#34;../tests/test_datasets/m
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">offline_phase</span><span class="o">.</span><span class="n">generate_rb_space</span><span class="p">()</span>
