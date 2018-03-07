@@ -29,7 +29,7 @@ EZyRB is a python library [@ezyrb] for Model Order Reduction based on baricentri
 
 In the EZyRB package we implemented in Python the algorithms described above. We also provide tutorials that show all the characteristics of the software, from the offline part in which it is possible to construct the database of snapshots, to the online part for fast evaluations of the fields for new parameters. There are also modules to allow the consistency of all the solutions (often with different degrees of freedom) in order to process them.
 
-As an exmaple, we show below an application taken from the automotive engineering field. In particular here we have the first POD modes of the pressure field on the DrivAer model, that is a generic car model developed at the Institute of Aerodynamics and Fluid Mechanics at the Technische Universität München to facilitate aerodynamic investigations of passenger vehicles [@wojciak2011investigation].
+As an exmaple, we show below an application taken from the automotive engineering field [@salmoiraghi2017]. In particular here we have the first POD modes of the pressure field on the DrivAer model, that is a generic car model developed at the Institute of Aerodynamics and Fluid Mechanics at the Technische Universität München to facilitate aerodynamic investigations of passenger vehicles [@wojciak2011investigation].
 
 ![Snapshots](../readme/pod_modes.png)
 
@@ -38,6 +38,6 @@ Here we have the DrivAer model online evaluation. On the left there is the press
 ![Reconstruction](../readme/errors.png)
 
 # Acknowledgements
-This work was partially supported by European Union Funding for Research and Innovation — Horizon 2020 Program — in the framework of European Research Council Executive Agency: H2020 ERC CoG 2015 AROMA-CFD project 681447 “Advanced Reduced Order Methods with Applications in Computational Fluid Dynamics” P.I. Gianluigi Rozza.
+This work was partially supported by the project HEaD, "Higher Education and Development", supported by Regione FVG — European Social Fund FSE 2014-2020, and by European Union Funding for Research and Innovation — Horizon 2020 Program — in the framework of European Research Council Executive Agency: H2020 ERC CoG 2015 AROMA-CFD project 681447 “Advanced Reduced Order Methods with Applications in Computational Fluid Dynamics” P.I. Gianluigi Rozza. We also thank Filippo Salmoiraghi for the original idea behind this package.
 
 # References
