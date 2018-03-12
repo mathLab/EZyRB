@@ -50,6 +50,18 @@ class TestOffline(TestCase):
         offline.init_database_from_file(conf_file)
         assert offline.snapshots.values.shape == (2500, 4)
 
+    def test_init_database_from_file_nofile(self):
+        conf_file = 'tests/test_datasets/notexisting_mu.conf'
+        offline = Offline(output_name='Pressure', dformat='point')
+        with self.assertRaises(IOError):
+            offline.init_database_from_file(conf_file)
+
+    def test_init_database_from_file_wrongfile(self):
+        conf_file = 'tests/test_datasets/wrongmu.conf'
+        offline = Offline(output_name='Pressure', dformat='point')
+        with self.assertRaises(ValueError):
+            offline.init_database_from_file(conf_file)
+
     def test_add_snapshot(self):
         conf_file = 'tests/test_datasets/mu.conf'
         offline = Offline(output_name='Pressure', dformat='point')
