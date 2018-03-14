@@ -22,6 +22,17 @@ class TestSnapshots(TestCase):
         snaps.append("tests/test_datasets/matlab_01.vtk")
         assert snaps.weighted.shape == (2500, 2)
 
+    def test_append_weights(self):
+        snaps = Snapshots(output_name='Weights', weight_name='Weights',
+                dformat="cell")
+        snaps.append("tests/test_datasets/matlab_00.vtk")
+        assert snaps.weights.shape == (2401, 1)
+
+    def test_append_wrongname(self):
+        snaps = Snapshots(output_name='Pressure', dformat="point")
+        with self.assertRaises(TypeError):
+            snaps.append(3.6)
+
     def test_size(self):
         snaps = Snapshots(output_name='Pressure', dformat="point")
         snaps.append("tests/test_datasets/matlab_00.vtk")
