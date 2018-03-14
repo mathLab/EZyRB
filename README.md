@@ -92,7 +92,7 @@ To run tests locally:
 ## Examples
 
 You can find useful tutorials on how to use the package in the [tutorials](tutorials/README.md) folder.
-Here we show an applications taken from the **automotive** engineering fields
+Here we show an application taken from the **automotive** engineering field
 
 <p align="center">
 <img src="readme/pod_modes.png" alt>
