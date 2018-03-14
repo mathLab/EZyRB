@@ -51,10 +51,41 @@ class TestMapper(TestCase):
         mapper.output_name = mapper.output_name + [names2]
         assert (["this", "a"] == mapper.output_name)
 
+    def test_interpolate_function_setter(self):
+        def custom_interp(values, dist):
+            return values[np.argmin(dist)]
+        mapper = ma.Mapper()
+        mapper.interpolate_function = custom_interp
+
+    def test_interpolate_function_setter_wrongtype(self):
+        mapper = ma.Mapper()
+        with self.assertRaises(TypeError):
+            mapper.interpolate_function = 3
+
+    def test_interpolation_mode_setter_wrongtype(self):
+        mapper = ma.Mapper()
+        with self.assertRaises(TypeError):
+            mapper.interpolation_mode = 5
+
+    def test_interpolation_mode_setter_wrongvalue(self):
+        mapper = ma.Mapper()
+        with self.assertRaises(ValueError):
+            mapper.interpolation_mode = 'node'
+
     def test_mapper_number_neighbors(self):
         mapper = ma.Mapper()
         mapper.number_neighbors = 3
         assert (3 == mapper.number_neighbors)
+
+    def test_mapper_number_neighbors_setter_wrongtype(self):
+        mapper = ma.Mapper()
+        with self.assertRaises(TypeError):
+            mapper.number_neighbors = np.array([3])
+
+    def test_find_neighbour(self):
+        mapper = ma.Mapper()
+        with self.assertRaises(RuntimeError):
+            mapper._find_neighbour([0, 0, 0])
 
     def test_mapper_callable_build_neighbour_locator(self):
         mapper = ma.Mapper()
@@ -125,6 +156,12 @@ class TestMapper(TestCase):
         test_map = FileHandler(map_file).get_dataset("test")
         os.remove(map_file)
         assert (test_map.shape == (197, 1))
+
+    def test_mapper_map_solution_nogeometryfile(self):
+        mapper = ma.Mapper()
+        mapper.output_name = "Pressure"
+        mapper.interpolation_mode = 'point'
+        mapper.map_solution(vtk_file, 'tests/test_datasets/matlab_00.vtk')
 
     def test_mapper_map_solution2(self):
         mapper = ma.Mapper()
