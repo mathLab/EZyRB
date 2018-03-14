@@ -8,6 +8,7 @@ from ezyrb.podinterpolation import PODInterpolation
 from ezyrb.parametricspace import ParametricSpace
 from ezyrb.points import Points
 from ezyrb.snapshots import Snapshots
+from scipy.interpolate import LinearNDInterpolator
 
 
 class TestPODInterpolation(TestCase):
@@ -28,6 +29,21 @@ class TestPODInterpolation(TestCase):
         snap.append("tests/test_datasets/matlab_03.vtk")
         space.generate(mu, snap)
         assert space.pod_basis.shape == (2500, 4)
+
+    def test_interpolator(self):
+        mu = Points()
+        snap = Snapshots(output_name="Pressure", dformat="point")
+        space = PODInterpolation()
+        mu.append([-.5, -.5])
+        mu.append([.5, -.5])
+        mu.append([.5, .5])
+        mu.append([-.5, .5])
+        snap.append("tests/test_datasets/matlab_00.vtk")
+        snap.append("tests/test_datasets/matlab_01.vtk")
+        snap.append("tests/test_datasets/matlab_02.vtk")
+        snap.append("tests/test_datasets/matlab_03.vtk")
+        space.generate(mu, snap)
+        assert isinstance(space.interpolator, LinearNDInterpolator)
 
     def test_call(self):
         mu = Points()
