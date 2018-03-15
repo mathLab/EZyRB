@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to EZyRB’s documentation! &mdash; EZyRB 0.1 documentation</title>
+  <title>Welcome to EZyRB’s documentation! &mdash; EZyRB 0.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EZyRB 0.1 documentation" href="#"/>
+    <link rel="top" title="EZyRB 0.2 documentation" href="#"/>
         <link rel="next" title="Code Documentation" href="code.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -163,146 +163,35 @@
 <p>Easy Reduced Basis method.</p>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>EZyRB is a python library for the Model Order Reduction based on baricentric triangulation for the selection of the parameter points and on Proper Orthogonal Decomposition for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.</p>
+<p>EZyRB is a python library for the Model Order Reduction based on baricentric triangulation for the selection of the parameter points and on Proper Orthogonal Decomposition for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. The software uses a POD interpolation approach in which the solutions are projected on the low dimensional space spanned by the POD modes (see “Bui-Thanh et al. - Proper orthogonal decomposition extensions for parametric applications in compressible aerodynamics” and “Chinesta et al. - Model Order Reduction: a survey”). The new solution is then obtained by interpolating the low rank solutions into the parametric space. This approach makes the package non intrusive with respect to the high fidelity solver actually used. This allows an easy integration into existing simulation pipelines, and it can deal with both vtk files and matlab files.</p>
+<p>In the EZyRB package we implemented in Python the algorithms described above. We also provide tutorials that show all the characteristics of the software, from the offline part in which it is possible to construct the database of snapshots, to the online part for fast evaluations of the fields for new parameters. There are also modules to allow the consistency of all the solutions (often with different degrees of freedom) in order to process them.</p>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>EZyRB requires numpy, scipy, matplotlib, and sphinx (for the documentation). They can be easily installed via pip. Moreover EZyRB depends on vtk. The code is compatible with Python 2.7. It can be installed directly from the source code.</p>
+<p>The <a class="reference external" href="https://github.com/mathLab/EZyRB">official distribution</a> is on GitHub, and you can clone the repository using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">mathLab</span><span class="o">/</span><span class="n">EZyRB</span>
+</pre></div>
 </div>
-<div class="section" id="guide">
-<h2>Guide<a class="headerlink" href="#guide" title="Permalink to this headline">¶</a></h2>
+<p>To install the package just type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>To uninstall the package you have to rerun the installation and record the installed files in order to remove them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">record</span> <span class="n">installed_files</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">cat</span> <span class="n">installed_files</span><span class="o">.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">xargs</span> <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="developer-s-guide">
+<h3>Developer’s Guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">¶</a></h3>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Code Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.html">ezyrb.points.Points</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.append.html">ezyrb.points.Points.append</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.__getitem__.html">ezyrb.points.Points.__getitem__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.values.html">ezyrb.points.Points.values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.size.html">ezyrb.points.Points.size</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.dimension.html">ezyrb.points.Points.dimension</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.points.Points.triangulation.html">ezyrb.points.Points.triangulation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="snapshots.html">Snapshots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.html">ezyrb.snapshots.Snapshots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.__getitem__.html">ezyrb.snapshots.Snapshots.__getitem__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.files.html">ezyrb.snapshots.Snapshots.files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.values.html">ezyrb.snapshots.Snapshots.values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.weighted.html">ezyrb.snapshots.Snapshots.weighted</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.weights.html">ezyrb.snapshots.Snapshots.weights</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.size.html">ezyrb.snapshots.Snapshots.size</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.dimension.html">ezyrb.snapshots.Snapshots.dimension</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.append.html">ezyrb.snapshots.Snapshots.append</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots._append_values.html">ezyrb.snapshots.Snapshots._append_values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots._append_weighted.html">ezyrb.snapshots.Snapshots._append_weighted</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="podinterpolation.html">PODInterpolation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.html">ezyrb.podinterpolation.PODInterpolation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.pod_basis.html">ezyrb.podinterpolation.PODInterpolation.pod_basis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.interpolator.html">ezyrb.podinterpolation.PODInterpolation.interpolator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.generate.html">ezyrb.podinterpolation.PODInterpolation.generate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.__call__.html">ezyrb.podinterpolation.PODInterpolation.__call__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.podinterpolation.PODInterpolation.loo_error.html">ezyrb.podinterpolation.PODInterpolation.loo_error</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.html">ezyrb.interpolation.Interpolation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.interpolator.html">ezyrb.interpolation.Interpolation.interpolator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.generate.html">ezyrb.interpolation.Interpolation.generate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.__call__.html">ezyrb.interpolation.Interpolation.__call__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.interpolation.Interpolation.loo_error.html">ezyrb.interpolation.Interpolation.loo_error</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="parametricspace.html">ParametricSpace</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.html">ezyrb.parametricspace.ParametricSpace</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.__call__.html">ezyrb.parametricspace.ParametricSpace.__call__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.save.html">ezyrb.parametricspace.ParametricSpace.save</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.load.html">ezyrb.parametricspace.ParametricSpace.load</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="filehandler.html">FileHandler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.filehandler.FileHandler.html">ezyrb.filehandler.FileHandler</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="matlabhandler.html">MatlabHandler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.matlabhandler.MatlabHandler.html">ezyrb.matlabhandler.MatlabHandler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.matlabhandler.MatlabHandler.get_dataset.html">ezyrb.matlabhandler.MatlabHandler.get_dataset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.matlabhandler.MatlabHandler.set_dataset.html">ezyrb.matlabhandler.MatlabHandler.set_dataset</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">VtkHandler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler.html">ezyrb.vtkhandler.VtkHandler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler._read_polydata.html">ezyrb.vtkhandler.VtkHandler._read_polydata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler._save_polydata.html">ezyrb.vtkhandler.VtkHandler._save_polydata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler.get_geometry.html">ezyrb.vtkhandler.VtkHandler.get_geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler.set_geometry.html">ezyrb.vtkhandler.VtkHandler.set_geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler.get_dataset.html">ezyrb.vtkhandler.VtkHandler.get_dataset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.vtkhandler.VtkHandler.get_all_output_names.html">ezyrb.vtkhandler.VtkHandler.get_all_output_names</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">StlHandler</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.stlhandler.StlHandler.html">ezyrb.stlhandler.StlHandler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.stlhandler.StlHandler._read_polydata.html">ezyrb.stlhandler.StlHandler._read_polydata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.stlhandler.StlHandler._save_polydata.html">ezyrb.stlhandler.StlHandler._save_polydata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.stlhandler.StlHandler.get_geometry.html">ezyrb.stlhandler.StlHandler.get_geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.stlhandler.StlHandler.set_geometry.html">ezyrb.stlhandler.StlHandler.set_geometry</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="online.html">Online</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.online.Online.html">ezyrb.online.Online</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.online.Online.run.html">ezyrb.online.Online.run</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.online.Online.run_and_store.html">ezyrb.online.Online.run_and_store</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="offline.html">Offline</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.html">ezyrb.offline.Offline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database.html">ezyrb.offline.Offline.init_database</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.init_database_from_file.html">ezyrb.offline.Offline.init_database_from_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.add_snapshot.html">ezyrb.offline.Offline.add_snapshot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.generate_rb_space.html">ezyrb.offline.Offline.generate_rb_space</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.save_rb_space.html">ezyrb.offline.Offline.save_rb_space</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.loo_error.html">ezyrb.offline.Offline.loo_error</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.offline.Offline.optimal_mu.html">ezyrb.offline.Offline.optimal_mu</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="mapper.html">Mapper</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.html">ezyrb.mapper.Mapper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.get_cell_centroid.html">ezyrb.mapper.Mapper.get_cell_centroid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.default_interpolate_func.html">ezyrb.mapper.Mapper.default_interpolate_func</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.output_name.html">ezyrb.mapper.Mapper.output_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.output_name.html">ezyrb.mapper.Mapper.output_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.interpolate_function.html">ezyrb.mapper.Mapper.interpolate_function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.interpolate_function.html">ezyrb.mapper.Mapper.interpolate_function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.interpolation_mode.html">ezyrb.mapper.Mapper.interpolation_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.interpolation_mode.html">ezyrb.mapper.Mapper.interpolation_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper._build_neighbour_locator.html">ezyrb.mapper.Mapper._build_neighbour_locator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper._find_neighbour.html">ezyrb.mapper.Mapper._find_neighbour</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.number_neighbors.html">ezyrb.mapper.Mapper.number_neighbors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.number_neighbors.html">ezyrb.mapper.Mapper.number_neighbors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.mapper.Mapper.map_solution.html">ezyrb.mapper.Mapper.map_solution</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.normal.html">ezyrb.utilities.normal</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.normalize.html">ezyrb.utilities.normalize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.polygon_area.html">ezyrb.utilities.polygon_area</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.simplex_volume.html">ezyrb.utilities.simplex_volume</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.compute_area.html">ezyrb.utilities.compute_area</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.compute_normals.html">ezyrb.utilities.compute_normals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.write_area.html">ezyrb.utilities.write_area</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.utilities.write_normals.html">ezyrb.utilities.write_normals</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBFInterpolator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.html">ezyrb.ndinterpolator.rbf.RBFInterpolator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__.html">ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic.html">ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
+</div>
 </div>
 </div>
 <div class="section" id="tutorials">
@@ -344,7 +233,8 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Filippo Salmoiraghi, Marco Tezzele.
+        &copy; Copyright 2016-2018, EZyRB contributors.
+      Last updated on Mar 15, 2018.
 
     </p>
   </div>
@@ -366,7 +256,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.2',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
