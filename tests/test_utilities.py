@@ -38,30 +38,32 @@ class TestPod(TestCase):
         np.testing.assert_almost_equal(volume, real_volume)
 
     def test_compute_area(self):
-        area = ezyrb.utilities.compute_area('tests/test_datasets/test_sphere.stl')
+        area = ezyrb.utilities.compute_area(
+            'tests/test_datasets/test_sphere.stl')
         np.testing.assert_almost_equal(3.076495, area.sum(), decimal=6)
 
     def test_compute_normals_points(self):
         normals = ezyrb.utilities.compute_normals(
-                'tests/test_datasets/test_sphere.stl', datatype='point')
+            'tests/test_datasets/test_sphere.stl', datatype='point')
         np.testing.assert_array_almost_equal(
-                [0, 0, 0], normals.sum(axis=0), decimal=4)
+            [0, 0, 0], normals.sum(axis=0), decimal=4)
 
     def test_compute_normals_cell(self):
         normals = ezyrb.utilities.compute_normals(
-                'tests/test_datasets/test_sphere.stl')
+            'tests/test_datasets/test_sphere.stl')
         np.testing.assert_array_almost_equal(
-                [0, 0, 0], normals.sum(axis=0), decimal=4)
+            [0, 0, 0], normals.sum(axis=0), decimal=4)
 
     def test_write_area(self):
         ezyrb.utilities.write_area('tests/test_datasets/test_sphere.vtk')
-        area = FileHandler(
-            'tests/test_datasets/test_sphere.vtk').get_dataset('Area', 'cell')
+        area = FileHandler('tests/test_datasets/test_sphere.vtk').get_dataset(
+            'Area', 'cell')
         np.testing.assert_almost_equal(3.118406, area.sum(), decimal=6)
 
     def test_write_normals(self):
         ezyrb.utilities.write_normals('tests/test_datasets/test_sphere.vtk')
         normals = FileHandler(
-            'tests/test_datasets/test_sphere.vtk').get_dataset('Normals', 'cell')
+            'tests/test_datasets/test_sphere.vtk').get_dataset(
+                'Normals', 'cell')
         np.testing.assert_array_almost_equal(
-                [0, 0, 0], normals.sum(axis=0), decimal=4)
+            [0, 0, 0], normals.sum(axis=0), decimal=4)

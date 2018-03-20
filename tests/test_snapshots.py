@@ -23,8 +23,8 @@ class TestSnapshots(TestCase):
         assert snaps.weighted.shape == (2500, 2)
 
     def test_append_weights(self):
-        snaps = Snapshots(output_name='Weights', weight_name='Weights',
-                dformat="cell")
+        snaps = Snapshots(
+            output_name='Weights', weight_name='Weights', dformat="cell")
         snaps.append("tests/test_datasets/matlab_00.vtk")
         assert snaps.weights.shape == (2401, 1)
 

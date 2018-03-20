@@ -6,6 +6,7 @@ import os
 
 from ezyrb.parametricspace import ParametricSpace
 
+
 class TestParametricSpace(TestCase):
     def test_init(self):
         with self.assertRaises(NotImplementedError):

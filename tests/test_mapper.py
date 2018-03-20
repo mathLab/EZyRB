@@ -54,6 +54,7 @@ class TestMapper(TestCase):
     def test_interpolate_function_setter(self):
         def custom_interp(values, dist):
             return values[np.argmin(dist)]
+
         mapper = ma.Mapper()
         mapper.interpolate_function = custom_interp
 
