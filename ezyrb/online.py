@@ -29,7 +29,7 @@ class Online(object):
     """
 
     def __init__(self, output_name, space_filename, dformat='cell'):
-        
+
         self.output_name = output_name
         self.dformat = dformat
         self.space = ParametricSpace.load(space_filename)

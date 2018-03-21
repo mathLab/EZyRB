@@ -45,11 +45,12 @@ def polygon_area(points):
     if num_points < 3:
         return 0.0
 
-    total = np.sum([
-        np.cross(points[i], points[(i + 1) % num_points])
-        for i in np.arange(num_points)
-    ],
-                   axis=0)
+    total = np.sum(
+        [
+            np.cross(points[i], points[(i + 1) % num_points])
+            for i in np.arange(num_points)
+        ],
+        axis=0)
 
     unit_vector = normalize(normal(*points[0:3]))
 
@@ -112,8 +113,7 @@ def compute_normals(filename, datatype='cell'):
         for i_point in np.arange(points.shape[0]):
             cell_adiacent = [cells.index(c) for c in cells if i_point in c]
             normals_cell[i_point] = normalize(
-                np.mean(
-                    normals[cell_adiacent], axis=0))
+                np.mean(normals[cell_adiacent], axis=0))
         normals = normals_cell
 
     return normals

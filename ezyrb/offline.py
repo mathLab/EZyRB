@@ -173,7 +173,6 @@ class Offline(object):
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(
-                    worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
 
         return barycentric_point

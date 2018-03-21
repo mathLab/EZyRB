@@ -121,8 +121,8 @@ class Snapshots(object):
 
         if not self.values.size and self._w_name:
 
-            self._weights = FileHandler(filename).get_dataset(self._w_name,
-                                                              self._dformat)
+            self._weights = FileHandler(filename).get_dataset(
+                self._w_name, self._dformat)
 
         self._files.append(filename)
 
