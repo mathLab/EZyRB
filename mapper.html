@@ -248,7 +248,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descname">Mapper</code></dt>
+<em class="property">class </em><code class="descname">Mapper</code><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Documentation</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -270,7 +270,7 @@ starting from neighbors value.</li>
 </table>
 <dl class="method">
 <dt>
-<code class="descname">_build_neighbour_locator</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span></dt>
+<code class="descname">_build_neighbour_locator</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper._build_neighbour_locator"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Construct kdtree to nearest neighbors search.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -285,7 +285,7 @@ coordinates of points by row</td>
 
 <dl class="method">
 <dt>
-<code class="descname">_find_neighbour</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span></dt>
+<code class="descname">_find_neighbour</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper._find_neighbour"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This method looks for the nearest neighbors to a given point; the
 locator have to build before looking for operation.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -307,7 +307,7 @@ neighbors.</td>
 
 <dl class="staticmethod">
 <dt>
-<em class="property">static </em><code class="descname">default_interpolate_func</code><span class="sig-paren">(</span><em>distance</em><span class="sig-paren">)</span></dt>
+<em class="property">static </em><code class="descname">default_interpolate_func</code><span class="sig-paren">(</span><em>distance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper.default_interpolate_func"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Default function for the point interpolation. Take as argument
 the neighbors values and the respective distance between
 to-interpolate point and neighbors, and return the values weighted
@@ -332,7 +332,7 @@ to-interpolate point and neighbors.</li>
 
 <dl class="staticmethod">
 <dt>
-<em class="property">static </em><code class="descname">get_cell_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<em class="property">static </em><code class="descname">get_cell_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper.get_cell_centroid"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Compute the centroid of the cell defined by <cite>vertices</cite>; the centroid is
 computed as the <cite>vertices</cite> coordinates average.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -392,7 +392,7 @@ or the selected output cell data. Valid value is ‘point’ or ‘cell’.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">map_solution</code><span class="sig-paren">(</span><em>output_file</em>, <em>solution_file</em>, <em>geometry_file=None</em><span class="sig-paren">)</span></dt>
+<code class="descname">map_solution</code><span class="sig-paren">(</span><em>output_file</em>, <em>solution_file</em>, <em>geometry_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/mapper.html#Mapper.map_solution"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This method maps the solution on a new geometry. To be more
 specific, for each point (or cell) of the given geometry looks for the
 nearest solution points (or cells) and interpolate the selected output
@@ -483,7 +483,7 @@ file to the mapped one.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016-2018, EZyRB contributors.
-      Last updated on Mar 15, 2018.
+      Last updated on Mar 20, 2018.
 
     </p>
   </div>

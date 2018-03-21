@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ezyrb.mapper &mdash; EZyRB 0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="EZyRB 0.2 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EZyRB
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EZyRB</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ezyrb.mapper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ezyrb.mapper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities to map solution on a specific geometry</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ezyrb.filehandler</span> <span class="k">import</span> <span class="n">FileHandler</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+
+<div class="viewcode-block" id="Mapper"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper">[docs]</a><span class="k">class</span> <span class="nc">Mapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Documentation</span>
+
+<span class="sd">    :cvar list(str) _output_name: the list of output names to map.</span>
+<span class="sd">    :cvar str _mode: indicate if new file will be interpolated using point</span>
+<span class="sd">        data or cell data.</span>
+<span class="sd">    :cvar int _n_neighbors: number of neighbors to use to interpolate new</span>
+<span class="sd">        value.</span>
+<span class="sd">    :cvar function _interpolate_func: function to interpolate new value</span>
+<span class="sd">        starting from neighbors value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Mapper.__init__"><a class="viewcode-back" href="../../_summaries/ezyrb.mapper.Mapper.html#ezyrb.mapper.Mapper.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_name</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_neighbour_locator</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="s2">&quot;point&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span> <span class="o">=</span> <span class="mi">1</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_func</span> <span class="o">=</span> <span class="n">Mapper</span><span class="o">.</span><span class="n">default_interpolate_func</span>
+
+<div class="viewcode-block" id="Mapper.get_cell_centroid"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper.get_cell_centroid">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_cell_centroid</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the centroid of the cell defined by `vertices`; the centroid is</span>
+<span class="sd">        computed as the `vertices` coordinates average.</span>
+
+<span class="sd">        :param numpy.ndarray vertices: a *n_vertices*-by-3 matrix where vertices</span>
+<span class="sd">            coordinates are store by row.</span>
+<span class="sd">        :return: cell centroid coordinates</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">centroid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">centroid</span>
+
+<div class="viewcode-block" id="Mapper.default_interpolate_func"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper.default_interpolate_func">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_interpolate_func</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default function for the point interpolation. Take as argument</span>
+<span class="sd">        the neighbors values and the respective distance between</span>
+<span class="sd">        to-interpolate point and neighbors, and return the values weighted</span>
+<span class="sd">        average (weights are the reciprocal of the distances). If</span>
+<span class="sd">        to-interpolate point coincides with one of the neighbors, return that</span>
+<span class="sd">        neighbour value.</span>
+
+<span class="sd">        :param numpy.ndarray values: a matrix *number_of_neighbors* -by-</span>
+<span class="sd">            *number_of_components* containing neighbors values.</span>
+<span class="sd">        :param numpy.narray distance: a vector containing distance between</span>
+<span class="sd">            to-interpolate point and neighbors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">distance</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">distance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span>
+</div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">distance</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">output_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The names of outputs you wanna interpolate from the original solution</span>
+<span class="sd">        file to the mapped one.</span>
+
+<span class="sd">        :getter: Returns the output names</span>
+<span class="sd">        :setter: Sets the output names</span>
+<span class="sd">        :type: list(str)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_name</span>
+
+    <span class="nd">@output_name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">output_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">output_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_name</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">output_name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_name</span> <span class="o">=</span> <span class="n">output_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">interpolate_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The function to interpolate value of a new point using neighbors value.</span>
+<span class="sd">        It has to take as arguments two `numpy.array`: the first indicates</span>
+<span class="sd">        neighbors value (one row for each value) and the second indicates</span>
+<span class="sd">        distance from interpolated point.</span>
+
+<span class="sd">        :getter: gets the interpolated function</span>
+<span class="sd">        :setter: sets the interpolation function</span>
+<span class="sd">        :type: function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_func</span>
+
+    <span class="nd">@interpolate_function</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">interpolate_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_func</span> <span class="o">=</span> <span class="n">func</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">interpolation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Indicate if solution will be mapped using the selected output point data</span>
+<span class="sd">        or the selected output cell data. Valid value is &#39;point&#39; or &#39;cell&#39;.</span>
+
+<span class="sd">        :getter: gets current mode</span>
+<span class="sd">        :setter: sets the mode</span>
+<span class="sd">        :type: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
+
+    <span class="nd">@interpolation_mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">interpolation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">,</span> <span class="s1">&#39;point&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+<div class="viewcode-block" id="Mapper._build_neighbour_locator"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper._build_neighbour_locator">[docs]</a>    <span class="k">def</span> <span class="nf">_build_neighbour_locator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct kdtree to nearest neighbors search.</span>
+
+<span class="sd">        :param numpy.ndarray points: a *n_points* -by- 3 where are stored</span>
+<span class="sd">            coordinates of points by row</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_neighbour_locator</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="c1"># The maximum recursion limit can be exceeded for large data sets.</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">setrecursion</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_neighbour_locator</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mapper._find_neighbour"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper._find_neighbour">[docs]</a>    <span class="k">def</span> <span class="nf">_find_neighbour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method looks for the nearest neighbors to a given point; the</span>
+<span class="sd">        locator have to build before looking for operation.</span>
+
+<span class="sd">        :param numpy.array coordinates: coordinates of the point to query</span>
+<span class="sd">        :return: a 2 *n_neighbors*-by-*n_query_points*; it contains in the</span>
+<span class="sd">            first `number_neighbors` columns the index of neighbors , and in</span>
+<span class="sd">            last *number_neighbors* columns the distance from query points to</span>
+<span class="sd">            neighbors.</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neighbour_locator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Neighbour locator seems not initialized&quot;</span><span class="p">)</span>
+
+        <span class="n">distance</span><span class="p">,</span> <span class="n">id_neighbour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neighbour_locator</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">coordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">id_neighbour</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                    <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span><span class="p">))),</span></div>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">number_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of neighbors to use for new value interpolation.</span>
+
+<span class="sd">        :getter: Sets number of neighbors</span>
+<span class="sd">        :setter: Return number of neighbors</span>
+<span class="sd">        :type: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span>
+
+    <span class="nd">@number_neighbors</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">number_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_neighbors</span> <span class="o">=</span> <span class="n">n</span>
+
+<div class="viewcode-block" id="Mapper.map_solution"><a class="viewcode-back" href="../../mapper.html#ezyrb.mapper.Mapper.map_solution">[docs]</a>    <span class="k">def</span> <span class="nf">map_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">solution_file</span><span class="p">,</span> <span class="n">geometry_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method maps the solution on a new geometry. To be more</span>
+<span class="sd">        specific, for each point (or cell) of the given geometry looks for the</span>
+<span class="sd">        nearest solution points (or cells) and interpolate the selected output</span>
+<span class="sd">        using neighbors values.It is possible select number of neighbors and the</span>
+<span class="sd">        interpolate function. If geometry_file is not specified, to-interpolate</span>
+<span class="sd">        points are taken from output_file, so in this case output_file must</span>
+<span class="sd">        contain geometry information; if geometry_file is specified,</span>
+<span class="sd">        to-interpolate points are taken from geometry_file and the interpolated</span>
+<span class="sd">        solution is write on output_file.</span>
+
+<span class="sd">        :param str output_file: name of file where interpolated solution will</span>
+<span class="sd">            be stored. Only vtk file are supported.</span>
+<span class="sd">        :param str solution_file: name of file where real solution is stored.</span>
+<span class="sd">        :param str geometry_file: name of file where geometry information is</span>
+<span class="sd">            stored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">geometry_file</span><span class="p">:</span>
+            <span class="n">geometry_file</span> <span class="o">=</span> <span class="n">output_file</span>
+
+        <span class="n">geo_file_handler</span> <span class="o">=</span> <span class="n">FileHandler</span><span class="p">(</span><span class="n">geometry_file</span><span class="p">)</span>
+        <span class="n">sol_file_handler</span> <span class="o">=</span> <span class="n">FileHandler</span><span class="p">(</span><span class="n">solution_file</span><span class="p">)</span>
+        <span class="n">out_file_handler</span> <span class="o">=</span> <span class="n">FileHandler</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># Read points and cell from geometry file and solution file</span>
+        <span class="c1">#</span>
+        <span class="n">point_sol</span><span class="p">,</span> <span class="n">cell_sol</span> <span class="o">=</span> <span class="n">sol_file_handler</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">(</span><span class="n">get_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">point_map</span><span class="p">,</span> <span class="n">cell_map</span> <span class="o">=</span> <span class="n">geo_file_handler</span><span class="o">.</span><span class="n">get_geometry</span><span class="p">(</span><span class="n">get_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># Only if geomtry file is not output file, I have to copy geomtry</span>
+        <span class="c1"># to output file</span>
+        <span class="k">if</span> <span class="n">geometry_file</span> <span class="o">!=</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="n">out_file_handler</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">(</span><span class="n">point_map</span><span class="p">,</span> <span class="n">cell_map</span><span class="p">)</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># Only for &#39;cell&#39; mapping</span>
+        <span class="c1">#</span>
+        <span class="c1"># if mapping using cell, compute cells centroid and use them</span>
+        <span class="c1"># as dataset for neighbors locator to find closest cell</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolation_mode</span> <span class="o">==</span> <span class="s2">&quot;cell&quot;</span><span class="p">:</span>
+            <span class="n">centroid_sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cell_centroid</span><span class="p">(</span><span class="n">point_sol</span><span class="p">[</span><span class="n">cell</span><span class="p">])</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_sol</span><span class="p">])</span>
+            <span class="n">centroid_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cell_centroid</span><span class="p">(</span><span class="n">point_map</span><span class="p">[</span><span class="n">cell</span><span class="p">])</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_map</span><span class="p">])</span>
+
+            <span class="n">point_sol</span> <span class="o">=</span> <span class="n">centroid_sol</span>
+            <span class="n">point_map</span> <span class="o">=</span> <span class="n">centroid_map</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># Build locator using correct points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_neighbour_locator</span><span class="p">(</span><span class="n">point_sol</span><span class="p">)</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># For each point find closest points in solution geometry</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_neighbour</span><span class="p">(</span><span class="n">query_point</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">query_point</span> <span class="ow">in</span> <span class="n">point_map</span>
+        <span class="p">])</span>
+
+        <span class="c1">#####</span>
+        <span class="c1"># Here the real mapping of new points on solution points</span>
+        <span class="k">for</span> <span class="n">output_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_name</span><span class="p">:</span>
+            <span class="n">output_array</span> <span class="o">=</span> <span class="n">sol_file_handler</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span>
+                <span class="n">output_name</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">)</span>
+
+            <span class="n">index_near</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">number_neighbors</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_neighbors</span><span class="p">:]</span>
+
+            <span class="n">mapped_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_function</span><span class="p">(</span><span class="n">output_array</span><span class="p">[</span><span class="n">index_near</span><span class="p">[</span><span class="n">id_neigh</span><span class="p">]],</span>
+                                          <span class="n">distance</span><span class="p">[</span><span class="n">id_neigh</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">id_neigh</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">neighbors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">])</span>
+
+            <span class="n">out_file_handler</span><span class="o">.</span><span class="n">set_dataset</span><span class="p">(</span></div></div>
+                <span class="n">mapped_output</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2018, EZyRB contributors.
+      Last updated on Mar 21, 2018.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

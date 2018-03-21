@@ -235,7 +235,7 @@ correlated(<a class="reference internal" href="_summaries/ezyrb.offline.Offline.
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descname">Offline</code><span class="sig-paren">(</span><em>output_name</em>, <em>space_type=&lt;class 'ezyrb.podinterpolation.PODInterpolation'&gt;</em>, <em>weight_name=None</em>, <em>dformat='cell'</em><span class="sig-paren">)</span></dt>
+<em class="property">class </em><code class="descname">Offline</code><span class="sig-paren">(</span><em>output_name</em>, <em>space_type=&lt;class 'ezyrb.podinterpolation.PODInterpolation'&gt;</em>, <em>weight_name=None</em>, <em>dformat='cell'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Offline phase.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -267,7 +267,7 @@ the reduced space generation.</li>
 </table>
 <dl class="method">
 <dt>
-<code class="descname">add_snapshot</code><span class="sig-paren">(</span><em>new_mu</em>, <em>new_file</em><span class="sig-paren">)</span></dt>
+<code class="descname">add_snapshot</code><span class="sig-paren">(</span><em>new_mu</em>, <em>new_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.add_snapshot"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This methos adds the new solution to the database and the new parameter
 values to the parameter points; this can be done only after the new
 solution has be computed and placed in the proper directory.</p>
@@ -288,14 +288,14 @@ database.</li>
 
 <dl class="method">
 <dt>
-<code class="descname">generate_rb_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<code class="descname">generate_rb_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.generate_rb_space"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Generate the reduced basis space by combining the snapshots. It
 uses the chosen method for the generation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">init_database</code><span class="sig-paren">(</span><em>values</em>, <em>files</em><span class="sig-paren">)</span></dt>
+<code class="descname">init_database</code><span class="sig-paren">(</span><em>values</em>, <em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.init_database"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Initialize the database with the passed parameter values and snapshot
 files: the <em>i</em>-th parameter has to be the parametric point of the
 solution stored in the <em>i</em>-th file.</p>
@@ -315,7 +315,7 @@ solution stored in the <em>i</em>-th file.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">init_database_from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span></dt>
+<code class="descname">init_database_from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.init_database_from_file"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Initialize the database by reading the parameter values and the
 snapshot files from a given filename; this file has to be format as
 following: first <em>N</em> columns indicate the parameter values, the <em>N+1</em>
@@ -339,7 +339,7 @@ files are stored.</td>
 
 <dl class="method">
 <dt>
-<code class="descname">loo_error</code><span class="sig-paren">(</span><em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span></dt>
+<code class="descname">loo_error</code><span class="sig-paren">(</span><em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.loo_error"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Estimate the approximation error using <em>leave-one-out</em> strategy. The
 main idea is to create several reduced spaces by combining all the
 snapshots except one. The error vector is computed as the difference
@@ -366,7 +366,7 @@ parametric points.</td>
 
 <dl class="method">
 <dt>
-<code class="descname">optimal_mu</code><span class="sig-paren">(</span><em>error=None</em>, <em>k=1</em><span class="sig-paren">)</span></dt>
+<code class="descname">optimal_mu</code><span class="sig-paren">(</span><em>error=None</em>, <em>k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.optimal_mu"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the parametric points where new high-fidelity solutions have to
 be computed in ordere to globaly reduce the estimated error. These
 points are the barycentric center of the region (simplex) with higher
@@ -396,7 +396,7 @@ snapshot; if error array is not passed, it is computed using
 
 <dl class="method">
 <dt>
-<code class="descname">save_rb_space</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span></dt>
+<code class="descname">save_rb_space</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/offline.html#Offline.save_rb_space"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Save the reduced basis space to <cite>filename</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -435,7 +435,7 @@ snapshot; if error array is not passed, it is computed using
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016-2018, EZyRB contributors.
-      Last updated on Mar 15, 2018.
+      Last updated on Mar 21, 2018.
 
     </p>
   </div>

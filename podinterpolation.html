@@ -217,7 +217,7 @@ Decomposition Interpolation</p>
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descname">PODInterpolation</code></dt>
+<em class="property">class </em><code class="descname">PODInterpolation</code><a class="reference internal" href="_modules/ezyrb/podinterpolation.html#PODInterpolation"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.parametricspace.ParametricSpace.html#ezyrb.parametricspace.ParametricSpace" title="ezyrb.parametricspace.ParametricSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.parametricspace.ParametricSpace</span></code></a></p>
 <p>Documentation</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -236,7 +236,7 @@ interpolation</li>
 </table>
 <dl class="method">
 <dt>
-<code class="descname">generate</code><span class="sig-paren">(</span><em>points</em>, <em>snapshots</em>, <em>interpolator=&lt;class 'scipy.interpolate.interpnd.LinearNDInterpolator'&gt;</em><span class="sig-paren">)</span></dt>
+<code class="descname">generate</code><span class="sig-paren">(</span><em>points</em>, <em>snapshots</em>, <em>interpolator=&lt;class 'scipy.interpolate.interpnd.LinearNDInterpolator'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/podinterpolation.html#PODInterpolation.generate"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Generate the reduced space using the proper orthogonal decomposition
 interpolation: the matrix that contains the <cite>snapshots</cite> computed for
 the <cite>points</cite> is decomposed using SVD tecnique to obtain the POD basis.
@@ -276,7 +276,7 @@ the parametric space creation.</p>
 
 <dl class="staticmethod">
 <dt>
-<em class="property">static </em><code class="descname">loo_error</code><span class="sig-paren">(</span><em>snapshots</em>, <em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span></dt>
+<em class="property">static </em><code class="descname">loo_error</code><span class="sig-paren">(</span><em>snapshots</em>, <em>func=&lt;function norm&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/podinterpolation.html#PODInterpolation.loo_error"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Compute the error for each parametric point as projection of the
 snapshot onto the POD basis with a leave-one-out (loo) strategy.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -336,7 +336,7 @@ snapshot onto the POD basis with a leave-one-out (loo) strategy.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016-2018, EZyRB contributors.
-      Last updated on Mar 15, 2018.
+      Last updated on Mar 21, 2018.
 
     </p>
   </div>

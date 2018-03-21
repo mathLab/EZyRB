@@ -220,7 +220,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descname">VtkHandler</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span></dt>
+<em class="property">class </em><code class="descname">VtkHandler</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Vtk format file handler class.
 You are NOT supposed to call directly this class constructor (use
@@ -243,7 +243,7 @@ processed</li>
 </table>
 <dl class="method">
 <dt>
-<code class="descname">_read_polydata</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<code class="descname">_read_polydata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler._read_polydata"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This private method reads the given <cite>filename</cite> and return a vtkPolyData
 object containing all informations about file; to avoid useless IO
 operation on the same file, it stores polydata of the last file parsed
@@ -263,7 +263,7 @@ returned.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">_save_polydata</code><span class="sig-paren">(</span><em>data</em>, <em>write_bin=False</em><span class="sig-paren">)</span></dt>
+<code class="descname">_save_polydata</code><span class="sig-paren">(</span><em>data</em>, <em>write_bin=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler._save_polydata"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This private method saves into <cite>filename</cite> the <cite>data</cite>. <cite>data</cite> is a
 vtkPolydata. It is possible to specify format for <cite>filename</cite>: if
 <cite>write_bin</cite> is True, file is written in binary format, otherwise in
@@ -285,7 +285,7 @@ operations.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">get_all_output_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<code class="descname">get_all_output_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler.get_all_output_names"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the list of all the output names by point and the list of all the
 output names by cell.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -302,7 +302,7 @@ output names by cell.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">get_dataset</code><span class="sig-paren">(</span><em>output_name</em>, <em>datatype='point'</em><span class="sig-paren">)</span></dt>
+<code class="descname">get_dataset</code><span class="sig-paren">(</span><em>output_name</em>, <em>datatype='point'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler.get_dataset"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This method reads the given <cite>filename</cite> and returns a numpy array
 containing <cite>output_name</cite> field for each point (if datatype is ‘point’)
 or for each cell (if datatype is ‘cell’).
@@ -332,7 +332,7 @@ extracted output.</p>
 
 <dl class="method">
 <dt>
-<code class="descname">get_geometry</code><span class="sig-paren">(</span><em>get_cells=False</em><span class="sig-paren">)</span></dt>
+<code class="descname">get_geometry</code><span class="sig-paren">(</span><em>get_cells=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler.get_geometry"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This method reads the given filename and returns points and cells of
 file. If get_cells is True, it computes the list that contain index of
 points defining cells, otherwise the list is not computed and set to
@@ -356,7 +356,7 @@ of the points that define the cell (if computed).</td>
 
 <dl class="method">
 <dt>
-<code class="descname">set_dataset</code><span class="sig-paren">(</span><em>output_values</em>, <em>output_name</em>, <em>datatype='point'</em>, <em>write_bin=False</em><span class="sig-paren">)</span></dt>
+<code class="descname">set_dataset</code><span class="sig-paren">(</span><em>output_values</em>, <em>output_name</em>, <em>datatype='point'</em>, <em>write_bin=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler.set_dataset"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Writes to filename the given output. <cite>output_values</cite> is a matrix that
 contains the new values of output to write, <cite>output_name</cite> is a string
 that indicates name of output to write.</p>
@@ -381,7 +381,7 @@ false.</li>
 
 <dl class="method">
 <dt>
-<code class="descname">set_geometry</code><span class="sig-paren">(</span><em>points</em>, <em>cells</em>, <em>write_bin=False</em><span class="sig-paren">)</span></dt>
+<code class="descname">set_geometry</code><span class="sig-paren">(</span><em>points</em>, <em>cells</em>, <em>write_bin=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/vtkhandler.html#VtkHandler.set_geometry"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>This method writes to <cite>filename</cite> a new data defined by <cite>points</cite> and
 <cite>cells</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -429,7 +429,7 @@ false.</li>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016-2018, EZyRB contributors.
-      Last updated on Mar 15, 2018.
+      Last updated on Mar 21, 2018.
 
     </p>
   </div>
