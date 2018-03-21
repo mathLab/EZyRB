@@ -40,12 +40,9 @@
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
-**EZyRB** requires `numpy`, `scipy` and `matplotlib`. They can be easily installed via `pip`. Moreover **EZyRB** depends on `vtk`. These requirements cannot be satisfied through `pip`. The code is compatible with Python 2.7.
-Please see the table below for instructions on how to satisfy the requirements.
-
-| Package | Version  | Comment                                                                    |
-|---------|----------|----------------------------------------------------------------------------|
-| vtk     | >= 5.0   | Simplest solution is `conda install vtk`                                   |
+**EZyRB** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `nose` (for local
+        test) and `sphinx` (to generate the documentation). They can be easily
+installed via `pip`
 
 The official distribution is on GitHub, and you can clone the repository using
 
