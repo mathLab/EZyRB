@@ -117,6 +117,10 @@ If you use this package in your publications please cite the package as follows:
 ### Recent works with EZyRB
 Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
+* Salmoiraghi, Scardigli, Telib, Rozza. *Free Form Deformation, mesh morphing and reduced order methods: enablers for efficient aerodynamic shape optimization*. 2018. [[arXiv](https://arxiv.org/abs/1803.04688)].
+
+* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape Optimization by means of Proper Orthogonal Decomposition and Dynamic Mode Decomposition*. 2018. [[arXiv](https://arxiv.org/abs/1803.07368)].
+
 
 ## Authors and contributors
 **EZyRB** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by
