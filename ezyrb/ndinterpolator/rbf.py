@@ -24,6 +24,7 @@ class RBFInterpolator(object):
     :cvar callable basis: the basis function.
     :cvar numpy.ndarray weights: the weights matrix.
     """
+
     @staticmethod
     def multi_quadratic(X, r):
         """
