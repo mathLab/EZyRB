@@ -42,7 +42,7 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `nose` (for local
         test) and `sphinx` (to generate the documentation). They can be easily
-installed via `pip`
+installed via `pip`. The code is compatible with Python 2.7.
 
 The official distribution is on GitHub, and you can clone the repository using
 
