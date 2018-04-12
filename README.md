@@ -4,7 +4,7 @@
   </a>
 </p>
 <p align="center">
-    <a href=" https://doi.org/10.21105/joss.00661" target="_blank">
+    <a href="https://doi.org/10.21105/joss.00661" target="_blank">
         <img alt="JOSS DOI" src="http://joss.theoj.org/papers/10.21105/joss.00661/status.svg">
     </a>
     <a href="https://github.com/mathLab/EZyRB/blob/master/LICENSE.rst" target="_blank">
