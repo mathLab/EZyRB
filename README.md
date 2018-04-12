@@ -10,6 +10,9 @@
     <a href="https://github.com/mathLab/EZyRB/blob/master/LICENSE.rst" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
     </a>
+    <a href="https://badge.fury.io/py/ezyrb">
+        <img src="https://badge.fury.io/py/ezyrb.svg" alt="PyPI version" height="18">
+    </a>
     <a href="https://travis-ci.org/mathLab/EZyRB" target="_blank">
         <img alt="Build Status" src="https://travis-ci.org/mathLab/EZyRB.svg">
     </a>
@@ -44,17 +47,28 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `nose` (for local
-        test) and `sphinx` (to generate the documentation). They can be easily
-installed via `pip`. The code is compatible with Python 2.7.
+        test) and `sphinx` (to generate the documentation). The code is
+compatible with Python 2.7. It can be installed using `pip` or
+directly from the source code.
 
+### Installing via PIP
+Mac and Linux users can install pre-built binary packages using pip.
+To install the package just type: 
+```bash
+> pip install ezyrb
+```
+To uninstall the package:
+```bash
+> pip uninstall ezyrb
+```
+
+### Installing from source
 The official distribution is on GitHub, and you can clone the repository using
-
 ```bash
 > git clone https://github.com/mathLab/EZyRB
 ```
 
 To install the package just type:
-
 ```bash
 > python setup.py install
 ```
@@ -65,7 +79,6 @@ To uninstall the package you have to rerun the installation and record the insta
 > python setup.py install --record installed_files.txt
 > cat installed_files.txt | xargs rm -rf
 ```
-
 
 ## Documentation
 **EZyRB** uses [Sphinx](http://www.sphinx-doc.org/en/stable/) for code documentation. To build the html versions of the docs simply:
