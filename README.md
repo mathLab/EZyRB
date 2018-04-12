@@ -4,6 +4,9 @@
   </a>
 </p>
 <p align="center">
+    <a href=" https://doi.org/10.21105/joss.00661" target="_blank">
+        <img alt="JOSS DOI" src="http://joss.theoj.org/papers/10.21105/joss.00661/status.svg">
+    </a>
     <a href="https://github.com/mathLab/EZyRB/blob/master/LICENSE.rst" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
     </a>
@@ -109,9 +112,21 @@ Here we show an application taken from the **automotive** engineering field
 ## How to cite
 If you use this package in your publications please cite the package as follows:
 
+Demo et al., (2018). EZyRB: Easy Reduced Basis method. Journal of Open Source Software, 3(24), 661, [https://doi.org/10.21105/joss.00661](https://doi.org/10.21105/joss.00661)
+
+Or if you use LaTeX:
+
 ```tex
-\bibitem{ezyrb}
-{EZyRB: Easy Reduced Basis method. Available at}: \href{https://github.com/mathLab/EZyRB}{https://github.com/mathLab/EZyRB}.
+@article{demo18ezyrb,
+  Author = {Demo, Nicola and Tezzele, Marco and Rozza, Gianluigi},
+  Title = {{EZyRB: Easy Reduced Basis method}},
+  Journal = {The Journal of Open Source Software},
+  Volume = {3},
+  Number = {24},
+  Pages = {661},
+  Year = {2018},
+  Doi = {https://doi.org/10.21105/joss.00661}
+}
 ```
 
 ### Recent works with EZyRB
