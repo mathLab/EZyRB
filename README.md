@@ -147,7 +147,7 @@ Here there is a list of the scientific works involving **EZyRB** you can consult
 
 * Salmoiraghi, Scardigli, Telib, Rozza. *Free Form Deformation, mesh morphing and reduced order methods: enablers for efficient aerodynamic shape optimization*. 2018. [[arXiv](https://arxiv.org/abs/1803.04688)].
 
-* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape Optimization by means of Proper Orthogonal Decomposition and Dynamic Mode Decomposition*. 2018. [[arXiv](https://arxiv.org/abs/1803.07368)].
+* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)] [[arXiv](https://arxiv.org/abs/1803.07368)].
 
 
 ## Authors and contributors
