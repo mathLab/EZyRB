@@ -1,5 +1,5 @@
 """
-Class for computation of the Offline part. It provides methods for:
+Class to manage the entire offline phase. It provides methods for:
     - import the `snapshots` and the parameter values
       correlated(:func:`init_database <ezyrb.offline.Offline.init_database>` ,
       :func:`init_database_from_file
@@ -21,19 +21,19 @@ class Offline(object):
     """
     Offline phase.
 
-    :param ParametricSpace spacetype: the method used for the reduced space
-        generation. Default is :class:`.PODInterpolation`.
     :param str output_name: the name of the output of interest.
+    :param ParametricSpace space_type: the method used for the reduced space
+        generation. Default is :class:`.PODInterpolation`.
     :param str weight_name: the name of the output to consider as weight.
     :param str dformat: the data format to extract from the snapshot files:
         if the parameter is "cell", the snapshot values refer to the cell data,
         if the parameter is "point", the snapshot values refer to the point
         data. These are the only options available.
 
-    :cvar Points mu_values: the object that contains the parameter values
+    :cvar Points mu: the object that contains the parameter values
     :cvar Snapshots snapshots: the object that contains the snapshots extracted
         from the chosen files.
-    :cvar ParametricSpace spacetype: the method used for
+    :cvar ParametricSpace space: the method used for
         the reduced space generation.
     """
 
