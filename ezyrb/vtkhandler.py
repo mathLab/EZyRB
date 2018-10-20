@@ -72,11 +72,7 @@ class VtkHandler(object):
             writer.SetFileTypeToBinary()
 
         writer.SetFileName(self._filename)
-
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            writer.SetInput(data)
-        else:
-            writer.SetInputData(data)
+        writer.SetInputData(data)
         writer.Write()
 
     def get_geometry(self, get_cells=False):
