@@ -9,14 +9,16 @@ import scipy
 
 class Mapper(object):
     """
-    Documentation
+    This class provides methods to map a solution of a specific geometry.
+    See tutorial number 3 for an usage example.
 
     :cvar list(str) _output_name: the list of output names to map.
+    :cvar cKDTree _neighbour_locator: kdtree for nearest neighbors search.
     :cvar str _mode: indicate if new file will be interpolated using point
         data or cell data.
     :cvar int _n_neighbors: number of neighbors to use to interpolate new
         value.
-    :cvar function _interpolate_func: function to interpolate new value
+    :cvar function __interpolate_func: function to interpolate new value
         starting from neighbors value.
     """
 
@@ -132,7 +134,7 @@ class Mapper(object):
 
     def _build_neighbour_locator(self, points):
         """
-        Construct kdtree to nearest neighbors search.
+        Construct kdtree for nearest neighbors search.
 
         :param numpy.ndarray points: a *n_points* -by- 3 where are stored
             coordinates of points by row
@@ -146,8 +148,8 @@ class Mapper(object):
 
     def _find_neighbour(self, coordinates):
         """
-        This method looks for the nearest neighbors to a given point; the
-        locator have to build before looking for operation.
+        This method looks for the nearest neighbors of a given point; the
+        locator have to be built before looking for operation.
 
         :param numpy.array coordinates: coordinates of the point to query
         :return: a 2 *n_neighbors*-by-*n_query_points*; it contains in the
@@ -213,21 +215,16 @@ class Mapper(object):
         sol_file_handler = FileHandler(solution_file)
         out_file_handler = FileHandler(output_file)
 
-        #####
         # Read points and cell from geometry file and solution file
-        #
         point_sol, cell_sol = sol_file_handler.get_geometry(get_cells=True)
         point_map, cell_map = geo_file_handler.get_geometry(get_cells=True)
 
-        #####
         # Only if geomtry file is not output file, I have to copy geomtry
         # to output file
         if geometry_file != output_file:
             out_file_handler.set_geometry(point_map, cell_map)
 
-        #####
         # Only for 'cell' mapping
-        #
         # if mapping using cell, compute cells centroid and use them
         # as dataset for neighbors locator to find closest cell
         if self.interpolation_mode == "cell":
@@ -239,18 +236,15 @@ class Mapper(object):
             point_sol = centroid_sol
             point_map = centroid_map
 
-        #####
         # Build locator using correct points
         self._build_neighbour_locator(point_sol)
 
-        #####
         # For each point find closest points in solution geometry
         neighbors = np.array([
             self._find_neighbour(query_point).ravel()
             for query_point in point_map
         ])
 
-        #####
         # Here the real mapping of new points on solution points
         for output_name in self._output_name:
             output_array = sol_file_handler.get_dataset(
