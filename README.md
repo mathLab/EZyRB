@@ -145,7 +145,7 @@ Or if you use LaTeX:
 ### Recent works with EZyRB
 Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Salmoiraghi, Scardigli, Telib, Rozza. *Free Form Deformation, mesh morphing and reduced order methods: enablers for efficient aerodynamic shape optimization*. 2018. [[arXiv](https://arxiv.org/abs/1803.04688)].
+* Salmoiraghi, Scardigli, Telib, Rozza. *Free-form deformation, mesh morphing and reduced-order methods: enablers for efficient aerodynamic shape optimisation*. International Journal of Computational Fluid Dynamics, 32:4-5, 233-247, 2018. [[doi](https://doi.org/10.1080/10618562.2018.1514115)] [[arXiv](https://arxiv.org/abs/1803.04688)].
 
 * Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)] [[arXiv](https://arxiv.org/abs/1803.07368)].
 
