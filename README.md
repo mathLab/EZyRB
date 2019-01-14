@@ -145,6 +145,8 @@ Or if you use LaTeX:
 ### Recent works with EZyRB
 Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
+* Garotta, Demo, Tezzele, Carraturo, Reali, Rozza. *Reduced Order Isogeometric Analysis Approach for PDEs in Parametrized Domains*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1811.08631)].
+
 * Tezzele, Demo, Mola, Rozza. *An integrated data-driven computational pipeline with model order reduction for industrial and applied mathematics*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1810.12364)].
 
 * Salmoiraghi, Scardigli, Telib, Rozza. *Free-form deformation, mesh morphing and reduced-order methods: enablers for efficient aerodynamic shape optimisation*. International Journal of Computational Fluid Dynamics, 32:4-5, 233-247, 2018. [[DOI](https://doi.org/10.1080/10618562.2018.1514115)], [[arXiv](https://arxiv.org/abs/1803.04688)].
