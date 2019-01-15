@@ -145,7 +145,7 @@ class Offline(object):
     def optimal_mu(self, error=None, k=1):
         """
         Return the parametric points where new high-fidelity solutions have to
-        be computed in ordere to globaly reduce the estimated error. These
+        be computed in order to globally reduce the estimated error. These
         points are the barycentric center of the region (simplex) with higher
         error.
 
