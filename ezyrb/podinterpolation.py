@@ -60,7 +60,7 @@ class PODInterpolation(ParametricSpace):
 
         self._pod_basis = np.sqrt(snapshots.weights) * eig_vec
         coefs = self._pod_basis.T.dot(snapshots.weighted)
-        self._interpolator = interpolator(points.values.T, coefs)
+        self._interpolator = interpolator(points.values.T, coefs.T)
 
     def __call__(self, value):
         """
