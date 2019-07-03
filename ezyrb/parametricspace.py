@@ -26,7 +26,7 @@ class ParametricSpace(object):
 
         :param str filename: the filename where the space has to be saved.
         """
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
@@ -38,5 +38,5 @@ class ParametricSpace(object):
         :return: the space instance.
         :rtype: ParametricSpace
         """
-        with open(filename, 'r') as f:
+        with open(filename, 'rb') as f:
             return pickle.load(f)
