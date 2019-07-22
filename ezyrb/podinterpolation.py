@@ -4,7 +4,7 @@ Decomposition Interpolation
 """
 
 from ezyrb.parametricspace import ParametricSpace
-from scipy.interpolate import LinearNDInterpolator
+from ezyrb.ndinterpolator.linear import LinearInterpolator
 import numpy as np
 
 
@@ -42,7 +42,7 @@ class PODInterpolation(ParametricSpace):
         """
         return self._interpolator
 
-    def generate(self, points, snapshots, interpolator=LinearNDInterpolator):
+    def generate(self, points, snapshots, interpolator=LinearInterpolator):
         """
         Generate the reduced space using the proper orthogonal decomposition
         interpolation: the matrix that contains the `snapshots` computed for

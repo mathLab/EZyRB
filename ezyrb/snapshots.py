@@ -150,7 +150,6 @@ class Snapshots(object):
 
         :param array_like values: the output.
         """
-        print(values.shape)
         array = np.dot(np.sqrt(self._weights), values.T).reshape(-1, 1)
         try:
             self._weighted = np.append(self._weighted, array, 1)
