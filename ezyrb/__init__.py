@@ -1,7 +1,7 @@
 __all__ = [
     'filehandler', 'matlabhandler', 'vtkhandler', 'podinterpolation', 'online',
     'stlhandler', 'mapper', 'offline', 'utilities', 'points', 'snapshots',
-    'parametricspace', 'interpolation', 'rbf'
+    'parametricspace', 'interpolation', 'rbf', 'linear'
 ]
 
 from . import filehandler
@@ -18,3 +18,4 @@ from . import points
 from . import snapshots
 from . import utilities
 from .ndinterpolator import rbf
+from .ndinterpolator import linear

@@ -8,7 +8,7 @@ from ezyrb.podinterpolation import PODInterpolation
 from ezyrb.parametricspace import ParametricSpace
 from ezyrb.points import Points
 from ezyrb.snapshots import Snapshots
-from scipy.interpolate import LinearNDInterpolator
+from ezyrb.ndinterpolator.linear import LinearInterpolator
 
 
 class TestPODInterpolation(TestCase):
@@ -43,7 +43,7 @@ class TestPODInterpolation(TestCase):
         snap.append("tests/test_datasets/matlab_02.vtk")
         snap.append("tests/test_datasets/matlab_03.vtk")
         space.generate(mu, snap)
-        assert isinstance(space.interpolator, LinearNDInterpolator)
+        assert isinstance(space.interpolator, LinearInterpolator)
 
     def test_call(self):
         mu = Points()
