@@ -25,7 +25,7 @@
 </p>
 
 
-**EZyRB**: Easy Reduced Basis method
+**EZyRB**: Easy Reduced Basis methodkj kxcjhv
 
 ## Table of contents
 * [Description](#description)
