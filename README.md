@@ -145,7 +145,7 @@ Or if you use LaTeX:
 ### Recent works with EZyRB
 Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Tezzele, Demo, Rozza. *A non-intrusive approach for proper orthogonal decomposition modal coefficients reconstruction through active subspaces*. Comptes Rendus de l'Academie des Sciences DataBEST 2019 Special Issue. [[arXiv](https://arxiv.org/abs/1907.12777)].
+* Tezzele, Demo, Rozza. *A non-intrusive approach for proper orthogonal decomposition modal coefficients reconstruction through active subspaces*. Comptes Rendus de l'Academie des Sciences DataBEST 2019 Special Issue. [[arXiv](https://arxiv.org/abs/1907.12777)] [[bibitem](readme/demo2019cras.bib)] .
 
 * Tezzele, Demo, Rozza. *Shape optimization through proper orthogonal decomposition with interpolation and dynamic mode decomposition enhanced by active subspaces*. In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 122-133, 2019. [[DOI](https://congress.cimne.com/marine2019/frontal/Doc/EbookMarine2019.pdf)] [[arXiv](https://arxiv.org/abs/1905.05483)].
 
