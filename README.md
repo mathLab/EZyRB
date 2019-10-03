@@ -51,33 +51,25 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 compatible with Python 2.7. It can be installed using `pip` or
 directly from the source code.
 
-### Installing via PIP
-Mac and Linux users can install pre-built binary packages using pip.
-To install the package just type: 
-```bash
-> pip install ezyrb
-```
-To uninstall the package:
-```bash
-> pip uninstall ezyrb
-```
-
 ### Installing from source
 The official distribution is on GitHub, and you can clone the repository using
 ```bash
 > git clone https://github.com/mathLab/EZyRB
 ```
 
-To install the package just type:
+To install the latest version of the package just type:
+```bash
+> pip install git+https://github.com/mathLab/EZyRB
+```
+
+Otherwise to install your own local branch you can use the `setup.py` file
 ```bash
 > python setup.py install
 ```
 
-To uninstall the package you have to rerun the installation and record the installed files in order to remove them:
-
+To uninstall the package just use pip again:
 ```bash
-> python setup.py install --record installed_files.txt
-> cat installed_files.txt | xargs rm -rf
+> pip uninstall ezyrb
 ```
 
 ## Documentation
