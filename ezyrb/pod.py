@@ -132,8 +132,6 @@ class POD(Reduction):
     def _corrm(self, X):
         """
         Truncated Singular Value Decomposition. calculated with correlation matrix.
-
-
         
         :param numpy.ndarray X: the matrix to decompose.
         :return: the truncated left-singular vectors matrix, the truncated

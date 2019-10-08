@@ -23,14 +23,12 @@ class TestPOD(TestCase):
             A, -1 * poddb, rtol=1e-03, atol=1e-08,)
     
     def test_correlation_matirix_savemem(self):
-        A = POD('correlation_matrix',save_memory = True).reduce(snapshots)
+        A = POD('correlation_matrix', save_memory = True).reduce(snapshots)
         assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
             A, -1 * poddb, rtol=1e-03, atol=1e-08,)
 
     def test_randomized_svd(self):
         A = POD('randomized_svd').reduce(snapshots)
-        #assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
-        #    A, -1 * poddb, rtol=1e-03, atol=1e-08,)
         assert np.allclose(np.absolute(A), np.absolute(poddb), rtol=1e-03, atol=1e-08)
     
     def test_singlular_values(self):
@@ -43,6 +41,6 @@ class TestPOD(TestCase):
     def test_modes(self):
         a = POD('svd')
         a.reduce(snapshots)
-        np.testing.assert_allclose (a.modes,modes)
+        np.testing.assert_allclose(a.modes,modes)
 
 
