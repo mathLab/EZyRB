@@ -50,11 +50,19 @@ class POD(Reduction):
         return self._singular_values
 
     def reduce(self, X):
+        """
+
+        :type: numpy.ndarray
+        """
         self._modes, self._singular_values = self.__method(X)
         print('AAAA', self._modes)
         return self.modes.T.dot(X)
 
     def expand(self, X):
+        """
+
+        :type: numpy.ndarray
+        """
         return np.sum(self.modes * X, axis=1)
 
     def _truncation(self, X):
@@ -101,7 +109,14 @@ class POD(Reduction):
 
     def _rsvd(self, X):
         """
+        Truncated randomized Singular Value Decomposition.
+        
+        :param numpy.ndarray X: the matrix to decompose.
+        :return: the truncated left-singular vectors matrix, the truncated
+            singular values array, the truncated right-singular vectors matrix.
+        :rtype: numpy.ndarray, numpy.ndarray, numpy.ndarray
         """
+
         P = np.random.rand(X.shape[1], X.shape[0])
         Q = np.linalg.qr(X.dot(P))[0]
 
@@ -116,24 +131,32 @@ class POD(Reduction):
 
     def _corrm(self, X):
         """
-        """
-        # TODO: check
-        #if self.save_memory:
-        #    corr = np.empty(size=(X.shape[1], X.shape[1]))
-        #    for i, i_snap in enumerate(X.T):
-        #        for j, k_snap in enumerate(X.T):
-        #            corr[i, j] = np.inner(i_snap, j_snap)
-        #else:
+        Truncated Singular Value Decomposition. calculated with correlation matrix.
 
-        corr = X.T.dot(X)
-
-        s, U = np.linalg.eig(corr)
-    
-        U = X.dot(U)/np.sqrt(s)
-
-        rank = self._truncation(X)
-        return U[:, :rank], s[:rank]
-    
-         
 
         
+        :param numpy.ndarray X: the matrix to decompose.
+        :return: the truncated left-singular vectors matrix, the truncated
+            singular values array, the truncated right-singular vectors matrix.
+        :rtype: numpy.ndarray, numpy.ndarray, numpy.ndarray
+        """
+
+        if self.save_memory:
+            corr = np.empty(size=(X.shape[1], X.shape[1]))
+            for i, i_snap in enumerate(X.T):
+                for j, k_snap in enumerate(X.T):
+                    corr[i, j] = np.inner(i_snap, j_snap)
+        else:
+            corr = X.T.dot(X)
+
+        s, U = np.linalg.eig(corr)
+        U = X.dot(U)/np.sqrt(s)
+        rank = self._truncation(X)
+
+        return U[:, :rank], s[:rank]
+
+
+
+
+
+
