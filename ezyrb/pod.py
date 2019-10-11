@@ -51,15 +51,16 @@ class POD(Reduction):
 
     def reduce(self, X):
         """
+        Reduces the parameter Space by using the specified reduction method (default svd).
 
         :type: numpy.ndarray
         """
         self._modes, self._singular_values = self.__method(X)
-        print('AAAA', self._modes)
         return self.modes.T.dot(X)
 
     def expand(self, X):
         """
+        Projects a reduced to full order solution.
 
         :type: numpy.ndarray
         """
