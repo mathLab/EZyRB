@@ -14,6 +14,7 @@ class ReducedOrderModel(object):
         """
         Calculate reduced space
         """
+
         self.approximation.fit(
             self.database.parameters,
             self.reduction.reduce(self.database.snapshots.T))
@@ -45,6 +46,7 @@ class ReducedOrderModel(object):
             parametric points.
         :rtype: numpy.ndarray
         """
+
         points = self.database.parameters.shape[0]
 
         error = np.zeros(points)

@@ -145,6 +145,7 @@ class POD(Reduction):
             for i, i_snap in enumerate(X.T):
                 for j, k_snap in enumerate(X.T):
                     corr[i, j] = np.inner(i_snap, k_snap)
+
         else:
             corr = X.T.dot(X)
 
