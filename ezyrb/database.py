@@ -1,7 +1,7 @@
 """
 Module for the snapshots database collected during the Offline stage
 """
-import numpy
+import numpy as np
 
 class Database(object):
 

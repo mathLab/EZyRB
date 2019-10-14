@@ -40,3 +40,14 @@ class ReducedOrderModel(object):
                                 rom.predict(self.database.parameters[j]))
 
         return error
+    
+    def add_snapshot(self, new_parameters, new_snapshots):
+        """
+        This methos adds the new solution to the database and the new parameter
+        values to the parameter points
+        
+        :param numpy array new_parameters: the parameters value to add to database.
+        :param numpy array new_snapshots: the snapshots to add to database.
+        """
+        self.database.add(new_parameters, new_snapshots)
+        self.fit()
