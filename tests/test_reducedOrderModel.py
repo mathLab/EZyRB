@@ -60,3 +60,21 @@ class TestReducedOrderModel(TestCase):
         
         np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-5, atol=1e-8)
 
+    def test_optimal_mu(self):
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T, scaler_snapshots=Scale('minmax'))
+        rom = ROM(db, pod, rbf).fit()
+        opt_mu = rom.optimal_mu()
+        np.testing.assert_allclose(opt_mu, [[-0.17305253, -0.21253351]],
+                rtol=1e-5, atol=1e-8)
+
+
+
+
+
+
+
+
+
+        
