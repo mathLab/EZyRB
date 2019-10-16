@@ -1,6 +1,8 @@
+"""
+Reduced Order Model class
+"""
 import numpy as np
-from ezyrb import POD, RBF, Database, Scale
-
+from ezyrb import POD, Database, Scale
 
 class ReducedOrderModel(object):
     def __init__(self, database, reduction, approximation):
@@ -9,6 +11,10 @@ class ReducedOrderModel(object):
         self.approximation = approximation
 
     def fit(self):
+        """
+        Calculate reduced space
+        """
+
         self.approximation.fit(
             self.database.parameters,
             self.reduction.reduce(self.database.snapshots.T))
@@ -16,11 +22,30 @@ class ReducedOrderModel(object):
         return self
 
     def predict(self, mu):
+        """
+        Calculate predicted solution for given mu
+        """
         print(self.approximation.predict(mu))
         return self.database.scaler_snapshots.inverse(
             self.reduction.expand(self.approximation.predict(mu)))
 
     def loo_error(self, norm=np.linalg.norm):
+        """
+        Estimate the approximation error using *leave-one-out* strategy. The
+        main idea is to create several reduced spaces by combining all the
+        snapshots except one. The error vector is computed as the difference
+        between the removed snapshot and the projection onto the properly
+        reduced space. The procedure repeats for each snapshot in the database.
+        The `func` is applied on each vector of error to obtained a float
+        number.
+
+        :param function func: the function used to assign at each vector of
+            error a float number. It has to take as input a 'numpy.ndarray` and
+            returns a float. Default value is the L2 norm.
+        :return: the vector that contains the errors estimated for all
+            parametric points.
+        :rtype: numpy.ndarray
+        """
 
         points = self.database.parameters.shape[0]
 
