@@ -18,9 +18,8 @@ class ReducedOrderModel(object):
         Calculate reduced space
         """
 
-        self.approximation.fit(
-            self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T))
+        self.approximation.fit(self.database.parameters,
+                               self.reduction.reduce(self.database.snapshots.T))
 
         return self
 
@@ -116,9 +115,8 @@ class ReducedOrderModel(object):
 
         return barycentric_point
 
-
     def _simplex_volume(self, vertices):
-         """
+        """
          Method implementing the computation of the volume of a N dimensional
          simplex.
          Source from: `wikipedia.org/wiki/Simplex
@@ -129,5 +127,6 @@ class ReducedOrderModel(object):
          :return: N dimensional volume of the simplex.
          :rtype: float
          """
-         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
-         return np.abs(np.linalg.det(distance) / math.factorial(vertices.shape[1]))
+        distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
+        return np.abs(
+            np.linalg.det(distance) / math.factorial(vertices.shape[1]))
