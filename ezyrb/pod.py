@@ -144,7 +144,8 @@ class POD(Reduction):
             corr = np.empty(size=(X.shape[1], X.shape[1]))
             for i, i_snap in enumerate(X.T):
                 for j, k_snap in enumerate(X.T):
-                    corr[i, j] = np.inner(i_snap, j_snap)
+                    corr[i, j] = np.inner(i_snap, k_snap)
+
         else:
             corr = X.T.dot(X)
 

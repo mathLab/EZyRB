@@ -68,13 +68,3 @@ class TestReducedOrderModel(TestCase):
         opt_mu = rom.optimal_mu()
         np.testing.assert_allclose(opt_mu, [[-0.17305253, -0.21253351]],
                 rtol=1e-5, atol=1e-8)
-
-
-
-
-
-
-
-
-
-        

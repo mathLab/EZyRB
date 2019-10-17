@@ -1,6 +1,9 @@
+"""
+Reduced Order Model class
+"""
 import numpy as np
+import math
 from ezyrb import POD, RBF, Database, Scale
-from ezyrb.utilities import simplex_volume
 from scipy.spatial import Delaunay
 
 
@@ -11,17 +14,40 @@ class ReducedOrderModel(object):
         self.approximation = approximation
 
     def fit(self):
-        self.approximation.fit(self.database.parameters,
-                               self.reduction.reduce(self.database.snapshots.T))
+        """
+        Calculate reduced space
+        """
+
+        self.approximation.fit(
+            self.database.parameters,
+            self.reduction.reduce(self.database.snapshots.T))
 
         return self
 
     def predict(self, mu):
-        print(self.approximation.predict(mu))
+        """
+        Calculate predicted solution for given mu
+        """
         return self.database.scaler_snapshots.inverse(
             self.reduction.expand(self.approximation.predict(mu)))
 
     def loo_error(self, norm=np.linalg.norm):
+        """
+        Estimate the approximation error using *leave-one-out* strategy. The
+        main idea is to create several reduced spaces by combining all the
+        snapshots except one. The error vector is computed as the difference
+        between the removed snapshot and the projection onto the properly
+        reduced space. The procedure repeats for each snapshot in the database.
+        The `func` is applied on each vector of error to obtained a float
+        number.
+
+        :param function func: the function used to assign at each vector of
+            error a float number. It has to take as input a 'numpy.ndarray` and
+            returns a float. Default value is the L2 norm.
+        :return: the vector that contains the errors estimated for all
+            parametric points.
+        :rtype: numpy.ndarray
+        """
 
         points = self.database.parameters.shape[0]
 
@@ -76,7 +102,7 @@ class ReducedOrderModel(object):
         tria = Delaunay(mu)
 
         error_on_simplex = np.array([
-            np.sum(error[smpx]) * simplex_volume(mu[smpx])
+            np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
             for smpx in tria.simplices
         ])
 
@@ -89,3 +115,19 @@ class ReducedOrderModel(object):
                 np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
 
         return barycentric_point
+
+
+    def _simplex_volume(self, vertices):
+         """
+         Method implementing the computation of the volume of a N dimensional
+         simplex.
+         Source from: `wikipedia.org/wiki/Simplex
+         <https://en.wikipedia.org/wiki/Simplex>`_.
+         :param numpy.ndarray simplex_vertices: Nx3 array containing the
+             parameter values representing the vertices of a simplex. N is the
+             dimensionality of the parameters.
+         :return: N dimensional volume of the simplex.
+         :rtype: float
+         """
+         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
+         return np.abs(np.linalg.det(distance) / math.factorial(vertices.shape[1]))
