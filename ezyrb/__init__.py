@@ -1,7 +1,5 @@
 __all__ = [
-    'filehandler', 'matlabhandler', 'vtkhandler', 'podinterpolation', 'online',
-    'stlhandler', 'mapper', 'offline', 'utilities', 'points', 'snapshots',
-    'parametricspace', 'interpolation', 'rbf'
+    'database', 'reduction', 'pod', 'rbf', 'scale', 'reducedordermodel', 'ndinterpolator'
 ]
 
 __title__ = "ezyrb"

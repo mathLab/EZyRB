@@ -3,7 +3,7 @@ Reduced Order Model class
 """
 import numpy as np
 import math
-from ezyrb import POD, RBF, Database, Scale
+from ezyrb import  Database, Scale
 from scipy.spatial import Delaunay
 
 
@@ -85,7 +85,7 @@ class ReducedOrderModel(object):
         be computed in ordere to globaly reduce the estimated error. These
         points are the barycentric center of the region (simplex) with higher
         error.
-        
+
         :param numpy.ndarray error: the estimated error evaluated for each
             snapshot; if error array is not passed, it is computed using
             :func:`loo_error` with the default function. Default value is None.
