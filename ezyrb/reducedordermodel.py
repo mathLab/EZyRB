@@ -2,7 +2,10 @@
 Reduced Order Model class
 """
 import numpy as np
-from ezyrb import POD, Database, Scale
+import math
+from ezyrb import  Database, Scale
+from scipy.spatial import Delaunay
+
 
 class ReducedOrderModel(object):
     def __init__(self, database, reduction, approximation):
@@ -15,9 +18,8 @@ class ReducedOrderModel(object):
         Calculate reduced space
         """
 
-        self.approximation.fit(
-            self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T))
+        self.approximation.fit(self.database.parameters,
+                               self.reduction.reduce(self.database.snapshots.T))
 
         return self
 
@@ -25,7 +27,6 @@ class ReducedOrderModel(object):
         """
         Calculate predicted solution for given mu
         """
-        print(self.approximation.predict(mu))
         return self.database.scaler_snapshots.inverse(
             self.reduction.expand(self.approximation.predict(mu)))
 
@@ -56,12 +57,76 @@ class ReducedOrderModel(object):
             remaining_snaps = self.database.snapshots[remaining_index]
             remaining_param = self.database.parameters[remaining_index]
 
-            db = Database(remaining_param, remaining_snaps,
+            db = Database(remaining_param,
+                          remaining_snaps,
                           scaler_snapshots=Scale('minmax'))
             rom = ReducedOrderModel(db, self.reduction,
                                     self.approximation).fit()
 
             error[j] = norm(self.database.snapshots[j] -
-                                rom.predict(self.database.parameters[j]))
+                            rom.predict(self.database.parameters[j]))
 
         return error
+
+    def add_snapshot(self, new_parameters, new_snapshots):
+        """
+        This methos adds the new solution to the database and the new parameter
+        values to the parameter points
+
+        :param numpy array new_parameters: the parameters value to add to database.
+        :param numpy array new_snapshots: the snapshots to add to database.
+        """
+        self.database.add(new_parameters, new_snapshots)
+        self.fit()
+
+    def optimal_mu(self, error=None, k=1):
+        """
+        Return the parametric points where new high-fidelity solutions have to
+        be computed in ordere to globaly reduce the estimated error. These
+        points are the barycentric center of the region (simplex) with higher
+        error.
+
+        :param numpy.ndarray error: the estimated error evaluated for each
+            snapshot; if error array is not passed, it is computed using
+            :func:`loo_error` with the default function. Default value is None.
+        :param int k: the number of optimal points to return. Default value is
+            1.
+        :return: the optimal points
+        :rtype: list(numpy.ndarray)
+        """
+        if error is None:
+            error = self.loo_error()
+
+        mu = self.database.parameters
+        tria = Delaunay(mu)
+
+        error_on_simplex = np.array([
+            np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
+            for smpx in tria.simplices
+        ])
+
+        barycentric_point = []
+        for index in np.argpartition(error_on_simplex, -k)[-k:]:
+            worst_tria_pts = mu[tria.simplices[index]]
+            worst_tria_err = error[tria.simplices[index]]
+
+            barycentric_point.append(
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
+
+        return barycentric_point
+
+    def _simplex_volume(self, vertices):
+        """
+         Method implementing the computation of the volume of a N dimensional
+         simplex.
+         Source from: `wikipedia.org/wiki/Simplex
+         <https://en.wikipedia.org/wiki/Simplex>`_.
+         :param numpy.ndarray simplex_vertices: Nx3 array containing the
+             parameter values representing the vertices of a simplex. N is the
+             dimensionality of the parameters.
+         :return: N dimensional volume of the simplex.
+         :rtype: float
+         """
+        distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
+        return np.abs(
+            np.linalg.det(distance) / math.factorial(vertices.shape[1]))
