@@ -3,9 +3,13 @@ Module for the snapshots database collected during the Offline stage
 """
 import numpy as np
 
-class Database(object):
 
-    def __init__(self, parameters=None, snapshots=None, scaler_parameters=None, scaler_snapshots=None):
+class Database(object):
+    def __init__(self,
+                 parameters=None,
+                 snapshots=None,
+                 scaler_parameters=None,
+                 scaler_snapshots=None):
         """
         Database class
 
@@ -25,7 +29,7 @@ class Database(object):
         if (parameters is None) ^ (snapshots is None):
             raise RuntimeError
 
-        if not (parameters is None) and not(snapshots is None):
+        if not (parameters is None) and not (snapshots is None):
             self.add(parameters, snapshots)
 
     @property
@@ -52,11 +56,19 @@ class Database(object):
         else:
             return self._snapshots
 
+    def __getitem__(self, val):
+        """
+        This method returns a new Database with the selected parameters and snapshots.
+
+        .. warning:: The new parameters and snapshots are a view of the original Database.
+        """
+        return Database(self._parameters[val], self._snapshots[val],
+                        self.scaler_parameters, self.scaler_snapshots)
 
     def add(self, parameters, snapshots):
         """
         """
-        
+
         if len(parameters) is not len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
         if self._parameters is None and self._snapshots is None:
