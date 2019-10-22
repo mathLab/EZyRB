@@ -1,9 +1,9 @@
 """
-Reduced Order Model class
+Module for the Reduced Order Modeling
 """
 import numpy as np
 import math
-from ezyrb import  Database, Scale
+from ezyrb import Database, Scale
 from scipy.spatial import Delaunay
 
 
@@ -17,7 +17,6 @@ class ReducedOrderModel(object):
         """
         Calculate reduced space
         """
-
         self.approximation.fit(self.database.parameters,
                                self.reduction.reduce(self.database.snapshots.T))
 
@@ -70,11 +69,11 @@ class ReducedOrderModel(object):
 
     def add_snapshot(self, new_parameters, new_snapshots):
         """
-        This methos adds the new solution to the database and the new parameter
-        values to the parameter points
+        This method adds the new solution to the database and the new parameter
+        values to the parameter points.
 
-        :param numpy array new_parameters: the parameters value to add to database.
-        :param numpy array new_snapshots: the snapshots to add to database.
+        :param numpy.ndarray new_parameters: the parameters value to add to database.
+        :param numpy.ndarray new_snapshots: the snapshots to add to database.
         """
         self.database.add(new_parameters, new_snapshots)
         self.fit()

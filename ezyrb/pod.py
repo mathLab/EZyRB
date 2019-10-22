@@ -4,16 +4,22 @@ import numpy as np
 
 from .reduction import Reduction
 
-class POD(Reduction):
-    
 
+class POD(Reduction):
     def __init__(self, method='svd', **kwargs):
         """
         """
         available_methods = {
-            'svd': (self._svd, {'rank': -1}),
-            'randomized_svd': (self._rsvd, {'rank': -1}),
-            'correlation_matrix': (self._corrm, {'rank': -1, 'save_memory': False}),
+            'svd': (self._svd, {
+                'rank': -1
+            }),
+            'randomized_svd': (self._rsvd, {
+                'rank': -1
+            }),
+            'correlation_matrix': (self._corrm, {
+                'rank': -1,
+                'save_memory': False
+            }),
         }
 
         self._modes = None
@@ -23,7 +29,7 @@ class POD(Reduction):
         if method is None:
             raise RuntimeError(
                 "Invalid method for POD. Please chose one among {}".format(
-                ', '.join(available_methods)))
+                    ', '.join(available_methods)))
 
         self.__method, default_args = method
         kwargs.update(default_args)
@@ -86,7 +92,7 @@ class POD(Reduction):
             rank = min(svd_rank, U.shape[1])
         else:
             rank = X.shape[1]
-        
+
         return rank
 
     def _svd(self, X):
@@ -129,7 +135,6 @@ class POD(Reduction):
         rank = self._truncation(X)
         return U[:, :rank], s[:rank]
 
-
     def _corrm(self, X):
         """
         Truncated Singular Value Decomposition. calculated with correlation matrix.
@@ -150,13 +155,7 @@ class POD(Reduction):
             corr = X.T.dot(X)
 
         s, U = np.linalg.eig(corr)
-        U = X.dot(U)/np.sqrt(s)
+        U = X.dot(U) / np.sqrt(s)
         rank = self._truncation(X)
 
         return U[:, :rank], s[:rank]
-
-
-
-
-
-

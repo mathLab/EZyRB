@@ -42,5 +42,6 @@ class TestRBFInterpolator(TestCase):
         space = RBFInterpolator(pts, values)
         exct_res = np.array(
             [[4.75195353, 5.70234424, 6.65273494, 7.60312565, 8.55351636]])
-        np.testing.assert_array_almost_equal(
-            space([[0, 0, 0]]), exct_res, decimal=6)
+        np.testing.assert_array_almost_equal(space([[0, 0, 0]]),
+                                             exct_res,
+                                             decimal=6)

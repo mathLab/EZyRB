@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 
 
 class Reduction(ABC):
-
     @abstractmethod
     def reduce(self):
         pass

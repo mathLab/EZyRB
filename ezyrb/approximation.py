@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 
 
 class Approximation(ABC):
-
     @abstractmethod
     def fit(self):
         pass

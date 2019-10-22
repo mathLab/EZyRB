@@ -1,5 +1,6 @@
 __all__ = [
-    'database', 'reduction', 'pod', 'rbf', 'scale', 'reducedordermodel', 'ndinterpolator'
+    'database', 'reduction', 'pod', 'rbf', 'scale', 'reducedordermodel',
+    'ndinterpolator'
 ]
 
 __title__ = "ezyrb"
