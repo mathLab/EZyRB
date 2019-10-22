@@ -7,6 +7,7 @@ from scipy.interpolate import Rbf
 
 from .approximation import Approximation
 
+
 class RBF(Approximation):
     """
     Multidimensional interpolator using Radial Basis Function.
@@ -34,11 +35,12 @@ class RBF(Approximation):
         self.interpolators = []
         print(points.shape)
         print(values.shape)
-        
+
         for value in values:
             argument = np.hstack([points, value.reshape(-1, 1)]).T
             print(argument)
-            self.interpolators.append(Rbf(*argument, smooth=self.smooth, function=self.kernel))
+            self.interpolators.append(
+                Rbf(*argument, smooth=self.smooth, function=self.kernel))
         print(self.interpolators[0](0, 0))
 
     def predict(self, new_point):

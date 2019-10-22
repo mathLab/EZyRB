@@ -54,9 +54,8 @@ class RBFInterpolator(object):
             self.basis = self.multi_quadratic
 
         self.weights = np.linalg.solve(
-            self.basis(
-                distance_matrix(points, points, metric=norm), self.radius),
-            values)
+            self.basis(distance_matrix(points, points, metric=norm),
+                       self.radius), values)
 
     def __call__(self, new_points):
         """
@@ -66,6 +65,5 @@ class RBFInterpolator(object):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        return self.basis(
-            distance_matrix(new_points, self.points), self.radius).dot(
-                self.weights)
+        return self.basis(distance_matrix(new_points, self.points),
+                          self.radius).dot(self.weights)
