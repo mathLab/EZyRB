@@ -33,15 +33,10 @@ class RBF(Approximation):
 
     def fit(self, points, values):
         self.interpolators = []
-        print(points.shape)
-        print(values.shape)
-
         for value in values:
             argument = np.hstack([points, value.reshape(-1, 1)]).T
-            print(argument)
             self.interpolators.append(
                 Rbf(*argument, smooth=self.smooth, function=self.kernel))
-        print(self.interpolators[0](0, 0))
 
     def predict(self, new_point):
         """
