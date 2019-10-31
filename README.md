@@ -37,7 +37,8 @@
 	* [Recent works with EZyRB](#recent-works-with-ezyrb)
 * [Authors and contributors](#authors-and-contributors)
 * [How to contribute](#how-to-contribute)
-	* [Submitting a patch](#submitting-a-patch) 
+	* [Submitting a patch](#submitting-a-patch)
+* [SISSA mathLab packages for reduced order modeling](#sissa-mathlab-packages-for-reduced-order-modeling)
 * [License](#license)
 
 ## Description
@@ -212,6 +213,16 @@ just a few small guidelines you need to follow.
 [well-formed commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [pull request]: https://help.github.com/articles/creating-a-pull-request
 
+## SISSA mathLab packages for reduced order modeling
+
+Below you can find a list of useful reduced order modelling packages from SISSA mathLab group:
+* **PyGeM**: Python library for Geometrical Morphing, that uses free form deformation to parametrize and morph complex geometries, [https://github.com/mathLab/PyGeM](https://github.com/mathLab/PyGeM).
+* **PyDMD**: Python library for Dynamic Mode Decomposition, for a data-driven model simplification based on spatiotemporal coherent structures, [https://github.com/mathLab/PyDMD](https://github.com/mathLab/PyDMD).
+* **RBniCS**: reduced order modelling in FEniCS, is an implementation in FEniCS of several reduced order modelling techniques for parametrized problems, [https://github.com/mathLab/RBniCS](https://github.com/mathLab/RBniCS).
+* **BladeX**: Python Package for Blade Deformation, for geometrical parametrization and bottom-up construction of propeller blades, [https://github.com/mathLab/BladeX](https://github.com/mathLab/BladeX).
+* **ITHACA-FV**: In real Time Highly Advanced Computational Applications for Finite Volumes, is C++ library based on the finite volume solver OpenFOAM. It consists of the implementation of several reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-FV](https://github.com/mathLab/ITHACA-FV).
+* **ITHACA-DG**: In real Time Highly Advanced Computational Applications for Discontinuous Galerkin Methods, is C++ library based on the Discontinuous Galerkin Methods solver HopeFOAM. It consists of the implementation of reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-DG](https://github.com/mathLab/ITHACA-DG).
+* **ITHACA-SEM**: In real Time Highly Advanced Computational Applications for Spectral Element Methods, is C++ library based on the spectral element solver Nektar++. It consists of the implementation of several reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-SEM](https://github.com/mathLab/ITHACA-SEM).
 
 ## License
 
