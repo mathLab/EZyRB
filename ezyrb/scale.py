@@ -52,5 +52,4 @@ class Scale(object):
         return x / np.linalg.norm(x, axis=self.axis, keepdims=True)
 
     def __call__(self, x):
-        print(x)
         return self.available_methods[self.method](x)
