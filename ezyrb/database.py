@@ -69,7 +69,6 @@ class Database(object):
     def __len__(self):
         return len(self._snapshots)
 
-    
     def add(self, parameters, snapshots):
         """
         """

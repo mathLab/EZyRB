@@ -1,5 +1,5 @@
 __all__ = [
-    'database', 
+    'database',
     'reduction', 'pod',
     'approximation', 'rbf', 'linear',
 
