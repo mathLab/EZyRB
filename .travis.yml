@@ -4,11 +4,11 @@ language: python
 matrix:
     include:
         - os: linux
-          python: 2.7
-          env: TOXENV=py27
+          python: 3.5
+          env: TOXENV=py35
         - os: osx
           language: generic
-          env: TOXENV=py27
+          env: TOXENV=py35
 
 before_script:
     - "export DISPLAY=:99.0"

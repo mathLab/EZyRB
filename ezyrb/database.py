@@ -5,21 +5,21 @@ import numpy as np
 
 
 class Database(object):
+    """
+    Database class
+
+    :param array_like parameters: the input parameters 
+    :param array_like snapshots: the input snapshots
+    :param Scale scaler_parameters: the scaler for the parameters. Default
+        is None meaning no scaling.
+    :param Scale scaler_snapshots: the scaler for the snapshots. Default is
+        None meaning no scaling.
+    """
     def __init__(self,
                  parameters=None,
                  snapshots=None,
                  scaler_parameters=None,
                  scaler_snapshots=None):
-        """
-        Database class
-
-        :param array_like parameters: the input parameters 
-        :param array_like snapshots: the input snapshots
-        :param Scale scaler_parameters: the scaler for the parameters. Default
-            is None meaning no scaling.
-        :param Scale scaler_snapshots: the scaler for the snapshots. Default is
-            None meaning no scaling.
-        """
         self._parameters = None
         self._snapshots = None
         self.scaler_parameters = scaler_parameters
@@ -40,7 +40,7 @@ class Database(object):
         :rtype: numpy.ndarray
         """
         if self.scaler_parameters:
-            return self.scaler_parameters(self._parameters)
+            return self.scaler_parameters.fit_transform(self._parameters)
         else:
             return self._parameters
 
@@ -52,7 +52,7 @@ class Database(object):
         :rtype: numpy.ndarray
         """
         if self.scaler_snapshots:
-            return self.scaler_snapshots(self._snapshots)
+            return self.scaler_snapshots.fit_transform(self._snapshots)
         else:
             return self._snapshots
 
@@ -60,17 +60,23 @@ class Database(object):
         """
         This method returns a new Database with the selected parameters and snapshots.
 
-        .. warning:: The new parameters and snapshots are a view of the original Database.
+        .. warning:: The new parameters and snapshots are a view of the
+            original Database.
         """
         return Database(self._parameters[val], self._snapshots[val],
                         self.scaler_parameters, self.scaler_snapshots)
 
+    def __len__(self):
+        return len(self._snapshots)
+
+    
     def add(self, parameters, snapshots):
         """
         """
 
         if len(parameters) is not len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
+
         if self._parameters is None and self._snapshots is None:
             self._parameters = parameters
             self._snapshots = snapshots

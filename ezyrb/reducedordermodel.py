@@ -3,7 +3,7 @@ Module for the Reduced Order Modeling
 """
 import numpy as np
 import math
-from ezyrb import Database, Scale
+from ezyrb import Database
 from scipy.spatial import Delaunay
 
 
@@ -26,8 +26,7 @@ class ReducedOrderModel(object):
         """
         Calculate predicted solution for given mu
         """
-        return self.database.scaler_snapshots.inverse(
-            self.reduction.expand(self.approximation.predict(mu)))
+        return self.reduction.expand(self.approximation.predict(mu))
 
     def loo_error(self, norm=np.linalg.norm):
         """
@@ -46,37 +45,22 @@ class ReducedOrderModel(object):
             parametric points.
         :rtype: numpy.ndarray
         """
+        error = np.zeros(len(self.database))
+        db_range = list(range(len(self.database)))
 
-        points = self.database.parameters.shape[0]
+        for j in db_range:
 
-        error = np.zeros(points)
-
-        for j in np.arange(points):
-            remaining_index = list(range(j)) + list(range(j + 1, points))
-            remaining_snaps = self.database.snapshots[remaining_index]
-            remaining_param = self.database.parameters[remaining_index]
-
-            db = Database(remaining_param,
-                          remaining_snaps,
-                          scaler_snapshots=Scale('minmax'))
-            rom = ReducedOrderModel(db, self.reduction,
+            remaining_index = db_range[:]
+            remaining_index.remove(j)
+            new_db = self.database[remaining_index]
+            
+            rom = ReducedOrderModel(new_db, self.reduction,
                                     self.approximation).fit()
 
             error[j] = norm(self.database.snapshots[j] -
                             rom.predict(self.database.parameters[j]))
 
         return error
-
-    def add_snapshot(self, new_parameters, new_snapshots):
-        """
-        This method adds the new solution to the database and the new parameter
-        values to the parameter points.
-
-        :param numpy.ndarray new_parameters: the parameters value to add to database.
-        :param numpy.ndarray new_snapshots: the snapshots to add to database.
-        """
-        self.database.add(new_parameters, new_snapshots)
-        self.fit()
 
     def optimal_mu(self, error=None, k=1):
         """

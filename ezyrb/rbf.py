@@ -12,19 +12,15 @@ class RBF(Approximation):
     """
     Multidimensional interpolator using Radial Basis Function.
 
-    :param array_like points: the coordinates of the points.
-    :param array_like values: the values in the points.
-    :param float radius: the radius used in the basis functions. Default is 1.0.
-    :param norm: The function that returns the distance between two points. It
-        has to be a function that take as input a vector and return a float
-        number.  Default is 'euclidean'.
-    :type norm: str or callable
-    :param callable basis: the basis function.
+    :param kernel: The radial basis function; the default is ‘multiquadric’.
+    :type kernel: str or callable
+    :param float smooth: values greater than zero increase the smoothness of
+        the approximation. 0 is for interpolation (default), the function will
+        always go through the nodal points in this case.
 
-    :cvar array_like points: the coordinates of the points.
-    :cvar float radius: the radius used in the basis functions. Default is 1.0.
-    :cvar callable basis: the basis function.
-    :cvar numpy.ndarray weights: the weights matrix.
+    :cvar kernel: The radial basis function; the default is ‘multiquadric’.
+    :cvar list interpolators: the RBF interpolators (the number of
+        interpolators depenend by the dimensionality of the output)
     """
 
     def __init__(self, kernel='multiquadric', smooth=0):
@@ -32,6 +28,12 @@ class RBF(Approximation):
         self.smooth = smooth
 
     def fit(self, points, values):
+        """
+        Construct the interpolator given `points` and `values`.
+
+        :param array_like points: the coordinates of the points.
+        :param array_like values: the values in the points.
+        """
         self.interpolators = []
         for value in values:
             argument = np.hstack([points, value.reshape(-1, 1)]).T

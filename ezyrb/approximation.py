@@ -1,9 +1,7 @@
 """
 Module for the Approximation abstract class
 """
-
 from abc import ABC, abstractmethod
-
 
 class Approximation(ABC):
     @abstractmethod
