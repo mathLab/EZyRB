@@ -37,7 +37,8 @@
 	* [Recent works with EZyRB](#recent-works-with-ezyrb)
 * [Authors and contributors](#authors-and-contributors)
 * [How to contribute](#how-to-contribute)
-	* [Submitting a patch](#submitting-a-patch) 
+	* [Submitting a patch](#submitting-a-patch)
+* [SISSA mathLab packages for reduced order modeling](#sissa-mathlab-packages-for-reduced-order-modeling)
 * [License](#license)
 
 ## Description
@@ -137,9 +138,19 @@ Or if you use LaTeX:
 ### Recent works with EZyRB
 Here there is a list of the scientific works involving **EZyRB** you can consult and/or cite. If you want to add one, please open a PR.
 
-* Salmoiraghi, Scardigli, Telib, Rozza. *Free Form Deformation, mesh morphing and reduced order methods: enablers for efficient aerodynamic shape optimization*. 2018. [[arXiv](https://arxiv.org/abs/1803.04688)].
+* Tezzele, Demo, Rozza. *A non-intrusive approach for proper orthogonal decomposition modal coefficients reconstruction through active subspaces*. Comptes Rendus de l'Academie des Sciences DataBEST 2019 Special Issue, in press. [[arXiv](https://arxiv.org/abs/1907.12777)] [[bibitem](readme/demo2019cras.bib)] .
 
-* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape Optimization by means of Proper Orthogonal Decomposition and Dynamic Mode Decomposition*. 2018. [[arXiv](https://arxiv.org/abs/1803.07368)].
+* Tezzele, Demo, Rozza. *Shape optimization through proper orthogonal decomposition with interpolation and dynamic mode decomposition enhanced by active subspaces*. In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 122-133, 2019. [[DOI](https://congress.cimne.com/marine2019/frontal/Doc/EbookMarine2019.pdf)] [[arXiv](https://arxiv.org/abs/1905.05483)] [[bibitem](readme/tezzele2019marine.bib)].
+
+* Demo, Tezzele, Mola, Rozza. *A complete data-driven framework for the efficient solution of parametric shape design and optimisation in naval engineering problems*. In Proceedings of MARINE 2019: VIII International Conference on Computational Methods in Marine Engineering, pages 111-121, 2019. [[DOI](https://congress.cimne.com/marine2019/frontal/Doc/EbookMarine2019.pdf)] [[arXiv](https://arxiv.org/abs/1905.05982)] [[bibitem](readme/demo2019marine.bib)].
+
+* Garotta, Demo, Tezzele, Carraturo, Reali, Rozza. *Reduced Order Isogeometric Analysis Approach for PDEs in Parametrized Domains*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1811.08631)] [[bibitem](readme/garotta2018quiet.bib)].
+
+* Tezzele, Demo, Mola, Rozza. *An integrated data-driven computational pipeline with model order reduction for industrial and applied mathematics*. Submitted, 2018. [[arXiv](https://arxiv.org/abs/1810.12364)] [[bibitem](readme/tezzele2018ecmi.bib)].
+
+* Salmoiraghi, Scardigli, Telib, Rozza. *Free-form deformation, mesh morphing and reduced-order methods: enablers for efficient aerodynamic shape optimisation*. International Journal of Computational Fluid Dynamics, 32:4-5, 233-247, 2018. [[DOI](https://doi.org/10.1080/10618562.2018.1514115)] [[arXiv](https://arxiv.org/abs/1803.04688)] [[bibitem](readme/salmoiraghi2018free.bib)].
+
+* Demo, Tezzele, Gustin, Lavini, Rozza. *Shape optimization by means of proper orthogonal decomposition and dynamic mode decomposition*. In Technology and Science for the Ships of the Future: Proceedings of NAV 2018: 19th International Conference on Ship & Maritime Research, 2018. [[DOI](https://doi.org/10.3233/978-1-61499-870-9-212)] [[arXiv](https://arxiv.org/abs/1803.07368)] [[bibitem](readme/demo2018shape.bib)].
 
 
 ## Authors and contributors
@@ -194,6 +205,16 @@ just a few small guidelines you need to follow.
 [well-formed commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [pull request]: https://help.github.com/articles/creating-a-pull-request
 
+## SISSA mathLab packages for reduced order modeling
+
+Below you can find a list of useful reduced order modelling packages from SISSA mathLab group:
+* **PyGeM**: Python library for Geometrical Morphing, that uses free form deformation to parametrize and morph complex geometries, [https://github.com/mathLab/PyGeM](https://github.com/mathLab/PyGeM).
+* **PyDMD**: Python library for Dynamic Mode Decomposition, for a data-driven model simplification based on spatiotemporal coherent structures, [https://github.com/mathLab/PyDMD](https://github.com/mathLab/PyDMD).
+* **RBniCS**: reduced order modelling in FEniCS, is an implementation in FEniCS of several reduced order modelling techniques for parametrized problems, [https://github.com/mathLab/RBniCS](https://github.com/mathLab/RBniCS).
+* **BladeX**: Python Package for Blade Deformation, for geometrical parametrization and bottom-up construction of propeller blades, [https://github.com/mathLab/BladeX](https://github.com/mathLab/BladeX).
+* **ITHACA-FV**: In real Time Highly Advanced Computational Applications for Finite Volumes, is C++ library based on the finite volume solver OpenFOAM. It consists of the implementation of several reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-FV](https://github.com/mathLab/ITHACA-FV).
+* **ITHACA-DG**: In real Time Highly Advanced Computational Applications for Discontinuous Galerkin Methods, is C++ library based on the Discontinuous Galerkin Methods solver HopeFOAM. It consists of the implementation of reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-DG](https://github.com/mathLab/ITHACA-DG).
+* **ITHACA-SEM**: In real Time Highly Advanced Computational Applications for Spectral Element Methods, is C++ library based on the spectral element solver Nektar++. It consists of the implementation of several reduced order modeling techniques for parametrized problems, [https://github.com/mathLab/ITHACA-SEM](https://github.com/mathLab/ITHACA-SEM).
 
 ## License
 
