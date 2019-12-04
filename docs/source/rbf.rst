@@ -1,20 +1,19 @@
-RBFInterpolator
+RBF
 =====================
 
-.. currentmodule:: ezyrb.ndinterpolator.rbf
+.. currentmodule:: ezyrb.rbf
 
-.. automodule:: ezyrb.ndinterpolator.rbf
+.. automodule:: ezyrb.rbf
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-    RBFInterpolator
-    RBFInterpolator.__call__
-    RBFInterpolator.multi_quadratic
+    RBF
+    RBF.fit
+    RBF.predict
 
-
-.. autoclass:: RBFInterpolator
+.. autoclass:: RBF
     :members:
     :private-members:
     :undoc-members:

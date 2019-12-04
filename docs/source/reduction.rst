@@ -1,17 +1,19 @@
-FileHandler
+Reduction
 =====================
 
-.. currentmodule:: ezyrb.filehandler
+.. currentmodule:: ezyrb.reduction
 
-.. automodule:: ezyrb.filehandler
+.. automodule:: ezyrb.reduction
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-    FileHandler
+    Reduction
+    Reduction.reduce
+    Reduction.expand
 
-.. autoclass:: FileHandler
+.. autoclass:: Reduction
     :members:
     :private-members:
     :undoc-members:

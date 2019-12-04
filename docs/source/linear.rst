@@ -1,19 +1,19 @@
-Online
+Linear
 =====================
 
-.. currentmodule:: ezyrb.online
+.. currentmodule:: ezyrb.linear
 
-.. automodule:: ezyrb.online
+.. automodule:: ezyrb.linear
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-    Online
-    Online.run
-    Online.run_and_store
+    Linear
+    Linear.fit
+    Linear.predict
 
-.. autoclass:: Online
+.. autoclass:: Linear
     :members:
     :private-members:
     :undoc-members:
