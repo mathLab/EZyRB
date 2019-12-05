@@ -32,7 +32,8 @@ class TestReducedOrderModel(TestCase):
         err = rom.loo_error()
         np.testing.assert_allclose(
             err,
-            np.array([421.299091, 344.571787,  48.711501, 300.490491]))
+            np.array([421.299091, 344.571787,  48.711501, 300.490491]),
+            rtol=1e-4)
 
     def test_optimal_mu(self):
         pod = POD()
@@ -40,4 +41,5 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         opt_mu = rom.optimal_mu()
-        np.testing.assert_allclose(opt_mu, [[-0.17687147, -0.21820951]])
+        np.testing.assert_allclose(opt_mu, [[-0.17687147, -0.21820951]],
+            rtol=1e-4)
