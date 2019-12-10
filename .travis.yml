@@ -26,7 +26,7 @@ before_install:
       else
         brew update;
         brew install python;
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
       fi
     - chmod +x miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
@@ -42,12 +42,11 @@ install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         conda create --yes -n test python=$TRAVIS_PYTHON_VERSION;
       else
-        conda create --yes -n test python="2.7";
+        conda create --yes -n test python="3.5";
       fi
     - source activate test
-    - pip install numpy scipy matplotlib pip nose vtk sphinx==1.4
+    - pip install numpy scipy matplotlib pip nose sphinx==1.4
     - pip install setuptools
-    - pip install enum34
     - pip install coveralls
     - pip install coverage
     - python setup.py install
