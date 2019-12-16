@@ -48,6 +48,7 @@ Developer's Guide
 .. toctree::
    :maxdepth: 1
 
+   index
    code
    contact
    contributing
@@ -60,9 +61,7 @@ Tutorials
 
 We made some tutorial examples:
 
-- `Tutorial 1 <tutorial1.html>`_ shows how to deal with a pressure field in vtk files (offline phase)
-- `Tutorial 2 <tutorial2.html>`_ shows how to deal with a pressure field in vtk files (online phase)
-- `Tutorial 3 <tutorial3.html>`_ shows how to interpolate the solution on a new mesh.
+- `Tutorial 1 <tutorial-1.html>`_ shows how to construct a simple reduced order model for a heat conduction problem.
 
 
 Indices and tables
