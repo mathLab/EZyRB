@@ -1,39 +1,99 @@
-from setuptools import setup, find_packages
+from setuptools import setup, Command
+import os
+import sys
+import ezyrb
+from shutil import rmtree
 
-def readme():
-    """
-    This function just return the content of README.md
-    """
-    with open('README.md') as f:
-        return f.read()
+# Package meta-data.
+NAME = ezyrb.__title__
+DESCRIPTION = 'Easy Reduced Basis'
+URL = 'https://github.com/mathLab/EZyRB'
+MAIL = ezyrb.__mail__
+AUTHOR = ezyrb.__author__
+VERSION = ezyrb.__version__
+KEYWORDS='pod interpolation reduced-basis model-order-reduction'
 
-setup(name='ezyrb',
-      version='0.2',
-      description='Easy Reduced Basis method',
-      long_description=readme(),
-      classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2.7',
+REQUIRED = [
+    'future', 'numpy', 'scipy',	'matplotlib',
+]
+
+EXTRAS = {
+    'docs': ['Sphinx==1.4', 'sphinx_rtd_theme'],
+}
+
+LDESCRIPTION = (
+    "EZyRB is a python library for the Model Order Reduction based on "
+    "baricentric triangulation for the selection of the parameter points and on "
+    "Proper Orthogonal Decomposition for the selection of the modes. It is "
+    "ideally suited for actual industrial problems, since its structure can "
+    "interact with several simulation software simply providing the output file "
+    "of the simulations."
+)
+
+here = os.path.abspath(os.path.dirname(__file__))
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds...')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution...')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPI via Twine...')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags...')
+        os.system('git tag v{0}'.format(VERSION))
+        os.system('git push --tags')
+
+        sys.exit()
+
+setup(
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=LDESCRIPTION,
+    author=AUTHOR,
+    author_email=MAIL,
+	classifiers=[
+	  	'Development Status :: 5 - Production/Stable',
+	  	'License :: OSI Approved :: MIT License',
+	  	'Programming Language :: Python :: 3.5',
+	  	'Programming Language :: Python :: 3.6',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics'
-      ],
-      keywords='dimension_reduction mathematics vtk pod podi',
-      url='https://github.com/mathLab/EZyRB',
-      author='Nicola Demo, Marco Tezzele',
-      author_email='demo.nicola@gmail.com, marcotez@gmail.com',
-      license='MIT',
-      packages=find_packages(),
-      install_requires=[
-            'numpy',
-            'scipy',
-            'matplotlib',
-            'enum34',
-            'Sphinx>=1.4',
-            'sphinx_rtd_theme',
-            'yapf'
-      ],
-      test_suite='nose.collector',
-      tests_require=['nose'],
-      include_package_data=True,
-      zip_safe=False)
+	],
+	keywords=KEYWORDS,
+	url=URL,
+	license='MIT',
+	packages=[NAME],
+    install_requires=REQUIRED,
+    extras_require=EXTRAS,
+    test_suite='nose.collector',
+	tests_require=['nose'],
+	include_package_data=True,
+	zip_safe=False,
+
+    # $ setup.py publish support.
+    cmdclass={
+        'upload': UploadCommand,
+    },)
