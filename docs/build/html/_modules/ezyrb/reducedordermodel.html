@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EZyRB
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to EZyRB’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EZyRB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ezyrb.reducedordermodel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ezyrb.reducedordermodel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for the Reduced Order Modeling</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="k">import</span> <span class="n">Delaunay</span>
+
+
+<div class="viewcode-block" id="ReducedOrderModel"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel">[docs]</a><span class="k">class</span> <span class="nc">ReducedOrderModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span> <span class="o">=</span> <span class="n">approximation</span>
+
+<div class="viewcode-block" id="ReducedOrderModel.fit"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate reduced space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel.predict"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate predicted solution for given mu</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel.loo_error"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.loo_error">[docs]</a>    <span class="k">def</span> <span class="nf">loo_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate the approximation error using *leave-one-out* strategy. The</span>
+<span class="sd">        main idea is to create several reduced spaces by combining all the</span>
+<span class="sd">        snapshots except one. The error vector is computed as the difference</span>
+<span class="sd">        between the removed snapshot and the projection onto the properly</span>
+<span class="sd">        reduced space. The procedure repeats for each snapshot in the database.</span>
+<span class="sd">        The `func` is applied on each vector of error to obtained a float</span>
+<span class="sd">        number.</span>
+
+<span class="sd">        :param function func: the function used to assign at each vector of</span>
+<span class="sd">            error a float number. It has to take as input a &#39;numpy.ndarray` and</span>
+<span class="sd">            returns a float. Default value is the L2 norm.</span>
+<span class="sd">        :return: the vector that contains the errors estimated for all</span>
+<span class="sd">            parametric points.</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">))</span>
+        <span class="n">db_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">db_range</span><span class="p">:</span>
+
+            <span class="n">remaining_index</span> <span class="o">=</span> <span class="n">db_range</span><span class="p">[:]</span>
+            <span class="n">remaining_index</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">new_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="n">remaining_index</span><span class="p">]</span>
+            <span class="n">rom</span> <span class="o">=</span> <span class="n">ReducedOrderModel</span><span class="p">(</span><span class="n">new_db</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+            <span class="n">error</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span>
+                            <span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">error</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel.optimal_mu"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu">[docs]</a>    <span class="k">def</span> <span class="nf">optimal_mu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the parametric points where new high-fidelity solutions have to</span>
+<span class="sd">        be computed in ordere to globaly reduce the estimated error. These</span>
+<span class="sd">        points are the barycentric center of the region (simplex) with higher</span>
+<span class="sd">        error.</span>
+
+<span class="sd">        :param numpy.ndarray error: the estimated error evaluated for each</span>
+<span class="sd">            snapshot; if error array is not passed, it is computed using</span>
+<span class="sd">            :func:`loo_error` with the default function. Default value is None.</span>
+<span class="sd">        :param int k: the number of optimal points to return. Default value is</span>
+<span class="sd">            1.</span>
+<span class="sd">        :return: the optimal points</span>
+<span class="sd">        :rtype: list(numpy.ndarray)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loo_error</span><span class="p">()</span>
+
+        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="n">tria</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+
+        <span class="n">error_on_simplex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="n">smpx</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simplex_volume</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="n">smpx</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">smpx</span> <span class="ow">in</span> <span class="n">tria</span><span class="o">.</span><span class="n">simplices</span>
+        <span class="p">])</span>
+
+        <span class="n">barycentric_point</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span><span class="n">error_on_simplex</span><span class="p">,</span> <span class="o">-</span><span class="n">k</span><span class="p">)[</span><span class="o">-</span><span class="n">k</span><span class="p">:]:</span>
+            <span class="n">worst_tria_pts</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="n">tria</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">index</span><span class="p">]]</span>
+            <span class="n">worst_tria_err</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="n">tria</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">index</span><span class="p">]]</span>
+
+            <span class="n">barycentric_point</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">worst_tria_pts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">worst_tria_err</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">barycentric_point</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel._simplex_volume"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume">[docs]</a>    <span class="k">def</span> <span class="nf">_simplex_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Method implementing the computation of the volume of a N dimensional</span>
+<span class="sd">         simplex.</span>
+<span class="sd">         Source from: `wikipedia.org/wiki/Simplex</span>
+<span class="sd">         &lt;https://en.wikipedia.org/wiki/Simplex&gt;`_.</span>
+<span class="sd">         :param numpy.ndarray simplex_vertices: Nx3 array containing the</span>
+<span class="sd">             parameter values representing the vertices of a simplex. N is the</span>
+<span class="sd">             dimensionality of the parameters.</span>
+<span class="sd">         :return: N dimensional volume of the simplex.</span>
+<span class="sd">         :rtype: float</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">vi</span> <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">factorial</span><span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Copyright 2016-2019, EZyRB contributors
+      <span class="lastupdated">
+        Last updated on Dec 17, 2019.
+      </span>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
