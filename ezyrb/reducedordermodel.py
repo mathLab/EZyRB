@@ -25,7 +25,17 @@ class ReducedOrderModel(object):
         """
         Calculate predicted solution for given mu
         """
-        return self.reduction.expand(self.approximation.predict(mu))
+        predicted_sol = self.reduction.expand(
+            np.atleast_2d(self.approximation.predict(mu)).T)
+        if 1 in predicted_sol.shape:
+            predicted_sol = predicted_sol.ravel()
+        return predicted_sol
+
+    def test_error(self, test, norm=np.linalg.norm):
+        """
+        """
+        predicted_test = self.predict(test.parameters)
+        return np.mean(norm(predicted_test - test.snapshots, axis=1)/norm(test.snapshots, axis=1))
 
     def loo_error(self, norm=np.linalg.norm):
         """
@@ -52,7 +62,7 @@ class ReducedOrderModel(object):
             remaining_index = db_range[:]
             remaining_index.remove(j)
             new_db = self.database[remaining_index]
-            rom = ReducedOrderModel(new_db, self.reduction,
+            rom = type(self)(new_db, self.reduction,
                     self.approximation).fit()
 
             error[j] = norm(self.database.snapshots[j] -
