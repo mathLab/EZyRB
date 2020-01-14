@@ -31,10 +31,10 @@ class POD(Reduction):
                 "Invalid method for POD. Please chose one among {}".format(
                     ', '.join(available_methods)))
 
-        self.__method, default_args = method
-        kwargs.update(default_args)
+        self.__method, args = method
+        args.update(kwargs)
 
-        for hyperparam, value in kwargs.items():
+        for hyperparam, value in args.items():
             setattr(self, hyperparam, value)
 
     @property
@@ -49,7 +49,7 @@ class POD(Reduction):
     @property
     def singular_values(self):
         """
-        The singular values  
+        The singular values
 
         :type: numpy.ndarray
         """
@@ -70,7 +70,7 @@ class POD(Reduction):
 
         :type: numpy.ndarray
         """
-        return np.sum(self.modes * X, axis=1)
+        return self.modes.dot(X).T
 
     def _truncation(self, X):
         """
@@ -85,11 +85,11 @@ class POD(Reduction):
             beta = np.divide(*sorted(X.shape))
             tau = np.median(s) * omega(beta)
             rank = np.sum(s > tau)
-        elif self.rank > 0 and svd_rank < 1:
+        elif self.rank > 0 and self.rank < 1:
             cumulative_energy = np.cumsum(s**2 / (s**2).sum())
-            rank = np.searchsorted(cumulative_energy, svd_rank) + 1
-        elif self.rank >= 1 and isinstance(svd_rank, int):
-            rank = min(svd_rank, U.shape[1])
+            rank = np.searchsorted(cumulative_energy, self.rank) + 1
+        elif self.rank >= 1 and isinstance(self.rank, int):
+            rank = self.rank #min(self.rank, U.shape[1])
         else:
             rank = X.shape[1]
 
@@ -117,7 +117,7 @@ class POD(Reduction):
     def _rsvd(self, X):
         """
         Truncated randomized Singular Value Decomposition.
-        
+
         :param numpy.ndarray X: the matrix to decompose.
         :return: the truncated left-singular vectors matrix, the truncated
             singular values array, the truncated right-singular vectors matrix.
@@ -138,7 +138,7 @@ class POD(Reduction):
     def _corrm(self, X):
         """
         Truncated Singular Value Decomposition. calculated with correlation matrix.
-        
+
         :param numpy.ndarray X: the matrix to decompose.
         :return: the truncated left-singular vectors matrix, the truncated
             singular values array, the truncated right-singular vectors matrix.
@@ -146,7 +146,7 @@ class POD(Reduction):
         """
 
         if self.save_memory:
-            corr = np.empty(size=(X.shape[1], X.shape[1]))
+            corr = np.empty(shape=(X.shape[1], X.shape[1]))
             for i, i_snap in enumerate(X.T):
                 for j, k_snap in enumerate(X.T):
                     corr[i, j] = np.inner(i_snap, k_snap)

@@ -18,5 +18,7 @@ __status__ = "Stable"
 from .database import Database
 from .reduction import Reduction
 from .pod import POD
+from .approximation import Approximation
 from .rbf import RBF
+from .linear import Linear
 from .reducedordermodel import ReducedOrderModel
