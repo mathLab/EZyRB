@@ -72,10 +72,13 @@ class POD(Reduction):
         """
         return self.modes.dot(X).T
 
-    def _truncation(self, X):
+    def _truncation(self, X, s):
         """
         Return the number of modes to select according to the `rank` parameter.
         See POD.__init__ for further info.
+
+        :param numpy.ndarray X: the matrix to decompose.
+        :param numpy.ndarray s: the singular values of X.
 
         :return: the number of modes
         :rtype: int
@@ -111,7 +114,7 @@ class POD(Reduction):
         """
         U, s = np.linalg.svd(X, full_matrices=False)[:2]
 
-        rank = self._truncation(X)
+        rank = self._truncation(X, s)
         return U[:, :rank], s[:rank]
 
     def _rsvd(self, X):
@@ -132,7 +135,7 @@ class POD(Reduction):
         Uy, s = np.linalg.svd(Y, full_matrices=False)[:2]
         U = Q.dot(Uy)
 
-        rank = self._truncation(X)
+        rank = self._truncation(X, s)
         return U[:, :rank], s[:rank]
 
     def _corrm(self, X):
@@ -156,6 +159,6 @@ class POD(Reduction):
 
         s, U = np.linalg.eig(corr)
         U = X.dot(U) / np.sqrt(s)
-        rank = self._truncation(X)
+        rank = self._truncation(X, s)
 
         return U[:, :rank], s[:rank]
