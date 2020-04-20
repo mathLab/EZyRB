@@ -41,10 +41,10 @@ class TestPOD(TestCase):
 
     def test_randomized_svd(self):
         A = POD('randomized_svd').reduce(snapshots)
-        assert np.allclose(np.absolute(A),
-                           np.absolute(poddb),
-                           rtol=1e-03,
-                           atol=1e-08)
+        np.testing.assert_allclose(np.absolute(A),
+                                   np.absolute(poddb),
+                                   rtol=1e-03,
+                                   atol=1e-08)
 
     def test_singlular_values(self):
         a = POD('svd')
@@ -59,3 +59,48 @@ class TestPOD(TestCase):
         a = POD('svd')
         a.reduce(snapshots)
         np.testing.assert_allclose(a.modes, modes)
+
+    def test_truncation_01(self):
+        a = POD(method='svd', rank=0)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 1
+
+    def test_truncation_02(self):
+        a = POD(method='randomized_svd', rank=0)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 1
+
+    def test_truncation_03(self):
+        a = POD(method='correlation_matrix', rank=0)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 2
+
+    def test_truncation_04(self):
+        a = POD(method='svd', rank=3)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 3
+
+    def test_truncation_05(self):
+        a = POD(method='randomized_svd', rank=3)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 3
+
+    def test_truncation_06(self):
+        a = POD(method='correlation_matrix', rank=4)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 4
+
+    def test_truncation_07(self):
+        a = POD(method='svd', rank=0.8)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 1
+
+    def test_truncation_08(self):
+        a = POD(method='randomized_svd', rank=0.995)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 3
+
+    def test_truncation_09(self):
+        a = POD(method='correlation_matrix', rank=0.9999)
+        a.reduce(snapshots)
+        assert a.singular_values.shape[0] == 2
