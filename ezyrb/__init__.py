@@ -1,8 +1,7 @@
 __all__ = [
     'database',
     'reduction', 'pod',
-    'approximation', 'rbf', 'linear', , 'gpr'
-
+    'approximation', 'rbf', 'linear', 'gpr'
 ]
 
 __project__ = 'EZyRB'

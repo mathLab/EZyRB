@@ -25,22 +25,26 @@ class GPR(Approximation):
 
     def fit(self, points, values, kern=None, optimization_restart=20):
         """
-        Construct the interpolator given `points` and `values`.
+        Construct the regression given `points` and `values`.
 
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        self.X_sample = np.asarray(points)
-        self.Y_sample = np.asarray(values)
+        self.X_sample = np.array(points)
+        self.Y_sample = np.array(values)
+        if self.X_sample.ndim == 1: 
+            self.X_sample = self.X_sample.reshape(-1,1)
+        if self.Y_sample.ndim == 1: 
+            self.Y_sample = self.Y_sample.reshape(-1,1)
 
         if kern is None:
             kern = GPy.kern.RBF(
-                input_dim=points.shape[1],
+                input_dim=self.X_sample.shape[1],
                 ARD=False)
 
         self.model = GPy.models.GPRegression(
-            points,
-            values,
+            self.X_sample,
+            self.Y_sample,
             kern,
             normalizer=True)
 
@@ -48,18 +52,19 @@ class GPR(Approximation):
 
     def predict(self, new_points):
         """
-        Query the regression model at given `new_points`.
+        Predict the mean and the variance of Gaussian distribution at given
+        `new_points`.
 
         :param array_like new_points: the coordinates of the given points.
-        :return: the interpolated values.
-        :rtype: numpy.ndarray
+        :return: the mean and the variance
+        :rtype: (numpy.ndarray, numpy.ndarray)
         """
         return self.model.predict(new_points)
 
     def optimal_mu(self, bounds, optimization_restart=10):
         """
         Proposes the next sampling point by looking at the point where the
-        Gaussian covariance is maximized.  A gradient method (with multi
+        Gaussian covariance is maximized. A gradient method (with multi
         starting points) is adopted for the optimization.
 
         :param numpy.ndarray bounds: the boundaries in the gradient
@@ -72,8 +77,8 @@ class GPR(Approximation):
         min_val = 1
         min_x = None
 
-        def min_obj(X, f=np.linalg.norm):
-            return -f(self.predict(X.reshape(1, -1))[1])
+        def min_obj(X):
+            return -np.linalg.norm(self.predict(X.reshape(1, -1))[1])
 
         initial_starts = np.random.uniform(
             bounds[:, 0],
@@ -83,12 +88,7 @@ class GPR(Approximation):
         # Find the best optimum by starting from n_restart different random
         # points.
         for x0 in initial_starts:
-            res = minimize(
-                min_obj,
-                x0,
-                self.model,
-                bounds=bounds,
-                method='L-BFGS-B')
+            res = minimize(min_obj, x0, bounds=bounds, method='L-BFGS-B')
 
             if res.fun < min_val:
                 min_val = res.fun
