@@ -14,7 +14,7 @@ VERSION = ezyrb.__version__
 KEYWORDS='pod interpolation reduced-basis model-order-reduction'
 
 REQUIRED = [
-    'future', 'numpy', 'scipy',	'matplotlib',
+    'future', 'numpy', 'scipy',	'matplotlib', 'GPy'
 ]
 
 EXTRAS = {
