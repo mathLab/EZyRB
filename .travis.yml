@@ -4,11 +4,11 @@ language: python
 matrix:
     include:
         - os: linux
-          python: 3.5
-          env: TOXENV=py35
+          python: 3.6
+          env: TOXENV=py36
         - os: osx
           language: generic
-          env: TOXENV=py35
+          env: TOXENV=py36
 
 before_script:
     - "export DISPLAY=:99.0"
@@ -42,10 +42,10 @@ install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         conda create --yes -n test python=$TRAVIS_PYTHON_VERSION;
       else
-        conda create --yes -n test python="3.5";
+        conda create --yes -n test python="3.6";
       fi
     - source activate test
-    - pip install numpy scipy matplotlib pip nose sphinx==1.4
+    - pip install numpy scipy matplotlib pip nose sphinx==1.4 gpy
     - pip install setuptools
     - pip install coveralls
     - pip install coverage

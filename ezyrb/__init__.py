@@ -1,8 +1,7 @@
 __all__ = [
     'database',
     'reduction', 'pod',
-    'approximation', 'rbf', 'linear',
-
+    'approximation', 'rbf', 'linear', 'gpr'
 ]
 
 __project__ = 'EZyRB'
@@ -21,4 +20,5 @@ from .pod import POD
 from .approximation import Approximation
 from .rbf import RBF
 from .linear import Linear
+from .gpr import GPR
 from .reducedordermodel import ReducedOrderModel
