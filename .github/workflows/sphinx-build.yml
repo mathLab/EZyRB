@@ -1,37 +1,26 @@
 name: "Pull Request Docs Check"
 
 on: 
-  pull_request:
-    branches: [ master ]
-
+  push:
+    tags:
+      - "*"
 
 jobs:
-
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
-
-    - name: Setup the environment
-      uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Create the new documentation
       uses: ammaraskar/sphinx-action@master
       with:
-        docs-folder: "doc/"
+        pre-build-command: "python -m pip install pip sphinx_rtd_theme numpy scipy GPy matplotlib -U"
+        docs-folder: "docs/"
 
-    - name: Commit documentation changes
-      run: |
-        git clone https://github.com/mathLab/EZyRB.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/build/html/* gh-pages/
-        cd gh-pages
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation" -a || true
-
-    - name: Push changes
-      uses: ad-m/github-push-action@master
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v2
       with:
-        branch: gh-pages
-        directory: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        #github_token: ${{ secrets.GITHUB_TOKEN }}
+        deploy_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        publish_dir: ./docs/build/html
+        allow_empty_commit: true
