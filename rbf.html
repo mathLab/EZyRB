@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RBFInterpolator &mdash; EZyRB 0.2 documentation</title>
+  <title>RBF &mdash; EZyRB 1.0 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EZyRB 0.2 documentation" href="index.html"/>
-        <link rel="up" title="Code Documentation" href="code.html"/>
-        <link rel="next" title="ezyrb.ndinterpolator.rbf.RBFInterpolator" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.html"/>
-        <link rel="prev" title="ezyrb.utilities.write_normals" href="_summaries/ezyrb.utilities.write_normals.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ReducedOrderModel" href="reducedordermodel.html" />
+    <link rel="prev" title="POD" href="pod.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                0.2
+                1.0
               </div>
             
           
@@ -92,26 +86,30 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="points.html">Points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshots.html">Snapshots</a></li>
-<li class="toctree-l2"><a class="reference internal" href="podinterpolation.html">PODInterpolation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricspace.html">ParametricSpace</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filehandler.html">FileHandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="matlabhandler.html">MatlabHandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vtkhandler.html">VtkHandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stlhandler.html">StlHandler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="online.html">Online</a></li>
-<li class="toctree-l2"><a class="reference internal" href="offline.html">Offline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mapper.html">Mapper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">RBFInterpolator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.html">ezyrb.ndinterpolator.rbf.RBFInterpolator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__.html">ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic.html">ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to EZyRB’s documentation!</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#description">Description</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#installation">Installation</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#developer-s-guide">Developer’s Guide</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="code.html">Code Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#tutorials">Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">RBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -128,7 +126,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EZyRB</a>
@@ -136,9 +134,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -163,7 +162,7 @@
         
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
         
-      <li>RBFInterpolator</li>
+      <li>RBF</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -182,81 +181,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-ezyrb.ndinterpolator.rbf">
-<span id="rbfinterpolator"></span><h1>RBFInterpolator<a class="headerlink" href="#module-ezyrb.ndinterpolator.rbf" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-ezyrb.rbf">
+<span id="rbf"></span><h1>RBF<a class="headerlink" href="#module-ezyrb.rbf" title="Permalink to this headline">¶</a></h1>
 <p>Module for Radial Basis Function Interpolation</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.html#ezyrb.ndinterpolator.rbf.RBFInterpolator" title="ezyrb.ndinterpolator.rbf.RBFInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBFInterpolator</span></code></a></td>
-<td>Multidimensional interpolator using Radial Basis Function.</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF</span></code></p></td>
+<td><p>Multidimensional interpolator using Radial Basis Function.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__.html#ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__" title="ezyrb.ndinterpolator.rbf.RBFInterpolator.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBFInterpolator.__call__</span></code></a></td>
-<td>Evaluate interpolator at given <cite>new_points</cite>.</td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF.fit</span></code></p></td>
+<td><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic.html#ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic" title="ezyrb.ndinterpolator.rbf.RBFInterpolator.multi_quadratic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBFInterpolator.multi_quadratic</span></code></a></td>
-<td>It implements the following formula:</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF.predict</span></code></p></td>
+<td><p>Evaluate interpolator at given <cite>new_points</cite>.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descname">RBFInterpolator</code><span class="sig-paren">(</span><em>points</em>, <em>values</em>, <em>radius=1.0</em>, <em>norm='euclidean'</em>, <em>basis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ndinterpolator/rbf.html#RBFInterpolator"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-name descname">RBF</code><span class="sig-paren">(</span><em class="sig-param">kernel='multiquadric'</em>, <em class="sig-param">smooth=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
 <p>Multidimensional interpolator using Radial Basis Function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>points</strong> (<em>array_like</em>) – the coordinates of the points.</li>
-<li><strong>values</strong> (<em>array_like</em>) – the values in the points.</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the radius used in the basis functions. Default is 1.0.</li>
-<li><strong>norm</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em> or </em><em>callable</em>) – The function that returns the distance between two points. It
-has to be a function that take as input a vector and return a float
-number.  Default is ‘euclidean’.</li>
-<li><strong>basis</strong> (<em>callable</em>) – the basis function.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em> or </em><em>callable</em>) – The radial basis function; the default is ‘multiquadric’.</p></li>
+<li><p><strong>smooth</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – values greater than zero increase the smoothness of
+the approximation. 0 is for interpolation (default), the function will
+always go through the nodal points in this case.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference internal" href="points.html#module-ezyrb.points" title="ezyrb.points"><strong>points</strong></a> (<em>array_like</em>) – the coordinates of the points.</li>
-<li><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the radius used in the basis functions. Default is 1.0.</li>
-<li><strong>basis</strong> (<em>callable</em>) – the basis function.</li>
-<li><a class="reference internal" href="_summaries/ezyrb.snapshots.Snapshots.weights.html#ezyrb.snapshots.Snapshots.weights" title="ezyrb.snapshots.Snapshots.weights"><strong>weights</strong></a> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.14)"><em>numpy.ndarray</em></a>) – the weights matrix.</li>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>kernel</strong> – The radial basis function; the default is ‘multiquadric’.</p></li>
+<li><p><strong>interpolators</strong> (<em>list</em>) – the RBF interpolators (the number of
+interpolators depenend by the dimensionality of the output)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="staticmethod">
+</dd>
+</dl>
+<dl class="attribute">
 <dt>
-<em class="property">static </em><code class="descname">multi_quadratic</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ndinterpolator/rbf.html#RBFInterpolator.multi_quadratic"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>It implements the following formula:</p>
-<div class="math">
-<p><img src="_images/math/95734d37f4eac9e65f81ad7d192a1802ae6d9a8e.png" alt="\varphi( \boldsymbol{x} ) = \sqrt{\boldsymbol{x}^2 +
-r^2}"/></p>
-</div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>X</strong> (<em>array_like</em><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the vector x in the formula above.</li>
-<li><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the parameter r in the formula above.</li>
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>array_like</em>) – the coordinates of the points.</p></li>
+<li><p><strong>values</strong> (<em>array_like</em>) – the values in the points.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the result of the formula above.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array_like or <a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">new_point</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF.predict"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Evaluate interpolator at given <cite>new_points</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_points</strong> (<em>array_like</em>) – the coordinates of the given points.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the interpolated values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -265,18 +265,16 @@ r^2}"/></p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="_summaries/ezyrb.ndinterpolator.rbf.RBFInterpolator.html" class="btn btn-neutral float-right" title="ezyrb.ndinterpolator.rbf.RBFInterpolator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reducedordermodel.html" class="btn btn-neutral float-right" title="ReducedOrderModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="_summaries/ezyrb.utilities.write_normals.html" class="btn btn-neutral" title="ezyrb.utilities.write_normals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pod.html" class="btn btn-neutral float-left" title="POD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -285,12 +283,14 @@ r^2}"/></p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2018, EZyRB contributors.
-      Last updated on Mar 20, 2018.
+        &copy; Copyright Copyright 2016-2019, EZyRB contributors
+      <span class="lastupdated">
+        Last updated on Jun 08, 2020.
+      </span>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -303,37 +303,15 @@ r^2}"/></p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.2',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
