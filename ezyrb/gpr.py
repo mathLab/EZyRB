@@ -50,16 +50,21 @@ class GPR(Approximation):
 
         self.model.optimize_restarts(optimization_restart, verbose=False)
 
-    def predict(self, new_points):
+    def predict(self, new_points, return_variance=False):
         """
         Predict the mean and the variance of Gaussian distribution at given
         `new_points`.
 
         :param array_like new_points: the coordinates of the given points.
+        :param bool return_variance: flag to return also the variance.
+            Default is False.
         :return: the mean and the variance
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
-        return self.model.predict(new_points)
+        new_points = np.atleast_2d(new_points)
+        if return_variance:
+            return self.model.predict(new_points)
+        return self.model.predict(new_points)[0]
 
     def optimal_mu(self, bounds, optimization_restart=10):
         """
@@ -78,7 +83,7 @@ class GPR(Approximation):
         min_x = None
 
         def min_obj(X):
-            return -np.linalg.norm(self.predict(X.reshape(1, -1))[1])
+            return -np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
 
         initial_starts = np.random.uniform(
             bounds[:, 0],

@@ -6,6 +6,7 @@ from ezyrb import ReducedOrderModel as ROM
 
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
 pred_sol_tst = np.load('tests/test_datasets/p_predsol.npy').T
+pred_sol_gpr = np.load('tests/test_datasets/p_predsol_gpr.npy').T
 param = np.array([[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]])
 
 
@@ -29,8 +30,8 @@ class TestReducedOrderModel(TestCase):
         gpr = GPR()
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
-        pred_sol = rom.predict([-0.293344, -0.23120537]) # same with np.array([-0.293344, -0.23120537])
-        np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
+        pred_sol = rom.predict([-0.293344, -0.23120537])
+        np.testing.assert_allclose(pred_sol, pred_sol_gpr, rtol=1e-4, atol=1e-5)
 
     def test_loo_error(self):
         pod = POD()
