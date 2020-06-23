@@ -51,7 +51,7 @@ class TestGPR(TestCase):
                              [0.0244903294, 0.0030022514],
                              [0.0247701249, 0.0030365513],
                              [0.0232064664, 0.0028448636]])
-        np.testing.assert_array_almost_equal(true_var, variance, decimal=10)
+        np.testing.assert_array_almost_equal(true_var, variance, decimal=6)
 
     def test_predict_03(self):
         np.random.seed(1)
