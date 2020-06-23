@@ -1,7 +1,7 @@
 import numpy as np
 
 from unittest import TestCase
-from ezyrb import POD, RBF, Database
+from ezyrb import POD, GPR, RBF, Database
 from ezyrb import ReducedOrderModel as ROM
 
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
@@ -16,12 +16,20 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf)
 
-    def test_predict(self):
+    def test_predict_01(self):
         pod = POD()
         rbf = RBF()
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         pred_sol = rom.predict([-0.293344, -0.23120537])
+        np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
+
+    def test_predict_02(self):
+        pod = POD(method='svd', rank=4)
+        gpr = GPR()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, gpr).fit()
+        pred_sol = rom.predict([-0.293344, -0.23120537]) # same with np.array([-0.293344, -0.23120537])
         np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
 
     def test_loo_error(self):
