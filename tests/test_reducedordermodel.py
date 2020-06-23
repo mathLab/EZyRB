@@ -26,7 +26,15 @@ class TestReducedOrderModel(TestCase):
         np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
 
     def test_predict_02(self):
-        pod = POD(method='svd', rank=-1)
+        pod = POD(method='svd', rank=4)
+        gpr = GPR()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, gpr).fit()
+        pred_sol = rom.predict([-.45, -.45])
+        np.testing.assert_allclose(pred_sol, pred_sol_gpr, rtol=1e-4, atol=1e-5)
+
+    def test_predict_03(self):
+        pod = POD(method='svd', rank=3)
         gpr = GPR()
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
