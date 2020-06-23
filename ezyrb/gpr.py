@@ -30,12 +30,8 @@ class GPR(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        self.X_sample = np.array(points)
-        self.Y_sample = np.array(values)
-        if self.X_sample.ndim == 1: 
-            self.X_sample = self.X_sample.reshape(-1,1)
-        if self.Y_sample.ndim == 1: 
-            self.Y_sample = self.Y_sample.reshape(-1,1)
+        self.X_sample = np.atleast_2d(points)
+        self.Y_sample = np.atleast_2d(values)
 
         if kern is None:
             kern = GPy.kern.RBF(
