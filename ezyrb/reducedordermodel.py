@@ -12,12 +12,14 @@ class ReducedOrderModel(object):
         self.reduction = reduction
         self.approximation = approximation
 
-    def fit(self):
+    def fit(self, *args, **kwargs):
         """
         Calculate reduced space
         """
-        self.approximation.fit(self.database.parameters,
-                               self.reduction.reduce(self.database.snapshots.T))
+        self.approximation.fit(
+            self.database.parameters,
+            self.reduction.reduce(self.database.snapshots.T).T,
+            *args, **kwargs)
 
         return self
 

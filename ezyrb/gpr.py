@@ -16,6 +16,17 @@ class GPR(Approximation):
     :cvar numpy.ndarray Y_sample: the array containing the output values,
         arranged by row.
     :cvar GPy.models.GPRegression model: the regression model.
+
+    Example:
+    >>> import ezyrb
+    >>> import numpy as np
+    >>> x = np.random.uniform(-1, 1, size=(4, 2))
+    >>> y = (np.sin(x[:, 0]) + np.cos(x[:, 1]**3)).reshape(-1, 1)
+    >>> gpr = ezyrb.GPR()
+    >>> gpr.fit(x, y)
+    >>> y_pred = gpr.predict(x)
+    >>> print(np.allclose(y, y_pred))
+
     """
 
     def __init__(self):
@@ -30,8 +41,12 @@ class GPR(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        self.X_sample = np.atleast_2d(points)
-        self.Y_sample = np.atleast_2d(values)
+        self.X_sample = np.array(points)
+        self.Y_sample = np.array(values)
+        if self.X_sample.ndim == 1: 
+            self.X_sample = self.X_sample.reshape(-1, 1)
+        if self.Y_sample.ndim == 1: 
+            self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         if kern is None:
             kern = GPy.kern.RBF(
