@@ -21,6 +21,18 @@ class RBF(Approximation):
     :cvar kernel: The radial basis function; the default is ‘multiquadric’.
     :cvar list interpolators: the RBF interpolators (the number of
         interpolators depenend by the dimensionality of the output)
+
+    Example:
+    >>> import ezyrb
+    >>> import numpy as np
+    >>> 
+    >>> x = np.random.uniform(-1, 1, size=(4, 2))
+    >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
+    >>> rbf = ezyrb.RBF()
+    >>> rbf.fit(x, y)
+    >>> y_pred = rbf.predict(x)
+    >>> print(np.allclose(y, y_pred))
+
     """
 
     def __init__(self, kernel='multiquadric', smooth=0):
@@ -35,7 +47,7 @@ class RBF(Approximation):
         :param array_like values: the values in the points.
         """
         self.interpolators = []
-        for value in values:
+        for value in values.T:
             argument = np.hstack([points, value.reshape(-1, 1)]).T
             self.interpolators.append(
                 Rbf(*argument, smooth=self.smooth, function=self.kernel))
@@ -48,4 +60,5 @@ class RBF(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        return np.array([interp(*new_point) for interp in self.interpolators])
+        new_point = np.array(new_point)
+        return np.array([interp(*new_point.T) for interp in self.interpolators]).T
