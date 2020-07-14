@@ -71,9 +71,9 @@ class Database(object):
 
     def add(self, parameters, snapshots):
         """
+        TO DOC
         """
-
-        if len(parameters) is not len(snapshots):
+        if len(parameters) != len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
 
         if self._parameters is None and self._snapshots is None:
