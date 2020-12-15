@@ -1,16 +1,19 @@
 from setuptools import setup, Command
 import os
 import sys
-import ezyrb
 from shutil import rmtree
 
+meta = {}
+with open("ezyrb/meta.py") as fp:
+    exec(fp.read(), meta)
+
 # Package meta-data.
-NAME = ezyrb.__title__
+NAME = meta['__title__']
 DESCRIPTION = 'Easy Reduced Basis'
 URL = 'https://github.com/mathLab/EZyRB'
-MAIL = ezyrb.__mail__
-AUTHOR = ezyrb.__author__
-VERSION = ezyrb.__version__
+MAIL = meta['__mail__']
+AUTHOR = meta['__author__']
+VERSION = meta['__version__']
 KEYWORDS='pod interpolation reduced-basis model-order-reduction'
 
 REQUIRED = [
@@ -75,10 +78,10 @@ setup(
     author=AUTHOR,
     author_email=MAIL,
 	classifiers=[
-	  	'Development Status :: 5 - Production/Stable',
-	  	'License :: OSI Approved :: MIT License',
-	  	'Programming Language :: Python :: 3.5',
-	  	'Programming Language :: Python :: 3.6',
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics'
 	],
