@@ -1,16 +1,14 @@
-
 """
 Module for Proper Orthogonal Decomposition (POD) via default svd
 """
 
-from reduction import Reduction
-
 import numpy as np
+
+from .reduction import Reduction
+
 
 class POD(Reduction):
     def __init__(self, method='svd', **kwargs):
-        """
-        """
         available_methods = {
             'svd': (self._svd, {
                 'rank': -1

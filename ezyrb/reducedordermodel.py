@@ -35,6 +35,8 @@ class ReducedOrderModel(object):
 
     def test_error(self, test, norm=np.linalg.norm):
         """
+        Compute the mean norm of the relative error vector of a predicted
+        test snapshot
         """
         predicted_test = self.predict(test.parameters)
         return np.mean(norm(predicted_test - test.snapshots, axis=1)/norm(test.snapshots, axis=1))

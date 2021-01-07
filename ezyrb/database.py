@@ -67,11 +67,15 @@ class Database(object):
                         self.scaler_parameters, self.scaler_snapshots)
 
     def __len__(self):
+        """
+        This method returns the number of snapshots
+        """
         return len(self._snapshots)
 
     def add(self, parameters, snapshots):
         """
-        TO DOC
+        Add (by row) new sets of snapshots and paramters to the original
+        database
         """
         if len(parameters) != len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
