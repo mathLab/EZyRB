@@ -1,7 +1,9 @@
 """
-Module for Proper Orthogonal Decomposition (POD) via default svd
+Module for Proper Orthogonal Decomposition (POD).
+Three different methods can be employed: Truncated Singular Value Decomposition,
+Truncated Randomized Singular Value Decomposition, Truncated Singular Value 
+Decomposition via correlation matrix.
 """
-
 import numpy as np
 
 from .reduction import Reduction
@@ -9,6 +11,8 @@ from .reduction import Reduction
 
 class POD(Reduction):
     def __init__(self, method='svd', **kwargs):
+        """
+        """
         available_methods = {
             'svd': (self._svd, {
                 'rank': -1

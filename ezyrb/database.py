@@ -68,14 +68,19 @@ class Database(object):
 
     def __len__(self):
         """
-        This method returns the number of snapshots
+        This method returns the number of snapshots.
+        
+        :rtype: int
         """
         return len(self._snapshots)
 
     def add(self, parameters, snapshots):
         """
-        Add (by row) new sets of snapshots and paramters to the original
-        database
+        Add (by row) new sets of snapshots and parameters to the original
+        database.
+        
+        :param array_like parameters: the parameters to add.
+        :param array_like snapshots: the snapshots to add.
         """
         if len(parameters) != len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
