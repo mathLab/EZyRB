@@ -35,6 +35,16 @@ class ReducedOrderModel(object):
 
     def test_error(self, test, norm=np.linalg.norm):
         """
+        Compute the mean norm of the relative error vectors of predicted
+        test snapshots.
+        
+        :param database.Database test: the input test database.
+        :param function func: the function used to assign at the vector of
+            errors a float number. It has to take as input a 'numpy.ndarray'
+            and returns a float. Default value is the L2 norm.
+        :return: the mean L2 norm of the relative errors of the estimated  
+            test snapshots.
+        :rtype: numpy.float64
         """
         predicted_test = self.predict(test.parameters)
         return np.mean(norm(predicted_test - test.snapshots, axis=1)/norm(test.snapshots, axis=1))
