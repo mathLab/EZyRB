@@ -9,27 +9,28 @@ from .approximation import Approximation
 class ANN(Approximation):
     """
     Feed-Forward Artifical Neural Network (ANN).
+    : param int trained_epoch: number of already trained iterations.
+    : param criterion: Loss definition (Mean Squared). 
+    : type criterion: torch.nn.modules.loss.MSELoss.
     
     Example:
-    >>> import ezyrb
-    >>> import torch
-    >>> import torch.nn as nn
     >>> import numpy as np
-    >>> 
-    >>> x = np.random.uniform(-1, 1, size=(4, 2))
+    >>> from ann import ANN
+    >>> x = np.random.uniform(-1, 1, size = (4, 2))
     >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
-    >>> ann = ezyrb.ANN()
-    >>> ann.fit(x,y)
+    >>> ann = ANN()
+    >>> ann.fit(x, y)
     >>> y_pred = ann.predict(x)
     >>> print(y)
     >>> print(y_pred)
     """
         
     def __init__(self):
-        self.trained_epoch = 0   
         # number of already trained iterations
-        self.criterion = torch.nn.MSELoss()
+        self.trained_epoch = 0   
         # the Mean Squared Loss is considered
+        self.criterion = torch.nn.MSELoss()
+        
         
     def fit(self, points, values):
         """
@@ -49,48 +50,48 @@ class ANN(Approximation):
         :return the training loss value at termination (after niter iterations).
         :rtype: float.
         """
-        layers = [points.shape[1], 10, 5, values.shape[1]]
         # ordered list with the number of neurons per layer (to be modified by the user)
-        # (i.e., layers[i]=number of neurons in the layer i)
-        niter=5000
+        # (i.e., layers[i] = number of neurons in the layer i)
+        layers = [points.shape[1], 10, 5, values.shape[1]]
+        niter = 5000
         arguments = []
         for i in range(len(layers)-2):
             arguments.append(nn.Linear(layers[i], layers[i+1]))
             arguments.append(nn.Tanh())
         arguments.append(nn.Linear(layers[len(layers)-2], layers[len(layers)-1]))
         arguments.append(nn.Identity())
-        self.model = nn.Sequential(*arguments)
         # ANN structural model definition
-        self.optimizer=torch.optim.Adam(self.model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
+        self.model = nn.Sequential(*arguments)
         # setting of the optimization solver (Adam)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
         points = torch.from_numpy(points).float()
         values = torch.from_numpy(values).float()
         for epoch in range(niter):
-            y_pred = self.model(points)
             # forward propagation (net evaluation at 'points')
-            loss = self.criterion(y_pred, values)
+            y_pred = self.model(points)
             # compute the training loss
-            self.optimizer.zero_grad()
+            loss = self.criterion(y_pred, values)
             # zero the gradients
-            old_loss = loss.item() 
+            self.optimizer.zero_grad()
             # loss values extraction (type: float)
-            loss.backward()
+            old_loss = loss.item() 
             # perform a backward propagation
+            loss.backward()
+            # parameters update 
             self.optimizer.step()
-            # parameters update           
-        self.trained_epoch += niter
         # update of the number of trained iterations
+        self.trained_epoch += niter
         return loss.item()
     
     def predict(self,new_point):
         """
         Evaluate the ANN at given 'new_points'.
         
-        :param (list or numpy.ndarray) new_points: the coordinates of the given points.
+        :param array_like new_points: the coordinates of the given points.
         :return: the predicted values via the ANN.
         :rtype: numpy.ndarray
         """
-        new_point=np.array(new_point)
+        new_point = np.array(new_point)
         new_point = torch.from_numpy(new_point).float()
-        y_new=self.model(new_point)
+        y_new = self.model(new_point)
         return y_new.detach().numpy()
