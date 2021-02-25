@@ -1,11 +1,7 @@
 __all__ = [
     'database',
     'reduction', 'pod',
-<<<<<<< HEAD
     'approximation', 'rbf', 'linear', 'gpr', 'ann'
-=======
-    'approximation', 'rbf', 'linear', 'gpr','ann'
->>>>>>> 359dc0ccc1c6d01703d0a34655ec5cfccd1f725a
 ]
 
 from .meta import *
