@@ -9,9 +9,9 @@ from .approximation import Approximation
 class ANN(Approximation):
     """
     Feed-Forward Artifical Neural Network (ANN).
-    : param int trained_epoch: number of already trained iterations.
-    : param criterion: Loss definition (Mean Squared). 
-    : type criterion: torch.nn.modules.loss.MSELoss.
+    :param int trained_epoch: number of already trained iterations.
+    :param criterion: Loss definition (Mean Squared). 
+    :type criterion: torch.nn.Module.
     
     Example:
     >>> import ezyrb
@@ -25,9 +25,47 @@ class ANN(Approximation):
     >>> print(y_pred)
     """
         
-    def __init__(self):
-        self.trained_epoch = 0   
-        self.criterion = torch.nn.MSELoss()
+    def __init__(self, layers, function, stop_training, loss=None):
+
+        if loss is None: loss = torch.nn.MSELoss
+        if optimizer is None: optimizer = torch.optim.Adam
+        if not isinstance(function, list): # Single activation function passed
+            function = [function] * (len(layers)-1)
+
+
+        self.layers = layers
+        self.function = function
+        self.loss = loss
+        self.stop_training = stop_training
+
+        self.loss_trend = []   
+        self.model = None
+
+    def _convert_numpy_to_torch(self, array):
+        """
+        Converting data type.
+        TODO: type should be not forced to `float`
+        """
+        return torch.from_numpy(array).float()
+
+    def _convert_torch_to_numpy(self, tensor):
+        """
+        Converting data type.
+        """
+        return tensor.detach().numpy()
+
+    def _build_model(self):
+        """
+        Build the torch model
+        """
+        self.layers.insert(0, points.shape[1])
+        self.layers.append(values.shape[1]
+        layers = []
+        for i in range(len(layers)-1):
+            layers.append(nn.Linear(self.layers[i], self.layers[i+1]))
+            layers.append(nn.Tanh())
+        layers.append(nn.Linear(self.layers[-2], self.layers[-1]))
+        self.model = nn.Sequential(*layers)
         
     def fit(self, points, values):
         """
@@ -47,28 +85,32 @@ class ANN(Approximation):
         :return the training loss value at termination (after niter iterations).
         :rtype: float.
         """
-        layers = [points.shape[1], 10, 5, values.shape[1]]
-        niter = 20000
-        arguments = []
-        for i in range(len(layers)-2):
-            arguments.append(nn.Linear(layers[i], layers[i+1]))
-            arguments.append(nn.Tanh())
-        arguments.append(nn.Linear(layers[len(layers)-2], layers[len(layers)-1]))
-        arguments.append(nn.Identity())
-        self.model = nn.Sequential(*arguments)
 
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
-        points = torch.from_numpy(points).float()
-        values = torch.from_numpy(values).float()
+        if self.model is None:
+           self._build_model() 
 
-        for epoch in range(niter):
+        optimizer = torch.optim.Adam(self.model.parameters())
+ 
+        points = self._convert_numpy_to_torch(points)
+        values = self._convert_numpy_to_torch(values)
+
+        n_epoch = 0
+
+        while True:
             y_pred = self.model(points)
             loss = self.criterion(y_pred, values)
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
-        self.trained_epoch += niter
-        return loss.item()
+            self.loss_trend.append(loss.item())
+
+            if isinstance(self.stop_training, int): # stop criteria is an integer
+                if n_epoch == self.stop_training: break
+            elif isinstance(self.stop_training, float): # stop criteria is float
+                if loss.item() < self.stop_training: break 
+
+            n_epoch += 1
+                
     
     def predict(self, new_point):
         """
@@ -78,7 +120,6 @@ class ANN(Approximation):
         :return: the predicted values via the ANN.
         :rtype: numpy.ndarray
         """
-        new_point = np.array(new_point)
-        new_point = torch.from_numpy(new_point).float()
-        y_new=self.model(new_point)
-        return y_new.detach().numpy()
+        new_point = self._convert_numpy_to_torch(new_point)
+        y_new = self.model(new_point)
+        return self._convert_torch_to_numpy(y_new)
