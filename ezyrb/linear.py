@@ -27,7 +27,8 @@ class Linear(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        self.intepolator = LinearNDInterpolator(points, values)
+        self.intepolator = LinearNDInterpolator(points, values,
+            fill_value=self.fill_value)
 
     def predict(self, new_point):
         """
