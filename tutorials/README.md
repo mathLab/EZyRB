@@ -5,8 +5,7 @@ In this folder you can find a collection of useful tutorials in order to underst
 #### [Tutorial 1](tutorial-1.ipynb)
 Here we show the typical workflow on a vtk pressure field for:
 1. The construcion of the reduced basis space, called offline phase;
-2. The online evaluation of the output of interest;
-3. Using the module mapper in order to interpolate the solutions (computed on meshes with different dimensions) on a new fixed dimension mesh.
+2. The online evaluation of the output of interest.
 
 
 #### More to come...
