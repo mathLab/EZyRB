@@ -22,6 +22,7 @@ class ANN(Approximation):
     Example:
     >>> import ezyrb
     >>> import numpy as np
+    >>> import torch.nn as nn
     >>> x = np.random.uniform(-1, 1, size =(4, 2))
     >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
     >>> ann = ezyrb.ANN([10, 5], nn.Tanh(), [20000,1e-5])
@@ -113,7 +114,7 @@ class ANN(Approximation):
         :param numpy.ndarray values: the (training) values in the points.
         """
 
-        self._build_model(points,values) 
+        self._build_model(points, values) 
         self.optimizer = torch.optim.Adam(self.model.parameters())
  
         points = self._convert_numpy_to_torch(points)
