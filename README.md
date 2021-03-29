@@ -47,7 +47,7 @@
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
-**EZyRB** requires `numpy`, `scipy`, `matplotlib`, `vtk`, `nose` (for local
+**EZyRB** requires `numpy`, `scipy`, `sklearn`, `matplotlib`, `vtk`, `nose` (for local
 test) and `sphinx` (to generate the documentation).The coe has been tested with
 Python3.5 version, but it should be compatible with Python3. It can be
 installed using `pip` or directly from the source code.
