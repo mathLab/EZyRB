@@ -47,13 +47,13 @@ install:
         conda create --yes -n test python="3.6";
       fi
     - source activate test
-    - pip install numpy scipy matplotlib pip nose sphinx==1.4 gpy torch
+    - pip install numpy scipy matplotlib pip nose sphinx==1.4 gpy torch sklearn
     - pip install setuptools
     - pip install coveralls
     - pip install coverage
     - python setup.py install
 
-script: 
+script:
     - coverage run test.py
 
 after_success:
