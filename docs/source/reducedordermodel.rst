@@ -13,7 +13,6 @@ ReducedOrderModel
     ReducedOrderModel.fit
     ReducedOrderModel.predict
     ReducedOrderModel.loo_error
-    ReducedOrderModel.add_snapshot
     ReducedOrderModel.optimal_mu
     ReducedOrderModel._simplex_volume
 
