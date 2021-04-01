@@ -23,7 +23,7 @@ import sphinx_rtd_theme
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../..'))
-import ezyrb
+import ezyrb.meta as meta
 
 # -- General configuration ------------------------------------------------
 
@@ -70,9 +70,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = ezyrb.__project__
-copyright = ezyrb.__copyright__
-author = ezyrb.__author__
+project = meta.__project__
+copyright = meta.__copyright__
+author = meta.__author__
 
 # autoclass
 autoclass_content = 'both'
@@ -82,7 +82,7 @@ autoclass_content = 'both'
 # built documents.
 #
 # The short X.Y version.
-version = ezyrb.__version__
+version = meta.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -287,7 +287,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, ezyrb.__title__, u'EZyRB Documentation',
+    (master_doc, meta.__title__, u'EZyRB Documentation',
      [author], 1)
 ]
 
