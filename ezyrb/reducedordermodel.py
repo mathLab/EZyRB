@@ -3,6 +3,7 @@ Module for the Reduced Order Modeling
 """
 import numpy as np
 import math
+import copy
 from scipy.spatial import Delaunay
 
 
@@ -74,8 +75,8 @@ class ReducedOrderModel(object):
             remaining_index = db_range[:]
             remaining_index.remove(j)
             new_db = self.database[remaining_index]
-            rom = type(self)(new_db, self.reduction,
-                    self.approximation).fit()
+            rom = type(self)(new_db, copy.deepcopy(self.reduction),
+                    copy.deepcopy(self.approximation)).fit()
 
             error[j] = norm(self.database.snapshots[j] -
                             rom.predict(self.database.parameters[j]))
