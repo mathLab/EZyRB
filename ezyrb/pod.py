@@ -87,7 +87,7 @@ class POD(Reduction):
         :return: the number of modes
         :rtype: int
         """
-        if self.rank is 0:
+        if self.rank == 0:
             omega = lambda x: 0.56 * x**3 - 0.95 * x**2 + 1.82 * x + 1.43
             beta = np.divide(*sorted(X.shape))
             tau = np.median(s) * omega(beta)
