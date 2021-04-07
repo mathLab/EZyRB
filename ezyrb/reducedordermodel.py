@@ -5,6 +5,7 @@ import numpy as np
 import math
 import copy
 from scipy.spatial import Delaunay
+from sklearn.model_selection import KFold
 
 
 class ReducedOrderModel(object):
@@ -19,8 +20,7 @@ class ReducedOrderModel(object):
         """
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T).T,
-            *args, **kwargs)
+            self.reduction.reduce(self.database.snapshots.T).T, *args, **kwargs)
 
         return self
 
@@ -40,15 +40,43 @@ class ReducedOrderModel(object):
         test snapshots.
         
         :param database.Database test: the input test database.
-        :param function func: the function used to assign at the vector of
+        :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
         :return: the mean L2 norm of the relative errors of the estimated  
             test snapshots.
-        :rtype: numpy.float64
+        :rtype: numpy.ndarray
         """
         predicted_test = self.predict(test.parameters)
-        return np.mean(norm(predicted_test - test.snapshots, axis=1)/norm(test.snapshots, axis=1))
+        return np.mean(
+            norm(predicted_test - test.snapshots, axis=1) /
+            norm(test.snapshots, axis=1))
+
+    def kfold_cv_error(self, n_splits, norm=np.linalg.norm):
+        """
+        Split the database into k consecutive folds (no shuffling by default).
+        Each fold is used once as a validation while the k - 1 remaining folds
+        form the training set. If `n_splits` is equal to the number of
+        snapshots this function is the same as `loo_error` but the error here
+        is relative and not absolute.
+
+        :param int n_splits: number of folds. Must be at least 2.
+        :param function norm: function to apply to compute the relative error
+            between the true snapshot and the predicted one.
+            Default value is the L2 norm.
+        :return: the vector containing the errors corresponding to each fold.
+        :rtype: numpy.ndarray
+        """
+        error = []
+        kf = KFold(n_splits=n_splits)
+        for train_index, test_index in kf.split(self.database):
+            new_db = self.database[train_index]
+            rom = type(self)(new_db, copy.deepcopy(self.reduction),
+                             copy.deepcopy(self.approximation)).fit()
+
+            error.append(rom.test_error(self.database[test_index], norm))
+
+        return np.array(error)
 
     def loo_error(self, norm=np.linalg.norm):
         """
@@ -57,10 +85,10 @@ class ReducedOrderModel(object):
         snapshots except one. The error vector is computed as the difference
         between the removed snapshot and the projection onto the properly
         reduced space. The procedure repeats for each snapshot in the database.
-        The `func` is applied on each vector of error to obtained a float
+        The `norm` is applied on each vector of error to obtained a float
         number.
 
-        :param function func: the function used to assign at each vector of
+        :param function norm: the function used to assign at each vector of
             error a float number. It has to take as input a 'numpy.ndarray` and
             returns a float. Default value is the L2 norm.
         :return: the vector that contains the errors estimated for all
@@ -76,7 +104,7 @@ class ReducedOrderModel(object):
             remaining_index.remove(j)
             new_db = self.database[remaining_index]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                    copy.deepcopy(self.approximation)).fit()
+                             copy.deepcopy(self.approximation)).fit()
 
             error[j] = norm(self.database.snapshots[j] -
                             rom.predict(self.database.parameters[j]))
