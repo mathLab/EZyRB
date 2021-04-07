@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 
 from unittest import TestCase
 from ezyrb import KNeighborsRegressor, Database, POD, ReducedOrderModel
@@ -58,12 +59,16 @@ class TestKNeighbors(TestCase):
 
     def test_wrong1(self):
         # wrong number of params
-        with self.assertRaises(Exception):
-            reg = KNeighborsRegressor()
-            reg.fit([[1, 2], [6,], [8, 9]], [[1, 0], [20, 5], [8, 6]])
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
+            with self.assertRaises(Exception):
+                reg = KNeighborsRegressor()
+                reg.fit([[1, 2], [6,], [8, 9]], [[1, 0], [20, 5], [8, 6]])
 
     def test_wrong2(self):
         # wrong number of values
-        with self.assertRaises(Exception):
-            reg = KNeighborsRegressor()
-            reg.fit([[1, 2], [6,], [8, 9]], [[20, 5], [8, 6]])
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
+            with self.assertRaises(Exception):
+                reg = KNeighborsRegressor()
+                reg.fit([[1, 2], [6,], [8, 9]], [[20, 5], [8, 6]])

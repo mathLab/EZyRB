@@ -56,6 +56,15 @@ class TestReducedOrderModel(TestCase):
             np.array([421.299091, 344.571787,  48.711501, 300.490491]),
             rtol=1e-4)
 
+    def test_loo_error_singular_values(self):
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf).fit()
+        valid_svalues = rom.reduction.singular_values
+        rom.loo_error()
+        np.testing.assert_allclose(valid_svalues, rom.reduction.singular_values)
+
     def test_optimal_mu(self):
         pod = POD()
         rbf = RBF()
