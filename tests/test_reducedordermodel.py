@@ -38,12 +38,31 @@ class TestReducedOrderModel(TestCase):
         pod = POD(method='svd', rank=3)
         gpr = GPR()
         db = Database(param, snapshots.T)
-        #rom = ROM(db, pod, RBF()).fit()
-        #pred_sol = rom.predict([-.45, -.45])
-        #print(pred_sol)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters[2])
         assert pred_sol.shape == db.snapshots[0].shape
+
+    def test_kfold_cv_error_01(self):
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf)
+        err = rom.kfold_cv_error(n_splits=4)
+        np.testing.assert_allclose(
+            err,
+            np.array([0.54002856, 1.21174449, 0.27177608, 0.91950896]),
+            rtol=1e-4)
+
+    def test_kfold_cv_error_02(self):
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf)
+        err = rom.kfold_cv_error(n_splits=3)
+        np.testing.assert_allclose(
+            err,
+            np.array([0.468199, 0.271776, 0.919509]),
+            rtol=1e-4)
 
     def test_loo_error(self):
         pod = POD()
