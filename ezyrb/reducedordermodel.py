@@ -17,6 +17,9 @@ class ReducedOrderModel(object):
     def fit(self, *args, **kwargs):
         """
         Calculate reduced space
+
+        :param \*args: additional parameters to pass to the `fit` method.
+        :param \**kwargs: additional parameters to pass to the `fit` method.
         """
         self.approximation.fit(
             self.database.parameters,
@@ -52,7 +55,7 @@ class ReducedOrderModel(object):
             norm(predicted_test - test.snapshots, axis=1) /
             norm(test.snapshots, axis=1))
 
-    def kfold_cv_error(self, n_splits, norm=np.linalg.norm):
+    def kfold_cv_error(self, n_splits, norm=np.linalg.norm, *args, **kwargs):
         """
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
@@ -64,6 +67,8 @@ class ReducedOrderModel(object):
         :param function norm: function to apply to compute the relative error
             between the true snapshot and the predicted one.
             Default value is the L2 norm.
+        :param \*args: additional parameters to pass to the `fit` method.
+        :param \**kwargs: additional parameters to pass to the `fit` method.
         :return: the vector containing the errors corresponding to each fold.
         :rtype: numpy.ndarray
         """
@@ -72,13 +77,14 @@ class ReducedOrderModel(object):
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit()
+                             copy.deepcopy(self.approximation)).fit(
+                                 *args, **kwargs)
 
             error.append(rom.test_error(self.database[test_index], norm))
 
         return np.array(error)
 
-    def loo_error(self, norm=np.linalg.norm):
+    def loo_error(self, norm=np.linalg.norm, *args, **kwargs):
         """
         Estimate the approximation error using *leave-one-out* strategy. The
         main idea is to create several reduced spaces by combining all the
@@ -91,6 +97,8 @@ class ReducedOrderModel(object):
         :param function norm: the function used to assign at each vector of
             error a float number. It has to take as input a 'numpy.ndarray` and
             returns a float. Default value is the L2 norm.
+        :param \*args: additional parameters to pass to the `fit` method.
+        :param \**kwargs: additional parameters to pass to the `fit` method.
         :return: the vector that contains the errors estimated for all
             parametric points.
         :rtype: numpy.ndarray
@@ -99,12 +107,12 @@ class ReducedOrderModel(object):
         db_range = list(range(len(self.database)))
 
         for j in db_range:
-
             remaining_index = db_range[:]
             remaining_index.remove(j)
             new_db = self.database[remaining_index]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit()
+                             copy.deepcopy(self.approximation)).fit(
+                                 *args, **kwargs)
 
             error[j] = norm(self.database.snapshots[j] -
                             rom.predict(self.database.parameters[j]))
