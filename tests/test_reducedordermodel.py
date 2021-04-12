@@ -64,7 +64,18 @@ class TestReducedOrderModel(TestCase):
             np.array([0.468199, 0.271776, 0.919509]),
             rtol=1e-4)
 
-    def test_loo_error(self):
+    def test_kfold_cv_error_03(self):
+        pod = POD()
+        gpr = GPR()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, gpr)
+        err = rom.kfold_cv_error(n_splits=3, normalizer=False)
+        np.testing.assert_allclose(
+            err,
+            np.array([0.664149, 1.355502, 0.379874]),
+            rtol=1e-3)
+
+    def test_loo_error_01(self):
         pod = POD()
         rbf = RBF()
         db = Database(param, snapshots.T)
@@ -74,6 +85,17 @@ class TestReducedOrderModel(TestCase):
             err,
             np.array([421.299091, 344.571787,  48.711501, 300.490491]),
             rtol=1e-4)
+
+    def test_loo_error_02(self):
+        pod = POD()
+        gpr = GPR()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, gpr)
+        err = rom.loo_error(normalizer=False)
+        np.testing.assert_allclose(
+            err[0],
+            np.array([579.632187]),
+            rtol=1e-3)
 
     def test_loo_error_singular_values(self):
         pod = POD()
