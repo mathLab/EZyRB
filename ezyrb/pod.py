@@ -59,13 +59,22 @@ class POD(Reduction):
         """
         return self._singular_values
 
-    def reduce(self, X):
+    def fit(self, X):
         """
-        Reduces the parameter Space by using the specified reduction method (default svd).
+        Create the reduced space for the given snapshots `X` using the
+        specified method
 
-        :type: numpy.ndarray
+        :param numpy.ndarray X: the input snapshots matrix (stored by column)
         """
         self._modes, self._singular_values = self.__method(X)
+        return self
+
+    def reduce(self, X):
+        """
+        Reduces the given snapshots.
+
+        :param numpy.ndarray X: the input snapshots matrix (stored by column).
+        """
         return self.modes.T.conj().dot(X)
 
     def expand(self, X):
