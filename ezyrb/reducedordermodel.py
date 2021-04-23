@@ -21,6 +21,7 @@ class ReducedOrderModel(object):
         :param \*args: additional parameters to pass to the `fit` method.
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
+        self.reduction.fit(self.database.snapshots.T)
         self.approximation.fit(
             self.database.parameters,
             self.reduction.reduce(self.database.snapshots.T).T, *args, **kwargs)

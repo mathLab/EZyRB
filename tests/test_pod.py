@@ -13,7 +13,7 @@ class TestPOD(TestCase):
         a = POD()
 
     def test_numpysvd(self):
-        A = POD('svd').reduce(snapshots)
+        A = POD('svd').fit(snapshots).reduce(snapshots)
         assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
             A,
             -1 * poddb,
@@ -22,7 +22,7 @@ class TestPOD(TestCase):
         )
 
     def test_correlation_matirix(self):
-        A = POD('correlation_matrix').reduce(snapshots)
+        A = POD('correlation_matrix').fit(snapshots).reduce(snapshots)
         assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
             A,
             -1 * poddb,
@@ -31,7 +31,7 @@ class TestPOD(TestCase):
         )
 
     def test_correlation_matirix_savemem(self):
-        A = POD('correlation_matrix', save_memory=True).reduce(snapshots)
+        A = POD('correlation_matrix', save_memory=True).fit(snapshots).reduce(snapshots)
         assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
             A,
             -1 * poddb,
@@ -40,15 +40,14 @@ class TestPOD(TestCase):
         )
 
     def test_randomized_svd(self):
-        A = POD('randomized_svd').reduce(snapshots)
+        A = POD('randomized_svd').fit(snapshots).reduce(snapshots)
         np.testing.assert_allclose(np.absolute(A),
                                    np.absolute(poddb),
                                    rtol=1e-03,
                                    atol=1e-08)
 
     def test_singlular_values(self):
-        a = POD('svd')
-        a.reduce(snapshots)
+        a = POD('svd').fit(snapshots)
         np.testing.assert_allclose(
             a.singular_values,
             np.array([887.15704, 183.2508, 84.11757, 26.40448]),
@@ -57,50 +56,50 @@ class TestPOD(TestCase):
 
     def test_modes(self):
         a = POD('svd')
-        a.reduce(snapshots)
+        a.fit(snapshots)
         np.testing.assert_allclose(a.modes, modes)
 
     def test_truncation_01(self):
         a = POD(method='svd', rank=0)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 1
 
     def test_truncation_02(self):
         a = POD(method='randomized_svd', rank=0)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 1
 
     def test_truncation_03(self):
         a = POD(method='correlation_matrix', rank=0)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 2
 
     def test_truncation_04(self):
         a = POD(method='svd', rank=3)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 3
 
     def test_truncation_05(self):
         a = POD(method='randomized_svd', rank=3)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 3
 
     def test_truncation_06(self):
         a = POD(method='correlation_matrix', rank=4)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 4
 
     def test_truncation_07(self):
         a = POD(method='svd', rank=0.8)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 1
 
     def test_truncation_08(self):
         a = POD(method='randomized_svd', rank=0.995)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 3
 
     def test_truncation_09(self):
         a = POD(method='correlation_matrix', rank=0.9999)
-        a.reduce(snapshots)
+        a.fit(snapshots)
         assert a.singular_values.shape[0] == 2
