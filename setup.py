@@ -17,7 +17,7 @@ VERSION = meta['__version__']
 KEYWORDS='pod interpolation reduced-basis model-order-reduction'
 
 REQUIRED = [
-    'future', 'numpy', 'scipy',	'matplotlib', 'GPy', 'sklearn'
+    'future', 'numpy', 'scipy',	'matplotlib', 'GPy', 'sklearn', 'torch'
 ]
 
 EXTRAS = {
