@@ -13,38 +13,25 @@ class TestPOD(TestCase):
         a = POD()
 
     def test_numpysvd(self):
-        A = POD('svd').fit(snapshots).reduce(snapshots)
-        assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
-            A,
-            -1 * poddb,
-            rtol=1e-03,
-            atol=1e-08,
-        )
+        pod = POD('svd').fit(snapshots)
+        snapshots_ = pod.expand(pod.reduce(snapshots))
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
+        assert np.allclose(snapshots, snapshots_, rtol=1e-03, atol=1e-08)
 
-    def test_correlation_matirix(self):
-        A = POD('correlation_matrix').fit(snapshots).reduce(snapshots)
-        assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
-            A,
-            -1 * poddb,
-            rtol=1e-03,
-            atol=1e-08,
-        )
+    def test_correlation_matrix(self):
+        pod = POD('correlation_matrix').fit(snapshots)
+        snapshots_ = pod.expand(pod.reduce(snapshots))
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=3)
 
     def test_correlation_matirix_savemem(self):
-        A = POD('correlation_matrix', save_memory=True).fit(snapshots).reduce(snapshots)
-        assert np.allclose(A, poddb, rtol=1e-03, atol=1e-08) or np.allclose(
-            A,
-            -1 * poddb,
-            rtol=1e-03,
-            atol=1e-08,
-        )
+        pod = POD('correlation_matrix', save_memory=True).fit(snapshots)
+        snapshots_ = pod.expand(pod.reduce(snapshots))
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
 
     def test_randomized_svd(self):
-        A = POD('randomized_svd').fit(snapshots).reduce(snapshots)
-        np.testing.assert_allclose(np.absolute(A),
-                                   np.absolute(poddb),
-                                   rtol=1e-03,
-                                   atol=1e-08)
+        pod = POD('randomized_svd', save_memory=False).fit(snapshots)
+        snapshots_ = pod.expand(pod.reduce(snapshots))
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
 
     def test_singlular_values(self):
         a = POD('svd').fit(snapshots)
@@ -72,7 +59,7 @@ class TestPOD(TestCase):
     def test_truncation_03(self):
         a = POD(method='correlation_matrix', rank=0)
         a.fit(snapshots)
-        assert a.singular_values.shape[0] == 2
+        assert a.singular_values.shape[0] == 1
 
     def test_truncation_04(self):
         a = POD(method='svd', rank=3)
@@ -102,4 +89,4 @@ class TestPOD(TestCase):
     def test_truncation_09(self):
         a = POD(method='correlation_matrix', rank=0.9999)
         a.fit(snapshots)
-        assert a.singular_values.shape[0] == 2
+        assert a.singular_values.shape[0] == 4
