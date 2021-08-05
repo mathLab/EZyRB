@@ -1,10 +1,14 @@
 """
 Module for Proper Orthogonal Decomposition (POD).
 Three different methods can be employed: Truncated Singular Value Decomposition,
-Truncated Randomized Singular Value Decomposition, Truncated Singular Value 
+Truncated Randomized Singular Value Decomposition, Truncated Singular Value
 Decomposition via correlation matrix.
 """
 import numpy as np
+try:
+    from scipy.linalg import eigh
+except:
+    from numpy.linalg import eigh
 
 from .reduction import Reduction
 
@@ -12,13 +16,51 @@ from .reduction import Reduction
 class POD(Reduction):
     def __init__(self, method='svd', **kwargs):
         """
+        Perform the Proper Orthogonal Decomposition.
+
+        :param method: the implementation to use for the computation of the POD
+            modes. Default is 'svd'.
+        :type method: {'svd', 'randomized_svd', 'correlation_matrix'}
+        :param rank: the rank for the truncation; If 0, the method computes
+            the optimal rank and uses it for truncation; if positive interger,
+            the method uses the argument for the truncation; if float between 0
+            and 1, the rank is the number of the biggest singular values that
+            are needed to reach the 'energy' specified by `svd_rank`; if -1,
+            the method does not compute truncation. Default is 0. The `rank`
+            parameter is available using all the available methods.
+        :type rank: int or float
+        :param int subspace_iteration: the number of subspace iteration in the
+            randomized svd. It is available only using the 'randomized_svd'
+            method. Default value is 1.
+        :param int omega_rank: the number of columns of the Omega random
+            matrix. If set to 0, the number of columns is equal to twice the
+            `rank` (if it has explicitly passed as integer) or twice the number
+            of input snapshots. Default value is 0. It is available only using
+            the 'randomized_svd' method.
+        :param bool save_memory: reduce the usage of the memory, despite an
+            higher number of operations. It is available only using the
+            'correlation_matrix' method. Default value is False.
+
+
+        :Example:
+            >>> pod = POD().fit(snapshots)
+            >>> reduced_snapshots = pod.reduce(snapshots)
+            >>> # Other possible constructors are ...
+            >>> pod = POD('svd')
+            >>> pod = POD('svd', rank=20)
+            >>> pod = POD('randomized_svd', rank=-1)
+            >>> pod = POD('randomized_svd', rank=0, subspace_iteration=3,
+                          omega_rank=10)
+            >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
         available_methods = {
             'svd': (self._svd, {
                 'rank': -1
             }),
             'randomized_svd': (self._rsvd, {
-                'rank': -1
+                'rank': -1,
+                'subspace_iteration': 1,
+                'omega_rank': 0
             }),
             'correlation_matrix': (self._corrm, {
                 'rank': -1,
@@ -83,7 +125,7 @@ class POD(Reduction):
 
         :type: numpy.ndarray
         """
-        return self.modes.dot(X).T
+        return self.modes.dot(X)
 
     def _truncation(self, X, s):
         """
@@ -138,14 +180,32 @@ class POD(Reduction):
         :return: the truncated left-singular vectors matrix, the truncated
             singular values array, the truncated right-singular vectors matrix.
         :rtype: numpy.ndarray, numpy.ndarray, numpy.ndarray
+
+        References:
+        Finding structure with randomness: probabilistic algorithms for
+        constructing approximate matrix decompositions. N. Halko, P. G.
+        Martinsson, J. A. Tropp.
         """
+        if self.omega_rank == 0 and isinstance(self.rank, int) and self.rank not in [0, -1]:
+            omega_rank = self.rank*2
+        elif self.omega_rank == 0:
+            omega_rank = X.shape[1]*2
+        else:
+            omega_rank = self.omega_rank
+        Omega = np.random.rand(X.shape[1], omega_rank)
 
-        P = np.random.rand(X.shape[1], X.shape[0])
-        Q = np.linalg.qr(X.dot(P))[0]
+        Y = np.dot(X, Omega)
+        Q = np.linalg.qr(Y)[0]
 
-        Y = Q.T.conj().dot(X)
+        if self.subspace_iteration:
+            for i in range(self.subspace_iteration):
+                Y_ = np.dot(X.T.conj(), Q)
+                Q_ = np.linalg.qr(Y_)[0]
+                Y = np.dot(X, Q_)
+                Q = np.linalg.qr(Y)[0]
 
-        Uy, s = np.linalg.svd(Y, full_matrices=False)[:2]
+        B = np.dot(Q.T.conj(), X)
+        Uy, s = np.linalg.svd(B, full_matrices=False)[:2]
         U = Q.dot(Uy)
 
         rank = self._truncation(X, s)
@@ -153,7 +213,7 @@ class POD(Reduction):
 
     def _corrm(self, X):
         """
-        Truncated Singular Value Decomposition. calculated with correlation matrix.
+        Truncated POD calculated with correlation matrix.
 
         :param numpy.ndarray X: the matrix to decompose.
         :return: the truncated left-singular vectors matrix, the truncated
@@ -170,8 +230,16 @@ class POD(Reduction):
         else:
             corr = X.T.dot(X)
 
-        s, U = np.linalg.eig(corr)
-        U = X.dot(U) / np.sqrt(s)
+        eigs, eigv = eigh(corr)
+
+        ordered_idx = np.argsort(eigs)[::-1]
+        eigs = eigs[ordered_idx]
+        eigv = eigv[:, ordered_idx]
+        s = np.sqrt(eigs[eigs > 0])
         rank = self._truncation(X, s)
+
+        # compute modes
+        eigv = eigv[:, eigs > 0]
+        U = X.dot(eigv) / s
 
         return U[:, :rank], s[:rank]
