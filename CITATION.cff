@@ -10,7 +10,7 @@ authors:
 - family-names: "Rozza"
   given-names: "Gianluigi"
   orcid: "https://orcid.org/0000-0002-0810-8812"
-title: "EZyRB"
+title: "EZyRB: Easy Reduced Basis method"
 version: 1.1.1
 doi: 0.21105/joss.00661
 date-released: 2018-04-11
