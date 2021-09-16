@@ -16,7 +16,6 @@ class TestPOD(TestCase):
         pod = POD('svd').fit(snapshots)
         snapshots_ = pod.expand(pod.reduce(snapshots))
         np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
-        assert np.allclose(snapshots, snapshots_, rtol=1e-03, atol=1e-08)
 
     def test_correlation_matrix(self):
         pod = POD('correlation_matrix').fit(snapshots)
