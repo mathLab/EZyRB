@@ -16,14 +16,13 @@
     <a href="https://travis-ci.org/mathLab/EZyRB" target="_blank">
         <img alt="Build Status" src="https://travis-ci.org/mathLab/EZyRB.svg">
     </a>
-    <a href="https://coveralls.io/github/mathLab/EZyRB" target="_blank">
-        <img alt="Coverage Status" src="https://coveralls.io/repos/github/mathLab/EZyRB/badge.svg">
+    <a href="https://www.codacy.com/gh/mathLab/EZyRB/dashboard?utm_source=github.com&utm_medium=referral&utm_content=mathLab/EZyRB&utm_campaign=Badge_Coverage" target="_blank">
+        <img alt="Coverage Status" src="https://app.codacy.com/project/badge/Coverage/0e6973fc18694fa38e3bc1802c0acc48">
     </a>
-    <a class="badge-align" href="https://www.codacy.com/app/mathLab/EZyRB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/EZyRB&amp;utm_campaign=Badge_Grade">
-        <img src="https://api.codacy.com/project/badge/Grade/045ccb10d2ff470f98f8e2baac8bd5cd"/>
+    <a class="badge-align" href="https://www.codacy.com/gh/mathLab/EZyRB/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/EZyRB&amp;utm_campaign=Badge_Grade">
+        <img src="https://app.codacy.com/project/badge/Grade/0e6973fc18694fa38e3bc1802c0acc48"/>
     </a>
 </p>
-
 
 **EZyRB**: Easy Reduced Basis method
 
