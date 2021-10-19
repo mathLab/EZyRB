@@ -1,8 +1,5 @@
-"""
-Wrapper for K-Neighbors Regressor.
-"""
+"""Wrapper for K-Neighbors Regressor."""
 
-import numpy as np
 from sklearn.neighbors import KNeighborsRegressor as Regressor
 
 from .neighbors_regressor import NeighborsRegressor

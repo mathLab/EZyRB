@@ -1,3 +1,5 @@
+"""EZyRB metadata."""
+
 __all__ = [
     '__project__',
     '__title__',

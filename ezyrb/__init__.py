@@ -1,3 +1,5 @@
+"""EZyRB package"""
+
 from .meta import *
 from .database import Database
 from .reduction import Reduction

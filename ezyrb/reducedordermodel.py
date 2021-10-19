@@ -1,21 +1,26 @@
-"""
-Module for the Reduced Order Modeling
-"""
-import numpy as np
+"""Module for the Reduced Order Modeling."""
+
 import math
 import copy
-from scipy.spatial import Delaunay
+import numpy as np
+from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
 
 
-class ReducedOrderModel(object):
+class ReducedOrderModel():
+    """
+    Reduced Order Model class.
+
+    This class performs the actual reduced order model using the selected
+    methods for approximation and reduction.
+    """
     def __init__(self, database, reduction, approximation):
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
 
     def fit(self, *args, **kwargs):
-        """
+        r"""
         Calculate reduced space
 
         :param \*args: additional parameters to pass to the `fit` method.
@@ -24,7 +29,8 @@ class ReducedOrderModel(object):
         self.reduction.fit(self.database.snapshots.T)
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T).T, *args, **kwargs)
+            self.reduction.reduce(self.database.snapshots.T).T, *args,
+            **kwargs)
 
         return self
 
@@ -42,12 +48,12 @@ class ReducedOrderModel(object):
         """
         Compute the mean norm of the relative error vectors of predicted
         test snapshots.
-        
+
         :param database.Database test: the input test database.
         :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
-        :return: the mean L2 norm of the relative errors of the estimated  
+        :return: the mean L2 norm of the relative errors of the estimated
             test snapshots.
         :rtype: numpy.ndarray
         """
@@ -56,8 +62,8 @@ class ReducedOrderModel(object):
             norm(predicted_test - test.snapshots, axis=1) /
             norm(test.snapshots, axis=1))
 
-    def kfold_cv_error(self, n_splits, norm=np.linalg.norm, *args, **kwargs):
-        """
+    def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
+        r"""
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
         form the training set. If `n_splits` is equal to the number of
@@ -85,8 +91,8 @@ class ReducedOrderModel(object):
 
         return np.array(error)
 
-    def loo_error(self, norm=np.linalg.norm, *args, **kwargs):
-        """
+    def loo_error(self, *args, norm=np.linalg.norm, **kwargs):
+        r"""
         Estimate the approximation error using *leave-one-out* strategy. The
         main idea is to create several reduced spaces by combining all the
         snapshots except one. The error vector is computed as the difference

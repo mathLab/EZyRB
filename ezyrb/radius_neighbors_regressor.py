@@ -1,8 +1,5 @@
-"""
-Wrapper for RadiusNeighborsRegressor.
-"""
+"""Wrapper for RadiusNeighborsRegressor."""
 
-import numpy as np
 from sklearn.neighbors import RadiusNeighborsRegressor as Regressor
 
 from .neighbors_regressor import NeighborsRegressor

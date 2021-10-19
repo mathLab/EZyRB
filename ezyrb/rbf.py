@@ -1,6 +1,4 @@
-"""
-Module for Radial Basis Function Interpolation
-"""
+"""Module for Radial Basis Function Interpolation."""
 
 import numpy as np
 from scipy.interpolate import Rbf
@@ -25,7 +23,7 @@ class RBF(Approximation):
     Example:
     >>> import ezyrb
     >>> import numpy as np
-    >>> 
+    >>>
     >>> x = np.random.uniform(-1, 1, size=(4, 2))
     >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
     >>> rbf = ezyrb.RBF()
@@ -38,6 +36,7 @@ class RBF(Approximation):
     def __init__(self, kernel='multiquadric', smooth=0):
         self.kernel = kernel
         self.smooth = smooth
+        self.interpolators = None
 
     def fit(self, points, values):
         """
@@ -61,4 +60,5 @@ class RBF(Approximation):
         :rtype: numpy.ndarray
         """
         new_point = np.array(new_point)
-        return np.array([interp(*new_point.T) for interp in self.interpolators]).T
+        return np.array([interp(*new_point.T) for interp in
+                         self.interpolators]).T
