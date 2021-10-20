@@ -3,7 +3,8 @@ Module for Linear N-Dimensional Interpolation
 """
 
 import numpy as np
-from scipy.interpolate import LinearNDInterpolator, interp1d
+from scipy.interpolate import LinearNDInterpolator as LinearNDInterp
+from scipy.interpolate import interp1d
 
 from .approximation import Approximation
 
@@ -19,6 +20,7 @@ class Linear(Approximation):
 
     def __init__(self, fill_value=np.nan):
         self.fill_value = fill_value
+        self.interpolator = None
 
     def fit(self, points, values):
         """
@@ -32,17 +34,18 @@ class Linear(Approximation):
         # parameters of dimensionality one)
         as_np_array = np.array(points)
         if not np.issubdtype(as_np_array.dtype, np.number):
-            raise ValueError('Invalid format or dimension for the argument `points`.')
+            raise ValueError('Invalid format or dimension for the argument'
+                             '`points`.')
 
         if as_np_array.shape[-1] == 1:
             as_np_array = np.squeeze(as_np_array, axis=-1)
 
         if as_np_array.ndim == 1 or (as_np_array.ndim == 2 and
-            as_np_array.shape[1] == 1):
+                                     as_np_array.shape[1] == 1):
             self.interpolator = interp1d(as_np_array, values, axis=0)
         else:
-            self.interpolator = LinearNDInterpolator(points, values,
-                fill_value=self.fill_value)
+            self.interpolator = LinearNDInterp(points, values,
+                                               fill_value=self.fill_value)
 
     def predict(self, new_point):
         """

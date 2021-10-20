@@ -7,6 +7,7 @@ from scipy.optimize import minimize
 
 from .approximation import Approximation
 
+
 class GPR(Approximation):
     """
     Multidimensional regression using Gaussian process.
@@ -34,7 +35,8 @@ class GPR(Approximation):
         self.Y_sample = None
         self.model = None
 
-    def fit(self, points, values, kern=None, normalizer=True, optimization_restart=20):
+    def fit(self, points, values, kern=None, normalizer=True,
+            optimization_restart=20):
         """
         Construct the regression given `points` and `values`.
 
@@ -48,9 +50,9 @@ class GPR(Approximation):
         """
         self.X_sample = np.array(points)
         self.Y_sample = np.array(values)
-        if self.X_sample.ndim == 1: 
+        if self.X_sample.ndim == 1:
             self.X_sample = self.X_sample.reshape(-1, 1)
-        if self.Y_sample.ndim == 1: 
+        if self.Y_sample.ndim == 1:
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         if kern is None:
@@ -99,7 +101,7 @@ class GPR(Approximation):
         min_x = None
 
         def min_obj(X):
-            return -np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
+            return -1*np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
 
         initial_starts = np.random.uniform(
             bounds[:, 0],

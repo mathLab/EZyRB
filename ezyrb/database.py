@@ -1,14 +1,13 @@
-"""
-Module for the snapshots database collected during the Offline stage
-"""
+"""Module for the snapshots database collected during the Offline stage."""
+
 import numpy as np
 
 
-class Database(object):
+class Database():
     """
     Database class
 
-    :param array_like parameters: the input parameters 
+    :param array_like parameters: the input parameters
     :param array_like snapshots: the input snapshots
     :param Scale scaler_parameters: the scaler for the parameters. Default
         is None meaning no scaling.
@@ -29,7 +28,7 @@ class Database(object):
         if (parameters is None) ^ (snapshots is None):
             raise RuntimeError
 
-        if not (parameters is None) and not (snapshots is None):
+        if parameters is not None and snapshots is not None:
             self.add(parameters, snapshots)
 
     @property
@@ -41,8 +40,8 @@ class Database(object):
         """
         if self.scaler_parameters:
             return self.scaler_parameters.fit_transform(self._parameters)
-        else:
-            return self._parameters
+
+        return self._parameters
 
     @property
     def snapshots(self):
@@ -53,12 +52,13 @@ class Database(object):
         """
         if self.scaler_snapshots:
             return self.scaler_snapshots.fit_transform(self._snapshots)
-        else:
-            return self._snapshots
+
+        return self._snapshots
 
     def __getitem__(self, val):
         """
-        This method returns a new Database with the selected parameters and snapshots.
+        This method returns a new Database with the selected parameters and
+        snapshots.
 
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
@@ -69,7 +69,7 @@ class Database(object):
     def __len__(self):
         """
         This method returns the number of snapshots.
-        
+
         :rtype: int
         """
         return len(self._snapshots)
@@ -78,7 +78,7 @@ class Database(object):
         """
         Add (by row) new sets of snapshots and parameters to the original
         database.
-        
+
         :param array_like parameters: the parameters to add.
         :param array_like snapshots: the snapshots to add.
         """

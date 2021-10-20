@@ -1,3 +1,5 @@
+"""Module for generic NeighborsRegressor."""
+
 import numpy as np
 from .approximation import Approximation
 
@@ -9,10 +11,6 @@ class NeighborsRegressor(Approximation):
     :param kwargs: arguments passed to the internal instance of
         *NeighborsRegressor.
     """
-
-    def __init__(self, **kwargs):
-        raise NotImplementedError("This class must be extended, not used.")
-
     def fit(self, points, values):
         """
         Construct the interpolator given `points` and `values`.
@@ -33,7 +31,7 @@ class NeighborsRegressor(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        if isinstance(new_point, np.ndarray) or isinstance(new_point, list):
+        if isinstance(new_point, (list, np.ndarray)):
             new_point = np.array(new_point).reshape(len(new_point), -1)
         else:
             new_point = np.array([new_point])

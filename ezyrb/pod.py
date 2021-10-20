@@ -1,14 +1,14 @@
 """
 Module for Proper Orthogonal Decomposition (POD).
-Three different methods can be employed: Truncated Singular Value Decomposition,
-Truncated Randomized Singular Value Decomposition, Truncated Singular Value
-Decomposition via correlation matrix.
+Three different methods can be employed: Truncated Singular Value
+Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
+Singular Value Decomposition via correlation matrix.
 """
-import numpy as np
 try:
     from scipy.linalg import eigh
-except:
+except ImportError:
     from numpy.linalg import eigh
+import numpy as np
 
 from .reduction import Reduction
 
@@ -138,8 +138,11 @@ class POD(Reduction):
         :return: the number of modes
         :rtype: int
         """
+
+        def omega(x):
+            return 0.56 * x**3 - 0.95 * x**2 + 1.82 * x + 1.43
+
         if self.rank == 0:
-            omega = lambda x: 0.56 * x**3 - 0.95 * x**2 + 1.82 * x + 1.43
             beta = np.divide(*sorted(X.shape))
             tau = np.median(s) * omega(beta)
             rank = np.sum(s > tau)
@@ -147,7 +150,7 @@ class POD(Reduction):
             cumulative_energy = np.cumsum(s**2 / (s**2).sum())
             rank = np.searchsorted(cumulative_energy, self.rank) + 1
         elif self.rank >= 1 and isinstance(self.rank, int):
-            rank = self.rank #min(self.rank, U.shape[1])
+            rank = self.rank
         else:
             rank = X.shape[1]
 
@@ -186,7 +189,8 @@ class POD(Reduction):
         constructing approximate matrix decompositions. N. Halko, P. G.
         Martinsson, J. A. Tropp.
         """
-        if self.omega_rank == 0 and isinstance(self.rank, int) and self.rank not in [0, -1]:
+        if (self.omega_rank == 0 and isinstance(self.rank, int) and
+                self.rank not in [0, -1]):
             omega_rank = self.rank*2
         elif self.omega_rank == 0:
             omega_rank = X.shape[1]*2
@@ -198,7 +202,7 @@ class POD(Reduction):
         Q = np.linalg.qr(Y)[0]
 
         if self.subspace_iteration:
-            for i in range(self.subspace_iteration):
+            for _ in range(self.subspace_iteration):
                 Y_ = np.dot(X.T.conj(), Q)
                 Q_ = np.linalg.qr(Y_)[0]
                 Y = np.dot(X, Q_)
