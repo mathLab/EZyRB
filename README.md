@@ -41,7 +41,32 @@
 * [License](#license)
 
 ## Description
-**EZyRB** is a python library for the Model Order Reduction based on **baricentric triangulation** for the selection of the parameter points and on **Proper Orthogonal Decomposition** for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. Up to now, it handles files in the vtk and mat formats. It has been used for the model order reduction of problems solved with matlab and openFOAM.
+**EZyRB** is a Python package that performs a *data-driven model order reduction* for parametrized problems exploiting the recent approaches.
+Such techniques are able to provide a parametric model capable to provide the real-time approximation of the solution of a generic (potentially complex and non linear) problem. The reduced model is totally built upon the numerical data obtained by the original (to reduce) model, without requiring any knowledge of the equations that describe this model, resulting in a well suited framework for industrial contexts due to its natural capability to been integrated with commercial software.
+
+#### The POD-based approach
+Widely exploited in the reduced basis community, the **Proper Orthogonal Decomposition** (also called principal analysis components) results effective also in a data-driven context, reducing dimensionality of the input data. It has been indeed exploited in several methods, like POD with Interpolation (PODI), POD with Gaussian process regression (POD-GPR) or POD with neural network (POD-NN).
+More in general, in the data-driven context it is usually coupled with a generic regression/interpolation techniques for the approximation of the solution.
+
+#### Simple interface
+The software interface has been kept as simple and intuitive as possible. Few lines of code are sufficient to built and query the reduced model, assuming the input parameters and snapshots are already available. The following lines show a minimal but working example using PODI (RBF used as interpolation method):
+```python
+from ezyrb import POD, RBF, Database
+from ezyrb import ReducedOrderModel as ROM
+
+## input
+params, snapshots = extract_params_and_snapshots(...) # my input data
+new_param = input('The new parametric point where solution will be predicted: ')
+
+db = Database(params, snapshots)
+pod = POD('svd')
+rbf = RBF()
+    
+rom = ROM(db, pod, rbf)
+rom.fit();
+
+rom.predict(new_mu)
+```
 
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
