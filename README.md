@@ -65,7 +65,7 @@ rbf = RBF()
 rom = ROM(db, pod, rbf)
 rom.fit();
 
-rom.predict(new_mu)
+rom.predict(new_param)
 ```
 
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
