@@ -14,7 +14,7 @@ URL = 'https://github.com/mathLab/EZyRB'
 MAIL = meta['__mail__']
 AUTHOR = meta['__author__']
 VERSION = meta['__version__']
-KEYWORDS='pod interpolation reduced-basis model-order-reduction'
+KEYWORDS = 'pod interpolation reduced-basis model-order-reduction'
 
 REQUIRED = [
     'future', 'numpy', 'scipy',	'matplotlib', 'GPy', 'sklearn', 'torch'
@@ -22,15 +22,16 @@ REQUIRED = [
 
 EXTRAS = {
     'docs': ['Sphinx==1.4', 'sphinx_rtd_theme'],
+    'test': ['pytest', 'pytest-cov'],
 }
 
 LDESCRIPTION = (
     "EZyRB is a python library for the Model Order Reduction based on "
-    "baricentric triangulation for the selection of the parameter points and on "
-    "Proper Orthogonal Decomposition for the selection of the modes. It is "
+    "baricentric triangulation for the selection of the parameter points and "
+    "on Proper Orthogonal Decomposition for the selection of the modes. It is "
     "ideally suited for actual industrial problems, since its structure can "
-    "interact with several simulation software simply providing the output file "
-    "of the simulations."
+    "interact with several simulation software simply providing the output "
+    "file of the simulations."
 )
 
 here = os.path.abspath(os.path.dirname(__file__))
