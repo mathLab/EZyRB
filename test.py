@@ -1,4 +1,0 @@
-
-import nose
-
-nose.main()

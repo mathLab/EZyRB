@@ -71,10 +71,10 @@ rom.predict(new_param)
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
-**EZyRB** requires `numpy`, `scipy`, `sklearn`, `matplotlib`, `torch`, `vtk`, `nose` (for local
-test) and `sphinx` (to generate the documentation).The coe has been tested with
-Python3.5 version, but it should be compatible with Python3. It can be
-installed using `pip` or directly from the source code.
+**EZyRB** requires `numpy`, `scipy`, `sklearn`, `matplotlib`, `torch`, `GPy`,
+`pytest` (for local test) and `sphinx` (to generate the documentation). The coe
+has been tested with Python3.5 version, but it should be compatible with
+Python3. It can be installed using `pip` or directly from the source code.
 
 ### Installing from source
 The official distribution is on GitHub, and you can clone the repository using
@@ -87,9 +87,9 @@ To install the latest version of the package just type:
 > pip install git+https://github.com/mathLab/EZyRB
 ```
 
-Otherwise to install your own local branch you can use the `setup.py` file
+Otherwise to install your own local branch you can use
 ```bash
-> python setup.py install
+> pip install -e .
 ```
 
 To uninstall the package just use pip again:
@@ -109,12 +109,12 @@ The generated html can be found in `docs/build/html`. Open up the `index.html` y
 
 
 ## Testing
-We are using Travis CI for continuous intergration testing. You can check out the current status [here](https://travis-ci.org/mathLab/EZyRB).
+We are using the Github Actions for continuous intergration testing. You can check out the current status [here](https://github.com/mathLab/EZyRB/actions/workflows/testing_pr.yml).
 
 To run tests locally:
 
 ```bash
-> python test.py
+> pytest
 ```
 
 
