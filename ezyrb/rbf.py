@@ -32,7 +32,6 @@ class RBF(Approximation):
     >>> print(np.allclose(y, y_pred))
 
     """
-
     def __init__(self, kernel='multiquadric', smooth=0):
         self.kernel = kernel
         self.smooth = smooth
@@ -60,5 +59,5 @@ class RBF(Approximation):
         :rtype: numpy.ndarray
         """
         new_point = np.array(new_point)
-        return np.array([interp(*new_point.T) for interp in
-                         self.interpolators]).T
+        return np.array([interp(*new_point.T)
+                         for interp in self.interpolators]).T

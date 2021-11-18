@@ -4,6 +4,7 @@ from .meta import *
 from .database import Database
 from .reduction import Reduction
 from .pod import POD
+from .ae import AE
 from .approximation import Approximation
 from .rbf import RBF
 from .linear import Linear
@@ -14,8 +15,6 @@ from .kneighbors_regressor import KNeighborsRegressor
 from .radius_neighbors_regressor import RadiusNeighborsRegressor
 
 __all__ = [
-    'database',
-    'reduction', 'pod',
-    'approximation', 'rbf', 'linear', 'gpr', 'ann',
-    'kneighbors_regressor', 'radius_neighbors_regressor'
+    'database', 'reduction', 'pod', 'approximation', 'rbf', 'linear', 'gpr',
+    'ann', 'kneighbors_regressor', 'radius_neighbors_regressor', 'ae'
 ]

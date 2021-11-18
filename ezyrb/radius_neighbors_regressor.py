@@ -12,6 +12,5 @@ class RadiusNeighborsRegressor(NeighborsRegressor):
     :param kwargs: arguments passed to the internal instance of
         RadiusNeighborsRegressor.
     """
-
     def __init__(self, **kwargs):
         self.regressor = Regressor(**kwargs)

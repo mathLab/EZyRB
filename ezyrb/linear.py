@@ -17,7 +17,6 @@ class Linear(Approximation):
         of the convex hull of the input points. If not provided, then the
         default is numpy.nan.
     """
-
     def __init__(self, fill_value=np.nan):
         self.fill_value = fill_value
         self.interpolator = None
@@ -40,11 +39,12 @@ class Linear(Approximation):
         if as_np_array.shape[-1] == 1:
             as_np_array = np.squeeze(as_np_array, axis=-1)
 
-        if as_np_array.ndim == 1 or (as_np_array.ndim == 2 and
-                                     as_np_array.shape[1] == 1):
+        if as_np_array.ndim == 1 or (as_np_array.ndim == 2
+                                     and as_np_array.shape[1] == 1):
             self.interpolator = interp1d(as_np_array, values, axis=0)
         else:
-            self.interpolator = LinearNDInterp(points, values,
+            self.interpolator = LinearNDInterp(points,
+                                               values,
                                                fill_value=self.fill_value)
 
     def predict(self, new_point):

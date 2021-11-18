@@ -29,8 +29,7 @@ class ReducedOrderModel():
         self.reduction.fit(self.database.snapshots.T)
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T).T, *args,
-            **kwargs)
+            self.reduction.reduce(self.database.snapshots.T).T, *args, **kwargs)
 
         return self
 

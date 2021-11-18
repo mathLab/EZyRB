@@ -138,7 +138,6 @@ class POD(Reduction):
         :return: the number of modes
         :rtype: int
         """
-
         def omega(x):
             return 0.56 * x**3 - 0.95 * x**2 + 1.82 * x + 1.43
 
@@ -189,11 +188,11 @@ class POD(Reduction):
         constructing approximate matrix decompositions. N. Halko, P. G.
         Martinsson, J. A. Tropp.
         """
-        if (self.omega_rank == 0 and isinstance(self.rank, int) and
-                self.rank not in [0, -1]):
-            omega_rank = self.rank*2
+        if (self.omega_rank == 0 and isinstance(self.rank, int)
+                and self.rank not in [0, -1]):
+            omega_rank = self.rank * 2
         elif self.omega_rank == 0:
-            omega_rank = X.shape[1]*2
+            omega_rank = X.shape[1] * 2
         else:
             omega_rank = self.omega_rank
         Omega = np.random.rand(X.shape[1], omega_rank)

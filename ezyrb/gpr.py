@@ -29,13 +29,16 @@ class GPR(Approximation):
     >>> print(np.allclose(y, y_pred))
 
     """
-
     def __init__(self):
         self.X_sample = None
         self.Y_sample = None
         self.model = None
 
-    def fit(self, points, values, kern=None, normalizer=True,
+    def fit(self,
+            points,
+            values,
+            kern=None,
+            normalizer=True,
             optimization_restart=20):
         """
         Construct the regression given `points` and `values`.
@@ -56,15 +59,12 @@ class GPR(Approximation):
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         if kern is None:
-            kern = GPy.kern.RBF(
-                input_dim=self.X_sample.shape[1],
-                ARD=False)
+            kern = GPy.kern.RBF(input_dim=self.X_sample.shape[1], ARD=False)
 
-        self.model = GPy.models.GPRegression(
-            self.X_sample,
-            self.Y_sample,
-            kern,
-            normalizer=normalizer)
+        self.model = GPy.models.GPRegression(self.X_sample,
+                                             self.Y_sample,
+                                             kern,
+                                             normalizer=normalizer)
 
         self.model.optimize_restarts(optimization_restart, verbose=False)
 
@@ -101,12 +101,11 @@ class GPR(Approximation):
         min_x = None
 
         def min_obj(X):
-            return -1*np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
+            return -1 * np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
 
-        initial_starts = np.random.uniform(
-            bounds[:, 0],
-            bounds[:, 1],
-            size=(optimization_restart, dim))
+        initial_starts = np.random.uniform(bounds[:, 0],
+                                           bounds[:, 1],
+                                           size=(optimization_restart, dim))
 
         # Find the best optimum by starting from n_restart different random
         # points.
