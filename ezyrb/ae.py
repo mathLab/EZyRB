@@ -36,9 +36,10 @@ class AE(ANN, Reduction):
         >>> import torch
         >>> f = torch.nn.Softplus
         >>> low_dim = 5
+        >>> optim = torch.optim.Adam
         >>> ae = AE([400, low_dim], [low_dim, 400], f(), f(), 2000)
         >>> # or ...
-        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5)
+        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5, optimizer = optim)
         >>> ae.fit(snapshots)
         >>> reduced_snapshots = ae.reduce(snapshots)
         >>> expanded_snapshots = ae.expand(reduced_snapshots)
@@ -49,7 +50,9 @@ class AE(ANN, Reduction):
                  function_encoder,
                  function_decoder,
                  stop_training,
-                 loss=None):
+                 loss=None,
+                 optimizer = torch.optim.Adam,
+                 lr = None):
 
         if loss is None:
             loss = torch.nn.MSELoss()
@@ -71,8 +74,11 @@ class AE(ANN, Reduction):
         self.loss_trend = []
         self.encoder = None
         self.decoder = None
-        self.optimizer = None
+        self.optimizer = optimizer
         self.model = None
+        self.lr = lr
+        if self.lr is None:
+            self.lr = 1e-3
 
     class InnerAE(torch.nn.Module):
         """
@@ -150,7 +156,7 @@ class AE(ANN, Reduction):
         """
         values = values.T
         self._build_model(values)
-        self.optimizer = torch.optim.Adam(self.model.parameters())
+        self.optimizer = self.optimizer(self.model.parameters(),lr=self.lr)
         values = self._convert_numpy_to_torch(values)
         n_epoch = 1
         flag = True
