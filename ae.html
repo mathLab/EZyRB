@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AE &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ReducedOrderModel" href="reducedordermodel.html" />
+    <link rel="prev" title="POD" href="pod.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> EZyRB
+          </a>
+              <div class="version">
+                1.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EZyRB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="code.html">Code Documentation</a> &raquo;</li>
+      <li>AE</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ae.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-ezyrb.ae">
+<span id="ae"></span><h1>AE<a class="headerlink" href="#module-ezyrb.ae" title="Permalink to this headline">¶</a></h1>
+<p>Module for FNN-Autoencoders.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE</span></code></p></td>
+<td><p>Feed-Forward AutoEncoder class (AE)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.fit</span></code></p></td>
+<td><p>Build the AE given ‘values’ and perform training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.reduce</span></code></p></td>
+<td><p>Reduces the given snapshots.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.expand</span></code></p></td>
+<td><p>Projects a reduced to full order solution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE._build_model</span></code></p></td>
+<td><p>Build the torch model.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-name descname">AE</code><span class="sig-paren">(</span><em class="sig-param">layers_encoder</em>, <em class="sig-param">layers_decoder</em>, <em class="sig-param">function_encoder</em>, <em class="sig-param">function_decoder</em>, <em class="sig-param">stop_training</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">lr=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.reduction.Reduction</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.ann.ANN</span></code></p>
+<p>Feed-Forward AutoEncoder class (AE)</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layers_encoder</strong> (<em>list</em>) – ordered list with the number of neurons of
+each hidden layer for the encoder</p></li>
+<li><p><strong>layers_decoder</strong> (<em>list</em>) – ordered list with the number of neurons of
+each hidden layer for the decoder</p></li>
+<li><p><strong>function_encoder</strong> (<em>torch.nn.modules.activation</em>) – activation function
+at each layer for the encoder, except for the output layer at with
+Identity is considered by default.  A single activation function can
+be passed or a list of them of length equal to the number of hidden
+layers.</p></li>
+<li><p><strong>function_decoder</strong> (<em>torch.nn.modules.activation</em>) – activation function
+at each layer for the decoder, except for the output layer at with
+Identity is considered by default.  A single activation function can
+be passed or a list of them of length equal to the number of hidden
+layers.</p></li>
+<li><p><strong>stop_training</strong> (<em>list</em>) – list with the maximum number of training
+iterations (int) and/or the desired tolerance on the training loss
+(float).</p></li>
+<li><p><strong>loss</strong> (<em>torch.nn.Module</em>) – loss definition (Mean Squared if not
+given).</p></li>
+<li><p><strong>optimizer</strong> (<em>torch.optim</em>) – the torch class implementing optimizer.
+Default value is <cite>Adam</cite> optimizer.</p></li>
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the learning rate. Default is 0.001.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">AE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">low_dim</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">optim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ae</span> <span class="o">=</span> <span class="n">AE</span><span class="p">([</span><span class="mi">400</span><span class="p">,</span> <span class="n">low_dim</span><span class="p">],</span> <span class="p">[</span><span class="n">low_dim</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span> <span class="n">f</span><span class="p">(),</span> <span class="n">f</span><span class="p">(),</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># or ...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ae</span> <span class="o">=</span> <span class="n">AE</span><span class="p">([</span><span class="mi">400</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">low_dim</span><span class="p">],</span> <span class="p">[</span><span class="n">low_dim</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span> <span class="n">f</span><span class="p">(),</span> <span class="n">f</span><span class="p">(),</span> <span class="mf">1e-5</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="n">optimizer</span><span class="o">=</span><span class="n">optim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ae</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reduced_snapshots</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expanded_snapshots</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">reduced_snapshots</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-name descname">InnerAE</code><span class="sig-paren">(</span><em class="sig-param">outer_instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.InnerAE"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Autoencoder as a pytorch module</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">_is_full_backward_hook</code><em class="property"> = None</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.InnerAE.forward"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Compute the forward of the autoencoder</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">training</code><em class="property"> = None</em></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">_build_model</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE._build_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Build the torch model.</p>
+<p>Considering the number of neurons per layer (self.layers), a
+feed-forward NN is defined:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>activation function from layer i&gt;=0 to layer i+1:
+self.function[i]; activation function at the output layer:
+Identity (by default).</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the set values one wants to reduce.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">expand</code><span class="sig-paren">(</span><em class="sig-param">g</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.expand"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Projects a reduced to full order solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>numpy.ndarray g the latent variables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Build the AE given ‘values’ and perform training.</p>
+<dl class="simple">
+<dt>Training procedure information:</dt><dd><ul class="simple">
+<li><p>optimizer: Adam’s method with default parameters (see, e.g.,
+<a class="reference external" href="https://pytorch.org/docs/stable/optim.html">https://pytorch.org/docs/stable/optim.html</a>);</p></li>
+<li><p>loss: self.loss (if none, the Mean Squared Loss is set by
+default).</p></li>
+<li><p>stopping criterion: the fulfillment of the requested tolerance
+on the training loss compatibly with the prescribed budget of
+training iterations (if type(self.stop_training) is list); if
+type(self.stop_training) is int or type(self.stop_training) is
+float, only the number of maximum iterations or the accuracy
+level on the training loss is considered as the stopping rule,
+respectively.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.reduce"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Reduces the given snapshots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pod.html" class="btn btn-neutral float-left" title="POD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reducedordermodel.html" class="btn btn-neutral float-right" title="ReducedOrderModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
+      <span class="lastupdated">Last updated on Nov 23, 2021.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ezyrb.ae &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> EZyRB
+          </a>
+              <div class="version">
+                1.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EZyRB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ezyrb.ae</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ezyrb.ae</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for FNN-Autoencoders.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">.reduction</span> <span class="kn">import</span> <span class="n">Reduction</span>
+<span class="kn">from</span> <span class="nn">.ann</span> <span class="kn">import</span> <span class="n">ANN</span>
+
+
+<div class="viewcode-block" id="AE"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE">[docs]</a><span class="k">class</span> <span class="nc">AE</span><span class="p">(</span><span class="n">Reduction</span><span class="p">,</span> <span class="n">ANN</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Feed-Forward AutoEncoder class (AE)</span>
+
+<span class="sd">    :param list layers_encoder: ordered list with the number of neurons of</span>
+<span class="sd">        each hidden layer for the encoder</span>
+<span class="sd">    :param list layers_decoder: ordered list with the number of neurons of</span>
+<span class="sd">        each hidden layer for the decoder</span>
+<span class="sd">    :param torch.nn.modules.activation function_encoder: activation function</span>
+<span class="sd">        at each layer for the encoder, except for the output layer at with</span>
+<span class="sd">        Identity is considered by default.  A single activation function can</span>
+<span class="sd">        be passed or a list of them of length equal to the number of hidden</span>
+<span class="sd">        layers.</span>
+<span class="sd">    :param torch.nn.modules.activation function_decoder: activation function</span>
+<span class="sd">        at each layer for the decoder, except for the output layer at with</span>
+<span class="sd">        Identity is considered by default.  A single activation function can</span>
+<span class="sd">        be passed or a list of them of length equal to the number of hidden</span>
+<span class="sd">        layers.</span>
+<span class="sd">    :param list stop_training: list with the maximum number of training</span>
+<span class="sd">        iterations (int) and/or the desired tolerance on the training loss</span>
+<span class="sd">        (float).</span>
+<span class="sd">    :param torch.nn.Module loss: loss definition (Mean Squared if not</span>
+<span class="sd">        given).</span>
+<span class="sd">    :param torch.optim optimizer: the torch class implementing optimizer.</span>
+<span class="sd">        Default value is `Adam` optimizer.</span>
+<span class="sd">    :param float lr: the learning rate. Default is 0.001.</span>
+
+<span class="sd">    :Example:</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import AE</span>
+<span class="sd">        &gt;&gt;&gt; import torch</span>
+<span class="sd">        &gt;&gt;&gt; f = torch.nn.Softplus</span>
+<span class="sd">        &gt;&gt;&gt; low_dim = 5</span>
+<span class="sd">        &gt;&gt;&gt; optim = torch.optim.Adam</span>
+<span class="sd">        &gt;&gt;&gt; ae = AE([400, low_dim], [low_dim, 400], f(), f(), 2000)</span>
+<span class="sd">        &gt;&gt;&gt; # or ...</span>
+<span class="sd">        &gt;&gt;&gt; ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5,</span>
+<span class="sd">        &gt;&gt;&gt;          optimizer=optim)</span>
+<span class="sd">        &gt;&gt;&gt; ae.fit(snapshots)</span>
+<span class="sd">        &gt;&gt;&gt; reduced_snapshots = ae.reduce(snapshots)</span>
+<span class="sd">        &gt;&gt;&gt; expanded_snapshots = ae.expand(reduced_snapshots)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">layers_encoder</span><span class="p">,</span>
+                 <span class="n">layers_decoder</span><span class="p">,</span>
+                 <span class="n">function_encoder</span><span class="p">,</span>
+                 <span class="n">function_decoder</span><span class="p">,</span>
+                 <span class="n">stop_training</span><span class="p">,</span>
+                 <span class="n">loss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+                 <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function_encoder</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># Single activation function passed</span>
+            <span class="n">function_encoder</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_encoder</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function_decoder</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># Single activation function passed</span>
+            <span class="n">function_decoder</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_decoder</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stop_training</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">stop_training</span> <span class="o">=</span> <span class="p">[</span><span class="n">stop_training</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers_encoder</span> <span class="o">=</span> <span class="n">layers_encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers_decoder</span> <span class="o">=</span> <span class="n">layers_decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_encoder</span> <span class="o">=</span> <span class="n">function_encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_decoder</span> <span class="o">=</span> <span class="n">function_decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_training</span> <span class="o">=</span> <span class="n">stop_training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_trend</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+
+<div class="viewcode-block" id="AE.InnerAE"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.InnerAE">[docs]</a>    <span class="k">class</span> <span class="nc">InnerAE</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Autoencoder as a pytorch module</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outer_instance</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">outer_instance</span><span class="o">.</span><span class="n">encoder</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">outer_instance</span><span class="o">.</span><span class="n">decoder</span>
+
+<div class="viewcode-block" id="AE.InnerAE.forward"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.InnerAE.forward">[docs]</a>        <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Compute the forward of the autoencoder</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">decoded</span></div></div>
+
+<div class="viewcode-block" id="AE._build_model"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE._build_model">[docs]</a>    <span class="k">def</span> <span class="nf">_build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the torch model.</span>
+
+<span class="sd">        Considering the number of neurons per layer (self.layers), a</span>
+<span class="sd">        feed-forward NN is defined:</span>
+<span class="sd">            - activation function from layer i&gt;=0 to layer i+1:</span>
+<span class="sd">              self.function[i]; activation function at the output layer:</span>
+<span class="sd">              Identity (by default).</span>
+
+<span class="sd">        :param numpy.ndarray values: the set values one wants to reduce.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layers_encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_encoder</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">layers_encoder</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">layers_decoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_decoder</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">layers_decoder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">layers_encoder_torch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers_encoder</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function_encoder</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">layers_encoder</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">layers_decoder_torch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers_decoder</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function_decoder</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">layers_decoder</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers_encoder_torch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers_decoder_torch</span><span class="p">)</span>
+        <span class="c1"># Creating the model adding the encoder and the decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InnerAE</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AE.fit"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the AE given &#39;values&#39; and perform training.</span>
+
+<span class="sd">        Training procedure information:</span>
+<span class="sd">            -  optimizer: Adam&#39;s method with default parameters (see, e.g.,</span>
+<span class="sd">               https://pytorch.org/docs/stable/optim.html);</span>
+<span class="sd">            -  loss: self.loss (if none, the Mean Squared Loss is set by</span>
+<span class="sd">               default).</span>
+<span class="sd">            -  stopping criterion: the fulfillment of the requested tolerance</span>
+<span class="sd">               on the training loss compatibly with the prescribed budget of</span>
+<span class="sd">               training iterations (if type(self.stop_training) is list); if</span>
+<span class="sd">               type(self.stop_training) is int or type(self.stop_training) is</span>
+<span class="sd">               float, only the number of maximum iterations or the accuracy</span>
+<span class="sd">               level on the training loss is considered as the stopping rule,</span>
+<span class="sd">               respectively.</span>
+
+<span class="sd">        :param numpy.ndarray values: the (training) values in the points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">T</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_model</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_numpy_to_torch</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">n_epoch</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">flag</span><span class="p">:</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_trend</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">criteria</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_training</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="c1"># stop criteria is an integer</span>
+                    <span class="k">if</span> <span class="n">n_epoch</span> <span class="o">==</span> <span class="n">criteria</span><span class="p">:</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                    <span class="c1"># stop criteria is float</span>
+                    <span class="k">if</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">criteria</span><span class="p">:</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">n_epoch</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="AE.reduce"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.reduce">[docs]</a>    <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the given snapshots.</span>
+
+<span class="sd">        :param numpy.ndarray X: the input snapshots matrix (stored by column).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_numpy_to_torch</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span></div>
+
+<div class="viewcode-block" id="AE.expand"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.expand">[docs]</a>    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Projects a reduced to full order solution.</span>
+
+<span class="sd">        :param: numpy.ndarray g the latent variables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_numpy_to_torch</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
+      <span class="lastupdated">Last updated on Nov 23, 2021.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

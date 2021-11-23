@@ -38,7 +38,6 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to EZyRB’s documentation!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
@@ -235,16 +234,16 @@
 
 <div class="viewcode-block" id="ReducedOrderModel._simplex_volume"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume">[docs]</a>    <span class="k">def</span> <span class="nf">_simplex_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Method implementing the computation of the volume of a N dimensional</span>
-<span class="sd">         simplex.</span>
-<span class="sd">         Source from: `wikipedia.org/wiki/Simplex</span>
-<span class="sd">         &lt;https://en.wikipedia.org/wiki/Simplex&gt;`_.</span>
-<span class="sd">         :param numpy.ndarray simplex_vertices: Nx3 array containing the</span>
-<span class="sd">             parameter values representing the vertices of a simplex. N is the</span>
-<span class="sd">             dimensionality of the parameters.</span>
-<span class="sd">         :return: N dimensional volume of the simplex.</span>
-<span class="sd">         :rtype: float</span>
-<span class="sd">         &quot;&quot;&quot;</span>
+<span class="sd">        Method implementing the computation of the volume of a N dimensional</span>
+<span class="sd">        simplex.</span>
+<span class="sd">        Source from: `wikipedia.org/wiki/Simplex</span>
+<span class="sd">        &lt;https://en.wikipedia.org/wiki/Simplex&gt;`_.</span>
+<span class="sd">        :param numpy.ndarray simplex_vertices: Nx3 array containing the</span>
+<span class="sd">            parameter values representing the vertices of a simplex. N is the</span>
+<span class="sd">            dimensionality of the parameters.</span>
+<span class="sd">        :return: N dimensional volume of the simplex.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">vi</span> <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">factorial</span><span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div></div>
