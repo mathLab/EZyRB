@@ -12,6 +12,5 @@ class KNeighborsRegressor(NeighborsRegressor):
     :param kwargs: arguments passed to the internal instance of
         KNeighborsRegressor.
     """
-
     def __init__(self, **kwargs):
         self.regressor = Regressor(**kwargs)
