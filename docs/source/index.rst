@@ -48,7 +48,6 @@ Developer's Guide
 .. toctree::
    :maxdepth: 1
 
-   index
    code
    contact
    contributing
