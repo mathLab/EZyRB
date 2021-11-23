@@ -149,7 +149,6 @@ class AE(ANN, Reduction):
             loss.backward()
             self.optimizer.step()
             self.loss_trend.append(loss.item())
-            print(n_epoch)
             for criteria in self.stop_training:
                 if isinstance(criteria, int):
                     # stop criteria is an integer
