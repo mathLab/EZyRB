@@ -14,7 +14,7 @@ jobs:
     - name: Create the new documentation
       uses: ammaraskar/sphinx-action@master
       with:
-        pre-build-command: "python -m pip install pip sphinx_rtd_theme numpy scipy GPy matplotlib -U"
+        pre-build-command: "python -m pip install .[docs]"
         docs-folder: "docs/"
 
     - name: Deploy
