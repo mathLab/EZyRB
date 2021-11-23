@@ -8,9 +8,10 @@ from .reduction import Reduction
 from .ann import ANN
 
 
-class AE(ANN, Reduction):
+class AE(Reduction, ANN):
     """
     Feed-Forward AutoEncoder class (AE)
+
     :param list layers_encoder: ordered list with the number of neurons of
         each hidden layer for the encoder
     :param list layers_decoder: ordered list with the number of neurons of
@@ -30,6 +31,9 @@ class AE(ANN, Reduction):
         (float).
     :param torch.nn.Module loss: loss definition (Mean Squared if not
         given).
+    :param torch.optim optimizer: the torch class implementing optimizer.
+        Default value is `Adam` optimizer.
+    :param float lr: the learning rate. Default is 0.001.
 
     :Example:
         >>> from ezyrb import AE
@@ -39,7 +43,8 @@ class AE(ANN, Reduction):
         >>> optim = torch.optim.Adam
         >>> ae = AE([400, low_dim], [low_dim, 400], f(), f(), 2000)
         >>> # or ...
-        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5, optimizer = optim)
+        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5,
+        >>>          optimizer=optim)
         >>> ae.fit(snapshots)
         >>> reduced_snapshots = ae.reduce(snapshots)
         >>> expanded_snapshots = ae.expand(reduced_snapshots)
@@ -51,19 +56,22 @@ class AE(ANN, Reduction):
                  function_decoder,
                  stop_training,
                  loss=None,
-                 optimizer = torch.optim.Adam,
-                 lr = None):
+                 optimizer=torch.optim.Adam,
+                 lr=0.001):
 
         if loss is None:
             loss = torch.nn.MSELoss()
+
         if not isinstance(function_encoder, list):
             # Single activation function passed
             function_encoder = [function_encoder] * (len(layers_encoder))
         if not isinstance(function_decoder, list):
             # Single activation function passed
             function_decoder = [function_decoder] * (len(layers_decoder))
+
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
+
         self.layers_encoder = layers_encoder
         self.layers_decoder = layers_decoder
         self.function_encoder = function_encoder
@@ -77,8 +85,6 @@ class AE(ANN, Reduction):
         self.optimizer = optimizer
         self.model = None
         self.lr = lr
-        if self.lr is None:
-            self.lr = 1e-3
 
     class InnerAE(torch.nn.Module):
         """
@@ -156,7 +162,7 @@ class AE(ANN, Reduction):
         """
         values = values.T
         self._build_model(values)
-        self.optimizer = self.optimizer(self.model.parameters(),lr=self.lr)
+        self.optimizer = self.optimizer(self.model.parameters(), lr=self.lr)
         values = self._convert_numpy_to_torch(values)
         n_epoch = 1
         flag = True

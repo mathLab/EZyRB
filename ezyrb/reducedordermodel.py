@@ -163,16 +163,16 @@ class ReducedOrderModel():
 
     def _simplex_volume(self, vertices):
         """
-         Method implementing the computation of the volume of a N dimensional
-         simplex.
-         Source from: `wikipedia.org/wiki/Simplex
-         <https://en.wikipedia.org/wiki/Simplex>`_.
-         :param numpy.ndarray simplex_vertices: Nx3 array containing the
-             parameter values representing the vertices of a simplex. N is the
-             dimensionality of the parameters.
-         :return: N dimensional volume of the simplex.
-         :rtype: float
-         """
+        Method implementing the computation of the volume of a N dimensional
+        simplex.
+        Source from: `wikipedia.org/wiki/Simplex
+        <https://en.wikipedia.org/wiki/Simplex>`_.
+        :param numpy.ndarray simplex_vertices: Nx3 array containing the
+            parameter values representing the vertices of a simplex. N is the
+            dimensionality of the parameters.
+        :return: N dimensional volume of the simplex.
+        :rtype: float
+        """
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
             np.linalg.det(distance) / math.factorial(vertices.shape[1]))
