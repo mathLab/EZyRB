@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reduction &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.radius_neighbors_regressor &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -60,7 +60,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>ezyrb.reduction</li>
+      <li>ezyrb.radius_neighbors_regressor</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -69,30 +69,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for ezyrb.reduction</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module for the Reduction abstract class.&quot;&quot;&quot;</span>
+  <h1>Source code for ezyrb.radius_neighbors_regressor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Wrapper for RadiusNeighborsRegressor.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">RadiusNeighborsRegressor</span> <span class="k">as</span> <span class="n">Regressor</span>
+
+<span class="kn">from</span> <span class="nn">.neighbors_regressor</span> <span class="kn">import</span> <span class="n">NeighborsRegressor</span>
 
 
-<div class="viewcode-block" id="Reduction"><a class="viewcode-back" href="../../reduction.html#ezyrb.reduction.Reduction">[docs]</a><span class="k">class</span> <span class="nc">Reduction</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="RadiusNeighborsRegressor"><a class="viewcode-back" href="../../radius_neighbors_regressor.html#ezyrb.radius_neighbors_regressor.RadiusNeighborsRegressor">[docs]</a><span class="k">class</span> <span class="nc">RadiusNeighborsRegressor</span><span class="p">(</span><span class="n">NeighborsRegressor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The abstract `Approximation` class.</span>
+<span class="sd">    Radius Neighbors Regressor.</span>
 
-<span class="sd">    All the classes that implement the input-output mapping should be inherited</span>
-<span class="sd">    from this class.</span>
+<span class="sd">    :param kwargs: arguments passed to the internal instance of</span>
+<span class="sd">        RadiusNeighborsRegressor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Reduction.fit"><a class="viewcode-back" href="../../reduction.html#ezyrb.reduction.Reduction.fit">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstract `fit`&quot;&quot;&quot;</span></div>
-
-<div class="viewcode-block" id="Reduction.reduce"><a class="viewcode-back" href="../../reduction.html#ezyrb.reduction.Reduction.reduce">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstract `reduce`&quot;&quot;&quot;</span></div>
-
-<div class="viewcode-block" id="Reduction.expand"><a class="viewcode-back" href="../../reduction.html#ezyrb.reduction.Reduction.expand">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstract `expand`&quot;&quot;&quot;</span></div></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span> <span class="o">=</span> <span class="n">Regressor</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

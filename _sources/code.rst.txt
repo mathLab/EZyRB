@@ -4,10 +4,15 @@ Code Documentation
 .. toctree::
     :maxdepth: 2
 
-   approximation
    database
+   approximation
    linear
-   pod
    rbf
-   reducedordermodel
+   radius_neighbors_regressor
+   kneighbors_regressor
+   gpr
+   ann
    reduction
+   pod
+   ae
+   reducedordermodel

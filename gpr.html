@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RBF &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>GPR &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="RadiusNeighborsRegressor" href="radius_neighbors_regressor.html" />
-    <link rel="prev" title="Linear" href="linear.html" /> 
+    <link rel="next" title="ANN" href="ann.html" />
+    <link rel="prev" title="KNeighborsRegressor" href="kneighbors_regressor.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,10 +60,10 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">RBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GPR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
@@ -90,9 +90,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
-      <li>RBF</li>
+      <li>GPR</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/rbf.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/gpr.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -100,57 +100,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.rbf">
-<span id="rbf"></span><h1>RBF<a class="headerlink" href="#module-ezyrb.rbf" title="Permalink to this headline">¶</a></h1>
-<p>Module for Radial Basis Function Interpolation.</p>
+  <div class="section" id="module-ezyrb.gpr">
+<span id="gpr"></span><h1>GPR<a class="headerlink" href="#module-ezyrb.gpr" title="Permalink to this headline">¶</a></h1>
+<p>Module wrapper exploiting <cite>GPy</cite> for Gaussian Process Regression</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF</span></code></p></td>
-<td><p>Multidimensional interpolator using Radial Basis Function.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR</span></code></p></td>
+<td><p>Multidimensional regression using Gaussian process.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF.fit</span></code></p></td>
-<td><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.fit</span></code></p></td>
+<td><p>Construct the regression given <cite>points</cite> and <cite>values</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBF.predict</span></code></p></td>
-<td><p>Evaluate interpolator at given <cite>new_points</cite>.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.predict</span></code></p></td>
+<td><p>Predict the mean and the variance of Gaussian distribution at given <cite>new_points</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.optimal_mu</span></code></p></td>
+<td><p>Proposes the next sampling point by looking at the point where the Gaussian covariance is maximized.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">RBF</code><span class="sig-paren">(</span><em class="sig-param">kernel='multiquadric'</em>, <em class="sig-param">smooth=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">GPR</code><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
-<p>Multidimensional interpolator using Radial Basis Function.</p>
+<p>Multidimensional regression using Gaussian process.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>kernel</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em> or </em><em>callable</em>) – The radial basis function; the default is ‘multiquadric’.</p></li>
-<li><p><strong>smooth</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – values greater than zero increase the smoothness of
-the approximation. 0 is for interpolation (default), the function will
-always go through the nodal points in this case.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Variables</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>kernel</strong> – The radial basis function; the default is ‘multiquadric’.</p></li>
-<li><p><strong>interpolators</strong> (<em>list</em>) – the RBF interpolators (the number of
-interpolators depenend by the dimensionality of the output)</p></li>
+<li><p><strong>X_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the array containing the input points,
+arranged by row.</p></li>
+<li><p><strong>Y_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the array containing the output values,
+arranged by row.</p></li>
+<li><p><strong>model</strong> (<em>GPy.models.GPRegression</em>) – the regression model.</p></li>
 </ul>
 </dd>
 </dl>
 <p>Example:
 &gt;&gt;&gt; import ezyrb
 &gt;&gt;&gt; import numpy as np
-&gt;&gt;&gt;
 &gt;&gt;&gt; x = np.random.uniform(-1, 1, size=(4, 2))
-&gt;&gt;&gt; y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
-&gt;&gt;&gt; rbf = ezyrb.RBF()
-&gt;&gt;&gt; rbf.fit(x, y)
-&gt;&gt;&gt; y_pred = rbf.predict(x)
+&gt;&gt;&gt; y = (np.sin(x[:, 0]) + np.cos(x[:, 1]**3)).reshape(-1, 1)
+&gt;&gt;&gt; gpr = ezyrb.GPR()
+&gt;&gt;&gt; gpr.fit(x, y)
+&gt;&gt;&gt; y_pred = gpr.predict(x)
 &gt;&gt;&gt; print(np.allclose(y, y_pred))</p>
 <dl class="attribute">
 <dt>
@@ -159,13 +155,18 @@ interpolators depenend by the dimensionality of the output)</p></li>
 
 <dl class="method">
 <dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF.fit"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em>, <em class="sig-param">kern=None</em>, <em class="sig-param">normalizer=True</em>, <em class="sig-param">optimization_restart=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Construct the regression given <cite>points</cite> and <cite>values</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>points</strong> (<em>array_like</em>) – the coordinates of the points.</p></li>
 <li><p><strong>values</strong> (<em>array_like</em>) – the values in the points.</p></li>
+<li><p><strong>kern</strong> (<em>GPy.kern</em>) – kernel object from GPy.</p></li>
+<li><p><strong>normalizer</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether to normilize <cite>values</cite> or not.
+Defaults to True.</p></li>
+<li><p><strong>optimization_restart</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – number of restarts for the
+optimization. Defaults to 20.</p></li>
 </ul>
 </dd>
 </dl>
@@ -173,17 +174,41 @@ interpolators depenend by the dimensionality of the output)</p></li>
 
 <dl class="method">
 <dt>
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">new_point</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF.predict"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Evaluate interpolator at given <cite>new_points</cite>.</p>
+<code class="sig-name descname">optimal_mu</code><span class="sig-paren">(</span><em class="sig-param">bounds</em>, <em class="sig-param">optimization_restart=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.optimal_mu"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Proposes the next sampling point by looking at the point where the
+Gaussian covariance is maximized. A gradient method (with multi
+starting points) is adopted for the optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_points</strong> (<em>array_like</em>) – the coordinates of the given points.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the boundaries in the gradient
+optimization. The shape must be (<em>input_dim</em>, 2), where <em>input_dim</em>
+is the dimension of the input points.</p></li>
+<li><p><strong>optimization_restart</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of restart in the gradient
+optimization. Default is 10.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">new_points</em>, <em class="sig-param">return_variance=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.predict"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Predict the mean and the variance of Gaussian distribution at given
+<cite>new_points</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_points</strong> (<em>array_like</em>) – the coordinates of the given points.</p></li>
+<li><p><strong>return_variance</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – flag to return also the variance.
+Default is False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the interpolated values.</p>
+<dd class="field-even"><p>the mean and the variance</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,8 +221,8 @@ interpolators depenend by the dimensionality of the output)</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="linear.html" class="btn btn-neutral float-left" title="Linear" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="radius_neighbors_regressor.html" class="btn btn-neutral float-right" title="RadiusNeighborsRegressor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="kneighbors_regressor.html" class="btn btn-neutral float-left" title="KNeighborsRegressor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ann.html" class="btn btn-neutral float-right" title="ANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

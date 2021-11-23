@@ -1,73 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>POD &mdash; EZyRB 1.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-
-  
-  
-  
-  
-
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POD &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="RBF" href="rbf.html" />
-    <link rel="prev" title="Linear" href="linear.html" /> 
+    <link rel="next" title="ReducedOrderModel" href="reducedordermodel.html" />
+    <link rel="prev" title="Reduction" href="reduction.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EZyRB
-          
-
-          
+            <a href="index.html" class="icon icon-home"> EZyRB
           </a>
-
-          
-            
-            
               <div class="version">
-                1.1
+                1.2.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Welcome to EZyRB’s documentation!</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#description">Description</a><ul class="current">
@@ -105,13 +57,17 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">POD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">POD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -119,73 +75,37 @@
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EZyRB</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
-        
       <li>POD</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-            
             <a href="_sources/pod.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="module-ezyrb.pod">
 <span id="pod"></span><h1>POD<a class="headerlink" href="#module-ezyrb.pod" title="Permalink to this headline">¶</a></h1>
+<p>Module for Proper Orthogonal Decomposition (POD).
+Three different methods can be employed: Truncated Singular Value
+Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
+Singular Value Decomposition via correlation matrix.</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -193,7 +113,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD</span></code></p></td>
-<td><p></p></td>
+<td><p>Perform the Proper Orthogonal Decomposition.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.modes</span></code></p></td>
 <td><p>The POD modes.</p></td>
@@ -202,7 +122,7 @@
 <td><p>The singular values</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.reduce</span></code></p></td>
-<td><p>Reduces the parameter Space by using the specified reduction method (default svd).</p></td>
+<td><p>Reduces the given snapshots.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.expand</span></code></p></td>
 <td><p>Projects a reduced to full order solution.</p></td>
@@ -217,7 +137,7 @@
 <td><p>Truncated randomized Singular Value Decomposition.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._corrm</span></code></p></td>
-<td><p>Truncated Singular Value Decomposition.</p></td>
+<td><p>Truncated POD calculated with correlation matrix.</p></td>
 </tr>
 </tbody>
 </table>
@@ -225,6 +145,46 @@
 <dt>
 <em class="property">class </em><code class="sig-name descname">POD</code><span class="sig-paren">(</span><em class="sig-param">method='svd'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.reduction.Reduction</span></code></p>
+<p>Perform the Proper Orthogonal Decomposition.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>{'svd'</em><em>, </em><em>'randomized_svd'</em><em>, </em><em>'correlation_matrix'}</em>) – the implementation to use for the computation of the POD
+modes. Default is ‘svd’.</p></li>
+<li><p><strong>rank</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the rank for the truncation; If 0, the method computes
+the optimal rank and uses it for truncation; if positive interger,
+the method uses the argument for the truncation; if float between 0
+and 1, the rank is the number of the biggest singular values that
+are needed to reach the ‘energy’ specified by <cite>svd_rank</cite>; if -1,
+the method does not compute truncation. Default is 0. The <cite>rank</cite>
+parameter is available using all the available methods.</p></li>
+<li><p><strong>subspace_iteration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of subspace iteration in the
+randomized svd. It is available only using the ‘randomized_svd’
+method. Default value is 1.</p></li>
+<li><p><strong>omega_rank</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of columns of the Omega random
+matrix. If set to 0, the number of columns is equal to twice the
+<cite>rank</cite> (if it has explicitly passed as integer) or twice the number
+of input snapshots. Default value is 0. It is available only using
+the ‘randomized_svd’ method.</p></li>
+<li><p><strong>save_memory</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – reduce the usage of the memory, despite an
+higher number of operations. It is available only using the
+‘correlation_matrix’ method. Default value is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reduced_snapshots</span> <span class="o">=</span> <span class="n">pod</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Other possible constructors are ...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subspace_iteration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="go">              omega_rank=10)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;correlation_matrix&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <dl class="attribute">
 <dt>
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
@@ -233,17 +193,17 @@
 <dl class="method">
 <dt>
 <code class="sig-name descname">_corrm</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD._corrm"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Truncated Singular Value Decomposition. calculated with correlation matrix.</p>
+<dd><p>Truncated POD calculated with correlation matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
 singular values array, the truncated right-singular vectors matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -254,16 +214,20 @@ singular values array, the truncated right-singular vectors matrix.</p>
 <dd><p>Truncated randomized Singular Value Decomposition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
 singular values array, the truncated right-singular vectors matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
 </dd>
 </dl>
+<p>References:
+Finding structure with randomness: probabilistic algorithms for
+constructing approximate matrix decompositions. N. Halko, P. G.
+Martinsson, J. A. Tropp.</p>
 </dd></dl>
 
 <dl class="method">
@@ -272,14 +236,14 @@ singular values array, the truncated right-singular vectors matrix.</p>
 <dd><p>Truncated Singular Value Decomposition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
 singular values array, the truncated right-singular vectors matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
 </dd>
 </dl>
 <p>References:
@@ -296,8 +260,8 @@ See POD.__init__ for further info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p></li>
-<li><p><strong>s</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – the singular values of X.</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p></li>
+<li><p><strong>s</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the singular values of X.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -315,7 +279,19 @@ See POD.__init__ for further info.</p>
 <dd><p>Projects a reduced to full order solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Create the reduced space for the given snapshots <cite>X</cite> using the
+specified method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,7 +302,7 @@ See POD.__init__ for further info.</p>
 <dd><p>The POD modes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -334,10 +310,10 @@ See POD.__init__ for further info.</p>
 <dl class="method">
 <dt>
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.reduce"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Reduces the parameter Space by using the specified reduction method (default svd).</p>
+<dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,7 +324,7 @@ See POD.__init__ for further info.</p>
 <dd><p>The singular values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -359,61 +335,35 @@ See POD.__init__ for further info.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="rbf.html" class="btn btn-neutral float-right" title="RBF" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="linear.html" class="btn btn-neutral float-left" title="Linear" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reduction.html" class="btn btn-neutral float-left" title="Reduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reducedordermodel.html" class="btn btn-neutral float-right" title="ReducedOrderModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright Copyright 2016-2019, EZyRB contributors
-      <span class="lastupdated">
-        Last updated on Dec 15, 2020.
-      </span>
-
-    </p>
+    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
+      <span class="lastupdated">Last updated on Nov 23, 2021.
+      </span></p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

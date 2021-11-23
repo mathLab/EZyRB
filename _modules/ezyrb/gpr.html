@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ezyrb.gpr &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> EZyRB
+          </a>
+              <div class="version">
+                1.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to EZyRB’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EZyRB</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ezyrb.gpr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ezyrb.gpr</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module wrapper exploiting `GPy` for Gaussian Process Regression</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">GPy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="kn">from</span> <span class="nn">.approximation</span> <span class="kn">import</span> <span class="n">Approximation</span>
+
+
+<div class="viewcode-block" id="GPR"><a class="viewcode-back" href="../../gpr.html#ezyrb.gpr.GPR">[docs]</a><span class="k">class</span> <span class="nc">GPR</span><span class="p">(</span><span class="n">Approximation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multidimensional regression using Gaussian process.</span>
+
+<span class="sd">    :cvar numpy.ndarray X_sample: the array containing the input points,</span>
+<span class="sd">        arranged by row.</span>
+<span class="sd">    :cvar numpy.ndarray Y_sample: the array containing the output values,</span>
+<span class="sd">        arranged by row.</span>
+<span class="sd">    :cvar GPy.models.GPRegression model: the regression model.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    &gt;&gt;&gt; import ezyrb</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; x = np.random.uniform(-1, 1, size=(4, 2))</span>
+<span class="sd">    &gt;&gt;&gt; y = (np.sin(x[:, 0]) + np.cos(x[:, 1]**3)).reshape(-1, 1)</span>
+<span class="sd">    &gt;&gt;&gt; gpr = ezyrb.GPR()</span>
+<span class="sd">    &gt;&gt;&gt; gpr.fit(x, y)</span>
+<span class="sd">    &gt;&gt;&gt; y_pred = gpr.predict(x)</span>
+<span class="sd">    &gt;&gt;&gt; print(np.allclose(y, y_pred))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="GPR.fit"><a class="viewcode-back" href="../../gpr.html#ezyrb.gpr.GPR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">points</span><span class="p">,</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">kern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">normalizer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">optimization_restart</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the regression given `points` and `values`.</span>
+
+<span class="sd">        :param array_like points: the coordinates of the points.</span>
+<span class="sd">        :param array_like values: the values in the points.</span>
+<span class="sd">        :param GPy.kern kern: kernel object from GPy.</span>
+<span class="sd">        :param bool normalizer: whether to normilize `values` or not.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        :param int optimization_restart: number of restarts for the</span>
+<span class="sd">            optimization. Defaults to 20.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kern</span> <span class="o">=</span> <span class="n">GPy</span><span class="o">.</span><span class="n">kern</span><span class="o">.</span><span class="n">RBF</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ARD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">GPy</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">GPRegression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">Y_sample</span><span class="p">,</span>
+                                             <span class="n">kern</span><span class="p">,</span>
+                                             <span class="n">normalizer</span><span class="o">=</span><span class="n">normalizer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize_restarts</span><span class="p">(</span><span class="n">optimization_restart</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GPR.predict"><a class="viewcode-back" href="../../gpr.html#ezyrb.gpr.GPR.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_points</span><span class="p">,</span> <span class="n">return_variance</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict the mean and the variance of Gaussian distribution at given</span>
+<span class="sd">        `new_points`.</span>
+
+<span class="sd">        :param array_like new_points: the coordinates of the given points.</span>
+<span class="sd">        :param bool return_variance: flag to return also the variance.</span>
+<span class="sd">            Default is False.</span>
+<span class="sd">        :return: the mean and the variance</span>
+<span class="sd">        :rtype: (numpy.ndarray, numpy.ndarray)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">new_points</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_variance</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_points</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GPR.optimal_mu"><a class="viewcode-back" href="../../gpr.html#ezyrb.gpr.GPR.optimal_mu">[docs]</a>    <span class="k">def</span> <span class="nf">optimal_mu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">optimization_restart</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Proposes the next sampling point by looking at the point where the</span>
+<span class="sd">        Gaussian covariance is maximized. A gradient method (with multi</span>
+<span class="sd">        starting points) is adopted for the optimization.</span>
+
+<span class="sd">        :param numpy.ndarray bounds: the boundaries in the gradient</span>
+<span class="sd">            optimization. The shape must be (*input_dim*, 2), where *input_dim*</span>
+<span class="sd">            is the dimension of the input points.</span>
+<span class="sd">        :param int optimization_restart: the number of restart in the gradient</span>
+<span class="sd">            optimization. Default is 10.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">min_x</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">def</span> <span class="nf">min_obj</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">initial_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                           <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">optimization_restart</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+
+        <span class="c1"># Find the best optimum by starting from n_restart different random</span>
+        <span class="c1"># points.</span>
+        <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">initial_starts</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">min_obj</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">&lt;</span> <span class="n">min_val</span><span class="p">:</span>
+                <span class="n">min_val</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+                <span class="n">min_x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+
+        <span class="k">return</span> <span class="n">min_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
+      <span class="lastupdated">Last updated on Nov 23, 2021.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

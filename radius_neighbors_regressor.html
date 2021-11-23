@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Database &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>RadiusNeighborsRegressor &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Approximation" href="approximation.html" />
-    <link rel="prev" title="Code Documentation" href="code.html" /> 
+    <link rel="next" title="KNeighborsRegressor" href="kneighbors_regressor.html" />
+    <link rel="prev" title="RBF" href="rbf.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,11 +57,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">RadiusNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
@@ -90,9 +90,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="code.html">Code Documentation</a> &raquo;</li>
-      <li>Database</li>
+      <li>RadiusNeighborsRegressor</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/database.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/radius_neighbors_regressor.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -100,88 +100,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.database">
-<span id="database"></span><h1>Database<a class="headerlink" href="#module-ezyrb.database" title="Permalink to this headline">¶</a></h1>
-<p>Module for the snapshots database collected during the Offline stage.</p>
+  <div class="section" id="radiusneighborsregressor">
+<h1>RadiusNeighborsRegressor<a class="headerlink" href="#radiusneighborsregressor" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-ezyrb.radius_neighbors_regressor"></span><p>Wrapper for RadiusNeighborsRegressor.</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database</span></code></p></td>
-<td><p>Database class</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RadiusNeighborsRegressor</span></code></p></td>
+<td><p>Radius Neighbors Regressor.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.parameters</span></code></p></td>
-<td><p>The matrix containing the input parameters (by row).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RadiusNeighborsRegressor.fit</span></code></p></td>
+<td><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.snapshots</span></code></p></td>
-<td><p>The matrix containing the snapshots (by row).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__getitem__</span></code></p></td>
-<td><p>This method returns a new Database with the selected parameters and snapshots.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__len__</span></code></p></td>
-<td><p>This method returns the number of snapshots.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.add</span></code></p></td>
-<td><p>Add (by row) new sets of snapshots and parameters to the original database.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RadiusNeighborsRegressor.predict</span></code></p></td>
+<td><p>Evaluate interpolator at given <cite>new_points</cite>.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em>, <em class="sig-param">snapshots=None</em>, <em class="sig-param">scaler_parameters=None</em>, <em class="sig-param">scaler_snapshots=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Database class</p>
+<em class="property">class </em><code class="sig-name descname">RadiusNeighborsRegressor</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/radius_neighbors_regressor.html#RadiusNeighborsRegressor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.neighbors_regressor.NeighborsRegressor</span></code></p>
+<p>Radius Neighbors Regressor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parameters</strong> (<em>array_like</em>) – the input parameters</p></li>
-<li><p><strong>snapshots</strong> (<em>array_like</em>) – the input snapshots</p></li>
-<li><p><strong>scaler_parameters</strong> (<em>Scale</em>) – the scaler for the parameters. Default
-is None meaning no scaling.</p></li>
-<li><p><strong>scaler_snapshots</strong> (<em>Scale</em>) – the scaler for the snapshots. Default is
-None meaning no scaling.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>kwargs</strong> – arguments passed to the internal instance of
+RadiusNeighborsRegressor.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="attribute">
 <dt>
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">parameters</em>, <em class="sig-param">snapshots</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.add"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Add (by row) new sets of snapshots and parameters to the original
-database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parameters</strong> (<em>array_like</em>) – the parameters to add.</p></li>
-<li><p><strong>snapshots</strong> (<em>array_like</em>) – the snapshots to add.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">parameters</code></dt>
-<dd><p>The matrix containing the input parameters (by row).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">snapshots</code></dt>
-<dd><p>The matrix containing the snapshots (by row).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -191,8 +144,8 @@ database.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="code.html" class="btn btn-neutral float-left" title="Code Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="approximation.html" class="btn btn-neutral float-right" title="Approximation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rbf.html" class="btn btn-neutral float-left" title="RBF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kneighbors_regressor.html" class="btn btn-neutral float-right" title="KNeighborsRegressor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
