@@ -30,6 +30,18 @@ class AE(ANN, Reduction):
         (float).
     :param torch.nn.Module loss: loss definition (Mean Squared if not
         given).
+
+    :Example:
+        >>> from ezyrb import AE
+        >>> import torch
+        >>> f = torch.nn.Softplus
+        >>> low_dim = 5
+        >>> ae = AE([400, low_dim], [low_dim, 400], f(), f(), 2000)
+        >>> # or ...
+        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5)
+        >>> ae.fit(snapshots)
+        >>> reduced_snapshots = ae.reduce(snapshots)
+        >>> expanded_snapshots = ae.expand(reduced_snapshots)
     """
     def __init__(self,
                  layers_encoder,
@@ -126,8 +138,8 @@ class AE(ANN, Reduction):
                https://pytorch.org/docs/stable/optim.html);
             -  loss: self.loss (if none, the Mean Squared Loss is set by
                default).
-            -  stopping criterion: the fulfillment of the requested tolerance on
-               the training loss compatibly with the prescribed budget of
+            -  stopping criterion: the fulfillment of the requested tolerance
+               on the training loss compatibly with the prescribed budget of
                training iterations (if type(self.stop_training) is list); if
                type(self.stop_training) is int or type(self.stop_training) is
                float, only the number of maximum iterations or the accuracy
