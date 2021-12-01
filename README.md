@@ -72,7 +72,7 @@ See the [**Examples**](#examples) section below and the [**Tutorials**](tutorial
 
 ## Dependencies and installation
 **EZyRB** requires `numpy`, `scipy`, `sklearn`, `matplotlib`, `torch`, `GPy`,
-`pytest` (for local test) and `sphinx` (to generate the documentation). The coe
+`pytest` (for local test) and `sphinx` (to generate the documentation). The code
 has been tested with Python3.5 version, but it should be compatible with
 Python3. It can be installed using `pip` or directly from the source code.
 
