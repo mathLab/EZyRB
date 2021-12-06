@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ReducedOrderModel &mdash; EZyRB 1.2.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.0
+                1.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -192,6 +192,21 @@ Default value is the L2 norm.</p></li>
 
 <dl class="method">
 <dt>
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.load"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Load the object from <cite>fname</cite> using the pickle module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The <cite>ReducedOrderModel</cite> loaded</p>
+</dd>
+</dl>
+<p>Example:
+&gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM
+&gt;&gt;&gt; rom = ROM.load(‘ezyrb.rom’)
+&gt;&gt;&gt; rom.predict(new_param)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
 <code class="sig-name descname">loo_error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">norm=&lt;function norm&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.loo_error"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Estimate the approximation error using <em>leave-one-out</em> strategy. The
 main idea is to create several reduced spaces by combining all the
@@ -254,6 +269,30 @@ snapshot; if error array is not passed, it is computed using
 
 <dl class="method">
 <dt>
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">fname</em>, <em class="sig-param">save_db=True</em>, <em class="sig-param">save_reduction=True</em>, <em class="sig-param">save_approx=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.save"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Save the object to <cite>fname</cite> using the pickle module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the name of file where the reduced order model will
+be saved.</p></li>
+<li><p><strong>save_db</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Database</cite> will be saved.</p></li>
+<li><p><strong>save_reduction</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Reduction</cite> will be
+saved.</p></li>
+<li><p><strong>save_approx</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Approximation</cite> will be
+saved.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:
+&gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM
+&gt;&gt;&gt; rom = ROM(…) #  Construct here the rom
+&gt;&gt;&gt; rom.fit()
+&gt;&gt;&gt; rom.save(‘ezyrb.rom’)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
 <code class="sig-name descname">test_error</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">norm=&lt;function norm&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.test_error"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Compute the mean norm of the relative error vectors of predicted
 test snapshots.</p>
@@ -292,7 +331,7 @@ test snapshots.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Nov 23, 2021.
+      <span class="lastupdated">Last updated on Dec 06, 2021.
       </span></p>
   </div>
 

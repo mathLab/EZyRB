@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.0
+                1.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -73,6 +73,7 @@
 
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.qhull</span> <span class="kn">import</span> <span class="n">Delaunay</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
@@ -100,7 +101,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -113,6 +116,53 @@
         <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
             <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">predicted_sol</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel.save"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">save_db</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_approx</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the object to `fname` using the pickle module.</span>
+
+<span class="sd">        :param str fname: the name of file where the reduced order model will</span>
+<span class="sd">            be saved.</span>
+<span class="sd">        :param bool save_db: Flag to select if the `Database` will be saved.</span>
+<span class="sd">        :param bool save_reduction: Flag to select if the `Reduction` will be</span>
+<span class="sd">            saved.</span>
+<span class="sd">        :param bool save_approx: Flag to select if the `Approximation` will be</span>
+<span class="sd">            saved.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">        &gt;&gt;&gt; rom = ROM(...) #  Construct here the rom</span>
+<span class="sd">        &gt;&gt;&gt; rom.fit()</span>
+<span class="sd">        &gt;&gt;&gt; rom.save(&#39;ezyrb.rom&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rom_to_store</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">save_db</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">rom_to_store</span><span class="o">.</span><span class="n">database</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">save_reduction</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">rom_to_store</span><span class="o">.</span><span class="n">reduction</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">save_approx</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">rom_to_store</span><span class="o">.</span><span class="n">approximation</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">rom_to_store</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReducedOrderModel.load"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load the object from `fname` using the pickle module.</span>
+
+<span class="sd">        :return: The `ReducedOrderModel` loaded</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">        &gt;&gt;&gt; rom = ROM.load(&#39;ezyrb.rom&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; rom.predict(new_param)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">rom</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rom</span></div>
 
 <div class="viewcode-block" id="ReducedOrderModel.test_error"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.test_error">[docs]</a>    <span class="k">def</span> <span class="nf">test_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -257,7 +307,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Nov 23, 2021.
+      <span class="lastupdated">Last updated on Dec 06, 2021.
       </span></p>
   </div>
 
