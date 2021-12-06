@@ -2,6 +2,7 @@
 
 import math
 import copy
+import pickle
 import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
@@ -29,7 +30,9 @@ class ReducedOrderModel():
         self.reduction.fit(self.database.snapshots.T)
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T).T, *args, **kwargs)
+            self.reduction.reduce(self.database.snapshots.T).T,
+            *args,
+            **kwargs)
 
         return self
 
@@ -42,6 +45,53 @@ class ReducedOrderModel():
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
         return predicted_sol
+
+    def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
+        """
+        Save the object to `fname` using the pickle module.
+
+        :param str fname: the name of file where the reduced order model will
+            be saved.
+        :param bool save_db: Flag to select if the `Database` will be saved.
+        :param bool save_reduction: Flag to select if the `Reduction` will be
+            saved.
+        :param bool save_approx: Flag to select if the `Approximation` will be
+            saved.
+
+        Example:
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> rom = ROM(...) #  Construct here the rom
+        >>> rom.fit()
+        >>> rom.save('ezyrb.rom')
+        """
+        rom_to_store = copy.copy(self)
+
+        if not save_db:
+            del rom_to_store.database
+        if not save_reduction:
+            del rom_to_store.reduction
+        if not save_approx:
+            del rom_to_store.approximation
+
+        with open(fname, 'wb') as output:
+            pickle.dump(rom_to_store, output, pickle.HIGHEST_PROTOCOL)
+
+    @staticmethod
+    def load(fname):
+        """
+        Load the object from `fname` using the pickle module.
+
+        :return: The `ReducedOrderModel` loaded
+
+        Example:
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> rom = ROM.load('ezyrb.rom')
+        >>> rom.predict(new_param)
+        """
+        with open(fname, 'rb') as output:
+            rom = pickle.load(output)
+
+        return rom
 
     def test_error(self, test, norm=np.linalg.norm):
         """
