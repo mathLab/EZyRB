@@ -17,6 +17,45 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf)
 
+    def test_save(self):
+        fname = 'ezyrb.tmp'
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf)
+        rom.fit()
+        rom.save(fname)
+
+    def test_load(self):
+        fname = 'ezyrb.tmp'
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf)
+        rom.fit()
+        rom.save(fname)
+        new_rom = ROM.load(fname)
+        new_param = [-0.293344, -0.23120537]
+        np.testing.assert_array_almost_equal(
+            rom.predict(new_param),
+            new_rom.predict(new_param)
+        )
+
+    def test_load2(self):
+        fname = 'ezyrb2.tmp'
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf)
+        rom.fit()
+        rom.save(fname, save_db=False)
+        new_rom = ROM.load(fname)
+        new_param = [-0.293344, -0.23120537]
+        np.testing.assert_array_almost_equal(
+            rom.predict(new_param),
+            new_rom.predict(new_param)
+        )
+
     def test_predict_01(self):
         pod = POD()
         rbf = RBF()
