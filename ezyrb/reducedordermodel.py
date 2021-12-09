@@ -106,7 +106,7 @@ class ReducedOrderModel():
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters)
+        predicted_test = self.predict(test.parameters).T
         return np.mean(
             norm(predicted_test - test.snapshots, axis=1) /
             norm(test.snapshots, axis=1))
