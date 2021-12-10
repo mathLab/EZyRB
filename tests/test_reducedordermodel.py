@@ -87,8 +87,6 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters)
-        print(pred_sol.shape)
-        print(db.snapshots.shape)
         assert pred_sol.shape == db.snapshots.shape
 
     def test_test_error(self):
