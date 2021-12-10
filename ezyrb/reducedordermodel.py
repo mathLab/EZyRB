@@ -44,6 +44,8 @@ class ReducedOrderModel():
             np.atleast_2d(self.approximation.predict(mu)).T)
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
+        else:
+            predicted_sol = predicted_sol.T
         return predicted_sol
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):

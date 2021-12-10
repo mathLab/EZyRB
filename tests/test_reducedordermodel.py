@@ -81,6 +81,22 @@ class TestReducedOrderModel(TestCase):
         pred_sol = rom.predict(db.parameters[2])
         assert pred_sol.shape == db.snapshots[0].shape
 
+    def test_predict_04(self):
+        pod = POD(method='svd', rank=3)
+        gpr = GPR()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, gpr).fit()
+        pred_sol = rom.predict(db.parameters)
+        assert pred_sol.shape == db.snapshots.shape
+
+    def test_test_error(self):
+        pod = POD(method='svd', rank=-1)
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf).fit()
+        error = rom.test_error(db)
+        np.testing.assert_almost_equal(error, 0)
+
     def test_kfold_cv_error_01(self):
         pod = POD()
         rbf = RBF()
@@ -135,7 +151,7 @@ class TestReducedOrderModel(TestCase):
         err = rom.loo_error(normalizer=False)
         np.testing.assert_allclose(
             err[0],
-            np.array([579.632187]),
+            np.array(579.632187),
             rtol=1e-3)
 
     def test_loo_error_singular_values(self):
