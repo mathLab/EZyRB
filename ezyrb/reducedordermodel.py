@@ -14,6 +14,32 @@ class ReducedOrderModel():
 
     This class performs the actual reduced order model using the selected
     methods for approximation and reduction.
+
+    :param ezyrb.Database database: the database to use for training the reduced
+        order model.
+    :param ezyrb.Reduction reduction: the reduction method to use in reduced order
+        model.
+    :param ezyrb.Approximation approximation: the approximation method to use in
+        reduced order model.
+
+    :cvar ezyrb.Database database: the database used for training the reduced
+        order model.
+    :cvar ezyrb.Reduction reduction: the reduction method used in reduced order
+        model.
+    :cvar ezyrb.Approximation approximation: the approximation method used in
+        reduced order model.
+
+    :Example:
+
+         >>> from ezyrb import ReducedOrderModel as ROM
+         >>> from ezyrb import POD, RBF, Database
+         >>> pod = POD()
+         >>> rbf = RBF()
+         >>> # param, snapshots and new_param are assumed to be declared
+         >>> db = Database(param, snapshots)
+         >>> rom = ROM(db, pod, rbf).fit()
+         >>> rom.predict(new_param)
+
     """
     def __init__(self, database, reduction, approximation):
         self.database = database
