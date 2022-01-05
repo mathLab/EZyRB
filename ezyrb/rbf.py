@@ -20,16 +20,17 @@ class RBF(Approximation):
     :cvar list interpolators: the RBF interpolators (the number of
         interpolators depenend by the dimensionality of the output)
 
-    Example:
-    >>> import ezyrb
-    >>> import numpy as np
-    >>>
-    >>> x = np.random.uniform(-1, 1, size=(4, 2))
-    >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
-    >>> rbf = ezyrb.RBF()
-    >>> rbf.fit(x, y)
-    >>> y_pred = rbf.predict(x)
-    >>> print(np.allclose(y, y_pred))
+    :Example:
+
+         >>> import ezyrb
+         >>> import numpy as np
+         >>>
+         >>> x = np.random.uniform(-1, 1, size=(4, 2))
+         >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
+         >>> rbf = ezyrb.RBF()
+         >>> rbf.fit(x, y)
+         >>> y_pred = rbf.predict(x)
+         >>> print(np.allclose(y, y_pred))
 
     """
     def __init__(self, kernel='multiquadric', smooth=0):
