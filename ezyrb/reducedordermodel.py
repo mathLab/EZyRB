@@ -87,6 +87,7 @@ class ReducedOrderModel():
             saved.
 
         Example:
+
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> rom = ROM(...) #  Construct here the rom
         >>> rom.fit()
@@ -112,6 +113,7 @@ class ReducedOrderModel():
         :return: The `ReducedOrderModel` loaded
 
         Example:
+
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> rom = ROM.load('ezyrb.rom')
         >>> rom.predict(new_param)
@@ -206,7 +208,7 @@ class ReducedOrderModel():
     def optimal_mu(self, error=None, k=1):
         """
         Return the parametric points where new high-fidelity solutions have to
-        be computed in ordere to globaly reduce the estimated error. These
+        be computed in order to globally reduce the estimated error. These
         points are the barycentric center of the region (simplex) with higher
         error.
 
@@ -245,6 +247,7 @@ class ReducedOrderModel():
         simplex.
         Source from: `wikipedia.org/wiki/Simplex
         <https://en.wikipedia.org/wiki/Simplex>`_.
+        
         :param numpy.ndarray simplex_vertices: Nx3 array containing the
             parameter values representing the vertices of a simplex. N is the
             dimensionality of the parameters.
