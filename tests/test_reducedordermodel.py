@@ -95,7 +95,7 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         error = rom.test_error(db)
-        np.testing.assert_almost_equal(error, 0)
+        np.testing.assert_almost_equal(error, 0, decimal=6)
 
     def test_kfold_cv_error_01(self):
         pod = POD()
