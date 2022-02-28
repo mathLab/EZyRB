@@ -207,24 +207,24 @@ class AE(Reduction, ANN):
 
     def reduce(self, X):
         """
-        .. note::
-
-            Same as `transform`. Kept for backward compatibility.
-        
         Reduces the given snapshots.
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
+
+        .. note::
+
+            Same as `transform`. Kept for backward compatibility.
         """
         return self.transform(X)
 
     def expand(self, g):
         """
-        .. note::
-
-            Same as `inverse_transform`. Kept for backward compatibility.
-        
         Projects a reduced to full order solution.
 
         :param: numpy.ndarray g the latent variables.
+
+        .. note::
+
+            Same as `inverse_transform`. Kept for backward compatibility.
         """
         return self.inverse_transform(g)
