@@ -21,10 +21,10 @@ class PODAE(POD, AE):
         """
         """
         self.pod.fit(X)
-        coefficients = self.pod.reduce(X)
+        coefficients = self.pod.transform(X)
         self.ae.fit(coefficients)
 
-    def reduce(self, X):
+    def transform(self, X):
         """
         Reduces the given snapshots.
 
@@ -35,7 +35,7 @@ class PODAE(POD, AE):
         g = self.ae.encoder(coeff)
         return g.cpu().detach().numpy().T
 
-    def expand(self, g):
+    def inverse_transform(self, g):
         """
         Projects a reduced to full order solution.
 
@@ -45,3 +45,27 @@ class PODAE(POD, AE):
         u = self.ae.decoder(g)
         u = u.cpu().detach().numpy().T
         return self.pod.expand(u)
+
+    def reduce(self, X):
+        """
+        .. note::
+
+            Same as `transform`. Kept for backward compatibility.
+        
+        Reduces the given snapshots.
+
+        :param numpy.ndarray X: the input snapshots matrix (stored by column).
+        """
+        return self.transform(X)
+
+    def expand(self, g):
+        """
+        .. note::
+
+            Same as `inverse_transform`. Kept for backward compatibility.
+        
+        Projects a reduced to full order solution.
+
+        :param: numpy.ndarray g the latent variables.
+        """
+        return self.inverse_transform(g)

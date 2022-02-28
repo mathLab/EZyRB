@@ -19,7 +19,7 @@ class TestAE(TestCase):
         pod = POD(rank=4)
         podae = PODAE(pod, ae)
         podae.fit(snapshots)
-        snapshots_ = podae.expand(podae.reduce(snapshots))
+        snapshots_ = podae.inverse_transform(podae.transform(snapshots))
         rerr = np.linalg.norm(snapshots_ - snapshots)/np.linalg.norm(snapshots)
         assert rerr < 5e-3
 

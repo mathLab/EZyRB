@@ -15,7 +15,7 @@ class TestAE(TestCase):
         f = torch.nn.Softplus
         ae = AE([400, 20, 2], [2, 20, 400], f(), f(), 1e-5)
         ae.fit(snapshots)
-        snapshots_ = ae.expand(ae.reduce(snapshots))
+        snapshots_ = ae.inverse_transform(ae.transform(snapshots))
         rerr = np.linalg.norm(snapshots_ - snapshots)/np.linalg.norm(snapshots)
         assert rerr < 5e-3
 
@@ -24,7 +24,7 @@ class TestAE(TestCase):
         low_dim = 5
         ae = AE([400, low_dim], [low_dim, 400], f(), f(), 20)
         ae.fit(snapshots)
-        reduced_snapshots = ae.reduce(snapshots)
+        reduced_snapshots = ae.transform(snapshots)
         assert reduced_snapshots.shape[0] == low_dim
-        expanded_snapshots = ae.expand(reduced_snapshots)
+        expanded_snapshots = ae.inverse_transform(reduced_snapshots)
         assert expanded_snapshots.shape[0] == snapshots.shape[0]
