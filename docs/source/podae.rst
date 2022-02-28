@@ -1,9 +1,9 @@
 PODAE
 =====================
 
-.. currentmodule:: ezyrb.podae
+.. currentmodule:: ezyrb.pod_ae
 
-.. automodule:: ezyrb.podae
+.. automodule:: ezyrb.pod_ae
 
 .. autosummary::
     :toctree: _summaries
