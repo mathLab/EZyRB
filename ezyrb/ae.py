@@ -185,7 +185,7 @@ class AE(Reduction, ANN):
 
             n_epoch += 1
 
-    def reduce(self, X):
+    def transform(self, X):
         """
         Reduces the given snapshots.
 
@@ -195,7 +195,7 @@ class AE(Reduction, ANN):
         g = self.encoder(X)
         return g.cpu().detach().numpy().T
 
-    def expand(self, g):
+    def inverse_transform(self, g):
         """
         Projects a reduced to full order solution.
 
@@ -204,3 +204,27 @@ class AE(Reduction, ANN):
         g = self._convert_numpy_to_torch(g).T
         u = self.decoder(g)
         return u.cpu().detach().numpy().T
+
+    def reduce(self, X):
+        """
+        Reduces the given snapshots.
+
+        :param numpy.ndarray X: the input snapshots matrix (stored by column).
+
+        .. note::
+
+            Same as `transform`. Kept for backward compatibility.
+        """
+        return self.transform(X)
+
+    def expand(self, g):
+        """
+        Projects a reduced to full order solution.
+
+        :param: numpy.ndarray g the latent variables.
+
+        .. note::
+
+            Same as `inverse_transform`. Kept for backward compatibility.
+        """
+        return self.inverse_transform(g)

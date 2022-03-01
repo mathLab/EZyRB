@@ -56,7 +56,7 @@ class ReducedOrderModel():
         self.reduction.fit(self.database.snapshots.T)
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.reduce(self.database.snapshots.T).T,
+            self.reduction.transform(self.database.snapshots.T).T,
             *args,
             **kwargs)
 
@@ -66,7 +66,7 @@ class ReducedOrderModel():
         """
         Calculate predicted solution for given mu
         """
-        predicted_sol = self.reduction.expand(
+        predicted_sol = self.reduction.inverse_transform(
             np.atleast_2d(self.approximation.predict(mu)).T)
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()

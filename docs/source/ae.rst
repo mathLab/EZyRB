@@ -13,6 +13,8 @@ AE
     AE.fit
     AE.reduce
     AE.expand
+    AE.transform
+    AE.inverse_transform
     AE._build_model
 
 .. autoclass:: AE

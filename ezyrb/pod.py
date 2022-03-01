@@ -111,7 +111,7 @@ class POD(Reduction):
         self._modes, self._singular_values = self.__method(X)
         return self
 
-    def reduce(self, X):
+    def transform(self, X):
         """
         Reduces the given snapshots.
 
@@ -119,13 +119,37 @@ class POD(Reduction):
         """
         return self.modes.T.conj().dot(X)
 
-    def expand(self, X):
+    def inverse_transform(self, X):
         """
         Projects a reduced to full order solution.
 
         :type: numpy.ndarray
         """
         return self.modes.dot(X)
+
+    def reduce(self, X):
+        """
+        Reduces the given snapshots.
+
+        :param numpy.ndarray X: the input snapshots matrix (stored by column).
+
+        .. note::
+
+            Same as `transform`. Kept for backward compatibility.
+        """
+        return self.transform(X)
+
+    def expand(self, X):
+        """
+        Projects a reduced to full order solution.
+
+        :type: numpy.ndarray
+
+        .. note::
+
+            Same as `inverse_transform`. Kept for backward compatibility.
+        """
+        return self.inverse_transform(X)
 
     def _truncation(self, X, s):
         """

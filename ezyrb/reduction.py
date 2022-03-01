@@ -15,9 +15,9 @@ class Reduction(ABC):
         """Abstract `fit`"""
 
     @abstractmethod
-    def reduce(self):
-        """Abstract `reduce`"""
+    def transform(self):
+        """Abstract `transform`"""
 
     @abstractmethod
-    def expand(self):
-        """Abstract `expand`"""
+    def inverse_transform(self):
+        """Abstract `inverse_transform`"""
