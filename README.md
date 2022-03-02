@@ -68,6 +68,38 @@ rom.fit();
 rom.predict(new_param)
 ```
 
+The package provides different reduction methods and regressors. The high level structure of the library is represented here:
+```mermaid
+classDiagram
+
+ReducedOrderModel *-- Database
+ReducedOrderModel *-- Reduction
+ReducedOrderModel *-- Approximation
+
+class ReducedOrderModel{
+ database
+ reduction
+ approximation
+ +fit()
+ +predict()
+ +test_error()
+}
+class Database{  
+ parameters
+ snapshots
+ +add()
+}
+class Reduction{  
+ +fit()
+ +transform()
+ +inverse_transform()
+}
+class Approximation{  
+ +fit()
+ +predict()
+}
+```
+
 See the [**Examples**](#examples) section below and the [**Tutorials**](tutorials/README.md) to have an idea of the potential of this package.
 
 ## Dependencies and installation
