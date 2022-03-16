@@ -10,3 +10,51 @@ Here we show the typical workflow on a vtk pressure field for:
 
 #### More to come...
 We plan to add more tutorials but the time is often against us. If you want to contribute with a notebook on a feature not covered yet we will be very happy and give you support on editing!
+
+
+## General structure
+The complete structure of the package can be summarized with the following diagram:
+
+```mermaid
+classDiagram
+
+ReducedOrderModel *-- Database
+ReducedOrderModel *-- Reduction
+ReducedOrderModel *-- Approximation
+Reduction <|-- POD
+Reduction <|-- AE
+Approximation <|-- ANN
+Approximation <|-- GPR
+Approximation <|-- Linear
+Approximation <|-- NeighborsRegressor
+Approximation <|-- RBF
+NeighborsRegressor <|-- KNeighborsRegressor
+NeighborsRegressor <|-- RadiusNeighborsRegressor
+POD <|-- PODAE
+AE <|-- PODAE
+
+class  ReducedOrderModel{
+ database
+ reduction
+ approximation
+ +fit()
+ +predict()
+ +test_error()
+}
+class  Database{  
+ parameters
+ snapshots
+ +add()
+}
+class  Reduction{
+ <<abstract>>
+ +fit()
+ +transform()
+ +inverse_transform()
+}
+class  Approximation{
+ <<abstract>>
+ +fit()
+ +predict()
+}
+```
