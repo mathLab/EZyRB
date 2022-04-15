@@ -61,6 +61,7 @@ Tutorials
 We made some tutorial examples:
 
 - `Tutorial 1 <tutorial-1.html>`_ shows how to construct a simple reduced order model for a heat conduction problem.
+- `Tutorial 2 <tutorial-2.html>`_ shows how test different methods for reduced order modeling on a NavierStokes 2D problem.
 
 
 Indices and tables
