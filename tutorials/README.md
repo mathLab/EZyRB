@@ -2,10 +2,9 @@
 
 In this folder you can find a collection of useful tutorials in order to understand the principles and the potential of **EZyRB**.
 
-#### [Tutorial 1](tutorial-1.ipynb)
-Here we show the typical workflow on a vtk pressure field for:
-1. The construcion of the reduced basis space, called offline phase;
-2. The online evaluation of the output of interest.
+[Tutorial 1](tutorial-1.ipynb) shows how to construct a simple reduced order model for a heat conduction problem.
+
+[Tutorial 2](tutorial-2.ipynb) shows how test different methods for reduced order modeling on a NavierStokes 2D problem.
 
 
 #### More to come...
