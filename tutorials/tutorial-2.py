@@ -102,7 +102,7 @@ for i in range(9):
 
 # In this step, we perform the model order reduction to obtain a reduced space from the full order space. We refer to [Tutorial 1](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-1.ipynb) for the description of the basic workflow, here we just quickly describe the steps implemented in the next cell.
 # 
-# We start by passing the matrices of the parameters and snapshots to the `Database()` class. It must be said that at this time we just create the ROM for the `vx` field. We create also the `POD` and `RBF` object to have a benchmark ROM.
+# We start by passing the matrices of the parameters and snapshots to the `Database()` class. It must be said that at this time we create the ROM for the `vx` field. We also instantiate the `POD` and `RBF` object to have a benchmark ROM.
 
 # In[5]:
 
@@ -168,7 +168,7 @@ print('\nAverage error = {}'.format(errors.mean()))
 # - a method for reducing the dimensionality of input snapshots;
 # - a method for approximate the solution manifold;
 # 
-# allowing in principle to a large variety of combinations.
+# allowing in principle a large variety of combinations.
 # 
 # The list of implemented **reduction methods** in EZyRB contains: 
 # - `POD`: *proper orthogonal decomposition*
@@ -181,16 +181,16 @@ print('\nAverage error = {}'.format(errors.mean()))
 # - `RadiusNeighborsRegressor`: *radius neighbors regression*
 # - `Linear`: *multidimensional linear interpolation*
 # 
-# Moreover, new state-of-the-art methods will arrive, so we invite to read the [documentation](https://mathlab.github.io/EZyRB/) for the complete list of all the possibilities!
+# Moreover, new state-of-the-art methods will arrive, so we invite you to read the [documentation](https://mathlab.github.io/EZyRB/) for the complete list of all the possibilities!
 # 
-# In the next cell, we create two dictionaries with the objects, such that we can easily test everything with simple `for` cycles. **WARNING** since several methods require the solution of an optimization problem (eg. GPR, ANN, AE), the cell may require some minutes to been run.
+# In the next cell, we create two dictionaries with the objects, such that we can easily test everything with simple `for` cycles. **WARNING** since several methods require the solution of an optimization problem (eg. GPR, ANN, AE), the cell may require some minutes to be run.
 
 # In[9]:
 
 
 reductions = {
     'POD': POD('svd',rank=10),
-    'AE': AE([200, 100, 10], [10, 100, 200], nn.Tanh(), nn.Tanh(), 1000),
+    'AE': AE([200, 100, 10], [10, 100, 200], nn.Tanh(), nn.Tanh(), 10),
 }
 
 approximations = {
@@ -199,7 +199,7 @@ approximations = {
     'GPR': GPR(),
     'KNeighbors': KNeighborsRegressor(),
     'RadiusNeighbors':  RadiusNeighborsRegressor(),
-    'ANN': ANN([20, 20], nn.Tanh(), 1000),
+    'ANN': ANN([20, 20], nn.Tanh(), 10),
 }
 
 header = '{:10s}'.format('')
@@ -219,7 +219,7 @@ for redname, redclass in reductions.items():
 
 # In a very compact way, we tested several frameworks - like POD-RBF, POD-GPR, POD-NN -, showing the accuracy reached by any of them.
 # 
-# We can also note that the frameworks that involves neural networks (`AE` and `ANN`) show a very poor precision. This is due to the fact of the limited number of epoch we impose in the learning procedure. You can try to increase the number of epochs as we shown in next cell in order to obtain better results, a the cost of a longer taining phase.
+# We can also note that the frameworks that involve neural networks (`AE` and `ANN`) show a very poor precision. This is due to the fact of the limited number of epochs we impose in the learning procedure. You can try to increase the number of epochs as we shown in the next cell in order to obtain better results, at the cost of a longer training phase.
 
 # In[10]:
 

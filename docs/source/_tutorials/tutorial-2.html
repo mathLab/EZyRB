@@ -13269,7 +13269,7 @@ Shape of parameters matrix: (500, 1)
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this step, we perform the model order reduction to obtain a reduced space from the full order space. We refer to <a href="https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-1.ipynb">Tutorial 1</a> for the description of the basic workflow, here we just quickly describe the steps implemented in the next cell.</p>
-<p>We start by passing the matrices of the parameters and snapshots to the <code>Database()</code> class. It must be said that at this time we just create the ROM for the <code>vx</code> field. We create also the <code>POD</code> and <code>RBF</code> object to have a benchmark ROM.</p>
+<p>We start by passing the matrices of the parameters and snapshots to the <code>Database()</code> class. It must be said that at this time we create the ROM for the <code>vx</code> field. We also instantiate the <code>POD</code> and <code>RBF</code> object to have a benchmark ROM.</p>
 
 </div>
 </div>
@@ -13434,7 +13434,7 @@ Average error = 3.611941374545217e-05
 <li>a method for reducing the dimensionality of input snapshots;</li>
 <li>a method for approximate the solution manifold;</li>
 </ul>
-<p>allowing in principle to a large variety of combinations.</p>
+<p>allowing in principle a large variety of combinations.</p>
 <p>The list of implemented <strong>reduction methods</strong> in EZyRB contains:</p>
 <ul>
 <li><code>POD</code>: <em>proper orthogonal decomposition</em></li>
@@ -13448,8 +13448,8 @@ Average error = 3.611941374545217e-05
 <li><code>RadiusNeighborsRegressor</code>: <em>radius neighbors regression</em></li>
 <li><code>Linear</code>: <em>multidimensional linear interpolation</em></li>
 </ul>
-<p>Moreover, new state-of-the-art methods will arrive, so we invite to read the <a href="https://mathlab.github.io/EZyRB/">documentation</a> for the complete list of all the possibilities!</p>
-<p>In the next cell, we create two dictionaries with the objects, such that we can easily test everything with simple <code>for</code> cycles. <strong>WARNING</strong> since several methods require the solution of an optimization problem (eg. GPR, ANN, AE), the cell may require some minutes to been run.</p>
+<p>Moreover, new state-of-the-art methods will arrive, so we invite you to read the <a href="https://mathlab.github.io/EZyRB/">documentation</a> for the complete list of all the possibilities!</p>
+<p>In the next cell, we create two dictionaries with the objects, such that we can easily test everything with simple <code>for</code> cycles. <strong>WARNING</strong> since several methods require the solution of an optimization problem (eg. GPR, ANN, AE), the cell may require some minutes to be run.</p>
 
 </div>
 </div>
@@ -13461,7 +13461,7 @@ Average error = 3.611941374545217e-05
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reductions</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;POD&#39;</span><span class="p">:</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span><span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-    <span class="s1">&#39;AE&#39;</span><span class="p">:</span> <span class="n">AE</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="s1">&#39;AE&#39;</span><span class="p">:</span> <span class="n">AE</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">10</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">approximations</span> <span class="o">=</span> <span class="p">{</span>
@@ -13470,7 +13470,7 @@ Average error = 3.611941374545217e-05
     <span class="s1">&#39;GPR&#39;</span><span class="p">:</span> <span class="n">GPR</span><span class="p">(),</span>
     <span class="s1">&#39;KNeighbors&#39;</span><span class="p">:</span> <span class="n">KNeighborsRegressor</span><span class="p">(),</span>
     <span class="s1">&#39;RadiusNeighbors&#39;</span><span class="p">:</span>  <span class="n">RadiusNeighborsRegressor</span><span class="p">(),</span>
-    <span class="s1">&#39;ANN&#39;</span><span class="p">:</span> <span class="n">ANN</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="s1">&#39;ANN&#39;</span><span class="p">:</span> <span class="n">ANN</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">10</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:10s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -13540,7 +13540,7 @@ POD           4.214594e-05    1.123213e-05    8.032581e-03    1.091257e-02    9.
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In a very compact way, we tested several frameworks - like POD-RBF, POD-GPR, POD-NN -, showing the accuracy reached by any of them.</p>
-<p>We can also note that the frameworks that involves neural networks (<code>AE</code> and <code>ANN</code>) show a very poor precision. This is due to the fact of the limited number of epoch we impose in the learning procedure. You can try to increase the number of epochs as we shown in next cell in order to obtain better results, a the cost of a longer taining phase.</p>
+<p>We can also note that the frameworks that involve neural networks (<code>AE</code> and <code>ANN</code>) show a very poor precision. This is due to the fact of the limited number of epochs we impose in the learning procedure. You can try to increase the number of epochs as we shown in the next cell in order to obtain better results, at the cost of a longer training phase.</p>
 
 </div>
 </div>
