@@ -97,7 +97,7 @@ fig, ax = plt.subplots(nrows=3, ncols=3, figsize=(16, 8), sharey=True, sharex=Tr
 ax = ax.flatten()
 for i in range(9):
     ax[i].tricontourf(data.triang, data.snapshots['vx'][i], levels=16)
-    ax[i].set_title('Original snapshot at time = {}'.format(*data.params[i].round(2)))
+    ax[i].set_title('Original snapshot at inlet velocity = {}'.format(*data.params[i].round(2)))
 
 
 # In this step, we perform the model order reduction to obtain a reduced space from the full order space. We refer to [Tutorial 1](https://github.com/mathLab/EZyRB/blob/master/tutorials/tutorial-1.ipynb) for the description of the basic workflow, here we just quickly describe the steps implemented in the next cell.
@@ -124,7 +124,7 @@ new_params = np.random.uniform(size=(2))*79.+1.
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 3))
 for i, param in enumerate(new_params):
     ax[i].tricontourf(data.triang, rom.predict([param]))
-    ax[i].set_title('Predicted snapshots at time = {}'.format(param))
+    ax[i].set_title('Predicted snapshots at inlet velocity = {}'.format(param))
 
 
 # We are now calculating the approximation error to see how close is our reduced solution to the full-order solution/simulation using the **k-fold Cross-Validation** strategy by passing the number of splits to the `ReducedOrderModel.kfold_cv_error(n_splits)` method, which operates as follows: 
