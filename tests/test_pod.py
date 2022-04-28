@@ -25,7 +25,7 @@ class TestPOD(TestCase):
     def test_correlation_matirix_savemem(self):
         pod = POD('correlation_matrix', save_memory=True).fit(snapshots)
         snapshots_ = pod.inverse_transform(pod.transform(snapshots))
-        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=3)
 
     def test_randomized_svd(self):
         pod = POD('randomized_svd', save_memory=False).fit(snapshots)
@@ -45,7 +45,7 @@ class TestPOD(TestCase):
     def test_correlation_matirix_savemem_old(self):
         pod = POD('correlation_matrix', save_memory=True).fit(snapshots)
         snapshots_ = pod.expand(pod.reduce(snapshots))
-        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=4)
+        np.testing.assert_array_almost_equal(snapshots, snapshots_, decimal=3)
 
     def test_randomized_svd_old(self):
         pod = POD('randomized_svd', save_memory=False).fit(snapshots)
