@@ -2,7 +2,7 @@ import numpy as np
 
 from unittest import TestCase
 from ezyrb import GPR
-import GPy
+import sklearn
 
 np.random.seed(17)
 
@@ -22,26 +22,19 @@ class TestGPR(TestCase):
     def test_constructor_empty(self):
         gpr = GPR()
 
-    def test_fit_mono(self):
+    def test_types(self):
         x, y = get_xy()
         gpr = GPR()
         gpr.fit(x[:, 0], y[:, 0])
-        assert isinstance(gpr.model, GPy.models.GPRegression)
+        assert isinstance(gpr.model,
+                          sklearn.gaussian_process.GaussianProcessRegressor)
 
-    def test_fit(self):
-        x, y = get_xy()
-        gpr = GPR()
-        gpr.fit(x, y)
-        assert isinstance(gpr.model, GPy.models.GPRegression)
-
-    """ TODO
     def test_predict_01(self):
         x, y = get_xy()
         gpr = GPR()
         gpr.fit(x, y, optimization_restart=50)
         test_y, variance = gpr.predict(x, return_variance=True)
         np.testing.assert_array_almost_equal(y, test_y, decimal=6)
-    """
 
     def test_predict_02(self):
         np.random.seed(42)
@@ -49,10 +42,10 @@ class TestGPR(TestCase):
         gpr = GPR()
         gpr.fit(x, y, optimization_restart=50)
         test_y, variance = gpr.predict(x[:4], return_variance=True)
-        true_var = np.array([[0.0242762038, 0.0029760019],
-                             [0.0244903294, 0.0030022514],
-                             [0.0247701249, 0.0030365513],
-                             [0.0232064664, 0.0028448636]])
+        true_var = np.array([[5.761689e-06, 2.017326e-06],
+                             [5.761686e-06, 2.017325e-06],
+                             [5.761692e-06, 2.017327e-06],
+                             [5.761695e-06, 2.017328e-06]])
         np.testing.assert_array_almost_equal(true_var, variance, decimal=6)
 
     def test_predict_03(self):
