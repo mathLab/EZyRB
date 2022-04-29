@@ -151,7 +151,7 @@ class TestReducedOrderModel(TestCase):
         err = rom.loo_error(normalizer=False)
         np.testing.assert_allclose(
             err[0],
-            np.array(579.632187),
+            np.array(498.703803),
             rtol=1e-3)
 
     def test_loo_error_singular_values(self):

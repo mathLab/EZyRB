@@ -1,9 +1,9 @@
 """
 Module wrapper exploiting `GPy` for Gaussian Process Regression
 """
-import GPy
 import numpy as np
 from scipy.optimize import minimize
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 from .approximation import Approximation
 
@@ -46,7 +46,8 @@ class GPR(Approximation):
 
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
-        :param GPy.kern kern: kernel object from GPy.
+        :param sklearn.gaussian_process.kernels.Kernel kern: kernel object from
+            sklearn.
         :param bool normalizer: whether to normilize `values` or not.
             Defaults to True.
         :param int optimization_restart: number of restarts for the
@@ -59,15 +60,10 @@ class GPR(Approximation):
         if self.Y_sample.ndim == 1:
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
-        if kern is None:
-            kern = GPy.kern.RBF(input_dim=self.X_sample.shape[1], ARD=False)
-
-        self.model = GPy.models.GPRegression(self.X_sample,
-                                             self.Y_sample,
-                                             kern,
-                                             normalizer=normalizer)
-
-        self.model.optimize_restarts(optimization_restart, verbose=False)
+        self.model = GaussianProcessRegressor(
+            kernel=kern, n_restarts_optimizer=optimization_restart,
+            normalize_y=normalizer)
+        self.model.fit(self.X_sample, self.Y_sample)
 
     def predict(self, new_points, return_variance=False):
         """
@@ -81,9 +77,7 @@ class GPR(Approximation):
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
         new_points = np.atleast_2d(new_points)
-        if return_variance:
-            return self.model.predict(new_points)
-        return self.model.predict(new_points)[0]
+        return self.model.predict(new_points, return_std=return_variance)
 
     def optimal_mu(self, bounds, optimization_restart=10):
         """
