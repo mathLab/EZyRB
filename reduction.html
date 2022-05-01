@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reduction &mdash; EZyRB 1.2.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Reduction &mdash; EZyRB 1.2.1.post2205 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1
+                1.2.1.post2205
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
 </ul>
 </li>
@@ -98,10 +99,16 @@
 <td><p>The abstract <cite>Approximation</cite> class.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.reduce</span></code></p></td>
-<td><p>Abstract <cite>reduce</cite></p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.expand</span></code></p></td>
-<td><p>Abstract <cite>expand</cite></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.transform</span></code></p></td>
+<td><p>Abstract <cite>transform</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.inverse_transform</span></code></p></td>
+<td><p>Abstract <cite>inverse_transform</cite></p></td>
 </tr>
 </tbody>
 </table>
@@ -119,20 +126,20 @@ from this class.</p>
 
 <dl class="method">
 <dt>
-<em class="property">abstract </em><code class="sig-name descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction.html#Reduction.expand"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Abstract <cite>expand</cite></p>
-</dd></dl>
-
-<dl class="method">
-<dt>
 <em class="property">abstract </em><code class="sig-name descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction.html#Reduction.fit"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Abstract <cite>fit</cite></p>
 </dd></dl>
 
 <dl class="method">
 <dt>
-<em class="property">abstract </em><code class="sig-name descname">reduce</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction.html#Reduction.reduce"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Abstract <cite>reduce</cite></p>
+<em class="property">abstract </em><code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction.html#Reduction.inverse_transform"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Abstract <cite>inverse_transform</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction.html#Reduction.transform"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Abstract <cite>transform</cite></p>
 </dd></dl>
 
 </dd></dl>
@@ -151,7 +158,7 @@ from this class.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 06, 2021.
+      <span class="lastupdated">Last updated on May 01, 2022.
       </span></p>
   </div>
 

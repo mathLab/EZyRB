@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.1.post2205 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1
+                1.2.1.post2205
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -85,6 +85,32 @@
 
 <span class="sd">    This class performs the actual reduced order model using the selected</span>
 <span class="sd">    methods for approximation and reduction.</span>
+
+<span class="sd">    :param ezyrb.Database database: the database to use for training the reduced</span>
+<span class="sd">        order model.</span>
+<span class="sd">    :param ezyrb.Reduction reduction: the reduction method to use in reduced order</span>
+<span class="sd">        model.</span>
+<span class="sd">    :param ezyrb.Approximation approximation: the approximation method to use in</span>
+<span class="sd">        reduced order model.</span>
+
+<span class="sd">    :cvar ezyrb.Database database: the database used for training the reduced</span>
+<span class="sd">        order model.</span>
+<span class="sd">    :cvar ezyrb.Reduction reduction: the reduction method used in reduced order</span>
+<span class="sd">        model.</span>
+<span class="sd">    :cvar ezyrb.Approximation approximation: the approximation method used in</span>
+<span class="sd">        reduced order model.</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">         &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">         &gt;&gt;&gt; from ezyrb import POD, RBF, Database</span>
+<span class="sd">         &gt;&gt;&gt; pod = POD()</span>
+<span class="sd">         &gt;&gt;&gt; rbf = RBF()</span>
+<span class="sd">         &gt;&gt;&gt; # param, snapshots and new_param are assumed to be declared</span>
+<span class="sd">         &gt;&gt;&gt; db = Database(param, snapshots)</span>
+<span class="sd">         &gt;&gt;&gt; rom = ROM(db, pod, rbf).fit()</span>
+<span class="sd">         &gt;&gt;&gt; rom.predict(new_param)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
@@ -101,7 +127,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
             <span class="o">*</span><span class="n">args</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -111,10 +137,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate predicted solution for given mu</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span>
+        <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
             <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">T</span>
         <span class="k">return</span> <span class="n">predicted_sol</span></div>
 
 <div class="viewcode-block" id="ReducedOrderModel.save"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">save_db</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_approx</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -130,6 +158,7 @@
 <span class="sd">            saved.</span>
 
 <span class="sd">        Example:</span>
+
 <span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
 <span class="sd">        &gt;&gt;&gt; rom = ROM(...) #  Construct here the rom</span>
 <span class="sd">        &gt;&gt;&gt; rom.fit()</span>
@@ -155,6 +184,7 @@
 <span class="sd">        :return: The `ReducedOrderModel` loaded</span>
 
 <span class="sd">        Example:</span>
+
 <span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
 <span class="sd">        &gt;&gt;&gt; rom = ROM.load(&#39;ezyrb.rom&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; rom.predict(new_param)</span>
@@ -249,7 +279,7 @@
 <div class="viewcode-block" id="ReducedOrderModel.optimal_mu"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu">[docs]</a>    <span class="k">def</span> <span class="nf">optimal_mu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the parametric points where new high-fidelity solutions have to</span>
-<span class="sd">        be computed in ordere to globaly reduce the estimated error. These</span>
+<span class="sd">        be computed in order to globally reduce the estimated error. These</span>
 <span class="sd">        points are the barycentric center of the region (simplex) with higher</span>
 <span class="sd">        error.</span>
 
@@ -288,6 +318,7 @@
 <span class="sd">        simplex.</span>
 <span class="sd">        Source from: `wikipedia.org/wiki/Simplex</span>
 <span class="sd">        &lt;https://en.wikipedia.org/wiki/Simplex&gt;`_.</span>
+<span class="sd">        </span>
 <span class="sd">        :param numpy.ndarray simplex_vertices: Nx3 array containing the</span>
 <span class="sd">            parameter values representing the vertices of a simplex. N is the</span>
 <span class="sd">            dimensionality of the parameters.</span>
@@ -307,7 +338,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 06, 2021.
+      <span class="lastupdated">Last updated on May 01, 2022.
       </span></p>
   </div>
 

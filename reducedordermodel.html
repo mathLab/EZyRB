@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.2.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ReducedOrderModel &mdash; EZyRB 1.2.1.post2205 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Contact" href="contact.html" />
-    <link rel="prev" title="AE" href="ae.html" /> 
+    <link rel="prev" title="PODAE" href="podae.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1
+                1.2.1.post2205
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">ReducedOrderModel</a></li>
 </ul>
 </li>
@@ -113,7 +114,7 @@
 <td><p>Estimate the approximation error using <em>leave-one-out</em> strategy.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.optimal_mu</span></code></p></td>
-<td><p>Return the parametric points where new high-fidelity solutions have to be computed in ordere to globaly reduce the estimated error.</p></td>
+<td><p>Return the parametric points where new high-fidelity solutions have to be computed in order to globally reduce the estimated error.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel._simplex_volume</span></code></p></td>
 <td><p>Method implementing the computation of the volume of a N dimensional simplex.</p></td>
@@ -127,23 +128,57 @@
 <p>Reduced Order Model class.</p>
 <p>This class performs the actual reduced order model using the selected
 methods for approximation and reduction.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> (<em>ezyrb.Database</em>) – the database to use for training the reduced
+order model.</p></li>
+<li><p><strong>reduction</strong> (<em>ezyrb.Reduction</em>) – the reduction method to use in reduced order
+model.</p></li>
+<li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method to use in
+reduced order model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="database.html#module-ezyrb.database" title="ezyrb.database"><strong>database</strong></a> (<em>ezyrb.Database</em>) – the database used for training the reduced
+order model.</p></li>
+<li><p><a class="reference internal" href="reduction.html#module-ezyrb.reduction" title="ezyrb.reduction"><strong>reduction</strong></a> (<em>ezyrb.Reduction</em>) – the reduction method used in reduced order
+model.</p></li>
+<li><p><a class="reference internal" href="approximation.html#module-ezyrb.approximation" title="ezyrb.approximation"><strong>approximation</strong></a> (<em>ezyrb.Approximation</em>) – the approximation method used in
+reduced order model.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">ReducedOrderModel</span> <span class="k">as</span> <span class="n">ROM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">POD</span><span class="p">,</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">Database</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rbf</span> <span class="o">=</span> <span class="n">RBF</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># param, snapshots and new_param are assumed to be declared</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span> <span class="o">=</span> <span class="n">ROM</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pod</span><span class="p">,</span> <span class="n">rbf</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_param</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <dl class="method">
 <dt>
 <code class="sig-name descname">_simplex_volume</code><span class="sig-paren">(</span><em class="sig-param">vertices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel._simplex_volume"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Method implementing the computation of the volume of a N dimensional
 simplex.
-Source from: <a class="reference external" href="https://en.wikipedia.org/wiki/Simplex">wikipedia.org/wiki/Simplex</a>.
-:param numpy.ndarray simplex_vertices: Nx3 array containing the</p>
-<blockquote>
-<div><p>parameter values representing the vertices of a simplex. N is the
-dimensionality of the parameters.</p>
-</div></blockquote>
+Source from: <a class="reference external" href="https://en.wikipedia.org/wiki/Simplex">wikipedia.org/wiki/Simplex</a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>N dimensional volume of the simplex.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
+parameter values representing the vertices of a simplex. N is the
+dimensionality of the parameters.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>N dimensional volume of the simplex.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -185,7 +220,7 @@ Default value is the L2 norm.</p></li>
 <dd class="field-even"><p>the vector containing the errors corresponding to each fold.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,10 +234,12 @@ Default value is the L2 norm.</p></li>
 <dd class="field-odd"><p>The <cite>ReducedOrderModel</cite> loaded</p>
 </dd>
 </dl>
-<p>Example:
-&gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM
-&gt;&gt;&gt; rom = ROM.load(‘ezyrb.rom’)
-&gt;&gt;&gt; rom.predict(new_param)</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">ReducedOrderModel</span> <span class="k">as</span> <span class="n">ROM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span> <span class="o">=</span> <span class="n">ROM</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;ezyrb.rom&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_param</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -230,7 +267,7 @@ returns a float. Default value is the L2 norm.</p></li>
 parametric points.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -239,13 +276,13 @@ parametric points.</p>
 <dt>
 <code class="sig-name descname">optimal_mu</code><span class="sig-paren">(</span><em class="sig-param">error=None</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.optimal_mu"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Return the parametric points where new high-fidelity solutions have to
-be computed in ordere to globaly reduce the estimated error. These
+be computed in order to globally reduce the estimated error. These
 points are the barycentric center of the region (simplex) with higher
 error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
+<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
 snapshot; if error array is not passed, it is computed using
 <code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code> with the default function. Default value is None.</p></li>
 <li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of optimal points to return. Default value is
@@ -256,7 +293,7 @@ snapshot; if error array is not passed, it is computed using
 <dd class="field-even"><p>the optimal points</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>list(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -284,11 +321,13 @@ saved.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Example:
-&gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM
-&gt;&gt;&gt; rom = ROM(…) #  Construct here the rom
-&gt;&gt;&gt; rom.fit()
-&gt;&gt;&gt; rom.save(‘ezyrb.rom’)</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">ReducedOrderModel</span> <span class="k">as</span> <span class="n">ROM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span> <span class="o">=</span> <span class="n">ROM</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="c1">#  Construct here the rom</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;ezyrb.rom&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -310,7 +349,7 @@ and returns a float. Default value is the L2 norm.</p></li>
 test snapshots.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -323,7 +362,7 @@ test snapshots.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ae.html" class="btn btn-neutral float-left" title="AE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="podae.html" class="btn btn-neutral float-left" title="PODAE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
@@ -331,7 +370,7 @@ test snapshots.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 06, 2021.
+      <span class="lastupdated">Last updated on May 01, 2022.
       </span></p>
   </div>
 
