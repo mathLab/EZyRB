@@ -21,6 +21,8 @@ class ReducedOrderModel():
         model.
     :param ezyrb.Approximation approximation: the approximation method to use in
         reduced order model.
+    :param object scaler_red: the scaler for the reduced variables (eg. modal
+        coefficients). Default is None.
 
     :cvar ezyrb.Database database: the database used for training the reduced
         order model.
@@ -28,6 +30,8 @@ class ReducedOrderModel():
         model.
     :cvar ezyrb.Approximation approximation: the approximation method used in
         reduced order model.
+    :cvar object scaler_red: the scaler for the reduced variables (eg. modal
+        coefficients).
 
     :Example:
 
@@ -41,10 +45,11 @@ class ReducedOrderModel():
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, database, reduction, approximation):
+    def __init__(self, database, reduction, approximation, scaler_red=None):
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
+        self.scaler_red = scaler_red
 
     def fit(self, *args, **kwargs):
         r"""
@@ -54,9 +59,14 @@ class ReducedOrderModel():
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
         self.reduction.fit(self.database.snapshots.T)
+        reduced_output = self.reduction.transform(self.database.snapshots.T).T
+
+        if self.scaler_red:
+            reduced_output = self.scaler_red.fit_transform(reduced_output)
+
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.transform(self.database.snapshots.T).T,
+            reduced_output,
             *args,
             **kwargs)
 
@@ -70,8 +80,13 @@ class ReducedOrderModel():
         if hasattr(self, 'database') and self.database.scaler_parameters:
             mu = self.database.scaler_parameters.transform(mu)
 
-        predicted_sol = self.reduction.inverse_transform(
-            np.atleast_2d(self.approximation.predict(mu)).T)
+        predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
+
+        if self.scaler_red:  # rescale modal coefficients
+            predicted_red_sol = self.scaler_red.inverse_transform(
+                predicted_red_sol)
+
+        predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
 
         if hasattr(self, 'database') and self.database.scaler_snapshots:
             predicted_sol = self.database.scaler_snapshots.inverse_transform(
