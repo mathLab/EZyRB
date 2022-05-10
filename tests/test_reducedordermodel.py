@@ -89,6 +89,31 @@ class TestReducedOrderModel(TestCase):
         pred_sol = rom.predict(db.parameters)
         assert pred_sol.shape == db.snapshots.shape
 
+    def test_predict_scaler_01(self):
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T, scaler_snapshots=scaler)
+        rom = ROM(db, pod, rbf).fit()
+        pred_sol = rom.predict(db.parameters[0])
+        np.testing.assert_allclose(pred_sol, db._snapshots[0], rtol=1e-4, atol=1e-5)
+        pred_sol = rom.predict(db.parameters[0:2])
+        np.testing.assert_allclose(pred_sol, db._snapshots[0:2], rtol=1e-4, atol=1e-5)
+
+    def test_predict_scaler_02(self):
+        from sklearn.preprocessing import StandardScaler
+        scaler_p = StandardScaler()
+        scaler_s = StandardScaler()
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T, scaler_parameters=scaler_p, scaler_snapshots=scaler_s)
+        rom = ROM(db, pod, rbf).fit()
+        pred_sol = rom.predict(db._parameters[0])
+        np.testing.assert_allclose(pred_sol, db._snapshots[0], rtol=1e-4, atol=1e-5)
+        pred_sol = rom.predict(db._parameters[0:2])
+        np.testing.assert_allclose(pred_sol, db._snapshots[0:2], rtol=1e-4, atol=1e-5)
+
     def test_test_error(self):
         pod = POD(method='svd', rank=-1)
         rbf = RBF()
