@@ -66,8 +66,17 @@ class ReducedOrderModel():
         """
         Calculate predicted solution for given mu
         """
+        mu = np.atleast_2d(mu)
+        if hasattr(self, 'database') and self.database.scaler_parameters:
+            mu = self.database.scaler_parameters.transform(mu)
+
         predicted_sol = self.reduction.inverse_transform(
             np.atleast_2d(self.approximation.predict(mu)).T)
+
+        if hasattr(self, 'database') and self.database.scaler_snapshots:
+            predicted_sol = self.database.scaler_snapshots.inverse_transform(
+                    predicted_sol.T).T
+
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
         else:
@@ -247,7 +256,7 @@ class ReducedOrderModel():
         simplex.
         Source from: `wikipedia.org/wiki/Simplex
         <https://en.wikipedia.org/wiki/Simplex>`_.
-        
+
         :param numpy.ndarray simplex_vertices: Nx3 array containing the
             parameter values representing the vertices of a simplex. N is the
             dimensionality of the parameters.
