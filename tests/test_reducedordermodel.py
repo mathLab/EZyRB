@@ -177,7 +177,7 @@ class TestReducedOrderModel(TestCase):
         err = rom.loo_error()
         np.testing.assert_allclose(
             err,
-            np.array([421.299091, 344.571787,  48.711501, 300.490491]),
+            np.array([0.540029, 1.211744, 0.271776, 0.919509]),
             rtol=1e-4)
 
     def test_loo_error_02(self):
@@ -188,7 +188,7 @@ class TestReducedOrderModel(TestCase):
         err = rom.loo_error(normalizer=False)
         np.testing.assert_allclose(
             err[0],
-            np.array(498.703803),
+            np.array(0.639247),
             rtol=1e-3)
 
     def test_loo_error_singular_values(self):
@@ -206,5 +206,5 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         opt_mu = rom.optimal_mu()
-        np.testing.assert_allclose(opt_mu, [[-0.17687147, -0.21820951]],
+        np.testing.assert_allclose(opt_mu, [[-0.046381, -0.15578 ]],
             rtol=1e-4)

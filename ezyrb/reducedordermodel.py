@@ -217,15 +217,16 @@ class ReducedOrderModel():
         db_range = list(range(len(self.database)))
 
         for j in db_range:
-            remaining_index = db_range[:]
-            remaining_index.remove(j)
-            new_db = self.database[remaining_index]
+            indeces = np.array([True] * len(self.database))
+            indeces[j] = False
+
+            new_db = self.database[indeces]
+            test_db = self.database[~indeces]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
 
-            error[j] = norm(self.database.snapshots[j] -
-                            rom.predict(self.database.parameters[j]))
+            error[j] = rom.test_error(test_db)
 
         return error
 
