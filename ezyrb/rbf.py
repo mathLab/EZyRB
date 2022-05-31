@@ -15,7 +15,7 @@ class RBF(Approximation):
     :param float smooth: values greater than zero increase the smoothness of
         the approximation. 0 is for interpolation (default), the function will
         always go through the nodal points in this case.
-    :param int neighbours: if specified, the value of the interpolant at each
+    :param int neighbors: if specified, the value of the interpolant at each
         evaluation point will be computed using only this many nearest data points.
         If None (default), all the data points are used by default.
     :param float epsilon: Shape parameter that scales the input to the RBF.
@@ -42,14 +42,14 @@ class RBF(Approximation):
 
     """
     def __init__(self,
-                 kernel='multiquadric',
+                 kernel='thin_plate_spline',
                  smooth=0,
-                 neighbours=None,
+                 neighbors=None,
                  epsilon=None,
                  degree=None):
         self.kernel = kernel
         self.smooth = smooth
-        self.neighbours = neighbours
+        self.neighbors = neighbors
         self.degree = degree
         self.epsilon = epsilon
         self.interpolators = None
@@ -63,10 +63,9 @@ class RBF(Approximation):
         """
         self.interpolators = []
         for value in values.T:
-            argument = np.hstack([points, value.reshape(-1, 1)]).T
             self.interpolators.append(
-                RBFInterpolator(*argument,
-                                neighbours=self.neighbours,
+                RBFInterpolator(points, value,
+                                neighbors=self.neighbors,
                                 smoothing=self.smooth,
                                 kernel=self.kernel,
                                 epsilon=self.epsilon,
@@ -81,5 +80,5 @@ class RBF(Approximation):
         :rtype: numpy.ndarray
         """
         new_point = np.array(new_point)
-        return np.array([interp(*new_point.T)
+        return np.array([interp(new_point)
                          for interp in self.interpolators]).T
