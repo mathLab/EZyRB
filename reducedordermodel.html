@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.2.1.post2205 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ReducedOrderModel &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2205
+                1.2.1.post2206
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -123,7 +123,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">ReducedOrderModel</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">reduction</em>, <em class="sig-param">approximation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">ReducedOrderModel</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">reduction</em>, <em class="sig-param">approximation</em>, <em class="sig-param">scaler_red=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Reduced Order Model class.</p>
 <p>This class performs the actual reduced order model using the selected
@@ -137,6 +137,8 @@ order model.</p></li>
 model.</p></li>
 <li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method to use in
 reduced order model.</p></li>
+<li><p><strong>scaler_red</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – the scaler for the reduced variables (eg. modal
+coefficients). Default is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Variables</dt>
@@ -147,6 +149,8 @@ order model.</p></li>
 model.</p></li>
 <li><p><a class="reference internal" href="approximation.html#module-ezyrb.approximation" title="ezyrb.approximation"><strong>approximation</strong></a> (<em>ezyrb.Approximation</em>) – the approximation method used in
 reduced order model.</p></li>
+<li><p><strong>scaler_red</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – the scaler for the reduced variables (eg. modal
+coefficients).</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Example</dt>
@@ -370,7 +374,7 @@ test snapshots.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on May 01, 2022.
+      <span class="lastupdated">Last updated on Jun 01, 2022.
       </span></p>
   </div>
 

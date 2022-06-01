@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.1.post2205 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2205
+                1.2.1.post2206
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,6 +92,8 @@
 <span class="sd">        model.</span>
 <span class="sd">    :param ezyrb.Approximation approximation: the approximation method to use in</span>
 <span class="sd">        reduced order model.</span>
+<span class="sd">    :param object scaler_red: the scaler for the reduced variables (eg. modal</span>
+<span class="sd">        coefficients). Default is None.</span>
 
 <span class="sd">    :cvar ezyrb.Database database: the database used for training the reduced</span>
 <span class="sd">        order model.</span>
@@ -99,6 +101,8 @@
 <span class="sd">        model.</span>
 <span class="sd">    :cvar ezyrb.Approximation approximation: the approximation method used in</span>
 <span class="sd">        reduced order model.</span>
+<span class="sd">    :cvar object scaler_red: the scaler for the reduced variables (eg. modal</span>
+<span class="sd">        coefficients).</span>
 
 <span class="sd">    :Example:</span>
 
@@ -112,10 +116,11 @@
 <span class="sd">         &gt;&gt;&gt; rom.predict(new_param)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">,</span> <span class="n">scaler_red</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span> <span class="o">=</span> <span class="n">approximation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span> <span class="o">=</span> <span class="n">scaler_red</span>
 
 <div class="viewcode-block" id="ReducedOrderModel.fit"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -125,9 +130,14 @@
 <span class="sd">        :param \**kwargs: additional parameters to pass to the `fit` method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">reduced_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="p">:</span>
+            <span class="n">reduced_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">reduced_output</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">reduced_output</span><span class="p">,</span>
             <span class="o">*</span><span class="n">args</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -137,8 +147,22 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate predicted solution for given mu</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_parameters</span><span class="p">:</span>
+            <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_parameters</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+
+        <span class="n">predicted_red_sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="p">:</span>  <span class="c1"># rescale modal coefficients</span>
+            <span class="n">predicted_red_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+                <span class="n">predicted_red_sol</span><span class="p">)</span>
+
+        <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">predicted_red_sol</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_snapshots</span><span class="p">:</span>
+            <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_snapshots</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+                    <span class="n">predicted_sol</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
         <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
             <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -264,15 +288,16 @@
         <span class="n">db_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)))</span>
 
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">db_range</span><span class="p">:</span>
-            <span class="n">remaining_index</span> <span class="o">=</span> <span class="n">db_range</span><span class="p">[:]</span>
-            <span class="n">remaining_index</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
-            <span class="n">new_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="n">remaining_index</span><span class="p">]</span>
+            <span class="n">indeces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">))</span>
+            <span class="n">indeces</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">new_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="n">indeces</span><span class="p">]</span>
+            <span class="n">test_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="o">~</span><span class="n">indeces</span><span class="p">]</span>
             <span class="n">rom</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">new_db</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="p">),</span>
                              <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
                                  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-            <span class="n">error</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span>
-                            <span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">error</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">test_error</span><span class="p">(</span><span class="n">test_db</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">error</span></div>
 
@@ -318,7 +343,7 @@
 <span class="sd">        simplex.</span>
 <span class="sd">        Source from: `wikipedia.org/wiki/Simplex</span>
 <span class="sd">        &lt;https://en.wikipedia.org/wiki/Simplex&gt;`_.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param numpy.ndarray simplex_vertices: Nx3 array containing the</span>
 <span class="sd">            parameter values representing the vertices of a simplex. N is the</span>
 <span class="sd">            dimensionality of the parameters.</span>
@@ -338,7 +363,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on May 01, 2022.
+      <span class="lastupdated">Last updated on Jun 01, 2022.
       </span></p>
   </div>
 
