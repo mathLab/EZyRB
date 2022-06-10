@@ -1,7 +1,7 @@
 """Module for the snapshots database collected during the Offline stage."""
 
 import numpy as np
-
+import torch
 
 class Database():
     """
@@ -13,14 +13,17 @@ class Database():
         is None meaning no scaling.
     :param Scale scaler_snapshots: the scaler for the snapshots. Default is
         None meaning no scaling.
+    :param array_like space: the input spatial data
     """
     def __init__(self,
                  parameters=None,
                  snapshots=None,
                  scaler_parameters=None,
-                 scaler_snapshots=None):
+                 scaler_snapshots=None,
+                 space=None):
         self._parameters = None
         self._snapshots = None
+        self._space = None
         self.scaler_parameters = scaler_parameters
         self.scaler_snapshots = scaler_snapshots
 
@@ -28,8 +31,15 @@ class Database():
         if (parameters is None) ^ (snapshots is None):
             raise RuntimeError
 
+        if space is not None and snapshots is None:
+            raise RuntimeError
+
         if parameters is not None and snapshots is not None:
-            self.add(parameters, snapshots)
+            if space is not None:
+                self.add(parameters, snapshots, space)
+            else:
+                self.add(parameters, snapshots)
+
 
     @property
     def parameters(self):
@@ -54,6 +64,16 @@ class Database():
             return self.scaler_snapshots.fit_transform(self._snapshots)
 
         return self._snapshots
+    
+    @property
+    def space(self):
+        """
+        The matrix containing spatial information (by row).
+
+        :rtype: numpy.ndarray        
+        """
+
+        return self._space
 
     def __getitem__(self, val):
         """
@@ -63,8 +83,12 @@ class Database():
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
         """
-        return Database(self._parameters[val], self._snapshots[val],
+        if self._space is None:
+            return Database(self._parameters[val], self._snapshots[val],
                         self.scaler_parameters, self.scaler_snapshots)
+        else:
+            return Database(self._parameters[val], self._snapshots[val], 
+                        self.scaler_parameters, self.scaler_snapshots,self._space[val])
 
     def __len__(self):
         """
@@ -74,7 +98,7 @@ class Database():
         """
         return len(self._snapshots)
 
-    def add(self, parameters, snapshots):
+    def add(self, parameters, snapshots, space=None):
         """
         Add (by row) new sets of snapshots and parameters to the original
         database.
@@ -85,11 +109,27 @@ class Database():
         if len(parameters) != len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
 
+        if (self._space is not None):
+            if space is None:
+                raise RuntimeError('No Spatial Value given')
+
+        if (self._space is not None) or (space is not None):
+            if space.shape != snapshots.shape:
+                raise RuntimeError('shape of space and snapshots are different.')
+
+
         if self._parameters is None and self._snapshots is None:
             self._parameters = parameters
             self._snapshots = snapshots
+            if self._space is None:
+                self._space = space
+        
+        elif self._space is None:
+            self._parameters = np.vstack([self._parameters, parameters])
+            self._snapshots = np.vstack([self._snapshots, snapshots])
         else:
             self._parameters = np.vstack([self._parameters, parameters])
             self._snapshots = np.vstack([self._snapshots, snapshots])
+            self._space = np.vstack([self._space, space])
 
         return self
