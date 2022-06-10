@@ -31,12 +31,6 @@ class Database():
             raise RuntimeError(
                 'Parameters and Snapshots are not both provided')
 
-        if space is not None and snapshots is None:
-            raise RuntimeError(
-                'Snapshot data is not provided with Spatial data')
-
-        if space is not None and snapshots is None:
-            raise RuntimeError
 
         if space is not None and snapshots is None:
             raise RuntimeError(
@@ -82,6 +76,7 @@ class Database():
         """
         return self._space
 
+
     def __getitem__(self, val):
         """
         This method returns a new Database with the selected parameters and
@@ -90,24 +85,24 @@ class Database():
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
         """
+        
         if isinstance(val, int):
             if self._space is None:
-                return Database(np.reshape(self._parameters[val],
-                                    (1,len(self._parameters[val]))),
-                                np.reshape(self._snapshots[val],
-                                    (1,len(self._snapshots[val]))),
+                return Database(self._parameters[val].reshape(1,len(self._parameters[val])),
+                                self._snapshots[val].reshape(1, len(self._snapshots[val])),
                                 self.scaler_parameters,
                                 self.scaler_snapshots)
-
-            return Database(np.reshape(self._parameters[val],
-                                (1,len(self._parameters[val]))),
-                            np.reshape(self._snapshots[val],
-                                (1,len(self._snapshots[val]))),
+            try:
+                self._space[val][0]
+                space = self._space[val].reshape(1,len(self._space[val]), len(self._space[val][0]))
+            except:
+                space =  self._space[val].reshape(1,-1)
+            return Database(self._parameters[val].reshape(1,len(self._parameters[val])),
+                            self._snapshots[val].reshape(1, len(self._snapshots[val])),
                             self.scaler_parameters,
                             self.scaler_snapshots,
-                            np.reshape(self._space[val],
-                                (1,len(self._space[val]))))
-
+                            space)
+                
         if self._space is None:
             return Database(self._parameters[val],
                             self._snapshots[val],
@@ -145,9 +140,20 @@ class Database():
                 raise RuntimeError('No Spatial Value given')
 
         if (self._space is not None) or (space is not None):
+            print(space.shape, snapshots.shape)
+            if len(space) != len(snapshots) or len(space[0]) != len(snapshots[0]):
+                raise RuntimeError(
+                    'shape of space and snapshots are different.')
+
+        if self._space is not None:
+            if space is None:
+                raise RuntimeError('No Spatial Value given')
+
+        if (self._space is not None) or (space is not None):
             if space.shape != snapshots.shape:
                 raise RuntimeError(
                     'shape of space and snapshots are different.')
+
 
         if self._parameters is None and self._snapshots is None:
             self._parameters = parameters

@@ -122,11 +122,11 @@ class ANN(Approximation):
         """
 
         self._build_model(points, values)
-        self.optimizer = torch.optim.Adam(self.model.parameters())
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 0.01)
 
         points = self._convert_numpy_to_torch(points)
         values = self._convert_numpy_to_torch(values)
-
+        print(points.shape, values.shape)
         n_epoch = 1
         flag = True
         while flag:
@@ -143,7 +143,7 @@ class ANN(Approximation):
                 elif isinstance(criteria, float):  # stop criteria is float
                     if loss.item() < criteria:
                         flag = False
-
+            print(loss.item())
             n_epoch += 1
 
     def predict(self, new_point):
@@ -157,3 +157,40 @@ class ANN(Approximation):
         new_point = self._convert_numpy_to_torch(np.array(new_point))
         y_new = self.model(new_point)
         return self._convert_torch_to_numpy(y_new)
+    
+    def predict_tensor(self, new_point):
+        
+        return self.model(new_point)
+
+    def save_state(self, filename):
+
+            checkpoint = {
+                    'model_state': self.model.state_dict(),
+                    'optimizer_state' : self.optimizer.state_dict(),
+                    'optimizer_class' : self.optimizer.__class__,
+                    'model_class' : self.model.__class__
+            }
+
+
+            
+            torch.save(checkpoint, filename)
+
+    def load_state(self, filename, points, values):
+
+        checkpoint = torch.load(filename)
+
+        
+
+        self._build_model(points, values)
+        print(self.model)
+        self.optimizer = checkpoint['optimizer_class']
+
+        self.model.load_state_dict(checkpoint['model_state'])
+
+        self.optimizer = checkpoint['optimizer_class'](self.model.parameters())
+        self.optimizer.load_state_dict(checkpoint['optimizer_state'])
+
+        # self.trained_epoch = checkpoint['epoch']
+        # self.history = checkpoint['history']
+
+        return self
