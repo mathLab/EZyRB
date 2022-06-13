@@ -130,7 +130,7 @@ class Database():
             self._snapshots = snapshots
             if self._space is None:
                 self._space = space
-        
+
         elif self._space is None:
             self._parameters = np.vstack([self._parameters, parameters])
             self._snapshots = np.vstack([self._snapshots, snapshots])
