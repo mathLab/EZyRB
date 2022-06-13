@@ -1,7 +1,6 @@
 """Module for the snapshots database collected during the Offline stage."""
 
 import numpy as np
-import torch
 
 class Database():
     """
@@ -29,10 +28,10 @@ class Database():
 
         # if only parameters or snapshots are provided
         if (parameters is None) ^ (snapshots is None):
-            raise RuntimeError
+            raise RuntimeError("Parameters and Snapshots are not both provided")
 
         if space is not None and snapshots is None:
-            raise RuntimeError
+            raise RuntimeError("Snapshot data is not provided with Spatial data")
 
         if parameters is not None and snapshots is not None:
             if space is not None:
@@ -70,9 +69,8 @@ class Database():
         """
         The matrix containing spatial information (by row).
 
-        :rtype: numpy.ndarray        
+        :rtype: numpy.ndarray
         """
-
         return self._space
 
     def __getitem__(self, val):
@@ -84,11 +82,16 @@ class Database():
             original Database.
         """
         if self._space is None:
-            return Database(self._parameters[val], self._snapshots[val],
-                        self.scaler_parameters, self.scaler_snapshots)
-        else:
-            return Database(self._parameters[val], self._snapshots[val], 
-                        self.scaler_parameters, self.scaler_snapshots,self._space[val])
+            return Database(self._parameters[val], 
+                            self._snapshots[val],
+                            self.scaler_parameters, 
+                            self.scaler_snapshots)
+        
+        return Database(self._parameters[val],
+                        self._snapshots[val], 
+                        self.scaler_parameters,
+                        self.scaler_snapshots,
+                        self._space[val])
 
     def __len__(self):
         """
@@ -109,7 +112,7 @@ class Database():
         if len(parameters) != len(snapshots):
             raise RuntimeError('Different number of parameters and snapshots.')
 
-        if (self._space is not None):
+        if self._space is not None:
             if space is None:
                 raise RuntimeError('No Spatial Value given')
 
