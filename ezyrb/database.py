@@ -63,7 +63,7 @@ class Database():
             return self.scaler_snapshots.fit_transform(self._snapshots)
 
         return self._snapshots
-    
+
     @property
     def space(self):
         """
@@ -82,13 +82,13 @@ class Database():
             original Database.
         """
         if self._space is None:
-            return Database(self._parameters[val], 
+            return Database(self._parameters[val],
                             self._snapshots[val],
-                            self.scaler_parameters, 
+                            self.scaler_parameters,
                             self.scaler_snapshots)
         
         return Database(self._parameters[val],
-                        self._snapshots[val], 
+                        self._snapshots[val],
                         self.scaler_parameters,
                         self.scaler_snapshots,
                         self._space[val])
