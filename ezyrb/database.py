@@ -28,10 +28,12 @@ class Database():
 
         # if only parameters or snapshots are provided
         if (parameters is None) ^ (snapshots is None):
-            raise RuntimeError("Parameters and Snapshots are not both provided")
+            raise RuntimeError(
+                'Parameters and Snapshots are not both provided')
 
         if space is not None and snapshots is None:
-            raise RuntimeError("Snapshot data is not provided with Spatial data")
+            raise RuntimeError(
+                'Snapshot data is not provided with Spatial data')
 
         if parameters is not None and snapshots is not None:
             if space is not None:
@@ -86,7 +88,7 @@ class Database():
                             self._snapshots[val],
                             self.scaler_parameters,
                             self.scaler_snapshots)
-        
+
         return Database(self._parameters[val],
                         self._snapshots[val],
                         self.scaler_parameters,
@@ -110,7 +112,8 @@ class Database():
         :param array_like snapshots: the snapshots to add.
         """
         if len(parameters) != len(snapshots):
-            raise RuntimeError('Different number of parameters and snapshots.')
+            raise RuntimeError(
+                'Different number of parameters and snapshots.')
 
         if self._space is not None:
             if space is None:
@@ -118,7 +121,8 @@ class Database():
 
         if (self._space is not None) or (space is not None):
             if space.shape != snapshots.shape:
-                raise RuntimeError('shape of space and snapshots are different.')
+                raise RuntimeError(
+                    'shape of space and snapshots are different.')
 
 
         if self._parameters is None and self._snapshots is None:
