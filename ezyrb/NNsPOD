@@ -1,0 +1,30 @@
+import torch
+import ezyrb
+
+class NNsPOD(ezyrb.POD):
+    def __init__(self, 
+                interp_layers, interp_function, interp_stop_training, 
+                shift_layers, shift_function, shift_stop_training, 
+                loss=None, method = "svd"):
+        self.interp_net = ezyrb.ANN(interp_layers, interp_function, interp_stop_training, loss)
+        self.shift_net = ezyrb.ANN(shift_layers, shift_function, shift_stop_training, loss)
+        super().__init__(method)
+
+    def train_interp_net(self, input_data):
+
+        self.interp_net.fit(input_data.space(), input_data.snapshots())
+
+    def predict_interp_net(self, new_data):
+
+        return self.interp_net.predict(new_data)
+
+    def train_shift_net(self, input_data):
+
+        self.shift_net.fit(input_data.space(), input_data.snapshots())
+
+    def predict_shift_net(self, new_data):
+
+        return self.shift_net.predict(new_data)
+
+    
+    
