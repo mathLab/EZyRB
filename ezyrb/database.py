@@ -83,17 +83,31 @@ class Database():
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
         """
-        if self._space is None:
+        if isinstance(val, int):
+            if self._space is None:
+                return Database(np.array(self._parameters[val]),
+                                np.array(self._snapshots[val]),
+                                self.scaler_parameters,
+                                self.scaler_snapshots)
+
+            return Database(np.array(self._parameters[val]),
+                            np.array(self._snapshots[val]),
+                            self.scaler_parameters,
+                            self.scaler_snapshots,
+                            np.array(self._space[val]))
+
+        else:
+            if self._space is None:
+                return Database(self._parameters[val],
+                                self._snapshots[val],
+                                self.scaler_parameters,
+                                self.scaler_snapshots)
+
             return Database(self._parameters[val],
                             self._snapshots[val],
                             self.scaler_parameters,
-                            self.scaler_snapshots)
-
-        return Database(self._parameters[val],
-                        self._snapshots[val],
-                        self.scaler_parameters,
-                        self.scaler_snapshots,
-                        self._space[val])
+                            self.scaler_snapshots,
+                            self._space[val])
 
     def __len__(self):
         """

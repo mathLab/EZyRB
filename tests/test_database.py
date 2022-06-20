@@ -43,6 +43,12 @@ class TestDatabase(TestCase):
         new = org[2::2]
         assert new.parameters.shape[0] == new.snapshots.shape[0] == 4
     
+    def test_getitem_singular(self): 
+        org = Database(np.random.uniform(size=(10, 3)),
+                       np.random.uniform(size=(10, 8)))
+        new = org[2]
+        assert True
+    
     def test_getitem_space(self):
         org = Database(np.random.uniform(size=(10, 3)),
                        np.random.uniform(size=(10, 8)),
