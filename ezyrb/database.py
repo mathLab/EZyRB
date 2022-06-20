@@ -85,16 +85,16 @@ class Database():
         """
         if isinstance(val, int):
             if self._space is None:
-                return Database(np.array(self._parameters[val]),
-                                np.array(self._snapshots[val]),
+                return Database(np.reshape(self._parameters[val], (1,len(self._parameters[val]))),
+                                np.reshape(self._snapshots[val],(1,len(self._snapshots[val]))),
                                 self.scaler_parameters,
                                 self.scaler_snapshots)
 
-            return Database(np.array(self._parameters[val]),
-                            np.array(self._snapshots[val]),
+            return Database(np.reshape(self._parameters[val], (1,len(self._parameters[val]))),
+                            np.reshape(self._snapshots[val],(1,len(self._snapshots[val]))),
                             self.scaler_parameters,
                             self.scaler_snapshots,
-                            np.array(self._space[val]))
+                            np.reshape(self._space[val], (1,len(self._space[val]))))
 
         else:
             if self._space is None:
