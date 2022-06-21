@@ -83,6 +83,24 @@ class Database():
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
         """
+        if isinstance(val, int):
+            if self._space is None:
+                return Database(np.reshape(self._parameters[val],
+                                    (1,len(self._parameters[val]))),
+                                np.reshape(self._snapshots[val],
+                                    (1,len(self._snapshots[val]))),
+                                self.scaler_parameters,
+                                self.scaler_snapshots)
+
+            return Database(np.reshape(self._parameters[val],
+                                (1,len(self._parameters[val]))),
+                            np.reshape(self._snapshots[val],
+                                (1,len(self._snapshots[val]))),
+                            self.scaler_parameters,
+                            self.scaler_snapshots,
+                            np.reshape(self._space[val],
+                                (1,len(self._space[val]))))
+
         if self._space is None:
             return Database(self._parameters[val],
                             self._snapshots[val],
