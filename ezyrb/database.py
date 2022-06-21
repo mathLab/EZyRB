@@ -105,8 +105,13 @@ class Database():
             return Database(self._parameters[val],
                             self._snapshots[val],
                             self.scaler_parameters,
-                            self.scaler_snapshots,
-                            self._space[val])
+                            self.scaler_snapshots)
+
+        return Database(self._parameters[val],
+                        self._snapshots[val],
+                        self.scaler_parameters,
+                        self.scaler_snapshots,
+                        self._space[val])
 
     def __len__(self):
         """
