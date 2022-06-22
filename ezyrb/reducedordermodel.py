@@ -21,6 +21,8 @@ class ReducedOrderModel():
         model.
     :param ezyrb.Approximation approximation: the approximation method to use in
         reduced order model.
+    :param object scaler_red: the scaler for the reduced variables (eg. modal
+        coefficients). Default is None.
 
     :cvar ezyrb.Database database: the database used for training the reduced
         order model.
@@ -28,6 +30,8 @@ class ReducedOrderModel():
         model.
     :cvar ezyrb.Approximation approximation: the approximation method used in
         reduced order model.
+    :cvar object scaler_red: the scaler for the reduced variables (eg. modal
+        coefficients).
 
     :Example:
 
@@ -41,10 +45,11 @@ class ReducedOrderModel():
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, database, reduction, approximation):
+    def __init__(self, database, reduction, approximation, scaler_red=None):
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
+        self.scaler_red = scaler_red
 
     def fit(self, *args, **kwargs):
         r"""
@@ -54,9 +59,14 @@ class ReducedOrderModel():
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
         self.reduction.fit(self.database.snapshots.T)
+        reduced_output = self.reduction.transform(self.database.snapshots.T).T
+
+        if self.scaler_red:
+            reduced_output = self.scaler_red.fit_transform(reduced_output)
+
         self.approximation.fit(
             self.database.parameters,
-            self.reduction.transform(self.database.snapshots.T).T,
+            reduced_output,
             *args,
             **kwargs)
 
@@ -66,8 +76,22 @@ class ReducedOrderModel():
         """
         Calculate predicted solution for given mu
         """
-        predicted_sol = self.reduction.inverse_transform(
-            np.atleast_2d(self.approximation.predict(mu)).T)
+        mu = np.atleast_2d(mu)
+        if hasattr(self, 'database') and self.database.scaler_parameters:
+            mu = self.database.scaler_parameters.transform(mu)
+
+        predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
+
+        if self.scaler_red:  # rescale modal coefficients
+            predicted_red_sol = self.scaler_red.inverse_transform(
+                predicted_red_sol)
+
+        predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
+
+        if hasattr(self, 'database') and self.database.scaler_snapshots:
+            predicted_sol = self.database.scaler_snapshots.inverse_transform(
+                    predicted_sol.T).T
+
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
         else:
@@ -193,15 +217,16 @@ class ReducedOrderModel():
         db_range = list(range(len(self.database)))
 
         for j in db_range:
-            remaining_index = db_range[:]
-            remaining_index.remove(j)
-            new_db = self.database[remaining_index]
+            indeces = np.array([True] * len(self.database))
+            indeces[j] = False
+
+            new_db = self.database[indeces]
+            test_db = self.database[~indeces]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
 
-            error[j] = norm(self.database.snapshots[j] -
-                            rom.predict(self.database.parameters[j]))
+            error[j] = rom.test_error(test_db)
 
         return error
 
@@ -247,7 +272,7 @@ class ReducedOrderModel():
         simplex.
         Source from: `wikipedia.org/wiki/Simplex
         <https://en.wikipedia.org/wiki/Simplex>`_.
-        
+
         :param numpy.ndarray simplex_vertices: Nx3 array containing the
             parameter values representing the vertices of a simplex. N is the
             dimensionality of the parameters.

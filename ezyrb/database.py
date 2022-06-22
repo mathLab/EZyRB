@@ -35,6 +35,10 @@ class Database():
             raise RuntimeError(
                 'Snapshot data is not provided with Spatial data')
 
+        if space is not None and snapshots is None:
+            raise RuntimeError(
+                'Snapshot data is not provided with Spatial data')
+
         if parameters is not None and snapshots is not None:
             if space is not None:
                 self.add(parameters, snapshots, space)
