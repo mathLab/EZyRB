@@ -82,25 +82,6 @@ class Database():
         """
         return self._space
 
-    @property
-    def space(self):
-        """
-        The matrix containing spatial information (by row).
-
-        :rtype: numpy.ndarray        
-        """
-
-        return self._space
-
-    @property
-    def space(self):
-        """
-        The matrix containing spatial information (by row).
-
-        :rtype: numpy.ndarray
-        """
-        return self._space
-
     def __getitem__(self, val):
         """
         This method returns a new Database with the selected parameters and
@@ -167,26 +148,6 @@ class Database():
             if space.shape != snapshots.shape:
                 raise RuntimeError(
                     'shape of space and snapshots are different.')
-
-
-        if (self._space is not None):
-            if space is None:
-                raise RuntimeError('No Spatial Value given')
-
-        if (self._space is not None) or (space is not None):
-            if space.shape != snapshots.shape:
-                raise RuntimeError('shape of space and snapshots are different.')
-
-
-        if self._space is not None:
-            if space is None:
-                raise RuntimeError('No Spatial Value given')
-
-        if (self._space is not None) or (space is not None):
-            if space.shape != snapshots.shape:
-                raise RuntimeError(
-                    'shape of space and snapshots are different.')
-
 
         if self._parameters is None and self._snapshots is None:
             self._parameters = parameters
