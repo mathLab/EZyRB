@@ -36,9 +36,6 @@ class Database():
                 'Snapshot data is not provided with Spatial data')
 
         if space is not None and snapshots is None:
-            raise RuntimeError
-
-        if space is not None and snapshots is None:
             raise RuntimeError(
                 'Snapshot data is not provided with Spatial data')
 
@@ -149,11 +146,13 @@ class Database():
                 raise RuntimeError(
                     'shape of space and snapshots are different.')
 
+
         if self._parameters is None and self._snapshots is None:
             self._parameters = parameters
             self._snapshots = snapshots
             if self._space is None:
                 self._space = space
+
         elif self._space is None:
             self._parameters = np.vstack([self._parameters, parameters])
             self._snapshots = np.vstack([self._snapshots, snapshots])
