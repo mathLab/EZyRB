@@ -2,7 +2,6 @@
 
 import numpy as np
 from scipy.interpolate import RBFInterpolator
-
 from .approximation import Approximation
 
 
@@ -16,7 +15,7 @@ class RBF(Approximation):
         the approximation. 0 is for interpolation (default), the function will
         always go through the nodal points in this case.
     :param int neighbors: if specified, the value of the interpolant at each
-        evaluation point will be computed using only this many nearest data points.
+        evaluation point will be computed using only the nearest data points.
         If None (default), all the data points are used by default.
     :param float epsilon: Shape parameter that scales the input to the RBF.
         If kernel is ‘linear’, ‘thin_plate_spline’, ‘cubic’, or ‘quintic’, this
@@ -51,8 +50,9 @@ class RBF(Approximation):
         self.smooth = smooth
         self.neighbors = neighbors
         self.degree = degree
-        self.epsilon = epsilon
+        self.epsilon = None
         self.interpolators = None
+        self.xi = None
 
     def fit(self, points, values):
         """
@@ -61,6 +61,21 @@ class RBF(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
+        self.xi = np.asarray([np.asarray(a, dtype=np.float_).flatten()
+                              for a in points])
+        N = self.xi.shape[-1]
+
+        if self.epsilon is None:
+            # default epsilon is the "the average distance between nodes" based
+            # on a bounding hypercube
+            ximax = np.amax(self.xi, axis=0)
+            ximin = np.amin(self.xi, axis=0)
+            edges = ximax - ximin
+            edges = edges[np.nonzero(edges)]
+            self.epsilon = np.power(np.prod(edges)/N, 1.0/edges.size)
+            if self.kernel in ['thin_plate_spline', 'cubic', 'quintic']:
+                self.epsilon = 1
+
         self.interpolators = []
         for value in values.T:
             self.interpolators.append(

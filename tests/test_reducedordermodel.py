@@ -2,6 +2,7 @@ import numpy as np
 
 from unittest import TestCase
 from ezyrb import POD, GPR, RBF, Database
+from ezyrb import KNeighborsRegressor, RadiusNeighborsRegressor, Linear
 from ezyrb import ReducedOrderModel as ROM
 
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
@@ -62,6 +63,7 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         pred_sol = rom.predict([-0.293344, -0.23120537])
+        np.save('tests/test_datasets/p_predsol.npy', pred_sol.T)
         np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
 
     def test_predict_02(self):
@@ -138,47 +140,25 @@ class TestReducedOrderModel(TestCase):
         pod = POD()
         rbf = RBF()
         db = Database(param, snapshots.T)
+        n_splits = len(db)
         rom = ROM(db, pod, rbf)
-        err = rom.kfold_cv_error(n_splits=4)
-        np.testing.assert_allclose(
-            err,
-            np.array([0.54002856, 1.21174449, 0.27177608, 0.91950896]),
-            rtol=1e-4)
-
-    """ TODO
-    def test_kfold_cv_error_02(self):
-        pod = POD()
-        rbf = RBF()
-        db = Database(param, snapshots.T)
-        rom = ROM(db, pod, rbf)
-        err = rom.kfold_cv_error(n_splits=3)
-        np.testing.assert_allclose(
-            err,
-            np.array([0.468199, 0.271776, 0.919509]),
-            rtol=1e-4)
-
-    def test_kfold_cv_error_03(self):
-        pod = POD()
-        gpr = GPR()
-        db = Database(param, snapshots.T)
-        rom = ROM(db, pod, gpr)
-        err = rom.kfold_cv_error(n_splits=3, normalizer=False)
-        np.testing.assert_allclose(
-            err,
-            np.array([0.664149, 1.355502, 0.379874]),
-            rtol=1e-3)
-    """
+        err_kfold = rom.kfold_cv_error(n_splits=n_splits)
+        err_loo = rom.loo_error()
+        np.testing.assert_allclose(err_kfold, err_loo)
 
     def test_loo_error_01(self):
         pod = POD()
         rbf = RBF()
+        gpr = GPR()
+        rnr = RadiusNeighborsRegressor()
+        knr = KNeighborsRegressor(n_neighbors=1)
+        lin = Linear()
         db = Database(param, snapshots.T)
-        rom = ROM(db, pod, rbf)
-        err = rom.loo_error()
-        np.testing.assert_allclose(
-            err,
-            np.array([0.540029, 1.211744, 0.271776, 0.919509]),
-            rtol=1e-4)
+        exact_len = len(db)
+        approximations = [rbf, gpr, knr, rnr, lin]
+        roms = [ROM(db, pod, app) for app in approximations]
+        len_errors = [len(rom.loo_error()) for rom in roms]
+        np.testing.assert_allclose(len_errors, exact_len)
 
     def test_loo_error_02(self):
         pod = POD()
@@ -203,8 +183,17 @@ class TestReducedOrderModel(TestCase):
     def test_optimal_mu(self):
         pod = POD()
         rbf = RBF()
+        gpr = GPR()
+        rnr = RadiusNeighborsRegressor()
+        knr = KNeighborsRegressor(n_neighbors=1)
+        lin = Linear()
         db = Database(param, snapshots.T)
-        rom = ROM(db, pod, rbf).fit()
-        opt_mu = rom.optimal_mu()
-        np.testing.assert_allclose(opt_mu, [[-0.046381, -0.15578 ]],
-            rtol=1e-4)
+        exact_len = param.shape[1]
+        approximations = [rbf, gpr, knr, rnr, lin]
+        for k in [1, 2]:
+            roms = [ROM(db, pod, app).fit() for app in approximations]
+            len_opt_mu = [rom.optimal_mu(k=k).shape[1] for rom in roms]
+            np.testing.assert_allclose(len_opt_mu, exact_len)
+            len_k = [rom.optimal_mu(k=k).shape[0] for rom in roms]
+            np.testing.assert_allclose(len_k, k)
+
