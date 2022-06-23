@@ -50,7 +50,7 @@ class RBF(Approximation):
         self.smooth = smooth
         self.neighbors = neighbors
         self.degree = degree
-        self.epsilon = None
+        self.epsilon = epsilon
         self.interpolators = None
         self.xi = None
 
