@@ -7,7 +7,6 @@ import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
 
-
 class ReducedOrderModel():
     """
     Reduced Order Model class.
@@ -243,7 +242,7 @@ class ReducedOrderModel():
         :param int k: the number of optimal points to return. Default value is
             1.
         :return: the optimal points
-        :rtype: list(numpy.ndarray)
+        :rtype: numpy.ndarray
         """
         if error is None:
             error = self.loo_error()
@@ -264,7 +263,7 @@ class ReducedOrderModel():
             barycentric_point.append(
                 np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
 
-        return barycentric_point
+        return np.asarray(barycentric_point)
 
     def _simplex_volume(self, vertices):
         """
