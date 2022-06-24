@@ -24,8 +24,7 @@ class RBF(Approximation):
         the minimum degree for kernel or 0 if there is no minimum degree.
 
     :cvar kernel: The radial basis function; the default is ‘multiquadric’.
-    :cvar list interpolators: the RBF interpolators (the number of
-        interpolators depenend by the dimensionality of the output)
+    :cvar interpolator: the RBF interpolator
 
     :Example:
 
@@ -51,7 +50,7 @@ class RBF(Approximation):
         self.neighbors = neighbors
         self.degree = degree
         self.epsilon = epsilon
-        self.interpolators = None
+        self.interpolator = None
         self.xi = None
 
     def fit(self, points, values):
@@ -83,7 +82,7 @@ class RBF(Approximation):
             kernel=self.kernel,
             epsilon=self.epsilon,
             degree=self.degree)
-        
+
     def predict(self, new_point):
         """
         Evaluate interpolator at given `new_points`.
