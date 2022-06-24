@@ -61,8 +61,7 @@ class RBF(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        self.xi = np.asarray([np.asarray(a, dtype=np.float_).flatten()
-                              for a in points])
+        self.xi = np.asarray(points)
         N = self.xi.shape[-1]
 
         if self.epsilon is None:
@@ -76,16 +75,15 @@ class RBF(Approximation):
             if self.kernel in ['thin_plate_spline', 'cubic', 'quintic']:
                 self.epsilon = 1
 
-        self.interpolators = []
-        for value in values.T:
-            self.interpolators.append(
-                RBFInterpolator(points, value,
-                                neighbors=self.neighbors,
-                                smoothing=self.smooth,
-                                kernel=self.kernel,
-                                epsilon=self.epsilon,
-                                degree=self.degree))
-
+        self.interpolator = RBFInterpolator(
+            points,
+            value,
+            neighbors=self.neighbors,
+            smoothing=self.smooth,
+            kernel=self.kernel,
+            epsilon=self.epsilon,
+            degree=self.degree)
+        
     def predict(self, new_point):
         """
         Evaluate interpolator at given `new_points`.
@@ -94,6 +92,4 @@ class RBF(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        new_point = np.array(new_point)
-        return np.array([interp(new_point)
-                         for interp in self.interpolators]).T
+        return self.interpolator(np.asarray(new_point))
