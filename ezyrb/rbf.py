@@ -77,7 +77,7 @@ class RBF(Approximation):
 
         self.interpolator = RBFInterpolator(
             points,
-            value,
+            values,
             neighbors=self.neighbors,
             smoothing=self.smooth,
             kernel=self.kernel,
