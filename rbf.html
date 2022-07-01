@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RBF &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>RBF &mdash; EZyRB 1.2.1.post2207 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2206
+                1.2.1.post2207
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -108,7 +108,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">RBF</code><span class="sig-paren">(</span><em class="sig-param">kernel='multiquadric'</em>, <em class="sig-param">smooth=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">RBF</code><span class="sig-paren">(</span><em class="sig-param">kernel='thin_plate_spline'</em>, <em class="sig-param">smooth=0</em>, <em class="sig-param">neighbors=None</em>, <em class="sig-param">epsilon=None</em>, <em class="sig-param">degree=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/rbf.html#RBF"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
 <p>Multidimensional interpolator using Radial Basis Function.</p>
 <dl class="field-list">
@@ -118,13 +118,20 @@
 <li><p><strong>smooth</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – values greater than zero increase the smoothness of
 the approximation. 0 is for interpolation (default), the function will
 always go through the nodal points in this case.</p></li>
+<li><p><strong>neighbors</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – if specified, the value of the interpolant at each
+evaluation point will be computed using only the nearest data points.
+If None (default), all the data points are used by default.</p></li>
+<li><p><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – Shape parameter that scales the input to the RBF.
+If kernel is ‘linear’, ‘thin_plate_spline’, ‘cubic’, or ‘quintic’, this
+defaults to 1 and can be ignored. Otherwise, this must be specified.</p></li>
+<li><p><strong>degree</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – Degree of the added polynomial. The default value is
+the minimum degree for kernel or 0 if there is no minimum degree.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Variables</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>kernel</strong> – The radial basis function; the default is ‘multiquadric’.</p></li>
-<li><p><strong>interpolators</strong> (<em>list</em>) – the RBF interpolators (the number of
-interpolators depenend by the dimensionality of the output)</p></li>
+<li><p><strong>interpolator</strong> – the RBF interpolator</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Example</dt>
@@ -172,7 +179,7 @@ interpolators depenend by the dimensionality of the output)</p></li>
 <dd class="field-even"><p>the interpolated values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -193,7 +200,7 @@ interpolators depenend by the dimensionality of the output)</p></li>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Jun 01, 2022.
+      <span class="lastupdated">Last updated on Jul 01, 2022.
       </span></p>
   </div>
 

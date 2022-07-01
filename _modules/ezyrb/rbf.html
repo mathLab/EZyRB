@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.rbf &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.rbf &mdash; EZyRB 1.2.1.post2207 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2206
+                1.2.1.post2207
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -72,8 +72,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Module for Radial Basis Function Interpolation.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">Rbf</span>
-
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">RBFInterpolator</span>
 <span class="kn">from</span> <span class="nn">.approximation</span> <span class="kn">import</span> <span class="n">Approximation</span>
 
 
@@ -86,10 +85,17 @@
 <span class="sd">    :param float smooth: values greater than zero increase the smoothness of</span>
 <span class="sd">        the approximation. 0 is for interpolation (default), the function will</span>
 <span class="sd">        always go through the nodal points in this case.</span>
+<span class="sd">    :param int neighbors: if specified, the value of the interpolant at each</span>
+<span class="sd">        evaluation point will be computed using only the nearest data points.</span>
+<span class="sd">        If None (default), all the data points are used by default.</span>
+<span class="sd">    :param float epsilon: Shape parameter that scales the input to the RBF.</span>
+<span class="sd">        If kernel is ‘linear’, ‘thin_plate_spline’, ‘cubic’, or ‘quintic’, this</span>
+<span class="sd">        defaults to 1 and can be ignored. Otherwise, this must be specified.</span>
+<span class="sd">    :param int degree: Degree of the added polynomial. The default value is</span>
+<span class="sd">        the minimum degree for kernel or 0 if there is no minimum degree.</span>
 
 <span class="sd">    :cvar kernel: The radial basis function; the default is ‘multiquadric’.</span>
-<span class="sd">    :cvar list interpolators: the RBF interpolators (the number of</span>
-<span class="sd">        interpolators depenend by the dimensionality of the output)</span>
+<span class="sd">    :cvar interpolator: the RBF interpolator</span>
 
 <span class="sd">    :Example:</span>
 
@@ -104,10 +110,19 @@
 <span class="sd">         &gt;&gt;&gt; print(np.allclose(y, y_pred))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;multiquadric&#39;</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;thin_plate_spline&#39;</span><span class="p">,</span>
+                 <span class="n">smooth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">neighbors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">degree</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="n">smooth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">interpolators</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span> <span class="o">=</span> <span class="n">neighbors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="n">degree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xi</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RBF.fit"><a class="viewcode-back" href="../../rbf.html#ezyrb.rbf.RBF.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -116,11 +131,28 @@
 <span class="sd">        :param array_like points: the coordinates of the points.</span>
 <span class="sd">        :param array_like values: the values in the points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">interpolators</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">:</span>
-            <span class="n">argument</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">points</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">interpolators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">Rbf</span><span class="p">(</span><span class="o">*</span><span class="n">argument</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smooth</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># default epsilon is the &quot;the average distance between nodes&quot; based</span>
+            <span class="c1"># on a bounding hypercube</span>
+            <span class="n">ximax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">ximin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xi</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="n">ximax</span> <span class="o">-</span> <span class="n">ximin</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">edges</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">edges</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;thin_plate_spline&#39;</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="s1">&#39;quintic&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span> <span class="o">=</span> <span class="n">RBFInterpolator</span><span class="p">(</span>
+            <span class="n">points</span><span class="p">,</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">,</span>
+            <span class="n">smoothing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smooth</span><span class="p">,</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
+            <span class="n">epsilon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span>
+            <span class="n">degree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RBF.predict"><a class="viewcode-back" href="../../rbf.html#ezyrb.rbf.RBF.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_point</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -130,9 +162,7 @@
 <span class="sd">        :return: the interpolated values.</span>
 <span class="sd">        :rtype: numpy.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_point</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">interp</span><span class="p">(</span><span class="o">*</span><span class="n">new_point</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-                         <span class="k">for</span> <span class="n">interp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolators</span><span class="p">])</span><span class="o">.</span><span class="n">T</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">new_point</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>
@@ -143,7 +173,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Jun 01, 2022.
+      <span class="lastupdated">Last updated on Jul 01, 2022.
       </span></p>
   </div>
 

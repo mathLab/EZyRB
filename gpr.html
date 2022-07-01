@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPR &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>GPR &mdash; EZyRB 1.2.1.post2207 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2206
+                1.2.1.post2207
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -117,9 +117,9 @@
 <dl class="field-list">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – the array containing the input points,
+<li><p><strong>X_sample</strong> (<em>numpy.ndarray</em>) – the array containing the input points,
 arranged by row.</p></li>
-<li><p><strong>Y_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – the array containing the output values,
+<li><p><strong>Y_sample</strong> (<em>numpy.ndarray</em>) – the array containing the output values,
 arranged by row.</p></li>
 <li><p><strong>model</strong> (<em>GPy.models.GPRegression</em>) – the regression model.</p></li>
 </ul>
@@ -171,7 +171,7 @@ starting points) is adopted for the optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – the boundaries in the gradient
+<li><p><strong>bounds</strong> (<em>numpy.ndarray</em>) – the boundaries in the gradient
 optimization. The shape must be (<em>input_dim</em>, 2), where <em>input_dim</em>
 is the dimension of the input points.</p></li>
 <li><p><strong>optimization_restart</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of restart in the gradient
@@ -198,7 +198,7 @@ Default is False.</p></li>
 <dd class="field-even"><p>the mean and the variance</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(numpy.ndarray, numpy.ndarray)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,7 +219,7 @@ Default is False.</p></li>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Jun 01, 2022.
+      <span class="lastupdated">Last updated on Jul 01, 2022.
       </span></p>
   </div>
 

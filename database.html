@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Database &mdash; EZyRB 1.2.1.post2206 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Database &mdash; EZyRB 1.2.1.post2207 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.2.1.post2206
+                1.2.1.post2207
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -117,7 +117,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em>, <em class="sig-param">snapshots=None</em>, <em class="sig-param">scaler_parameters=None</em>, <em class="sig-param">scaler_snapshots=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em>, <em class="sig-param">snapshots=None</em>, <em class="sig-param">scaler_parameters=None</em>, <em class="sig-param">scaler_snapshots=None</em>, <em class="sig-param">space=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Database class</p>
 <dl class="field-list simple">
@@ -129,12 +129,13 @@
 is None meaning no scaling.</p></li>
 <li><p><strong>scaler_snapshots</strong> (<em>Scale</em>) – the scaler for the snapshots. Default is
 None meaning no scaling.</p></li>
+<li><p><strong>space</strong> (<em>array_like</em>) – the input spatial data</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt>
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">parameters</em>, <em class="sig-param">snapshots</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.add"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">parameters</em>, <em class="sig-param">snapshots</em>, <em class="sig-param">space=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.add"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Add (by row) new sets of snapshots and parameters to the original
 database.</p>
 <dl class="field-list simple">
@@ -153,7 +154,7 @@ database.</p>
 <dd><p>The matrix containing the input parameters (by row).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -164,7 +165,18 @@ database.</p>
 <dd><p>The matrix containing the snapshots (by row).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)">numpy.ndarray</a></p>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">space</code></dt>
+<dd><p>The matrix containing spatial information (by row).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -185,7 +197,7 @@ database.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Jun 01, 2022.
+      <span class="lastupdated">Last updated on Jul 01, 2022.
       </span></p>
   </div>
 
