@@ -99,7 +99,7 @@ class ANN(Approximation):
         layers_torch.append(nn.Linear(layers[-2], layers[-1]))
         self.model = nn.Sequential(*layers_torch)
 
-    def fit(self, points, values):
+    def fit(self, points, values, optimizer = torch.optim.Adam, learning_rate = 0.001, frequency_print = 0):
         """
         Build the ANN given 'points' and 'values' and perform training.
 
@@ -119,14 +119,16 @@ class ANN(Approximation):
         :param numpy.ndarray points: the coordinates of the given (training)
             points.
         :param numpy.ndarray values: the (training) values in the points.
+        :param torch.optimizer optimizer: the optimizer used for the neural network
+        :param float learning_rate: learning rate used in the optimizer
+        :param int frequency_print: the number of epochs between the print of each loss value
         """
 
         self._build_model(points, values)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr = 0.01)
+        self.optimizer = optimizer(self.model.parameters(), lr = learning_rate)
 
         points = self._convert_numpy_to_torch(points)
         values = self._convert_numpy_to_torch(values)
-        print(points.shape, values.shape)
         n_epoch = 1
         flag = True
         while flag:
@@ -143,7 +145,9 @@ class ANN(Approximation):
                 elif isinstance(criteria, float):  # stop criteria is float
                     if loss.item() < criteria:
                         flag = False
-            print(loss.item())
+            if frequency_print != 0:
+                if n_epoch % frequency_print == 1:
+                    print(loss.item())
             n_epoch += 1
 
     def predict(self, new_point):
@@ -157,10 +161,7 @@ class ANN(Approximation):
         new_point = self._convert_numpy_to_torch(np.array(new_point))
         y_new = self.model(new_point)
         return self._convert_torch_to_numpy(y_new)
-    
-    def predict_tensor(self, new_point):
-        
-        return self.model(new_point)
+
 
     def save_state(self, filename):
 
@@ -171,18 +172,13 @@ class ANN(Approximation):
                     'model_class' : self.model.__class__
             }
 
-
-            
             torch.save(checkpoint, filename)
 
     def load_state(self, filename, points, values):
 
         checkpoint = torch.load(filename)
 
-        
-
         self._build_model(points, values)
-        print(self.model)
         self.optimizer = checkpoint['optimizer_class']
 
         self.model.load_state_dict(checkpoint['model_state'])
