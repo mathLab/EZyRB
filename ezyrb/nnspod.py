@@ -9,11 +9,27 @@ from .database import Database
 
 
 class NNsPOD(POD):
-    def __init__(self, method = "svd", path = None):
+    def __init__(self,
+                 interp_loss, interp_layers, interp_function, interp_stop_training, ref_point,
+                 shift_layers, shift_function, shift_stop_training, shift_loss = nn.MSELoss(),
+                 method = "svd"):
+        '''
+        :param list interp_layers: list with number of neurons in each layer
+        :param torch.nn.modules.activation interp_function: activation function for the interpnet
+        :param float interp_stop_training: desired tolerance for the interp training
+        :param torch.nn.Module interp_loss: loss function (MSE default)
+        '''
         ## add loss, layers, and functions variables
         super().__init__(method)
-        self.path = path
-
+        self.interp_loss = interp_loss
+        self.interp_layers = interp_layers
+        self.interp_function = interp_function
+        self.interp_stop_training = interp_stop_training
+        self.shift_loss = shift_loss
+        self.shift_layers = shift_layers
+        self.shift_function = shift_function
+        self.shift_stop_training = shift_stop_training
+        self.ref_point = ref_point
 
     def reshape2dto1d(self, x, y):
         """
@@ -35,19 +51,19 @@ class NNsPOD(POD):
         """
         return snapshots.reshape(int(np.sqrt(len(snapshots))), int(np.sqrt(len(snapshots))))
 
-    def train_interpnet(self,ref_data, interp_layers, interp_function, interp_stop_training, interp_loss, retrain = False, frequency_print = 0, save = True):
+    def train_interpnet(self,ref_data, retrain = False, frequency_print = 0, save = True, interp_file = None):
         """
         trains the Interpnet given 1d data:
 
         :param database ref_data: the reference data that the rest of the data will be shifted to
-        :param list interp_layers: list with number of neurons in each layer
-        :param torch.nn.modules.activation interp_function: activation function for the interpnet
-        :param float interp_stop_training: desired tolerance for the interp training
-        :param torch.nn.Module interp_loss: loss function (MSE default)
+        
         :param boolean retrain: True if the interpNetShould be retrained, False if it should be loaded
         """
+        if interp_file:
+            print(interp_file)
+            self.interp_path = interp_file
 
-        self.interp_net = ANN(interp_layers, interp_function, interp_stop_training, interp_loss)
+        self.interp_net = ANN(self.interp_layers, self.interp_function, self.interp_stop_training, self.interp_loss)
         if len(ref_data.space.shape) > 2:
             space = ref_data.space.reshape(-1, 2)
         else:
@@ -55,16 +71,16 @@ class NNsPOD(POD):
         snapshots = ref_data.snapshots.reshape(-1,1)
         if not retrain:
             try:
-                self.interp_net = self.interp_net.load_state(self.path, space, snapshots)
+                self.interp_net = self.interp_net.load_state(self.interp_path, space, snapshots)
                 print("loaded interpnet")
             except:
                 self.interp_net.fit(space, snapshots, frequency_print = frequency_print)
                 if save:
-                    self.interp_net.save_state(self.path)
+                    self.interp_net.save_state(self.interp_path)
         else:
             self.interp_net.fit(space, snapshots, frequency_print = frequency_print)
             if save:
-                self.interp_net.save_state(self.path)
+                self.interp_net.save_state(self.interp_path)
 
     def shift(self, x, y, shift_quantity):
         """
@@ -118,15 +134,15 @@ class NNsPOD(POD):
         layers_torch.append(nn.Linear(layers[-2], layers[-1]))
         self.model = nn.Sequential(*layers_torch)
 
-    def train_shiftnet(self, db, shift_layers, shift_function, shift_stop_training, 
-                        ref_data, preshift = False, 
-                        optimizer = torch.optim.Adam, learning_rate = 0.0001, frequency_print = 0):
+    def train_shiftnet(self, db, ref_data, preshift = False, 
+                       optimizer = torch.optim.Adam, learning_rate = 0.0001, 
+                       frequency_print = 0):
         """
         Trains and evaluates shiftnet given 1d data 'db'
 
         :param Database db: data at a certain parameter value
         :param list shift_layers: ordered list with number of neurons in each layer
-        :param torch.nn.modeulse.activation shift_function: the activation function used by the shiftnet
+        :param torch.nn.module.activation shift_function: the activation function used by the shiftnet
         :param int, float, or list stop_training: 
             int: number of epochs before stopping
             float: desired tolarance before stopping training
@@ -134,9 +150,8 @@ class NNsPOD(POD):
         :param Database db: data at the reference datapoint
         :param boolean preshift: True if preshift is desired otherwise false.
         """
-        self.layers = shift_layers
-        self.function = shift_function
-        self.loss_trend = []
+        self.layers = self.shift_layers
+        self.function = self.shift_function
         if preshift:
             x = self.pre_shift(db.space[0], db.snapshots[0], ref_data.snapshots[0])
         else:
@@ -150,13 +165,14 @@ class NNsPOD(POD):
 
         values = db.snapshots.reshape(-1,1)
 
-        self.stop_training = shift_stop_training
+        self.stop_training = self.shift_stop_training
         points = self.make_points(x, db.parameters)
 
         self.optimizer = optimizer(self.model.parameters(), lr = learning_rate)
 
-        self.loss = torch.nn.MSELoss()
+        self.loss = self.shift_loss
         points = torch.from_numpy(points).float()
+        self.loss_trend = []
         n_epoch = 1
         flag = True
         while flag:
@@ -191,20 +207,20 @@ class NNsPOD(POD):
         x_ret = x_new.detach().numpy()
         return x_ret
     
-    def fit(self, db, ref_point, interp_loss, interp_function, interp_layers,
-            shift_loss, shift_function,shift_layers):
+    def fit(self, db, interp_file):
+        self.interp_path = interp_file
         ## input variables: load files.
-        self.train_interpnet(db[ref_point], interp_layers, interp_function, interp_loss, None, retrain  = False, frequency_print = 25)
+        self.train_interpnet(db[self.ref_point], retrain  = False, frequency_print = 25)
         new_x = np.zeros(shape = db.space.shape)
         i = 0
         while i < db.parameters.shape[0]:
             if len(db.space.shape) > 2:
-                new_x[i] = self.train_shiftnet(db[i], shift_layers, shift_function, shift_loss, db[ref_point], preshift = True, frequency_print = 50).reshape(-1, 2)
+                new_x[i] = self.train_shiftnet(db[i], db[self.ref_point], preshift = True, frequency_print = 50).reshape(-1, 2)
             else:
-                new_x[i] = self.train_shiftnet(db[i], shift_layers, shift_function, shift_loss, db[ref_point], preshift = True, frequency_print = 50).reshape(-1)
+                new_x[i] = self.train_shiftnet(db[i], db[self.ref_point], preshift = True, frequency_print = 50).reshape(-1)
             i+=1
-            if i == ref_point:
-                new_x[ref_point] = db.space[ref_point]
+            if i == self.ref_point:
+                new_x[self.ref_point] = db.space[self.ref_point]
                 i +=1
         db = Database(space = new_x, snapshots = db.snapshots, parameters = db.parameters)
 
@@ -212,13 +228,15 @@ class NNsPOD(POD):
         new_snapshots = np.zeros(shape = db.snapshots.shape)
         new_space = np.zeros(shape = db.space.shape)
         while i < db.parameters.shape[0]:
-            self.train_interpnet(db[i], interp_layers, interp_function, interp_loss, None, retrain  = True, frequency_print = 200, save = False)
-            new_snapshots[i] = self.interp_net.model(torch.from_numpy(db.space[ref_point].reshape(-1,1)).float()).detach().numpy().reshape(-1)
-            new_space[i] = db.space[ref_point]
+            if len(db.space.shape) > 2:
+                new_snapshots[i] = self.interp_net.model(torch.from_numpy(db.space[i].reshape(-1,2)).float()).detach().numpy().reshape(-1)
+            else:
+                new_snapshots[i] = self.interp_net.model(torch.from_numpy(db.space[i].reshape(-1,1)).float()).detach().numpy().reshape(-1)
+            new_space[i] = db.space[self.ref_point]
             i+=1
-            if i == ref_point:
-                new_snapshots[ref_point] = db.snapshots[ref_point]
-                new_space[ref_point] =  db.space[ref_point]
+            if i == self.ref_point:
+                new_snapshots[self.ref_point] = db.snapshots[self.ref_point]
+                new_space[self.ref_point] =  db.space[self.ref_point]
                 i +=1
 
         db = Database(space = new_space, snapshots = new_snapshots, parameters = db.parameters)

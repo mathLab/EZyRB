@@ -149,7 +149,7 @@ class Database():
                 raise RuntimeError('No Spatial Value given')
 
         if (self._space is not None) or (space is not None):
-            if space.shape != snapshots.shape:
+             if len(space) != len(snapshots) or len(space[0]) != len(snapshots[0]):
                 raise RuntimeError(
                     'shape of space and snapshots are different.')
 
