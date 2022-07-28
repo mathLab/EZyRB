@@ -11,7 +11,9 @@ except ImportError:
 import numpy as np
 
 from .reduction import Reduction
-
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class POD(Reduction):
     def __init__(self, method='svd', **kwargs):
@@ -101,6 +103,8 @@ class POD(Reduction):
         """
         return self._singular_values
 
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self, X):
         """
         Create the reduced space for the given snapshots `X` using the
@@ -111,21 +115,39 @@ class POD(Reduction):
         self._modes, self._singular_values = self.__method(X)
         return self
 
-    def transform(self, X):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def transform(self, X, scaler_red):
         """
         Reduces the given snapshots.
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        return self.modes.T.conj().dot(X)
+        reduced_output = (self.modes.T.conj().dot(X)).T       
+        if scaler_red:
+            reduced_output = scaler_red.fit_transform(reduced_output)
+        return reduced_output
 
-    def inverse_transform(self, X):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def inverse_transform(self, X, database):
         """
         Projects a reduced to full order solution.
 
         :type: numpy.ndarray
         """
-        return self.modes.dot(X)
+        predicted_sol = self.modes.dot(X)
+
+        if database and database.scaler_snapshots:
+            predicted_sol = database.scaler_snapshots.inverse_transform(
+                    predicted_sol.T).T
+
+        if 1 in predicted_sol.shape:
+            predicted_sol = predicted_sol.ravel()
+        else:
+            predicted_sol = predicted_sol.T
+        
+        return predicted_sol
 
     def reduce(self, X):
         """

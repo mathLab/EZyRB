@@ -6,7 +6,9 @@ import torch
 import torch.nn as nn
 import numpy as np
 from .approximation import Approximation
-
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class ANN(Approximation):
     def __init__(self, layers, function, stop_training, loss=None):
@@ -99,6 +101,8 @@ class ANN(Approximation):
         layers_torch.append(nn.Linear(layers[-2], layers[-1]))
         self.model = nn.Sequential(*layers_torch)
 
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self, points, values):
         """
         Build the ANN given 'points' and 'values' and perform training.
@@ -146,7 +150,9 @@ class ANN(Approximation):
 
             n_epoch += 1
 
-    def predict(self, new_point):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def predict(self, new_point, scaler_red):
         """
         Evaluate the ANN at given 'new_points'.
 
@@ -156,4 +162,9 @@ class ANN(Approximation):
         """
         new_point = self._convert_numpy_to_torch(np.array(new_point))
         y_new = self.model(new_point)
-        return self._convert_torch_to_numpy(y_new)
+        predicted_red_sol = np.atleast_2d(self._convert_torch_to_numpy(y_new))
+        if scaler_red:  # rescale modal coefficients
+            predicted_red_sol = scaler_red.inverse_transform(
+                predicted_red_sol)
+        predicted_red_sol = predicted_red_sol.T
+        return predicted_red_sol

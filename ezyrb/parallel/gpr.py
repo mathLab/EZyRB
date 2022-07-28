@@ -6,7 +6,9 @@ from scipy.optimize import minimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 
 from .approximation import Approximation
-
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class GPR(Approximation):
     """
@@ -35,6 +37,8 @@ class GPR(Approximation):
         self.Y_sample = None
         self.model = None
 
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self,
             points,
             values,
@@ -65,7 +69,9 @@ class GPR(Approximation):
             normalize_y=normalizer)
         self.model.fit(self.X_sample, self.Y_sample)
 
-    def predict(self, new_points, return_variance=False):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def predict(self, new_points, scaler_red, return_variance=False):
         """
         Predict the mean and the variance of Gaussian distribution at given
         `new_points`.
@@ -77,7 +83,12 @@ class GPR(Approximation):
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
         new_points = np.atleast_2d(new_points)
-        return self.model.predict(new_points, return_std=return_variance)
+        predicted_red_sol = np.atleast_2d(self.model.predict(new_points, return_std=return_variance))
+        if scaler_red:  # rescale modal coefficients
+            predicted_red_sol = scaler_red.inverse_transform(
+                predicted_red_sol)
+        predicted_red_sol = predicted_red_sol.T
+        return predicted_red_sol
 
     def optimal_mu(self, bounds, optimization_restart=10):
         """

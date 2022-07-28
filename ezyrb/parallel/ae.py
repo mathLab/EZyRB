@@ -6,7 +6,10 @@ import torch
 import torch.nn as nn
 from .reduction import Reduction
 from .ann import ANN
-
+import numpy as np  
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class AE(Reduction, ANN):
     """
@@ -141,6 +144,8 @@ class AE(Reduction, ANN):
         # Creating the model adding the encoder and the decoder
         self.model = self.InnerAE(self)
 
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self, values):
         """
         Build the AE given 'values' and perform training.
@@ -185,7 +190,9 @@ class AE(Reduction, ANN):
 
             n_epoch += 1
 
-    def transform(self, X):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def transform(self, X, scaler_red):
         """
         Reduces the given snapshots.
 
@@ -193,9 +200,14 @@ class AE(Reduction, ANN):
         """
         X = self._convert_numpy_to_torch(X).T
         g = self.encoder(X)
-        return g.cpu().detach().numpy().T
+        reduced_output = (g.cpu().detach().numpy().T).T
+        if scaler_red:
+            reduced_output = scaler_red.fit_transform(reduced_output)
+        return reduced_output
 
-    def inverse_transform(self, g):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def inverse_transform(self, g, database):
         """
         Projects a reduced to full order solution.
 
@@ -203,7 +215,18 @@ class AE(Reduction, ANN):
         """
         g = self._convert_numpy_to_torch(g).T
         u = self.decoder(g)
-        return u.cpu().detach().numpy().T
+        predicted_sol = u.cpu().detach().numpy().T
+
+        if database and database.scaler_snapshots:
+            predicted_sol = database.scaler_snapshots.inverse_transform(
+                    predicted_sol.T).T
+
+        if 1 in predicted_sol.shape:
+            predicted_sol = predicted_sol.ravel()
+        else:
+            predicted_sol = predicted_sol.T
+        
+        return predicted_sol
 
     def reduce(self, X):
         """

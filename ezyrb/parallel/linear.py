@@ -7,7 +7,9 @@ from scipy.interpolate import LinearNDInterpolator as LinearNDInterp
 from scipy.interpolate import interp1d
 
 from .approximation import Approximation
-
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class Linear(Approximation):
     """
@@ -21,6 +23,8 @@ class Linear(Approximation):
         self.fill_value = fill_value
         self.interpolator = None
 
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self, points, values):
         """
         Construct the interpolator given `points` and `values`.
@@ -47,7 +51,9 @@ class Linear(Approximation):
                                                values,
                                                fill_value=self.fill_value)
 
-    def predict(self, new_point):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def predict(self, new_point, scaler_red):
         """
         Evaluate interpolator at given `new_points`.
 
@@ -55,4 +61,18 @@ class Linear(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        return self.interpolator(new_point)
+        new_red_snap = self.interpolator(new_point)
+        
+        # Drop the fist 1 from resulted from interp1d 
+        # (1, 1, latent) --> (1, latent)  
+        if (new_red_snap.shape[0] == 1) and (new_red_snap.shape[1] == 1):
+            new_red_snap = np.squeeze(new_red_snap, axis=0)
+
+        predicted_red_sol = np.atleast_2d(new_red_snap)
+
+        if scaler_red:  # rescale modal coefficients
+            predicted_red_sol = scaler_red.inverse_transform(
+                predicted_red_sol)
+        predicted_red_sol = predicted_red_sol.T
+
+        return predicted_red_sol

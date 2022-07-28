@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
+from pycompss.api.api import compss_wait_on
 
 class ReducedOrderModel():
     """
@@ -58,10 +59,7 @@ class ReducedOrderModel():
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
         self.reduction.fit(self.database.snapshots.T)
-        reduced_output = self.reduction.transform(self.database.snapshots.T).T
-
-        if self.scaler_red:
-            reduced_output = self.scaler_red.fit_transform(reduced_output)
+        reduced_output = self.reduction.transform(self.database.snapshots.T, self.scaler_red)
 
         self.approximation.fit(
             self.database.parameters,
@@ -79,22 +77,10 @@ class ReducedOrderModel():
         if hasattr(self, 'database') and self.database.scaler_parameters:
             mu = self.database.scaler_parameters.transform(mu)
 
-        predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
+        predicted_red_sol = self.approximation.predict(mu, self.scaler_red)
 
-        if self.scaler_red:  # rescale modal coefficients
-            predicted_red_sol = self.scaler_red.inverse_transform(
-                predicted_red_sol)
+        predicted_sol = self.reduction.inverse_transform(predicted_red_sol, self.database)
 
-        predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
-
-        if hasattr(self, 'database') and self.database.scaler_snapshots:
-            predicted_sol = self.database.scaler_snapshots.inverse_transform(
-                    predicted_sol.T).T
-
-        if 1 in predicted_sol.shape:
-            predicted_sol = predicted_sol.ravel()
-        else:
-            predicted_sol = predicted_sol.T
         return predicted_sol
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
@@ -146,24 +132,6 @@ class ReducedOrderModel():
 
         return rom
 
-    def test_error(self, test, norm=np.linalg.norm):
-        """
-        Compute the mean norm of the relative error vectors of predicted
-        test snapshots.
-
-        :param database.Database test: the input test database.
-        :param function norm: the function used to assign at the vector of
-            errors a float number. It has to take as input a 'numpy.ndarray'
-            and returns a float. Default value is the L2 norm.
-        :return: the mean L2 norm of the relative errors of the estimated
-            test snapshots.
-        :rtype: numpy.ndarray
-        """
-        predicted_test = self.predict(test.parameters)
-        return np.mean(
-            norm(predicted_test - test.snapshots, axis=1) /
-            norm(test.snapshots, axis=1))
-
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
         r"""
         Split the database into k consecutive folds (no shuffling by default).
@@ -182,6 +150,8 @@ class ReducedOrderModel():
         :rtype: numpy.ndarray
         """
         error = []
+        predicted_test = [] # to save my future objects
+        original_test= []
         kf = KFold(n_splits=n_splits)
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
@@ -189,7 +159,15 @@ class ReducedOrderModel():
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
 
-            error.append(rom.test_error(self.database[test_index], norm))
+            test = self.database[test_index]
+            predicted_test.append(rom.predict(test.parameters))  
+            original_test.append(test.snapshots)
+
+        predicted_test = compss_wait_on(predicted_test)
+        for j in range(len(predicted_test)):
+            error.append(np.mean(
+                norm(predicted_test[j] - original_test[j], axis=1) / 
+                norm(original_test[j], axis=1)))
 
         return np.array(error)
 
@@ -214,6 +192,8 @@ class ReducedOrderModel():
         """
         error = np.zeros(len(self.database))
         db_range = list(range(len(self.database)))
+        predicted_test = [] # to save my future objects
+        original_test= []
 
         for j in db_range:
             indeces = np.array([True] * len(self.database))
@@ -225,7 +205,14 @@ class ReducedOrderModel():
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
 
-            error[j] = rom.test_error(test_db)
+            predicted_test.append(rom.predict(test_db.parameters))
+            original_test.append(test_db.snapshots)
+
+        predicted_test = compss_wait_on(predicted_test)
+        for j in range(len(predicted_test)):
+                error[j] = np.mean(
+                    norm(predicted_test[j] - original_test[j], axis=1) / 
+                    norm(original_test[j], axis=1))
 
         return error
 

@@ -2,7 +2,9 @@
 
 import numpy as np
 from .approximation import Approximation
-
+from pycompss.api.task import task
+from pycompss.api.parameter import *
+# from pycompss.api.constraint import constraint
 
 class NeighborsRegressor(Approximation):
     """
@@ -11,6 +13,8 @@ class NeighborsRegressor(Approximation):
     :param kwargs: arguments passed to the internal instance of
         *NeighborsRegressor.
     """
+    # @constraint(computing_units="2")
+    @task(target_direction=INOUT)
     def fit(self, points, values):
         """
         Construct the interpolator given `points` and `values`.
@@ -23,7 +27,9 @@ class NeighborsRegressor(Approximation):
 
         self.regressor.fit(points, values)
 
-    def predict(self, new_point):
+    # @constraint(computing_units="2")
+    @task(returns=np.ndarray, target_direction=IN)
+    def predict(self, new_point, scaler_red):
         """
         Evaluate interpolator at given `new_points`.
 
@@ -36,4 +42,9 @@ class NeighborsRegressor(Approximation):
         else:
             new_point = np.array([new_point])
 
-        return self.regressor.predict(new_point)
+        predicted_red_sol = np.atleast_2d(self.regressor.predict(new_point))
+        if scaler_red:  # rescale modal coefficients
+            predicted_red_sol = scaler_red.inverse_transform(
+                predicted_red_sol)
+        predicted_red_sol = predicted_red_sol.T
+        return predicted_red_sol
