@@ -41,4 +41,4 @@ Besides the regular installation of EZyRB you need to have PyCOMPSs and PyEDDL i
 ## Authors and contributors
 
 This work is developed in [SISSA mathLab](https://mathlab.sissa.it/) within the framework of the [eFlows4HPC](https://eflows4hpc.eu/) project, in cooperation with 16 [partners](https://eflows4hpc.eu/partners/) from seven different countries.
-<img src="./pictures/logos.png" align="center">
+<img src="./examples/pictures/logos.png" align="center">
