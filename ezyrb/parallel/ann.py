@@ -3,44 +3,44 @@ Module for Artificial Neural Network (ANN) Prediction.
 """
 
 import torch
-import torch.nn as nn
+from torch import nn
 import numpy as np
-from .approximation import Approximation
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .approximation import Approximation
 
 class ANN(Approximation):
+    """
+    Feed-Forward Artifical Neural Network class (ANN).
+
+    :param list layers: ordered list with the number of neurons of each
+        hidden layer.
+    :param torch.nn.modules.activation function: activation function at each
+        layer, except for the output layer at with Identity is considered by
+        default. A single activation function can be passed or a list of
+        them of length equal to the number of hidden layers.
+    :param list stop_training: list with the maximum number of training
+        iterations (int) and/or the desired tolerance on the training loss
+        (float).
+    :param torch.nn.Module loss: loss definition (Mean Squared if not
+        given).
+
+    :Example:
+        >>> import ezyrb
+        >>> import numpy as np
+        >>> import torch.nn as nn
+        >>> x = np.random.uniform(-1, 1, size =(4, 2))
+        >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
+        >>> ann = ezyrb.ANN([10, 5], nn.Tanh(), [20000,1e-5])
+        >>> ann.fit(x, y)
+        >>> y_pred = ann.predict(x)
+        >>> print(y)
+        >>> print(y_pred)
+        >>> print(len(ann.loss_trend))
+        >>> print(ann.loss_trend[-1])
+    """
     def __init__(self, layers, function, stop_training, loss=None):
-        """
-        Feed-Forward Artifical Neural Network (ANN).
 
-        :param list layers: ordered list with the number of neurons of each
-            hidden layer.
-        :param torch.nn.modules.activation function: activation function at each
-            layer, except for the output layer at with Identity is considered by
-            default. A single activation function can be passed or a list of
-            them of length equal to the number of hidden layers.
-        :param list stop_training: list with the maximum number of training
-            iterations (int) and/or the desired tolerance on the training loss
-            (float).
-        :param torch.nn.Module loss: loss definition (Mean Squared if not
-            given).
-
-        :Example:
-            >>> import ezyrb
-            >>> import numpy as np
-            >>> import torch.nn as nn
-            >>> x = np.random.uniform(-1, 1, size =(4, 2))
-            >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
-            >>> ann = ezyrb.ANN([10, 5], nn.Tanh(), [20000,1e-5])
-            >>> ann.fit(x, y)
-            >>> y_pred = ann.predict(x)
-            >>> print(y)
-            >>> print(y_pred)
-            >>> print(len(ann.loss_trend))
-            >>> print(ann.loss_trend[-1])
-        """
         if loss is None:
             loss = torch.nn.MSELoss()
 
@@ -101,7 +101,6 @@ class ANN(Approximation):
         layers_torch.append(nn.Linear(layers[-2], layers[-1]))
         self.model = nn.Sequential(*layers_torch)
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, points, values):
         """
@@ -150,7 +149,6 @@ class ANN(Approximation):
 
             n_epoch += 1
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
         """

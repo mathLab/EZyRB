@@ -6,10 +6,9 @@ import numpy as np
 from scipy.interpolate import LinearNDInterpolator as LinearNDInterp
 from scipy.interpolate import interp1d
 
-from .approximation import Approximation
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .approximation import Approximation
 
 class Linear(Approximation):
     """
@@ -23,7 +22,6 @@ class Linear(Approximation):
         self.fill_value = fill_value
         self.interpolator = None
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, points, values):
         """
@@ -51,7 +49,6 @@ class Linear(Approximation):
                                                values,
                                                fill_value=self.fill_value)
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
         """
@@ -62,9 +59,9 @@ class Linear(Approximation):
         :rtype: numpy.ndarray
         """
         new_red_snap = self.interpolator(new_point)
-        
-        # Drop the fist 1 from resulted from interp1d 
-        # (1, 1, latent) --> (1, latent)  
+
+        # Drop the fist 1 from resulted from interp1d
+        # (1, 1, latent) --> (1, latent)
         if (new_red_snap.shape[0] == 1) and (new_red_snap.shape[1] == 1):
             new_red_snap = np.squeeze(new_red_snap, axis=0)
 

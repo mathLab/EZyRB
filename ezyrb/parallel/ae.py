@@ -3,13 +3,12 @@ Module for FNN-Autoencoders.
 """
 
 import torch
-import torch.nn as nn
-from .reduction import Reduction
+from torch import nn
 from .ann import ANN
 import numpy as np  
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .reduction import Reduction
 
 class AE(Reduction, ANN):
     """
@@ -144,7 +143,6 @@ class AE(Reduction, ANN):
         # Creating the model adding the encoder and the decoder
         self.model = self.InnerAE(self)
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, values):
         """
@@ -190,7 +188,6 @@ class AE(Reduction, ANN):
 
             n_epoch += 1
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def transform(self, X, scaler_red):
         """
@@ -205,7 +202,6 @@ class AE(Reduction, ANN):
             reduced_output = scaler_red.fit_transform(reduced_output)
         return reduced_output
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def inverse_transform(self, g, database):
         """
@@ -228,7 +224,7 @@ class AE(Reduction, ANN):
         
         return predicted_sol
 
-    def reduce(self, X):
+    def reduce(self, X, scaler_red):
         """
         Reduces the given snapshots.
 
@@ -238,9 +234,9 @@ class AE(Reduction, ANN):
 
             Same as `transform`. Kept for backward compatibility.
         """
-        return self.transform(X)
+        return self.transform(X, scaler_red)
 
-    def expand(self, g):
+    def expand(self, g, database):
         """
         Projects a reduced to full order solution.
 
@@ -250,4 +246,4 @@ class AE(Reduction, ANN):
 
             Same as `inverse_transform`. Kept for backward compatibility.
         """
-        return self.inverse_transform(g)
+        return self.inverse_transform(g, database)

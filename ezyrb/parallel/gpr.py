@@ -5,10 +5,9 @@ import numpy as np
 from scipy.optimize import minimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 
-from .approximation import Approximation
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .approximation import Approximation
 
 class GPR(Approximation):
     """
@@ -37,7 +36,6 @@ class GPR(Approximation):
         self.Y_sample = None
         self.model = None
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self,
             points,
@@ -69,7 +67,6 @@ class GPR(Approximation):
             normalize_y=normalizer)
         self.model.fit(self.X_sample, self.Y_sample)
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_points, scaler_red, return_variance=False):
         """
@@ -83,7 +80,8 @@ class GPR(Approximation):
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
         new_points = np.atleast_2d(new_points)
-        predicted_red_sol = np.atleast_2d(self.model.predict(new_points, return_std=return_variance))
+        predicted_red_sol = np.atleast_2d(self.model.predict(new_points,
+            return_std=return_variance))
         if scaler_red:  # rescale modal coefficients
             predicted_red_sol = scaler_red.inverse_transform(
                 predicted_red_sol)

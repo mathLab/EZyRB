@@ -2,10 +2,9 @@
 
 import numpy as np
 from scipy.interpolate import RBFInterpolator
-from .approximation import Approximation
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .approximation import Approximation
 
 class RBF(Approximation):
     """
@@ -55,7 +54,6 @@ class RBF(Approximation):
         self.interpolator = None
         self.xi = None
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, points, values):
         """
@@ -87,7 +85,6 @@ class RBF(Approximation):
             epsilon=self.epsilon,
             degree=self.degree)
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
         """
@@ -97,7 +94,8 @@ class RBF(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        predicted_red_sol = np.atleast_2d(self.interpolator(np.asarray(new_point)))
+        predicted_red_sol = np.atleast_2d(self.interpolator(
+            np.asarray(new_point)))
         if scaler_red:  # rescale modal coefficients
             predicted_red_sol = scaler_red.inverse_transform(
                 predicted_red_sol)

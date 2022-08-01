@@ -4,13 +4,12 @@ Module for FNN-Autoencoders.
 
 import sys      # Path to find PyEDDL library in PyCOMPSs container
 sys.path.append('/usr/local/miniconda3/lib/python3.8/site-packages')
-import pyeddl.eddl as eddl
+from pyeddl import eddl
 from pyeddl.tensor import Tensor
-from .reduction import Reduction
-import numpy as np  
+import numpy as np
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .reduction import Reduction
 
 class AE_EDDL(Reduction):
     """
@@ -33,16 +32,16 @@ class AE_EDDL(Reduction):
     :param list stop_training: list with the maximum number of training
         iterations (int) and/or the desired tolerance on the training loss
         (float).
-    :param int pyeddl.eddl batch_size: size of data batches used for 
+    :param int pyeddl.eddl batch_size: size of data batches used for
         training the network. 
-    :param str pyeddl.eddl loss: loss definition (Mean Squared if not 
+    :param str pyeddl.eddl loss: loss definition (Mean Squared if not
         given).
-    :param str pyeddl.eddl metric: metric definition (Mean Squared if not 
+    :param str pyeddl.eddl metric: metric definition (Mean Squared if not
         given).
-    :param pyeddl.eddl optimizer: the eddl class implementing optimizer.
+    :param pyeddl.eddl optimizer: the eddl class implementing optimizer
         Default value is `Adam` optimizer.
     :param float lr: the learning rate. Default is 0.001.
-    :param cs: type and number of the computing service. Default is 
+    :param cs: type and number of the computing service. Default is
         eddl.CS_CPU().
     :param int training_type: 1 for Coarse training, 2 Fine training_1
         3 for Fine training_2. Default is 2.
@@ -129,19 +128,21 @@ class AE_EDDL(Reduction):
 
         layers_decoder = self.layers_decoder.copy()
         layers_decoder.append(values.shape[1])
-        
+
         def EncoderBlock(layer):
             for i in range(1, len(layers_encoder)-1):
-                layer = self.function_encoder[i](eddl.Dense(layer, layers_encoder[i]))
+                layer = self.function_encoder[i](
+                    eddl.Dense(layer, layers_encoder[i]))
             layer = eddl.Dense(layer, layers_encoder[-1])
             return layer    
         
         def DecoderBlock(layer):
             for i in range(1, len(layers_decoder)-1):
-                layer = self.function_encoder[i](eddl.Dense(layer, layers_decoder[i]))
+                layer = self.function_encoder[i](
+                    eddl.Dense(layer, layers_decoder[i]))
             layer = eddl.Dense(layer, layers_decoder[-1])
             return layer    
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         # Define network1
         in1 = eddl.Input([layers_encoder[0]])
         self.encoder = EncoderBlock(in1)
@@ -155,7 +156,7 @@ class AE_EDDL(Reduction):
             [self.metric],
             self.cs(mem="low_mem")
         )
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         # Define network2
         in2 = eddl.Input([layers_decoder[0]])
         self.decoder2 = DecoderBlock(in2)
@@ -167,15 +168,14 @@ class AE_EDDL(Reduction):
             [self.loss ],
             [self.metric],
             self.cs(mem="low_mem")
-        )    
-        #-------------------------------------------------------------------------
+        )
+        #-----------------------------------------------------------------------
         eddl.summary(self.model_Autoencoder)
         eddl.plot(self.model_Autoencoder, "Autoencoder.pdf")
         eddl.summary(self.model_Decoder)
         eddl.plot(self.model_Decoder, "Decoder.pdf")
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, values):
         """
@@ -198,14 +198,15 @@ class AE_EDDL(Reduction):
         values = values.T
         values = Tensor.fromarray(values) # Numpy array to EDDL.Tensor 
         self._build_model(values)
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         if self.training_type == 1:
             print('Coarse training:')        
             n_epoch =1
             flag = True
             while flag:
                 print('Iteration number: ',n_epoch)
-                eddl.fit(self.model_Autoencoder, [values], [values], self.batch_size, 1)
+                eddl.fit(self.model_Autoencoder, [values], [values],
+                    self.batch_size, 1)
                 losses = eddl.get_losses(self.model_Autoencoder)
                 metrics = eddl.get_metrics(self.model_Autoencoder)
                 self.loss_trend.append(losses)
@@ -221,7 +222,7 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         elif self.training_type == 2:
             print('Fine training_1:')
             s = values.shape
@@ -240,9 +241,9 @@ class AE_EDDL(Reduction):
                 metrics = eddl.get_metrics(self.model_Autoencoder)
                 self.loss_trend.append(losses)
                 self.metric_trend.append(metrics)
-                print("Epoch {} ({} batches)".format(n_epoch, num_batches))
+                print("Epoch %d (%d batches)" % (n_epoch, num_batches))
                 for l, m in zip(losses, metrics):
-                    print("Loss: {}  Metric: {}".format(round(l,6), round(m,6)))
+                    print("Loss: %.6f\tMetric: %.6f" % (l, m))
                 
                 for criteria in self.stop_training:
                     if isinstance(criteria, int):
@@ -254,7 +255,7 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         elif self.training_type == 3:
             print('Fine training_2:')
             s = values.shape
@@ -266,7 +267,8 @@ class AE_EDDL(Reduction):
                 for j in range(num_batches):
                     # 2) using samples indices
                     indices = np.random.randint(0, s[0], self.batch_size)
-                    eddl.train_batch(self.model_Autoencoder, [values], [values], indices)
+                    eddl.train_batch(self.model_Autoencoder, [values], [values],
+                        indices)
 
                 losses = eddl.get_losses(self.model_Autoencoder)
                 metrics = eddl.get_metrics(self.model_Autoencoder)
@@ -274,7 +276,7 @@ class AE_EDDL(Reduction):
                 self.metric_trend.append(metrics)
                 print("Epoch {} ({} batches)".format(n_epoch, num_batches))
                 for l, m in zip(losses, metrics):
-                    print("Loss: {}  Metric: {}".format(round(l,6), round(m,6)))
+                    print("Loss: %.6f\tMetric: %.6f" % (l, m))
                 
                 for criteria in self.stop_training:
                     if isinstance(criteria, int):
@@ -286,20 +288,21 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-------------------------------------------------------------------------
+        #-----------------------------------------------------------------------
         # Copy parameters from model_Autoencoder to model_Decoder
-        # munber of Decoder's layers = (n) hidden layers + (n-1) activation layers
-        num_hidden = len(self.layers_encoder); 
-        num_lay_deccoder = 2*num_hidden -1;
-        decoder_parameters = eddl.get_parameters(self.model_Autoencoder, True)[-num_lay_deccoder:]
-        decoder_parameters.insert(0,[])  # insertc empty parameter for the new input layer of decoder
+        # munber of Decoder layers = (n) hidden layers + (n-1) activation layers
+        num_hidden = len(self.layers_encoder)
+        num_lay_deccoder = 2*num_hidden -1
+        decoder_parameters = eddl.get_parameters(self.model_Autoencoder,
+            True)[-num_lay_deccoder:]
+        # insertc empty parameter for the new input layer of decoder
+        decoder_parameters.insert(0,[])
         eddl.set_parameters(self.model_Decoder, decoder_parameters)
         
         ## For debugging
         # for i in decoder_parameters:
         #     print(len(i))
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def transform(self, X, scaler_red):
         """
@@ -307,9 +310,9 @@ class AE_EDDL(Reduction):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        X = Tensor.fromarray(X.T) # Numpy array to EDDL.Tensor 
+        X = Tensor.fromarray(X.T) # Numpy array to EDDL.Tensor
         # One prediction for the fitted model(1 forward pass after training)
-        out = eddl.predict(self.model_Autoencoder, [X])
+        eddl.predict(self.model_Autoencoder, [X])
         g = eddl.getOutput(self.encoder)
         reduced_output = (Tensor.getdata(g).T).T # EDDL.Tensor to Numpy array
         if scaler_red:
@@ -321,11 +324,9 @@ class AE_EDDL(Reduction):
         # g.info()
         # print('Expansion sapce info.:')
         # u.info()
-        # # out[0].info()  
 
         return reduced_output
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def inverse_transform(self, g, database):
         """
@@ -356,7 +357,7 @@ class AE_EDDL(Reduction):
         
         return predicted_sol
 
-    def reduce(self, X):
+    def reduce(self, X, scaler_red):
         """
         Reduces the given snapshots.
 
@@ -366,9 +367,9 @@ class AE_EDDL(Reduction):
 
             Same as `transform`. Kept for backward compatibility.
         """
-        return self.transform(X)
+        return self.transform(X, scaler_red)
 
-    def expand(self, g):
+    def expand(self, g, database):
         """
         Projects a reduced to full order solution.
 
@@ -378,4 +379,4 @@ class AE_EDDL(Reduction):
 
             Same as `inverse_transform`. Kept for backward compatibility.
         """
-        return self.inverse_transform(g)
+        return self.inverse_transform(g, database)

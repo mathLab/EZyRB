@@ -17,8 +17,8 @@ class ReducedOrderModel():
 
     :param ezyrb.Database database: the database to use for training the reduced
         order model.
-    :param ezyrb.Reduction reduction: the reduction method to use in reduced order
-        model.
+    :param ezyrb.Reduction reduction: the reduction method to use in reduced
+        order model.
     :param ezyrb.Approximation approximation: the approximation method to use in
         reduced order model.
     :param object scaler_red: the scaler for the reduced variables (eg. modal
@@ -59,7 +59,8 @@ class ReducedOrderModel():
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
         self.reduction.fit(self.database.snapshots.T)
-        reduced_output = self.reduction.transform(self.database.snapshots.T, self.scaler_red)
+        reduced_output = self.reduction.transform(
+            self.database.snapshots.T, self.scaler_red)
 
         self.approximation.fit(
             self.database.parameters,
@@ -79,7 +80,8 @@ class ReducedOrderModel():
 
         predicted_red_sol = self.approximation.predict(mu, self.scaler_red)
 
-        predicted_sol = self.reduction.inverse_transform(predicted_red_sol, self.database)
+        predicted_sol = self.reduction.inverse_transform(
+            predicted_red_sol, self.database)
 
         return predicted_sol
 
@@ -166,7 +168,7 @@ class ReducedOrderModel():
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
             error.append(np.mean(
-                norm(predicted_test[j] - original_test[j], axis=1) / 
+                norm(predicted_test[j] - original_test[j], axis=1) /
                 norm(original_test[j], axis=1)))
 
         return np.array(error)

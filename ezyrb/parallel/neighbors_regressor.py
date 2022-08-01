@@ -1,10 +1,9 @@
 """Module for generic NeighborsRegressor."""
 
 import numpy as np
-from .approximation import Approximation
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .approximation import Approximation
 
 class NeighborsRegressor(Approximation):
     """
@@ -13,7 +12,6 @@ class NeighborsRegressor(Approximation):
     :param kwargs: arguments passed to the internal instance of
         *NeighborsRegressor.
     """
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, points, values):
         """
@@ -27,7 +25,6 @@ class NeighborsRegressor(Approximation):
 
         self.regressor.fit(points, values)
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
         """

@@ -10,51 +10,51 @@ except ImportError:
     from numpy.linalg import eigh
 import numpy as np
 
-from .reduction import Reduction
 from pycompss.api.task import task
-from pycompss.api.parameter import *
-# from pycompss.api.constraint import constraint
+from pycompss.api.parameter import INOUT, IN
+from .reduction import Reduction
 
 class POD(Reduction):
+    """
+    Perform the Proper Orthogonal Decomposition.
+
+    :param method: the implementation to use for the computation of the POD
+        modes. Default is 'svd'.
+    :type method: {'svd', 'randomized_svd', 'correlation_matrix'}
+    :param rank: the rank for the truncation; If 0, the method computes
+        the optimal rank and uses it for truncation; if positive interger,
+        the method uses the argument for the truncation; if float between 0
+        and 1, the rank is the number of the biggest singular values that
+        are needed to reach the 'energy' specified by `svd_rank`; if -1,
+        the method does not compute truncation. Default is 0. The `rank`
+        parameter is available using all the available methods.
+    :type rank: int or float
+    :param int subspace_iteration: the number of subspace iteration in the
+        randomized svd. It is available only using the 'randomized_svd'
+        method. Default value is 1.
+    :param int omega_rank: the number of columns of the Omega random
+        matrix. If set to 0, the number of columns is equal to twice the
+        `rank` (if it has explicitly passed as integer) or twice the number
+        of input snapshots. Default value is 0. It is available only using
+        the 'randomized_svd' method.
+    :param bool save_memory: reduce the usage of the memory, despite an
+        higher number of operations. It is available only using the
+        'correlation_matrix' method. Default value is False.
+
+
+    :Example:
+        >>> pod = POD().fit(snapshots)
+        >>> reduced_snapshots = pod.reduce(snapshots)
+        >>> # Other possible constructors are ...
+        >>> pod = POD('svd')
+        >>> pod = POD('svd', rank=20)
+        >>> pod = POD('randomized_svd', rank=-1)
+        >>> pod = POD('randomized_svd', rank=0, subspace_iteration=3,
+                      omega_rank=10)
+        >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
+    """
     def __init__(self, method='svd', **kwargs):
-        """
-        Perform the Proper Orthogonal Decomposition.
 
-        :param method: the implementation to use for the computation of the POD
-            modes. Default is 'svd'.
-        :type method: {'svd', 'randomized_svd', 'correlation_matrix'}
-        :param rank: the rank for the truncation; If 0, the method computes
-            the optimal rank and uses it for truncation; if positive interger,
-            the method uses the argument for the truncation; if float between 0
-            and 1, the rank is the number of the biggest singular values that
-            are needed to reach the 'energy' specified by `svd_rank`; if -1,
-            the method does not compute truncation. Default is 0. The `rank`
-            parameter is available using all the available methods.
-        :type rank: int or float
-        :param int subspace_iteration: the number of subspace iteration in the
-            randomized svd. It is available only using the 'randomized_svd'
-            method. Default value is 1.
-        :param int omega_rank: the number of columns of the Omega random
-            matrix. If set to 0, the number of columns is equal to twice the
-            `rank` (if it has explicitly passed as integer) or twice the number
-            of input snapshots. Default value is 0. It is available only using
-            the 'randomized_svd' method.
-        :param bool save_memory: reduce the usage of the memory, despite an
-            higher number of operations. It is available only using the
-            'correlation_matrix' method. Default value is False.
-
-
-        :Example:
-            >>> pod = POD().fit(snapshots)
-            >>> reduced_snapshots = pod.reduce(snapshots)
-            >>> # Other possible constructors are ...
-            >>> pod = POD('svd')
-            >>> pod = POD('svd', rank=20)
-            >>> pod = POD('randomized_svd', rank=-1)
-            >>> pod = POD('randomized_svd', rank=0, subspace_iteration=3,
-                          omega_rank=10)
-            >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
-        """
         available_methods = {
             'svd': (self._svd, {
                 'rank': -1
@@ -103,7 +103,6 @@ class POD(Reduction):
         """
         return self._singular_values
 
-    # @constraint(computing_units="2")
     @task(target_direction=INOUT)
     def fit(self, X):
         """
@@ -115,7 +114,6 @@ class POD(Reduction):
         self._modes, self._singular_values = self.__method(X)
         return self
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def transform(self, X, scaler_red):
         """
@@ -123,12 +121,11 @@ class POD(Reduction):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        reduced_output = (self.modes.T.conj().dot(X)).T       
+        reduced_output = (self.modes.T.conj().dot(X)).T
         if scaler_red:
             reduced_output = scaler_red.fit_transform(reduced_output)
         return reduced_output
 
-    # @constraint(computing_units="2")
     @task(returns=np.ndarray, target_direction=IN)
     def inverse_transform(self, X, database):
         """
@@ -149,7 +146,7 @@ class POD(Reduction):
         
         return predicted_sol
 
-    def reduce(self, X):
+    def reduce(self, X, scaler_red):
         """
         Reduces the given snapshots.
 
@@ -159,9 +156,9 @@ class POD(Reduction):
 
             Same as `transform`. Kept for backward compatibility.
         """
-        return self.transform(X)
+        return self.transform(X, scaler_red)
 
-    def expand(self, X):
+    def expand(self, X, database):
         """
         Projects a reduced to full order solution.
 
@@ -171,7 +168,7 @@ class POD(Reduction):
 
             Same as `inverse_transform`. Kept for backward compatibility.
         """
-        return self.inverse_transform(X)
+        return self.inverse_transform(X, database)
 
     def _truncation(self, X, s):
         """
