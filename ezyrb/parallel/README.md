@@ -21,7 +21,7 @@ In this submodule of EZyRB, we utilised the   [PyCOMPSs](https://compss-doc.read
 
 The picture below shows the simultaneous execution of 12 different setups, each performing 3 predictions.
 
-![Alt text](https://github.com/karimyehia92/EZyRB/blob/parallel_ezyrb/ezyrb/parallel/examples/pictures/All1.png?raw=true "Simultaneous execution of 12 different setups, each performing 3 predictions")
+![Alt text](https://github.com/karimyehia92/EZyRB/blob/parallel_ezyrb/ezyrb/parallel/examples/pictures/2.png?raw=true "Simultaneous execution of 12 different setups, each performing 3 predictions")
 
 ### Non-linear reduction with data parallelism
 In the sequential version of EZyRB, the non-linear reduction is performed by the `ae.py` module  which relies on [PyTorch](https://pytorch.org/). In this version we added a new module `ae_EDDL.py` which is built using the European Distributed Deep Learning library [PyEDDL](https://github.com/deephealthproject/pyeddl).  The `ae_EDDL.py` module supports data parallelism and can run on CPUs, GPUs and FPGAs by easialy changing the type and number of the computing services you want to use during the execution.
