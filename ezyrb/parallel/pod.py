@@ -143,7 +143,7 @@ class POD(Reduction):
             predicted_sol = predicted_sol.ravel()
         else:
             predicted_sol = predicted_sol.T
-        
+
         return predicted_sol
 
     def reduce(self, X, scaler_red):

@@ -5,7 +5,7 @@ Module for FNN-Autoencoders.
 import torch
 from torch import nn
 from .ann import ANN
-import numpy as np  
+import numpy as np
 from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .reduction import Reduction
@@ -221,7 +221,7 @@ class AE(Reduction, ANN):
             predicted_sol = predicted_sol.ravel()
         else:
             predicted_sol = predicted_sol.T
-        
+
         return predicted_sol
 
     def reduce(self, X, scaler_red):

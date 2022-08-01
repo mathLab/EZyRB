@@ -33,7 +33,7 @@ class AE_EDDL(Reduction):
         iterations (int) and/or the desired tolerance on the training loss
         (float).
     :param int pyeddl.eddl batch_size: size of data batches used for
-        training the network. 
+        training the network.
     :param str pyeddl.eddl loss: loss definition (Mean Squared if not
         given).
     :param str pyeddl.eddl metric: metric definition (Mean Squared if not
@@ -134,8 +134,8 @@ class AE_EDDL(Reduction):
                 layer = self.function_encoder[i](
                     eddl.Dense(layer, layers_encoder[i]))
             layer = eddl.Dense(layer, layers_encoder[-1])
-            return layer    
-        
+            return layer
+
         def DecoderBlock(layer):
             for i in range(1, len(layers_decoder)-1):
                 layer = self.function_encoder[i](
@@ -196,11 +196,11 @@ class AE_EDDL(Reduction):
         :param numpy.ndarray values: the (training) values in the points.
         """
         values = values.T
-        values = Tensor.fromarray(values) # Numpy array to EDDL.Tensor 
+        values = Tensor.fromarray(values) # Numpy array to EDDL.Tensor
         self._build_model(values)
         #-----------------------------------------------------------------------
         if self.training_type == 1:
-            print('Coarse training:')        
+            print('Coarse training:')
             n_epoch =1
             flag = True
             while flag:
@@ -319,7 +319,7 @@ class AE_EDDL(Reduction):
             reduced_output = scaler_red.fit_transform(reduced_output)
         
         ## For debugging
-        # u = eddl.getOutput(self.decoder)                  
+        # u = eddl.getOutput(self.decoder)
         # print('Latent sapce info.:')
         # g.info()
         # print('Expansion sapce info.:')

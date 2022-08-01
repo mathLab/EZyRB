@@ -162,7 +162,7 @@ class ReducedOrderModel():
                                  *args, **kwargs)
 
             test = self.database[test_index]
-            predicted_test.append(rom.predict(test.parameters))  
+            predicted_test.append(rom.predict(test.parameters))
             original_test.append(test.snapshots)
 
         predicted_test = compss_wait_on(predicted_test)
@@ -212,9 +212,8 @@ class ReducedOrderModel():
 
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
-                error[j] = np.mean(
-                    norm(predicted_test[j] - original_test[j], axis=1) / 
-                    norm(original_test[j], axis=1))
+                error[j] = np.mean(norm(predicted_test[j] - original_test[j],
+                    axis=1) / norm(original_test[j], axis=1))
 
         return error
 
