@@ -158,7 +158,8 @@ class AE_EDDL(Reduction):
             self.imported = True
 
             # (n) hidden layers + (n-1) activation layers + (1) input layer
-            n = len(self.layers_encoder); encoder_layer_index = 2*n - 1;
+            n = len(self.layers_encoder)
+            encoder_layer_index = 2*n - 1
             self.model_Autoencoder = eddl.import_net_from_onnx_file(self.file_1)
             self.encoder = self.model_Autoencoder.layers[encoder_layer_index]
             self.decoder = self.model_Autoencoder.layers[-1]
@@ -383,7 +384,8 @@ class AE_EDDL(Reduction):
         #-----------------------------------------------------------------------
         # Copy parameters from model_Autoencoder to model_Decoder
         # munber of Decoder layers = (n) hidden layers + (n-1) activation layers
-        n = len(self.layers_encoder); num_lay_decoder = 2*n - 1;
+        n = len(self.layers_encoder)
+        num_lay_decoder = 2*n - 1
         decoder_parameters = eddl.get_parameters(self.model_Autoencoder,
             True)[-num_lay_decoder:]
         # Insert empty parameter for the new input layer of decoder
@@ -397,7 +399,7 @@ class AE_EDDL(Reduction):
         # serializable/picklable so we save the trained model and delete all
         # unpicklables at the time of serialization
         eddl.save_net_to_onnx_file(self.model_Autoencoder, self.file_1)
-        eddl.save_net_to_onnx_file(self.model_Decoder, self.file_2)  
+        eddl.save_net_to_onnx_file(self.model_Decoder, self.file_2)
         self.fitted = True
 
     @task(returns=np.ndarray, target_direction=IN)
@@ -412,7 +414,7 @@ class AE_EDDL(Reduction):
             # # For debugging
             # print("Encoder layer {} --> {}".format(
             #     self.encoder.input.shape, self.encoder.output.shape))
-            print("Trained model imported from ({})".format(self.file_1))
+            print(f"Trained model imported from ({self.file_1})")
             eddl.summary(self.model_Autoencoder)
         #-----------------------------------------------------------------------
         X = Tensor.fromarray(X.T) # Numpy array to EDDL.Tensor
@@ -441,7 +443,7 @@ class AE_EDDL(Reduction):
         """
         #-----------------------------------------------------------------------
         if self.imported: # Means PyCOMPSs is used.
-            print("Trained model imported from ({})".format(self.file_2))
+            print(f"Trained model imported from ({self.file_2})")
             eddl.summary(self.model_Decoder)
         #-----------------------------------------------------------------------
         g = Tensor.fromarray(g.T) # Numpy array to EDDL.Tensor
