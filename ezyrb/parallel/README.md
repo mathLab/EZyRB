@@ -19,7 +19,7 @@ Since the size of the input data obtained from the full order simulations can be
 ### Parallel execution
 In this submodule of EZyRB, we utilised the   [PyCOMPSs](https://compss-doc.readthedocs.io/en/stable/index.html)  package to convert some methods of EZyRB to tasks that can be executed simultaneously in different worker nodes.  This can enhance the process of multiple predictions or error calculations via [`ezyrb.ReducedOrderModel.kfold_cv_error()`](https://mathlab.github.io/EZyRB/reducedordermodel.html#) and [`ezyrb.ReducedOrderModel.loo_error()`](https://mathlab.github.io/EZyRB/reducedordermodel.html#) methods, where the model has to be executed multiple times for different parameters. 
 
-The picture below shows the simultaneous execution of 12 different setups, each performing 3 predictions.
+The picture below shows the simultaneous execution of 18 different setups, each performing 3 predictions.
 
 ![Alt text](https://github.com/mathLab/EZyRB/blob/master/ezyrb/parallel/examples/pictures/2.png?raw=true "Simultaneous execution of 12 different setups, each performing 3 predictions")
 
