@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://github.com/mathLab/PyDMD/" target="_blank" >
+  <a href="https://mathlab.github.io/EZyRB" target="_blank" >
     <img alt="Python Dynamic Mode Decomposition" src="readme/logo_EZyRB_small.png" width="200" />
   </a>
 </p>
