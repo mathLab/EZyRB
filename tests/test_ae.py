@@ -37,7 +37,7 @@ class TestAE(TestCase):
         assert isinstance(ae.optimizer, torch.optim.Optimizer)
         ae = AE([200, 100, 10], [10, 100, 200], torch.nn.Tanh(), torch.nn.Tanh(), 10)
         ae.fit(snapshots)
-        assert ae.optimizer == torch torch.optim.Adam
+        assert ae.optimizer == torch.optim.Adam
     
     def test_optimizer_doublefit(self):
         f = torch.nn.Softplus
