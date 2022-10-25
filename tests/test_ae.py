@@ -34,7 +34,7 @@ class TestAE(TestCase):
         low_dim = 5
         ae = AE([400, low_dim], [low_dim, 400], f(), f(), 20)
         ae.fit(snapshots)
-        assert isinstance(ae.optimizer, torch.optim.Optimizer)
+        assert ae.optimizer == torch.optim.Adam
         ae = AE([200, 100, 10], [10, 100, 200], torch.nn.Tanh(), torch.nn.Tanh(), 10)
         ae.fit(snapshots)
         assert ae.optimizer == torch.optim.Adam
