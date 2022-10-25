@@ -162,16 +162,16 @@ class AE(Reduction, ANN):
         """
         values = values.T
         self._build_model(values)
-        self.optimizer = self.optimizer(self.model.parameters(), lr=self.lr)
+        optimizer = self.optimizer(self.model.parameters(), lr=self.lr)
         values = self._convert_numpy_to_torch(values)
         n_epoch = 1
         flag = True
         while flag:
             y_pred = self.model(values)
             loss = self.loss(y_pred, values)
-            self.optimizer.zero_grad()
+            optimizer.zero_grad()
             loss.backward()
-            self.optimizer.step()
+            optimizer.step()
             self.loss_trend.append(loss.item())
             for criteria in self.stop_training:
                 if isinstance(criteria, int):
