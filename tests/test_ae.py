@@ -28,3 +28,10 @@ class TestAE(TestCase):
         assert reduced_snapshots.shape[0] == low_dim
         expanded_snapshots = ae.inverse_transform(reduced_snapshots)
         assert expanded_snapshots.shape[0] == snapshots.shape[0]
+        
+    def test_optimizer(self):
+        f = torch.nn.Softplus
+        low_dim = 5
+        ae = AE([400, low_dim], [low_dim, 400], f(), f(), 20)
+        ae.fit(snapshots)
+        assert isinstance(ae.optimizer, torch.optim.Optimizer)
