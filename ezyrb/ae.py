@@ -3,7 +3,6 @@ Module for FNN-Autoencoders.
 """
 
 import torch
-import torch.nn as nn
 from .reduction import Reduction
 from .ann import ANN
 
@@ -34,6 +33,10 @@ class AE(Reduction, ANN):
     :param torch.optim optimizer: the torch class implementing optimizer.
         Default value is `Adam` optimizer.
     :param float lr: the learning rate. Default is 0.001.
+    :param float l2_regularization: the L2 regularization coefficient, it
+        corresponds to the "weight_decay". Default is 0 (no regularization).
+    :param int frequency_print: the frequency in terms of epochs of the print
+        during the training of the network.
 
     :Example:
         >>> from ezyrb import AE
@@ -57,7 +60,12 @@ class AE(Reduction, ANN):
                  stop_training,
                  loss=None,
                  optimizer=torch.optim.Adam,
-                 lr=0.001):
+                 lr=0.001,
+                 l2_regularization=0,
+                 frequency_print=10):
+
+        if layers_encoder[-1] != layers_decoder[0]:
+            raise ValueError('Wrong dimension in encoder and decoder layers')
 
         if loss is None:
             loss = torch.nn.MSELoss()
@@ -83,25 +91,9 @@ class AE(Reduction, ANN):
         self.encoder = None
         self.decoder = None
         self.optimizer = optimizer
-        self.model = None
         self.lr = lr
-
-    class InnerAE(torch.nn.Module):
-        """
-        Autoencoder as a pytorch module
-        """
-        def __init__(self, outer_instance):
-            super().__init__()
-            self.encoder = outer_instance.encoder
-            self.decoder = outer_instance.decoder
-
-        def forward(self, x):
-            """
-            Compute the forward of the autoencoder
-            """
-            encoded = self.encoder(x)
-            decoded = self.decoder(encoded)
-            return decoded
+        self.frequency_print = frequency_print
+        self.l2_regularization = l2_regularization
 
     def _build_model(self, values):
         """
@@ -117,29 +109,13 @@ class AE(Reduction, ANN):
         """
         layers_encoder = self.layers_encoder.copy()
         layers_encoder.insert(0, values.shape[1])
+        self.encoder = self._list_to_sequential(layers_encoder,
+                                                self.function_encoder)
 
         layers_decoder = self.layers_decoder.copy()
         layers_decoder.append(values.shape[1])
-
-        layers_encoder_torch = []
-        for i in range(len(layers_encoder) - 2):
-            layers_encoder_torch.append(
-                nn.Linear(layers_encoder[i], layers_encoder[i + 1]))
-            layers_encoder_torch.append(self.function_encoder[i])
-        layers_encoder_torch.append(
-            nn.Linear(layers_encoder[-2], layers_encoder[-1]))
-
-        layers_decoder_torch = []
-        for i in range(len(layers_decoder) - 2):
-            layers_decoder_torch.append(
-                nn.Linear(layers_decoder[i], layers_decoder[i + 1]))
-            layers_decoder_torch.append(self.function_decoder[i])
-        layers_decoder_torch.append(
-            nn.Linear(layers_decoder[-2], layers_decoder[-1]))
-        self.encoder = nn.Sequential(*layers_encoder_torch)
-        self.decoder = nn.Sequential(*layers_decoder_torch)
-        # Creating the model adding the encoder and the decoder
-        self.model = self.InnerAE(self)
+        self.decoder = self._list_to_sequential(layers_decoder,
+                                                self.function_decoder)
 
     def fit(self, values):
         """
@@ -162,28 +138,42 @@ class AE(Reduction, ANN):
         """
         values = values.T
         self._build_model(values)
-        optimizer = self.optimizer(self.model.parameters(), lr=self.lr)
+
+        optimizer = self.optimizer(
+            list(self.encoder.parameters()) + list(self.decoder.parameters()),
+            lr=self.lr, weight_decay=self.l2_regularization)
+
         values = self._convert_numpy_to_torch(values)
+
         n_epoch = 1
         flag = True
         while flag:
-            y_pred = self.model(values)
+            y_pred = self.decoder(self.encoder(values))
+
             loss = self.loss(y_pred, values)
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            self.loss_trend.append(loss.item())
+
+            scalar_loss = loss.item()
+            self.loss_trend.append(scalar_loss)
+
             for criteria in self.stop_training:
-                if isinstance(criteria, int):
-                    # stop criteria is an integer
+                if isinstance(criteria, int):  # stop criteria is an integer
                     if n_epoch == criteria:
                         flag = False
-                elif isinstance(criteria, float):
-                    # stop criteria is float
-                    if loss.item() < criteria:
+                elif isinstance(criteria, float):  # stop criteria is float
+                    if scalar_loss < criteria:
                         flag = False
 
+            if (flag is False or
+                    n_epoch == 1 or n_epoch % self.frequency_print == 0):
+                print(f'[epoch {n_epoch:6d}]\t{scalar_loss:e}')
+
             n_epoch += 1
+
+        return optimizer
 
     def transform(self, X):
         """
