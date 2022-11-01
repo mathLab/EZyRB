@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.ae &mdash; EZyRB 1.3.0.post2210 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.ae &mdash; EZyRB 1.3.0.post2211 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.3.0.post2210
+                1.3.0.post2211
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -74,7 +74,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">.reduction</span> <span class="kn">import</span> <span class="n">Reduction</span>
 <span class="kn">from</span> <span class="nn">.ann</span> <span class="kn">import</span> <span class="n">ANN</span>
 
@@ -105,6 +104,10 @@
 <span class="sd">    :param torch.optim optimizer: the torch class implementing optimizer.</span>
 <span class="sd">        Default value is `Adam` optimizer.</span>
 <span class="sd">    :param float lr: the learning rate. Default is 0.001.</span>
+<span class="sd">    :param float l2_regularization: the L2 regularization coefficient, it</span>
+<span class="sd">        corresponds to the &quot;weight_decay&quot;. Default is 0 (no regularization).</span>
+<span class="sd">    :param int frequency_print: the frequency in terms of epochs of the print</span>
+<span class="sd">        during the training of the network.</span>
 
 <span class="sd">    :Example:</span>
 <span class="sd">        &gt;&gt;&gt; from ezyrb import AE</span>
@@ -128,7 +131,12 @@
                  <span class="n">stop_training</span><span class="p">,</span>
                  <span class="n">loss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
-                 <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+                 <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                 <span class="n">l2_regularization</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">frequency_print</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">layers_encoder</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">layers_decoder</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong dimension in encoder and decoder layers&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
@@ -154,25 +162,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
-
-<div class="viewcode-block" id="AE.InnerAE"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.InnerAE">[docs]</a>    <span class="k">class</span> <span class="nc">InnerAE</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Autoencoder as a pytorch module</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outer_instance</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">outer_instance</span><span class="o">.</span><span class="n">encoder</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">outer_instance</span><span class="o">.</span><span class="n">decoder</span>
-
-<div class="viewcode-block" id="AE.InnerAE.forward"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.InnerAE.forward">[docs]</a>        <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Compute the forward of the autoencoder</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">decoded</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frequency_print</span> <span class="o">=</span> <span class="n">frequency_print</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l2_regularization</span> <span class="o">=</span> <span class="n">l2_regularization</span>
 
 <div class="viewcode-block" id="AE._build_model"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE._build_model">[docs]</a>    <span class="k">def</span> <span class="nf">_build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -188,29 +180,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layers_encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_encoder</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">layers_encoder</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_to_sequential</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">function_encoder</span><span class="p">)</span>
 
         <span class="n">layers_decoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers_decoder</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">layers_decoder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="n">layers_encoder_torch</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers_encoder</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
-            <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function_encoder</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">layers_encoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_encoder</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">layers_encoder</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-
-        <span class="n">layers_decoder_torch</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers_decoder</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
-            <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function_decoder</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">layers_decoder_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">layers_decoder</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers_encoder_torch</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers_decoder_torch</span><span class="p">)</span>
-        <span class="c1"># Creating the model adding the encoder and the decoder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InnerAE</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_to_sequential</span><span class="p">(</span><span class="n">layers_decoder</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">function_decoder</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AE.fit"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -233,28 +209,42 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">T</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_build_model</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">()),</span>
+            <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">l2_regularization</span><span class="p">)</span>
+
         <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_numpy_to_torch</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
         <span class="n">n_epoch</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="n">flag</span><span class="p">:</span>
-            <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+
             <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
             <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">loss_trend</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+            <span class="n">scalar_loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_trend</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scalar_loss</span><span class="p">)</span>
+
             <span class="k">for</span> <span class="n">criteria</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_training</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                    <span class="c1"># stop criteria is an integer</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># stop criteria is an integer</span>
                     <span class="k">if</span> <span class="n">n_epoch</span> <span class="o">==</span> <span class="n">criteria</span><span class="p">:</span>
                         <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
-                    <span class="c1"># stop criteria is float</span>
-                    <span class="k">if</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">criteria</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">criteria</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>  <span class="c1"># stop criteria is float</span>
+                    <span class="k">if</span> <span class="n">scalar_loss</span> <span class="o">&lt;</span> <span class="n">criteria</span><span class="p">:</span>
                         <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
 
-            <span class="n">n_epoch</span> <span class="o">+=</span> <span class="mi">1</span></div>
+            <span class="k">if</span> <span class="p">(</span><span class="n">flag</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span>
+                    <span class="n">n_epoch</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">n_epoch</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency_print</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[epoch </span><span class="si">{n_epoch:6d}</span><span class="s1">]</span><span class="se">\t</span><span class="si">{scalar_loss:e}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">n_epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">optimizer</span></div>
 
 <div class="viewcode-block" id="AE.transform"><a class="viewcode-back" href="../../ae.html#ezyrb.ae.AE.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -309,7 +299,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Oct 01, 2022.
+      <span class="lastupdated">Last updated on Nov 01, 2022.
       </span></p>
   </div>
 

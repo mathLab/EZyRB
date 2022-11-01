@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AE &mdash; EZyRB 1.3.0.post2210 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>AE &mdash; EZyRB 1.3.0.post2211 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="index.html" class="icon icon-home"> EZyRB
           </a>
               <div class="version">
-                1.3.0.post2210
+                1.3.0.post2211
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -120,7 +120,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">AE</code><span class="sig-paren">(</span><em class="sig-param">layers_encoder</em>, <em class="sig-param">layers_decoder</em>, <em class="sig-param">function_encoder</em>, <em class="sig-param">function_decoder</em>, <em class="sig-param">stop_training</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">lr=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">AE</code><span class="sig-paren">(</span><em class="sig-param">layers_encoder</em>, <em class="sig-param">layers_decoder</em>, <em class="sig-param">function_encoder</em>, <em class="sig-param">function_decoder</em>, <em class="sig-param">stop_training</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">lr=0.001</em>, <em class="sig-param">l2_regularization=0</em>, <em class="sig-param">frequency_print=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.reduction.Reduction</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.ann.ANN</span></code></p>
 <p>Feed-Forward AutoEncoder class (AE)</p>
 <dl class="field-list">
@@ -148,6 +148,10 @@ given).</p></li>
 <li><p><strong>optimizer</strong> (<em>torch.optim</em>) – the torch class implementing optimizer.
 Default value is <cite>Adam</cite> optimizer.</p></li>
 <li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the learning rate. Default is 0.001.</p></li>
+<li><p><strong>l2_regularization</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the L2 regularization coefficient, it
+corresponds to the “weight_decay”. Default is 0 (no regularization).</p></li>
+<li><p><strong>frequency_print</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the frequency in terms of epochs of the print
+during the training of the network.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Example</dt>
@@ -167,30 +171,6 @@ Default value is <cite>Adam</cite> optimizer.</p></li>
 </div>
 </dd>
 </dl>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">InnerAE</code><span class="sig-paren">(</span><em class="sig-param">outer_instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.InnerAE"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<p>Autoencoder as a pytorch module</p>
-<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">_is_full_backward_hook</code><em class="property"> = None</em></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ae.html#AE.InnerAE.forward"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Compute the forward of the autoencoder</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">training</code><em class="property"> = None</em></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="attribute">
 <dt>
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
@@ -211,7 +191,7 @@ Identity (by default).</p></li>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><em>numpy.ndarray</em></a>) – the set values one wants to reduce.</p>
+<dd class="field-odd"><p><strong>values</strong> (<em>numpy.ndarray</em>) – the set values one wants to reduce.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,7 +233,7 @@ respectively.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p>
+<dd class="field-odd"><p><strong>values</strong> (<em>numpy.ndarray</em>) – the (training) values in the points.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,7 +255,7 @@ respectively.</p></li>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -290,7 +270,7 @@ respectively.</p></li>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.23)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,7 +291,7 @@ respectively.</p></li>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Oct 01, 2022.
+      <span class="lastupdated">Last updated on Nov 01, 2022.
       </span></p>
   </div>
 
