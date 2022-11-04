@@ -1,13 +1,15 @@
 """EZyRB package"""
 
 __all__ = [
-    'Database', 'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
+    'Database', 'Snapshot', 'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
     'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor', 'AE',
     'ReducedOrderModel', 'PODAE', 'RegularGrid'
 ]
 
 from .meta import *
 from .database import Database
+from .snapshot import Snapshot
+from .parameter import Parameter
 from .reduction import Reduction
 from .pod import POD
 from .ae import AE
