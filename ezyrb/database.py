@@ -67,6 +67,10 @@ class Database():
         """
         return len(self._pairs)
 
+    def __str__(self):
+        """ Print minimal info about the Database """
+        return str(self.parameters_matrix)
+
     def add(self, parameter, snapshot):
         """
         Add (by row) new sets of snapshots and parameters to the original
@@ -81,31 +85,50 @@ class Database():
         if not isinstance(snapshot, Snapshot):
             raise ValueError
 
-        self._pairs.append((parameter, snapshot))        
+        self._pairs.append((parameter, snapshot))
 
         return self
 
 
-    # def split(self, chunks, seed=None):
-    #     """
+    def split(self, chunks, seed=None):
+        """
 
-    #     >>> db = Database(...)
-    #     >>> train, test = db.split([0.8, 0.2])
-        
-    #     """
-    #     print(chunks)
-    #     if all(isinstance(n, int) for n in chunks):
-    #         if sum(chunks) != len(self):
-    #             raise ValueError('chunk elements are incosistent')
-            
-    #         ids = [
-    #             j for j, chunk in enumerate(chunks)
-    #             for i in range(chunk)
-    #         ] 
+        >>> db = Database(...)
+        >>> train, test = db.split([0.8, 0.2]) # ratio
+        >>> train, test = db.split([80, 20])   # n snapshots
 
-    #         return [self[ids == i] for i in range(chunks)]
+        """
+        if all(isinstance(n, int) for n in chunks):
+            if sum(chunks) != len(self):
+                raise ValueError('chunk elements are incosistent')
 
-    #     elif all(isinstance(n, int) for n in chunks):
-    #         pass
-    #     else:
-    #         ValueError
+            ids = [
+                j for j, chunk in enumerate(chunks)
+                for i in range(chunk)
+            ]
+            np.random.shuffle(ids)
+
+
+        elif all(isinstance(n, float) for n in chunks):
+            if not np.isclose(sum(chunks), 1.):
+                raise ValueError('chunk elements are incosistent')
+
+            cum_chunks = np.cumsum(chunks)
+            cum_chunks = np.insert(cum_chunks, 0, 0.0)
+            ids = np.ones(len(self)) * -1.
+            tmp = np.random.uniform(0, 1, size=len(self))
+            for i in range(len(cum_chunks)-1):
+                is_between = np.logical_and(
+                    tmp >= cum_chunks[i], tmp < cum_chunks[i+1])
+                ids[is_between] = i
+
+        else:
+            ValueError
+
+        new_database = [Database() for _ in range(len(chunks))]
+        for i, chunk in enumerate(chunks):
+            chunk_ids = np.array(ids) == i
+            for p, s in np.asarray(self._pairs)[chunk_ids]:
+                new_database[i].add(p, s)
+
+        return new_database

@@ -26,8 +26,8 @@ class TestDatabase(TestCase):
                        np.random.uniform(size=(10, 8)))
         new = org[2::2]
         assert new.parameters_matrix.shape[0] == new.snapshots_matrix.shape[0] == 4
-    
-    def test_getitem_singular(self): 
+
+    def test_getitem_singular(self):
         org = Database(np.random.uniform(size=(10, 3)),
                        np.random.uniform(size=(10, 8)))
         new = org[2]
@@ -39,9 +39,17 @@ class TestDatabase(TestCase):
         assert org.parameters_matrix.shape == (10, 3)
         assert org.snapshots_matrix.shape == (10, 8)
 
-    # def test_split(self):
-    #     org = Database(np.random.uniform(size=(10, 3)),
-    #                    np.random.uniform(size=(10, 8)))
-    #     t1, t2 = org.split([8, 2])
-    #     print(t1)
-    #     assert False
+    def test_split(self):
+        org = Database(np.random.uniform(size=(10, 3)),
+                       np.random.uniform(size=(10, 8)))
+        t1, t2 = org.split([8, 2])
+        assert isinstance(t1, Database)
+        assert isinstance(t2, Database)
+        assert t1.parameters_matrix.shape == (8, org.parameters_matrix.shape[1])
+        assert t2.parameters_matrix.shape == (2, org.parameters_matrix.shape[1])
+        org = Database(np.random.uniform(size=(10, 3)),
+                       np.random.uniform(size=(10, 8)))
+        t1, t2, t3 = org.split([.3, .3, .4])
+        assert isinstance(t1, Database)
+        assert isinstance(t2, Database)
+        assert isinstance(t3, Database)
