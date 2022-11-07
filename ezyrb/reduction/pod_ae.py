@@ -63,7 +63,7 @@ class PODAE(POD, AE):
         Projects a reduced to full order solution.
 
         :param: numpy.ndarray g the latent variables.
-        
+
         .. note::
 
             Same as `inverse_transform`. Kept for backward compatibility.

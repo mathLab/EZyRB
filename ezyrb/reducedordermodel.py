@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
+from .database import Database
 
 class ReducedOrderModel():
     """
@@ -44,30 +45,52 @@ class ReducedOrderModel():
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, database, reduction, approximation, scaler_red=None):
+    def __init__(self, database, reduction, approximation,
+                 fom_preprocessing=None, rom_preprocessing=None,
+                 fom_postprocessing=None, rom_postprocessing=None):
+
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
-        self.scaler_red = scaler_red
 
-    def fit(self, *args, **kwargs):
+        if fom_preprocessing is None:
+            fom_preprocessing = []
+        if rom_preprocessing is None:
+            fom_preprocessing = []
+        if fom_postprocessing is None:
+            fom_postprocessing = []
+        if rom_postprocessing is None:
+            fom_postprocessing = []
+
+        self.fom_preprocessing = fom_preprocessing
+        self.rom_preprocessing = rom_preprocessing
+        self.fom_postprocessing = fom_postprocessing
+        self.rom_postprocessing = rom_postprocessing
+
+    def fit(self):
         r"""
         Calculate reduced space
 
-        :param \*args: additional parameters to pass to the `fit` method.
-        :param \**kwargs: additional parameters to pass to the `fit` method.
         """
-        self.reduction.fit(self.database.snapshots.T)
-        reduced_output = self.reduction.transform(self.database.snapshots.T).T
 
-        if self.scaler_red:
-            reduced_output = self.scaler_red.fit_transform(reduced_output)
+        # FULL-ORDER PREPROCESSING here
+
+        self.reduction.fit(self.database.snapshots_matrix.T)
+        reduced_snapshots = self.reduction.transform(
+            self.database.snapshots_matrix.T).T
+
+        self._reduced_database = Database(self.database.parameters_matrix,
+                                          reduced_snapshots)
+
+        # REDUCED-ORDER PREPROCESSING here
 
         self.approximation.fit(
-            self.database.parameters,
-            reduced_output,
-            *args,
-            **kwargs)
+            self._reduced_database.parameters_matrix,
+            self._reduced_database.snapshots_matrix)
+
+        # REDUCED-ORDER POSTPROCESSING here
+
+        # FULL-ORDER POSTPROCESSING here
 
         return self
 
@@ -76,20 +99,10 @@ class ReducedOrderModel():
         Calculate predicted solution for given mu
         """
         mu = np.atleast_2d(mu)
-        if hasattr(self, 'database') and self.database.scaler_parameters:
-            mu = self.database.scaler_parameters.transform(mu)
 
         predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
 
-        if self.scaler_red:  # rescale modal coefficients
-            predicted_red_sol = self.scaler_red.inverse_transform(
-                predicted_red_sol)
-
         predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
-
-        if hasattr(self, 'database') and self.database.scaler_snapshots:
-            predicted_sol = self.database.scaler_snapshots.inverse_transform(
-                    predicted_sol.T).T
 
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
@@ -159,10 +172,10 @@ class ReducedOrderModel():
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters)
+        predicted_test = self.predict(test.parameters_matrix)
         return np.mean(
-            norm(predicted_test - test.snapshots, axis=1) /
-            norm(test.snapshots, axis=1))
+            norm(predicted_test - test.snapshots_matrix, axis=1) /
+            norm(test.snapshots_matrix, axis=1))
 
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
         r"""
