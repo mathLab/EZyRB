@@ -10,6 +10,18 @@ class Plugin(ABC):
     All the classes that implement the input-output mapping should be inherited
     from this class.
     """
-    @abstractmethod
-    def perform(self):
-        """Abstract `perform`"""
+    def fom_preprocessing(self):
+        """ Void """
+        pass
+
+    def rom_preprocessing(self):
+        """ Void """
+        pass
+
+    def rom_postprocessing(self):
+        """ Void """
+        pass
+
+    def fom_postprocessing(self):
+        """ Void """
+        pass

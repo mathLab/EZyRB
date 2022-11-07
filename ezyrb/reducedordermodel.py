@@ -46,26 +46,16 @@ class ReducedOrderModel():
 
     """
     def __init__(self, database, reduction, approximation,
-                 fom_preprocessing=None, rom_preprocessing=None,
-                 fom_postprocessing=None, rom_postprocessing=None):
+                 plugins=None):
 
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
 
-        if fom_preprocessing is None:
-            fom_preprocessing = []
-        if rom_preprocessing is None:
-            fom_preprocessing = []
-        if fom_postprocessing is None:
-            fom_postprocessing = []
-        if rom_postprocessing is None:
-            fom_postprocessing = []
+        if plugins is None:
+            plugins = []
 
-        self.fom_preprocessing = fom_preprocessing
-        self.rom_preprocessing = rom_preprocessing
-        self.fom_postprocessing = fom_postprocessing
-        self.rom_postprocessing = rom_postprocessing
+        self.plugins = plugins
 
     def fit(self):
         r"""
@@ -73,7 +63,12 @@ class ReducedOrderModel():
 
         """
 
+        import copy
+        self._full_database = copy.deepcopy(self.database)
+
         # FULL-ORDER PREPROCESSING here
+        for plugin in self.plugins:
+            plugin.fom_preprocessing(self)
 
         self.reduction.fit(self.database.snapshots_matrix.T)
         reduced_snapshots = self.reduction.transform(
@@ -82,15 +77,15 @@ class ReducedOrderModel():
         self._reduced_database = Database(self.database.parameters_matrix,
                                           reduced_snapshots)
 
+        print(self._reduced_database.snapshots_matrix)
         # REDUCED-ORDER PREPROCESSING here
+        for plugin in self.plugins:
+            plugin.rom_preprocessing(self)
 
+        print(self._reduced_database.snapshots_matrix)
         self.approximation.fit(
             self._reduced_database.parameters_matrix,
             self._reduced_database.snapshots_matrix)
-
-        # REDUCED-ORDER POSTPROCESSING here
-
-        # FULL-ORDER POSTPROCESSING here
 
         return self
 
@@ -98,16 +93,29 @@ class ReducedOrderModel():
         """
         Calculate predicted solution for given mu
         """
-        mu = np.atleast_2d(mu)
+        self._reduced_database = Database(
+                np.atleast_2d(mu),
+                np.atleast_2d(self.approximation.predict(mu))
+        )
 
-        predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
+        # REDUCED-ORDER POSTPROCESSING here
+        for plugin in self.plugins:
+            plugin.rom_postprocessing(self)
 
-        predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
+        self._full_database = Database(
+            np.atleast_2d(mu),
+            self.reduction.inverse_transform(
+                    self._reduced_database.snapshots_matrix.T).T
+        )
+        
+        # REDUCED-ORDER POSTPROCESSING here
+        for plugin in self.plugins:
+            plugin.fom_postprocessing(self)
 
+        predicted_sol = self._full_database.snapshots_matrix
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
-        else:
-            predicted_sol = predicted_sol.T
+
         return predicted_sol
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
