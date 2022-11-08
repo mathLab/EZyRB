@@ -55,8 +55,13 @@ class Database():
         .. warning:: The new parameters and snapshots are a view of the
             original Database.
         """
-        view = Database()
-        view._pairs = self._pairs[val]
+        if isinstance(val, np.ndarray):
+            view = Database()
+            for p, s in np.asarray(self._pairs)[val]:
+                view.add(p, s)
+        elif isinstance(val, (int, slice)):
+            view = Database()
+            view._pairs = self._pairs[val]
         return view
 
     def __len__(self):

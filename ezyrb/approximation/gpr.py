@@ -42,10 +42,9 @@ class GPR(Approximation):
         self.X_sample = None
         self.Y_sample = None
         self.kern = kern
-        self.normalizer = normalizer
+        self.normalizer = normalizer  # TODO: avoid normalizer inside GPR class
         self.optimization_restart = optimization_restart
         self.model = None
-        
 
     def fit(self, points, values):
         """
@@ -62,8 +61,8 @@ class GPR(Approximation):
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         self.model = GaussianProcessRegressor(
-            kernel=kern, n_restarts_optimizer=optimization_restart,
-            normalize_y=normalizer)
+            kernel=self.kern, n_restarts_optimizer=self.optimization_restart,
+            normalize_y=self.normalizer)
         self.model.fit(self.X_sample, self.Y_sample)
 
     def predict(self, new_points, return_variance=False):

@@ -93,10 +93,10 @@ class ReducedOrderModel():
         """
         Calculate predicted solution for given mu
         """
+        mu = np.atleast_2d(mu)
+
         self._reduced_database = Database(
-                np.atleast_2d(mu),
-                np.atleast_2d(self.approximation.predict(mu))
-        )
+                mu, np.atleast_2d(self.approximation.predict(mu)))
 
         # REDUCED-ORDER POSTPROCESSING here
         for plugin in self.plugins:
@@ -107,7 +107,7 @@ class ReducedOrderModel():
             self.reduction.inverse_transform(
                     self._reduced_database.snapshots_matrix.T).T
         )
-        
+
         # REDUCED-ORDER POSTPROCESSING here
         for plugin in self.plugins:
             plugin.fom_postprocessing(self)
@@ -243,8 +243,7 @@ class ReducedOrderModel():
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
-                                 *args, **kwargs)
+                             copy.deepcopy(self.approximation)).fit()
 
             error[j] = rom.test_error(test_db)
 
@@ -268,7 +267,7 @@ class ReducedOrderModel():
         if error is None:
             error = self.loo_error()
 
-        mu = self.database.parameters
+        mu = self.database.parameters_matrix
         tria = Delaunay(mu)
 
         error_on_simplex = np.array([

@@ -1,7 +1,5 @@
 """ Module for Scaler plugin """
 
-import numpy as np
-
 from .plugin import Plugin
 
 
@@ -14,12 +12,13 @@ class DatabaseScaler(Plugin):
     (`mode='full'`), at the reduced one (`mode='reduced'`) or both of them
     (`mode='both'`).
 
-    :param obj scaler: a generic object which has to have implemented the `fit`,
-        `transform` and  `inverse_trasform` methods (i.e. `sklearn` interface).
+    :param obj scaler: a generic object which has to have implemented the
+        `fit`, `transform` and  `inverse_trasform` methods (i.e. `sklearn`
+        interface).
     :param {'full', 'reduced'} mode: define if the rescaling has to be
         applied at the full order ('full') or at the reduced one ('reduced').
-    :param {'parameters', 'snapshots'} params: define if the rescaling has to be
-        applied to the parameters or to the snapshots.
+    :param {'parameters', 'snapshots'} params: define if the rescaling has to
+        be applied to the parameters or to the snapshots.
     """
     def __init__(self, scaler, mode, target) -> None:
         super().__init__()
@@ -30,9 +29,9 @@ class DatabaseScaler(Plugin):
 
     @property
     def target(self):
-        """ 
+        """
         Get the type of scaling. See class documentation for more info.
-        
+
         rtype: str
         """
         return self._target
@@ -46,9 +45,9 @@ class DatabaseScaler(Plugin):
 
     @property
     def mode(self):
-        """ 
+        """
         Get the type of scaling. See class documentation for more info.
-        
+
         rtype: str
         """
         return self._mode
@@ -62,7 +61,6 @@ class DatabaseScaler(Plugin):
 
     def _select_matrix(self, db):
         """ Helper function to select the proper matrix to rescale. """
-        target_ = self.target
         return getattr(db, f'{self.target}_matrix')
 
     def rom_preprocessing(self, rom):
@@ -71,7 +69,7 @@ class DatabaseScaler(Plugin):
 
         db = rom._reduced_database
 
-        self.scaler.fit(self._select_matrix(db)) 
+        self.scaler.fit(self._select_matrix(db))
 
         if self.target == 'parameters':
             new_db = type(db)(
@@ -92,7 +90,7 @@ class DatabaseScaler(Plugin):
 
         db = rom._full_database
 
-        self.scaler.fit(self._select_matrix(db)) 
+        self.scaler.fit(self._select_matrix(db))
 
         if self.target == 'parameters':
             new_db = type(db)(
@@ -110,7 +108,7 @@ class DatabaseScaler(Plugin):
     def fom_postprocessing(self, rom):
 
         if self.mode != 'full':
-            return 
+            return
 
         db = rom._full_database
 
@@ -124,7 +122,7 @@ class DatabaseScaler(Plugin):
                 db.parameters_matrix,
                 self.scaler.inverse_transform(self._select_matrix(db)),
             )
-        
+
         rom._full_database = new_db
 
     def rom_postprocessing(self, rom):
@@ -145,4 +143,3 @@ class DatabaseScaler(Plugin):
             )
 
         rom._reduced_database = new_db
-

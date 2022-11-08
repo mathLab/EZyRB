@@ -165,10 +165,10 @@ class TestReducedOrderModel(TestCase):
         gpr = GPR()
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr)
-        err = rom.loo_error(normalizer=False)
+        err = rom.loo_error()
         np.testing.assert_allclose(
             err[0],
-            np.array(0.639247),
+            np.array(0.595857),
             rtol=1e-3)
 
     def test_loo_error_singular_values(self):
