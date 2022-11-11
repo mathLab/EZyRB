@@ -8,6 +8,7 @@ from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
 from .database import Database
 
+
 class ReducedOrderModel():
     """
     Reduced Order Model class.
@@ -15,12 +16,12 @@ class ReducedOrderModel():
     This class performs the actual reduced order model using the selected
     methods for approximation and reduction.
 
-    :param ezyrb.Database database: the database to use for training the reduced
-        order model.
-    :param ezyrb.Reduction reduction: the reduction method to use in reduced order
-        model.
-    :param ezyrb.Approximation approximation: the approximation method to use in
+    :param ezyrb.Database database: the database to use for training the
         reduced order model.
+    :param ezyrb.Reduction reduction: the reduction method to use in reduced
+        order model.
+    :param ezyrb.Approximation approximation: the approximation method to use
+        in reduced order model.
     :param object scaler_red: the scaler for the reduced variables (eg. modal
         coefficients). Default is None.
 
@@ -70,19 +71,20 @@ class ReducedOrderModel():
         for plugin in self.plugins:
             plugin.fom_preprocessing(self)
 
-        self.reduction.fit(self.database.snapshots_matrix.T)
+        print(self._full_database.snapshots_matrix)
+        self.reduction.fit(self._full_database.snapshots_matrix.T)
+        # print(self.reduction.singular_values)
+        # print(self._full_database.snapshots_matrix)
         reduced_snapshots = self.reduction.transform(
-            self.database.snapshots_matrix.T).T
+            self._full_database.snapshots_matrix.T).T
 
-        self._reduced_database = Database(self.database.parameters_matrix,
-                                          reduced_snapshots)
+        self._reduced_database = Database(
+            self._full_database.parameters_matrix, reduced_snapshots)
 
-        print(self._reduced_database.snapshots_matrix)
         # REDUCED-ORDER PREPROCESSING here
         for plugin in self.plugins:
             plugin.rom_preprocessing(self)
 
-        print(self._reduced_database.snapshots_matrix)
         self.approximation.fit(
             self._reduced_database.parameters_matrix,
             self._reduced_database.snapshots_matrix)
@@ -112,11 +114,7 @@ class ReducedOrderModel():
         for plugin in self.plugins:
             plugin.fom_postprocessing(self)
 
-        predicted_sol = self._full_database.snapshots_matrix
-        if 1 in predicted_sol.shape:
-            predicted_sol = predicted_sol.ravel()
-
-        return predicted_sol
+        return self._full_database
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """

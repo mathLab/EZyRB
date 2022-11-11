@@ -1,5 +1,8 @@
 """ Module for discretized solution object """
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Snapshot:
 
@@ -33,7 +36,6 @@ class Snapshot:
 
         self._space = new_space
 
-
     @property
     def flattened(self):
         """ return the values in 1D array """
@@ -50,5 +52,3 @@ class Snapshot:
             plt.plot(self.space, self.values)
         else:
             raise NotImplementedError
-
-        plt.show()        

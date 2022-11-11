@@ -41,7 +41,10 @@ class Linear(Approximation):
 
         if as_np_array.ndim == 1 or (as_np_array.ndim == 2
                                      and as_np_array.shape[1] == 1):
-            self.interpolator = interp1d(as_np_array, values, axis=0)
+
+            self.interpolator = interp1d(as_np_array, values, axis=0,
+                                         bounds_error=False,
+                                         fill_value=self.fill_value)
         else:
             self.interpolator = LinearNDInterp(points,
                                                values,

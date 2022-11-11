@@ -1,34 +1,84 @@
 import numpy as np
-import pytest
+# import pytest
 
-from ezyrb import POD, GPR, RBF, Database, ANN
-from ezyrb import KNeighborsRegressor, RadiusNeighborsRegressor, Linear
+from ezyrb import POD, RBF, Database, Snapshot, Parameter, Linear
 from ezyrb import ReducedOrderModel as ROM
-from ezyrb.plugin.scaler import DatabaseScaler
 from ezyrb.plugin.shift import ShiftSnapshots
 
-from sklearn.preprocessing import StandardScaler
+n_params = 15
+params = np.linspace(0.5, 4.5, n_params).reshape(-1, 1)
 
-snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
-pred_sol_tst = np.load('tests/test_datasets/p_predsol.npy').T
-pred_sol_gpr = np.load('tests/test_datasets/p_predsol_gpr.npy').T
-param = np.array([[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]])
 
-def shift(snapshot, time):
-    snapshot.space -= 2*time
+def gaussian(x, mu, sig):
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+
+
+def wave(t, res=256):
+    x = np.linspace(0, 5, res)
+    return x, gaussian(x, t, 0.1)
+
+
+def shift(time):
+    return time-0.5
+
 
 def test_constructor():
+    ShiftSnapshots(shift, RBF())
+
+
+def test_fit():
     pod = POD()
-    import torch
     rbf = RBF()
-    db = Database(param, snapshots.T)
-    # rom = ROM(db, pod, rbf, plugins=[DatabaseScaler(StandardScaler(), 'full', 'snapshots')])
+    db = Database()
+    for param in params:
+        space, values = wave(param)
+        snap = Snapshot(values=values, space=space)
+        db.add(Parameter(param), snap)
     rom = ROM(db, pod, rbf, plugins=[
         ShiftSnapshots(shift, RBF())
     ])
     rom.fit()
-    print(rom.database.snapshots_matrix)
 
+
+def test_predict_ref():
+    pod = POD()
+    rbf = RBF()
+    db = Database()
+    for param in params:
+        space, values = wave(param)
+        snap = Snapshot(values=values, space=space)
+        db.add(Parameter(param), snap)
+    rom = ROM(db, pod, rbf, plugins=[
+        ShiftSnapshots(shift, Linear(fill_value=0.0))
+    ])
+    rom.fit()
+    pred = rom.predict(db._pairs[0][0].values)
+    np.testing.assert_array_almost_equal(
+        pred._pairs[0][1].values, db._pairs[0][1].values, decimal=1)
+
+
+def test_predict():
+    pod = POD()
+    rbf = Linear()
+    db = Database()
+    for param in params:
+        space, values = wave(param)
+        snap = Snapshot(values=values, space=space)
+        db.add(Parameter(param), snap)
+    rom = ROM(db, pod, rbf, plugins=[
+        ShiftSnapshots(shift, Linear(fill_value=0.0))
+    ])
+    rom.fit()
+    pred = rom.predict(db._pairs[10][0].values)
+
+    from scipy import spatial
+    tree = spatial.KDTree(db._pairs[10][1].space.reshape(-1, 1))
+    error = 0.0
+    for coord, value in zip(pred._pairs[0][1].space, pred._pairs[0][1].values):
+        a = tree.query(coord)
+        error += value - db._pairs[10][1].values[a[1]]
+
+    assert error < 1e-5
 
 # def test_values():
 #     snap = Snapshot(test_value)
@@ -36,4 +86,3 @@ def test_constructor():
 #     snap = Snapshot(test_value, space=test_space)
 #     with pytest.raises(ValueError):
 #         snap.values = test_value[:-2]
-
