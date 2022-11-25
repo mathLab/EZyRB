@@ -76,7 +76,7 @@ def test_predict():
     error = 0.0
     for coord, value in zip(pred._pairs[0][1].space, pred._pairs[0][1].values):
         a = tree.query(coord)
-        error += value - db._pairs[10][1].values[a[1]]
+        error += np.abs(value - db._pairs[10][1].values[a[1]])
 
     assert error < 1e-5
 

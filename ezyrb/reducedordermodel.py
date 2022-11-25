@@ -71,7 +71,6 @@ class ReducedOrderModel():
         for plugin in self.plugins:
             plugin.fom_preprocessing(self)
 
-        print(self._full_database.snapshots_matrix)
         self.reduction.fit(self._full_database.snapshots_matrix.T)
         # print(self.reduction.singular_values)
         # print(self._full_database.snapshots_matrix)
@@ -180,8 +179,8 @@ class ReducedOrderModel():
         """
         predicted_test = self.predict(test.parameters_matrix)
         return np.mean(
-            norm(predicted_test - test.snapshots_matrix, axis=1) /
-            norm(test.snapshots_matrix, axis=1))
+            norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+            axis=1) / norm(test.snapshots_matrix, axis=1))
 
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
         r"""
