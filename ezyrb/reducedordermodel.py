@@ -93,6 +93,10 @@ class ReducedOrderModel():
     def predict(self, mu):
         """
         Calculate predicted solution for given mu
+
+        :return: the database containing all the predicted solution (with
+            corresponding parameters).
+        :rtype: Database
         """
         mu = np.atleast_2d(mu)
 

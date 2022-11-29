@@ -38,8 +38,8 @@ class TestReducedOrderModel(TestCase):
         new_rom = ROM.load(fname)
         new_param = [-0.293344, -0.23120537]
         np.testing.assert_array_almost_equal(
-            rom.predict(new_param),
-            new_rom.predict(new_param)
+            rom.predict(new_param).snapshots_matrix,
+            new_rom.predict(new_param).snapshots_matrix
         )
 
     def test_load2(self):
@@ -53,8 +53,8 @@ class TestReducedOrderModel(TestCase):
         new_rom = ROM.load(fname)
         new_param = [-0.293344, -0.23120537]
         np.testing.assert_array_almost_equal(
-            rom.predict(new_param),
-            new_rom.predict(new_param)
+            rom.predict(new_param).snapshots_matrix,
+            new_rom.predict(new_param).snapshots_matrix
         )
 
     def test_predict_01(self):
@@ -63,8 +63,9 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf).fit()
         pred_sol = rom.predict([-0.293344, -0.23120537])
-        np.save('tests/test_datasets/p_predsol.npy', pred_sol.T)
-        np.testing.assert_allclose(pred_sol, pred_sol_tst, rtol=1e-4, atol=1e-5)
+        np.testing.assert_allclose(
+            pred_sol.snapshots_matrix.flatten(),
+            pred_sol_tst, rtol=1e-4, atol=1e-5)
 
     def test_predict_02(self):
         np.random.seed(117)
@@ -73,7 +74,9 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict([-.45, -.45])
-        np.testing.assert_allclose(pred_sol, pred_sol_gpr, rtol=1e-4, atol=1e-5)
+        np.testing.assert_allclose(
+            pred_sol.snapshots_matrix.flatten(),
+            pred_sol_gpr, rtol=1e-4, atol=1e-5)
 
     def test_predict_03(self):
         pod = POD(method='svd', rank=3)
@@ -81,7 +84,7 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters_matrix[2])
-        assert pred_sol.shape == db.snapshots_matrix[0].shape
+        assert pred_sol.snapshots_matrix[0].shape == db.snapshots_matrix[0].shape
 
     def test_predict_04(self):
         pod = POD(method='svd', rank=3)
@@ -89,7 +92,7 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters_matrix)
-        assert pred_sol.shape == db.snapshots_matrix.shape
+        assert pred_sol.snapshots_matrix.shape == db.snapshots_matrix.shape
 
     # def test_predict_scaler_01(self):
     #     from sklearn.preprocessing import StandardScaler

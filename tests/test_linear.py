@@ -48,9 +48,8 @@ class TestLinear(TestCase):
         rom = ReducedOrderModel(db, pod, reg)
 
         rom.fit()
-        assert rom.predict([1]) == 1
-        assert rom.predict([2]) == 5
-        assert rom.predict([3]) == 3
+        pred = rom.predict([[1], [2], [3]])
+        np.testing.assert_equal(pred.snapshots_matrix, np.array([1, 5, 3])[:,None]) 
 
         Y = np.random.uniform(size=(3, 3))
         db = Database(np.array([1, 2, 3]), Y)
