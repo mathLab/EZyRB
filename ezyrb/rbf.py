@@ -61,11 +61,11 @@ class RBF(Approximation):
         :param array_like values: the values in the points.
         """
         self.xi = np.asarray(points)
-        N = self.xi.shape[-1]
 
         if self.epsilon is None:
             # default epsilon is the "the average distance between nodes" based
             # on a bounding hypercube
+            N = self.xi.shape[-1]
             ximax = np.amax(self.xi, axis=0)
             ximin = np.amin(self.xi, axis=0)
             edges = ximax - ximin
