@@ -4,10 +4,6 @@ Three different methods can be employed: Truncated Singular Value
 Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
 Singular Value Decomposition via correlation matrix.
 """
-try:
-    from scipy.linalg import eigh
-except ImportError:
-    from numpy.linalg import eigh
 import numpy as np
 
 from .reduction import Reduction
@@ -74,8 +70,8 @@ class POD(Reduction):
         method = available_methods.get(method)
         if method is None:
             raise RuntimeError(
-                "Invalid method for POD. Please chose one among {}".format(
-                    ', '.join(available_methods)))
+                f"Invalid method for POD. Please chose one among {', '.join(available_methods)}"
+            )
 
         self.__method, args = method
         args.update(kwargs)
@@ -257,7 +253,7 @@ class POD(Reduction):
         else:
             corr = X.T.dot(X)
 
-        eigs, eigv = eigh(corr)
+        eigs, eigv = np.linalg.eigh(corr)
 
         ordered_idx = np.argsort(eigs)[::-1]
         eigs = eigs[ordered_idx]
