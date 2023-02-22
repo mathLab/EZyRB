@@ -98,7 +98,6 @@ class ANN(Approximation):
 
         layers_torch = []
         inout_layers = [[layers[i], layers[i+1]] for i in range(len(layers)-1)]
-        print(layers, functions)
 
         while True:
             if inout_layers:
@@ -153,7 +152,6 @@ class ANN(Approximation):
         :param numpy.ndarray values: the (training) values in the points.
         """
 
-        print('AAAAAAAA')
         self._build_model(points, values)
         optimizer = self.optimizer(
             self.model.parameters(),
