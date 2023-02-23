@@ -15,9 +15,8 @@ class ANN(Approximation):
     :param list layers: ordered list with the number of neurons of each hidden
         layer.
     :param torch.nn.modules.activation function: activation function at each
-        layer, except for the output layer at with Identity is considered by
-        default. A single activation function can be passed or a list of them
-        of length equal to the number of hidden layers.
+        layer. A single activation function can be passed or a list of them of
+        length equal to the number of hidden layers.
     :param list stop_training: list with the maximum number of training
         iterations (int) and/or the desired tolerance on the training loss
         (float).
@@ -29,6 +28,10 @@ class ANN(Approximation):
         corresponds to the "weight_decay". Default is 0 (no regularization).
     :param int frequency_print: the frequency in terms of epochs of the print
         during the training of the network.
+    :param boolean last_identity: Flag to specify if the last activation
+        function is the identity function. In the case the user provides the
+        entire list of activation functions, this attribute is ignored. Default
+        value is True.
 
     :Example:
         >>> import ezyrb
@@ -46,12 +49,13 @@ class ANN(Approximation):
     """
     def __init__(self, layers, function, stop_training, loss=None,
                  optimizer=torch.optim.Adam, lr=0.001, l2_regularization=0,
-                 frequency_print=10):
+                 frequency_print=10, last_identity=True):
         if loss is None:
             loss = torch.nn.MSELoss()
 
         if not isinstance(function, list):  # Single activation function passed
-            function = [function] * (len(layers))
+            nl = len(layers) if last_identity else len(layers)+1
+            function = [function] * nl
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
@@ -93,13 +97,19 @@ class ANN(Approximation):
     def _list_to_sequential(layers, functions):
 
         layers_torch = []
-        for i in range(len(layers) - 2):
+        inout_layers = [[layers[i], layers[i+1]] for i in range(len(layers)-1)]
 
-            layers_torch.append(nn.Linear(layers[i], layers[i + 1]))
+        while True:
+            if inout_layers:
+                inp_d, out_d = inout_layers.pop(0)
+                layers_torch.append(nn.Linear(inp_d, out_d))
 
-            if functions[i]:
-                layers_torch.append(functions[i])
-        layers_torch.append(nn.Linear(layers[-2], layers[-1]))
+            if functions:
+                layers_torch.append(functions.pop(0))
+
+            if not functions and not inout_layers:
+                break
+
         return nn.Sequential(*layers_torch)
 
     def _build_model(self, points, values):

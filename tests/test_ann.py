@@ -112,6 +112,27 @@ class TestANN(TestCase):
         for i in range(len(arr)):
             assert value[i] == arr[i]
 
+    def test_last_linear(self):
+        passed_func = nn.Tanh()
+        ann = ANN([10, 5, 2], passed_func, 20000, last_identity=True)
+        ann._build_model(np.array([[1,2],[3,4]]), np.array([[5,6],[7,8]]))
+        last_layer = ann.model[-1]
+        assert isinstance(last_layer, nn.Linear)
+        assert last_layer.in_features == 2
+        assert last_layer.out_features == 2
+
+        passed_func = nn.Tanh()
+        ann = ANN([10, 5, 2], passed_func, 20000, last_identity=False)
+        ann._build_model(np.array([[1,2],[3,4]]), np.array([[5,6],[7,8]]))
+        last_layer = ann.model[-1]
+        assert isinstance(last_layer, nn.Tanh)
+
+        passed_func = [nn.Tanh()] * 3 + [nn.ReLU()]
+        ann = ANN([10, 5, 2], passed_func, 20000)
+        ann._build_model(np.array([[1,2],[3,4]]), np.array([[5,6],[7,8]]))
+        last_layer = ann.model[-1]
+        assert isinstance(last_layer, nn.ReLU)
+
     def test_build_model(self):
         passed_func = nn.Tanh()
         ann = ANN([10, 5, 2], passed_func, 20000)

@@ -37,6 +37,10 @@ class AE(Reduction, ANN):
         corresponds to the "weight_decay". Default is 0 (no regularization).
     :param int frequency_print: the frequency in terms of epochs of the print
         during the training of the network.
+    :param boolean last_identity: Flag to specify if the last activation
+        function is the identity function. In the case the user provides the
+        entire list of activation functions, this attribute is ignored. Default
+        value is True.
 
     :Example:
         >>> from ezyrb import AE
@@ -62,7 +66,8 @@ class AE(Reduction, ANN):
                  optimizer=torch.optim.Adam,
                  lr=0.001,
                  l2_regularization=0,
-                 frequency_print=10):
+                 frequency_print=10,
+                 last_identity=True):
 
         if layers_encoder[-1] != layers_decoder[0]:
             raise ValueError('Wrong dimension in encoder and decoder layers')
@@ -72,10 +77,15 @@ class AE(Reduction, ANN):
 
         if not isinstance(function_encoder, list):
             # Single activation function passed
-            function_encoder = [function_encoder] * (len(layers_encoder))
+            layers = layers_encoder
+            nl = len(layers)-1 if last_identity else len(layers)
+            function_encoder = [function_encoder] * nl
+
         if not isinstance(function_decoder, list):
             # Single activation function passed
-            function_decoder = [function_decoder] * (len(layers_decoder))
+            layers = layers_decoder
+            nl = len(layers)-1 if last_identity else len(layers)
+            function_decoder = [function_decoder] * nl
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
