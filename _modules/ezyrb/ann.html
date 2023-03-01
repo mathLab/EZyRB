@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.ann &mdash; EZyRB 1.3.0.post2302 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.ann &mdash; EZyRB 1.3.0.post2303 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,14 +24,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> EZyRB
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            EZyRB
           </a>
               <div class="version">
-                1.3.0.post2302
+                1.3.0.post2303
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
       <li class="breadcrumb-item active">ezyrb.ann</li>
       <li class="wy-breadcrumbs-aside">
@@ -86,9 +90,8 @@
 <span class="sd">    :param list layers: ordered list with the number of neurons of each hidden</span>
 <span class="sd">        layer.</span>
 <span class="sd">    :param torch.nn.modules.activation function: activation function at each</span>
-<span class="sd">        layer, except for the output layer at with Identity is considered by</span>
-<span class="sd">        default. A single activation function can be passed or a list of them</span>
-<span class="sd">        of length equal to the number of hidden layers.</span>
+<span class="sd">        layer. A single activation function can be passed or a list of them of</span>
+<span class="sd">        length equal to the number of hidden layers.</span>
 <span class="sd">    :param list stop_training: list with the maximum number of training</span>
 <span class="sd">        iterations (int) and/or the desired tolerance on the training loss</span>
 <span class="sd">        (float).</span>
@@ -100,6 +103,10 @@
 <span class="sd">        corresponds to the &quot;weight_decay&quot;. Default is 0 (no regularization).</span>
 <span class="sd">    :param int frequency_print: the frequency in terms of epochs of the print</span>
 <span class="sd">        during the training of the network.</span>
+<span class="sd">    :param boolean last_identity: Flag to specify if the last activation</span>
+<span class="sd">        function is the identity function. In the case the user provides the</span>
+<span class="sd">        entire list of activation functions, this attribute is ignored. Default</span>
+<span class="sd">        value is True.</span>
 
 <span class="sd">    :Example:</span>
 <span class="sd">        &gt;&gt;&gt; import ezyrb</span>
@@ -117,12 +124,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">stop_training</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">l2_regularization</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">frequency_print</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+                 <span class="n">frequency_print</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">last_identity</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># Single activation function passed</span>
-            <span class="n">function</span> <span class="o">=</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">))</span>
+            <span class="n">nl</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span> <span class="k">if</span> <span class="n">last_identity</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="o">*</span> <span class="n">nl</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stop_training</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">stop_training</span> <span class="o">=</span> <span class="p">[</span><span class="n">stop_training</span><span class="p">]</span>
@@ -164,13 +172,19 @@
     <span class="k">def</span> <span class="nf">_list_to_sequential</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">functions</span><span class="p">):</span>
 
         <span class="n">layers_torch</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">inout_layers</span> <span class="o">=</span> <span class="p">[[</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
 
-            <span class="n">layers_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">layers</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inout_layers</span><span class="p">:</span>
+                <span class="n">inp_d</span><span class="p">,</span> <span class="n">out_d</span> <span class="o">=</span> <span class="n">inout_layers</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">layers_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">inp_d</span><span class="p">,</span> <span class="n">out_d</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">functions</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">layers_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">functions</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">layers_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">functions</span><span class="p">:</span>
+                <span class="n">layers_torch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">functions</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">functions</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">inout_layers</span><span class="p">:</span>
+                <span class="k">break</span>
+
         <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers_torch</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ANN._build_model"><a class="viewcode-back" href="../../ann.html#ezyrb.ann.ANN._build_model">[docs]</a>    <span class="k">def</span> <span class="nf">_build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -272,7 +286,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2023.
+      <span class="lastupdated">Last updated on Mar 01, 2023.
       </span></p>
   </div>
 

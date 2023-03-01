@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANN &mdash; EZyRB 1.3.0.post2302 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ANN &mdash; EZyRB 1.3.0.post2303 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -26,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> EZyRB
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            EZyRB
           </a>
               <div class="version">
-                1.3.0.post2302
+                1.3.0.post2303
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -74,7 +78,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="code.html">Code Documentation</a></li>
       <li class="breadcrumb-item active">ANN</li>
       <li class="wy-breadcrumbs-aside">
@@ -117,7 +121,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">ANN</code><span class="sig-paren">(</span><em class="sig-param">layers</em>, <em class="sig-param">function</em>, <em class="sig-param">stop_training</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">lr=0.001</em>, <em class="sig-param">l2_regularization=0</em>, <em class="sig-param">frequency_print=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ann.html#ANN"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">ANN</code><span class="sig-paren">(</span><em class="sig-param">layers</em>, <em class="sig-param">function</em>, <em class="sig-param">stop_training</em>, <em class="sig-param">loss=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">lr=0.001</em>, <em class="sig-param">l2_regularization=0</em>, <em class="sig-param">frequency_print=10</em>, <em class="sig-param">last_identity=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/ann.html#ANN"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
 <p>Feed-Forward Artifical Neural Network (ANN).</p>
 <dl class="field-list">
@@ -126,9 +130,8 @@
 <li><p><strong>layers</strong> (<em>list</em>) – ordered list with the number of neurons of each hidden
 layer.</p></li>
 <li><p><strong>function</strong> (<em>torch.nn.modules.activation</em>) – activation function at each
-layer, except for the output layer at with Identity is considered by
-default. A single activation function can be passed or a list of them
-of length equal to the number of hidden layers.</p></li>
+layer. A single activation function can be passed or a list of them of
+length equal to the number of hidden layers.</p></li>
 <li><p><strong>stop_training</strong> (<em>list</em>) – list with the maximum number of training
 iterations (int) and/or the desired tolerance on the training loss
 (float).</p></li>
@@ -140,6 +143,10 @@ Default value is <cite>Adam</cite> optimizer.</p></li>
 corresponds to the “weight_decay”. Default is 0 (no regularization).</p></li>
 <li><p><strong>frequency_print</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the frequency in terms of epochs of the print
 during the training of the network.</p></li>
+<li><p><strong>last_identity</strong> (<em>boolean</em>) – Flag to specify if the last activation
+function is the identity function. In the case the user provides the
+entire list of activation functions, this attribute is ignored. Default
+value is True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Example</dt>
@@ -287,7 +294,7 @@ points.</p></li>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2023.
+      <span class="lastupdated">Last updated on Mar 01, 2023.
       </span></p>
   </div>
 
