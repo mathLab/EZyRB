@@ -3,7 +3,7 @@
 __all__ = [
     'Database', 'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
     'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor', 'AE',
-    'ReducedOrderModel', 'PODAE'
+    'ReducedOrderModel', 'PODAE', 'RegularGrid'
 ]
 
 from .meta import *
@@ -15,6 +15,7 @@ from .pod_ae import PODAE
 from .approximation import Approximation
 from .rbf import RBF
 from .linear import Linear
+from .regular_grid import RegularGrid
 from .gpr import GPR
 from .reducedordermodel import ReducedOrderModel
 from .ann import ANN
