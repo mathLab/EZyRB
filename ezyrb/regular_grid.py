@@ -21,7 +21,7 @@ class RegularGrid(Approximation):
         self.fill_value = fill_value
         self.interpolator = None
 
-    def fit(self, grid, values):
+    def fit(self, grid, values, **kvargs):
         """
         Construct the interpolator given `grid` and `values`.
 
@@ -32,23 +32,30 @@ class RegularGrid(Approximation):
         # the dimensionality of each tuple of parameters (we look for
         # parameters of dimensionality one)
 
-        # as_np_array = np.array(points)
-        # if not np.issubdtype(as_np_array.dtype, np.number):
-        #     raise ValueError('Invalid format or dimension for the argument'
-        #                      '`points`.')
+        # we have two options
+        # 1.: we could make an interpolator for every mode and its coefficients
+        # or 2.: we "interpolate" the mode number
+        # option 1 is cleaner, but option 2 performs better
+        # X = U S VT, X being shaped m, n
 
-        # if as_np_array.shape[-1] == 1:
-        #     as_np_array = np.squeeze(as_np_array, axis=-1)
+        self.dim = len(grid)
+        vals = np.asarray(values)
+        r, n = vals.T.shape  # vals = (S*VT).T
+        self.mode_nr = np.arange(r)
+        extended_grid = [self.mode_nr, *grid]
+        shape = [r, ]
+        for i in range(self.dim):
+            shape.append(len(grid[i]))
+        assert np.prod(shape) == vals.size, "Values don't match grid. "\
+            "Make sure to pass a grid, not a list of points!\n"\
+            "HINT: did you use rom.fit()? This method does not work with a "\
+            "grid. Use reduction.fit(...) and approximation.fit(...) instead."
+        self.interpolator = RegularGridInterpolator(extended_grid,
+                                                    vals.T.reshape(shape),
+                                                    fill_value=self.fill_value,
+                                                    **kvargs)
 
-        # if as_np_array.ndim == 1 or (as_np_array.ndim == 2
-        #                              and as_np_array.shape[1] == 1):
-        #     self.interpolator = interp1d(as_np_array, values, axis=0)
-        # else:
-        #     self.interpolator = LinearNDInterp(points,
-        #                                        values,
-        #                                        fill_value=self.fill_value)
-
-    def predict(self, new_point):
+    def predict(self, new_points):
         """
         Evaluate interpolator at given `new_points`.
 
@@ -56,4 +63,9 @@ class RegularGrid(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        return self.interpolator(new_point)
+        dim = self.dim
+        xi_extended = np.zeros((len(self.mode_nr), len(new_points), dim+1))
+        xi_extended[:, :, 0] = self.mode_nr[:, None]
+        for i in range(dim):
+            xi_extended[:, :, i+1] = np.array(new_points)[:, i]
+        return self.interpolator(xi_extended).T
