@@ -1,10 +1,8 @@
 """
 Module for higher order interpolation on regular grids
 """
-
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator
-
 from .approximation import Approximation
 
 
@@ -20,6 +18,7 @@ class RegularGrid(Approximation):
     def __init__(self, fill_value=np.nan):
         self.fill_value = fill_value
         self.interpolator = None
+        return
 
     def fit(self, grid, values, **kvargs):
         """
@@ -28,10 +27,6 @@ class RegularGrid(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        # the first dimension is the list of parameters, the second one is
-        # the dimensionality of each tuple of parameters (we look for
-        # parameters of dimensionality one)
-
         # we have two options
         # 1.: we could make an interpolator for every mode and its coefficients
         # or 2.: we "interpolate" the mode number
@@ -54,6 +49,7 @@ class RegularGrid(Approximation):
                                                     vals.T.reshape(shape),
                                                     fill_value=self.fill_value,
                                                     **kvargs)
+        return
 
     def predict(self, new_points):
         """

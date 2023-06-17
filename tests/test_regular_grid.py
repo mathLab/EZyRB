@@ -1,8 +1,6 @@
 import numpy as np
-import warnings
-
 from unittest import TestCase
-from ezyrb import Linear, Database, POD, ReducedOrderModel, RegularGrid
+from ezyrb import RegularGrid  # Database, POD, ReducedOrderModel
 
 
 class TestRegularGrid(TestCase):
@@ -13,14 +11,6 @@ class TestRegularGrid(TestCase):
     def test_default_params(self):
         reg = RegularGrid()
         assert np.isnan(reg.fill_value)
-
-    # def test_predict(self):
-    #    reg = Linear()
-    #    reg.fit([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0], [20, 5], [8, 6]])
-    #    result = reg.predict([[1,2], [8,9], [6,7]])
-    #    assert (result[0] == [1,0]).all()
-    #    assert (result[1] == [8,6]).all()
-    #    assert (result[2] == [20, 5]).all()
 
     def test_predict1d(self):
         reg = RegularGrid()
@@ -53,35 +43,3 @@ class TestRegularGrid(TestCase):
 
     # TODO: test kvargs? depend on scipy version....
     # TODO: rom.fit() does not work, use reduction.fit() and approximation.fit() instead.
-
-    # def test_with_db_predict(self):
-    #     reg = RegularGrid()
-    #     pod = POD()
-    #     x1 = np.array([1, 2, 3])
-    #     xx, _ = np.meshgrid(x1, 1, indexing="ij")
-    #     db = Database(xx,
-    #                   np.array([1, 5, 3])[:, None])
-    #     rom = ReducedOrderModel(db, pod, reg)
-
-    #     rom.fit()
-    #     assert rom.predict([1]) == 1
-    #     assert rom.predict([2]) == 5
-    #     assert rom.predict([3]) == 3
-
-    # def test_wrong1(self):
-    #     # wrong number of params
-    #     with warnings.catch_warnings():
-    #         warnings.filterwarnings(
-    #             "ignore", category=np.VisibleDeprecationWarning)
-    #         with self.assertRaises(Exception):
-    #             reg = Linear()
-    #             reg.fit([[1, 2], [6, ], [8, 9]], [[1, 0], [20, 5], [8, 6]])
-
-    # def test_wrong2(self):
-    #     # wrong number of values
-    #     with warnings.catch_warnings():
-    #         warnings.filterwarnings(
-    #             "ignore", category=np.VisibleDeprecationWarning)
-    #         with self.assertRaises(Exception):
-    #             reg = Linear()
-    #             reg.fit([[1, 2], [6, ], [8, 9]], [[20, 5], [8, 6]])
