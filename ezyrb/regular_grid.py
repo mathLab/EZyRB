@@ -25,30 +25,21 @@ class RegularGrid(Approximation):
     def fit(self, points, values, **kvargs):
         """
         Construct the interpolator given `points` and `values`.
+        see scipy.interpolate.RegularGridInterpolator
 
-        Parameters
-        ----------
-        points : tuple of ndarray of float, with shapes (m1, ), ..., (mn, )
+        :param array_like points: with shapes (m1, ), ..., (mn, )
             The points defining the regular grid in n dimensions. The points in
             each dimension (i.e. every elements of the points tuple) must be
             strictly ascending or descending.
 
-        values : array_like, shape (m1, ..., mn, ...)
-            The data on the regular grid in n dimensions. Complex data can be
-            acceptable.
-        **kvargs : TYPE
-            see scipy.interpolate.RegularGridInterpolator
-
-        Returns
-        -------
-        None.
-
+        :param array_like values: shape (m1, ..., mn, ...)
+            The data on the regular grid in n dimensions.
         """
         # we have two options
         # 1.: we could make an interpolator for every mode and its coefficients
         # or 2.: we "interpolate" the mode number
         # option 1 is cleaner, but option 2 performs better
-        # X = U S VT, X being shaped m, n
+        # X = U S VT, X being shaped (m, n)
 
         self.dim = len(points)
         vals = np.asarray(values)
