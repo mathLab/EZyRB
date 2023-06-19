@@ -20,10 +20,18 @@ class RegularGrid(Approximation):
         self.fill_value = fill_value
         self.interpolator = None
         self.dim = None
+        self.n_modes = 0
         self.mode_nr = None
 
     def get_grid_axes(self, pts_scrmbld, vals_scrmbld):
-        # rounding errors!
+        """
+        calculates the grid axes from a meshed grid. The grid axes are given as
+        a tuple of ndarray of float, with shapes (m1, ), …, (mn, )
+        The values are ordered so they fit on a mesh generated with
+        numpy.meshgrid(ax1, ax2, ..., axn, indexing="ij")
+
+        """
+        # be aware of floating point precision in points!
         grid_axes = []
         iN = []  # index in dimension N
         nN = []  # size of dimension N
@@ -45,44 +53,61 @@ class RegularGrid(Approximation):
     def fit(self, points, values, **kvargs):
         """
         Construct the interpolator given `points` and `values`.
+        Assumes that the points are on a regular grid, fails when not.
         see scipy.interpolate.RegularGridInterpolator
 
-        :param array_like points: with shapes (m1, ), ..., (mn, )
-            The points defining the regular grid in n dimensions. The points in
-            each dimension (i.e. every elements of the points tuple) must be
-            strictly ascending or descending.
-        :param array_like values: shape (m1, ..., mn, ...)
-            The data on the regular grid in n dimensions.
+        :param array_like points: the coordinates of the points.
+        :param array_like values: the values in the points.
         """
         # we have two options
         # 1.: we could make an interpolator for every mode and its coefficients
         # or 2.: we "interpolate" the mode number
         # option 1 is cleaner, but option 2 performs better
         # X = U S VT, X being shaped (m, n)
+        points = np.array(points)
+        if not np.issubdtype(points.dtype, np.number):
+            raise ValueError('Invalid format or dimension for the argument'
+                             '`points`.')
 
-        self.dim = len(points)
+        if len(points.shape) == 1:
+            points.shape = (-1, 1)
+
+        self.dim = len(points[0])
         vals = np.asarray(values)
-        r = vals.T.shape[0]  # vals = (S*VT).T
-        self.mode_nr = np.arange(r)
-        extended_grid = [self.mode_nr, *points]
-        shape = [r, ]
+        grid_axes, values_grd = self.get_grid_axes(points, vals)
+        self.n_modes = vals.T.shape[0]  # vals = (S@VT).T = S@V
+        if self.n_modes > 1:
+            self.mode_nr = np.arange(self.n_modes)
+            extended_grid = [self.mode_nr, *grid_axes]
+            shape = [self.n_modes, ]
+        else:
+            extended_grid = grid_axes
+            shape = []
         for i in range(self.dim):
-            shape.append(len(points[i]))
-        assert np.prod(shape) == vals.size, "Values don't match grid. "\
+            shape.append(len(grid_axes[i]))
+        assert np.prod(shape) == values_grd.size, "Values don't match grid. "\
             "Make sure to pass a grid, not a list of points!\n"\
             "HINT: did you use rom.fit()? This method does not work with a "\
             "grid. Use reduction.fit(...) and approximation.fit(...) instead."
         self.interpolator = RegularGridInterpolator(extended_grid,
-                                                    vals.T.reshape(shape),
+                                                    values_grd.T.reshape(
+                                                        shape),
                                                     fill_value=self.fill_value,
                                                     **kvargs)
 
     def predict(self, new_point):
+        new_point = np.array(new_point)
+        if len(new_point.shape) == 1:
+            new_point.shape = (-1, 1)
+
         dim = self.dim
-        xi_extended = np.zeros((len(self.mode_nr), len(new_point), dim+1))
-        xi_extended[:, :, 0] = self.mode_nr[:, None]
-        for i in range(dim):
-            xi_extended[:, :, i+1] = np.array(new_point)[:, i]
+        if self.n_modes > 1:
+            xi_extended = np.zeros((len(self.mode_nr), len(new_point), dim+1))
+            xi_extended[:, :, 0] = self.mode_nr[:, None]
+            for i in range(dim):
+                xi_extended[:, :, i+1] = np.array(new_point)[:, i]
+        else:
+            xi_extended = new_point
         return self.interpolator(xi_extended).T
 
 

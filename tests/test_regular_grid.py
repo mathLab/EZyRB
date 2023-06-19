@@ -1,6 +1,6 @@
 import numpy as np
 from unittest import TestCase
-from ezyrb import RegularGrid  # Database, POD, ReducedOrderModel
+from ezyrb import RegularGrid, Database, POD, ReducedOrderModel
 
 
 class TestRegularGrid(TestCase):
@@ -12,12 +12,19 @@ class TestRegularGrid(TestCase):
         reg = RegularGrid()
         assert np.isnan(reg.fill_value)
 
+    def test_1D_1mode(self):
+        reg = RegularGrid()
+        reg.fit(np.array([1, 2, 3])[:, None],
+                np.array([1, 5, 3])[:, None])
+        assert reg.predict([1]) == 1
+        assert reg.predict([2]) == 5
+        assert reg.predict([3]) == 3
+
     def test_predict1d(self):
         reg = RegularGrid()
-        x1 = np.array([1, 6, 8])
+        x1 = np.array([[1], [6], [8]])
         V = np.array([[1, 0], [20, 5], [8, 6]])  # n, r = 3, 2
-        grid = [x1, ]
-        reg.fit(grid, V)
+        reg.fit(x1, V)
         result = reg.predict([[1], [8], [6]])
         assert (result[0] == [1, 0]).all()
         assert (result[1] == [8, 6]).all()
@@ -26,7 +33,7 @@ class TestRegularGrid(TestCase):
     def test_predict1d_2(self):
         reg = RegularGrid()
         x1 = [1, 2]
-        reg.fit([x1, ], [[1, 1], [2, 2]])
+        reg.fit(x1, [[1, 1], [2, 2]])
         result = reg.predict([[1.5]])
         assert (result[0] == [[1.5, 1.5]]).all()
 
@@ -34,14 +41,16 @@ class TestRegularGrid(TestCase):
         reg = RegularGrid()
         x1 = [1, 2, 3]
         x2 = [4, 5, 6, 7]
+        xx1, xx2 = np.meshgrid(x1, x2, indexing="ij")
+        points = np.c_[xx1.ravel(), xx2.ravel()]
         V = [[1, 21], [2, 22], [3, 23], [4, 24], [5, 25], [6, 26],
              [7, 27], [8, 28], [9, 29], [10, 30], [11, 31], [12, 32]]
-        reg.fit([x1, x2], V, method="linear")
+        reg.fit(points, V, method="linear")
         result = reg.predict([[1, 4], [1, 5]])
         assert (result[0] == [1, 21]).all()
         assert (result[1] == [2, 22]).all()
 
-    def test_points2grid_2D():
+    def test_get_grid_axes_2D(self):
         x1 = [.1, .2, .3]
         x2 = [4, 5, 6, 7]
         xx1, xx2 = np.meshgrid(x1, x2, indexing="ij")
@@ -54,10 +63,42 @@ class TestRegularGrid(TestCase):
         V_scrmbld = V[random_order, :]
 
         reg = RegularGrid()
-
-        (x1, x2), V_unscrambled = reg.get_grid_axes(pts_scrmbld, V_scrmbld)
+        grid_axes, V_unscrambled = reg.get_grid_axes(pts_scrmbld, V_scrmbld)
 
         assert np.allclose(V_unscrambled, V)
+        assert np.allclose(grid_axes[0], x1)
+        assert np.allclose(grid_axes[1], x2)
 
+    def test_get_grid_axes_3D(self):
+        x1 = [.1, .2, .3]
+        x2 = [4, 5, 6, 7]
+        x3 = [.12, .34, .56, .78, .90]
+        xx1, xx2, xx3 = np.meshgrid(x1, x2, x3, indexing="ij")
+        V = np.arange(len(x1)*len(x2)*len(x3)*2).reshape(-1, 2)
+        pts = np.c_[xx1.ravel(), xx2.ravel(), xx3.ravel()]
+
+        random_order = np.arange(len(pts))
+        np.random.shuffle(random_order)
+        pts_scrmbld = pts[random_order, :]
+        V_scrmbld = V[random_order, :]
+
+        reg = RegularGrid()
+        grid_axes, V_unscrambled = reg.get_grid_axes(pts_scrmbld, V_scrmbld)
+
+        assert np.allclose(V_unscrambled, V)
+        assert np.allclose(grid_axes[0], x1)
+        assert np.allclose(grid_axes[1], x2)
+        assert np.allclose(grid_axes[2], x3)
+
+    def test_with_db_predict(self):
+        reg = RegularGrid()
+        pod = POD()
+        db = Database(np.array([1, 2, 3])[:, None],
+                      np.array([1, 5, 3])[:, None])
+        rom = ReducedOrderModel(db, pod, reg)
+        rom.fit()
+        assert rom.predict([1]) == 1
+        assert rom.predict([2]) == 5
+        assert rom.predict([3]) == 3
     # TODO: test kvargs? depend on scipy version....
     # TODO: rom.fit() does not work, use reduction.fit() and approximation.fit() instead.
