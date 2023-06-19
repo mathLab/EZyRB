@@ -24,13 +24,23 @@ class RegularGrid(Approximation):
 
     def get_grid_axes(self, pts_scrmbld, vals_scrmbld):
         # rounding errors!
-        # works in 2D
-        x1, unique_inverse1 = np.unique(pts_scrmbld[:, 0], return_inverse=True)
-        x2, unique_inverse2 = np.unique(pts_scrmbld[:, 1], return_inverse=True)
-        new_row_index = unique_inverse1*len(x2)+unique_inverse2
+        grid_axes = []
+        iN = []  # index in dimension N
+        nN = []  # size of dimension N
+        dim = pts_scrmbld.shape[1]
+        for i in range(dim):
+            xn, unique_inverse_n = np.unique(pts_scrmbld[:, i],
+                                             return_inverse=True)
+            grid_axes.append(xn)
+            nN.append(len(xn))
+            iN.append(unique_inverse_n)
+
+        if np.prod(nN) != len(vals_scrmbld):
+            raise ValueError("points and values are not on a regular grid")
+        new_row_index = calculate_flat_index(iN, nN)
         reverse_scrambling = np.argsort(new_row_index)
         vals_on_regular_grid = vals_scrmbld[reverse_scrambling, :]
-        return (x1, x2), vals_on_regular_grid
+        return grid_axes, vals_on_regular_grid
 
     def fit(self, points, values, **kvargs):
         """
@@ -41,7 +51,6 @@ class RegularGrid(Approximation):
             The points defining the regular grid in n dimensions. The points in
             each dimension (i.e. every elements of the points tuple) must be
             strictly ascending or descending.
-
         :param array_like values: shape (m1, ..., mn, ...)
             The data on the regular grid in n dimensions.
         """
@@ -75,3 +84,28 @@ class RegularGrid(Approximation):
         for i in range(dim):
             xi_extended[:, :, i+1] = np.array(new_point)[:, i]
         return self.interpolator(xi_extended).T
+
+
+def calculate_flat_index(iN, nN):
+    """
+    Calculates the flat index for a multidimensional array given the indices
+    and dimensions.
+
+    :param list iN: indices representing the position of the element(s)
+                    in each dimension.
+    :param list nN: size of the array in each dimension.
+
+    :rtype: numpy.ndarray
+    """
+    # index = i1 + n1 * (i2 + n2 * (... (iN-1 + nN-1 * iN) ...))
+    if len(iN) != len(nN):
+        raise ValueError("The lengths of iN and nN should be the same.")
+
+    if any((i < 0).any() or (i >= n).any() for i, n in zip(iN, nN)):
+        raise ValueError("The indices are out of bounds.")
+
+    index = 0
+    for i, n in zip(iN, nN):
+        index = i + n * index
+
+    return index
