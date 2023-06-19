@@ -22,6 +22,16 @@ class RegularGrid(Approximation):
         self.dim = None
         self.mode_nr = None
 
+    def get_grid_axes(self, pts_scrmbld, vals_scrmbld):
+        # rounding errors!
+        # works in 2D
+        x1, unique_inverse1 = np.unique(pts_scrmbld[:, 0], return_inverse=True)
+        x2, unique_inverse2 = np.unique(pts_scrmbld[:, 1], return_inverse=True)
+        new_row_index = unique_inverse1*len(x2)+unique_inverse2
+        reverse_scrambling = np.argsort(new_row_index)
+        vals_on_regular_grid = vals_scrmbld[reverse_scrambling, :]
+        return (x1, x2), vals_on_regular_grid
+
     def fit(self, points, values, **kvargs):
         """
         Construct the interpolator given `points` and `values`.

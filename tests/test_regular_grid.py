@@ -41,5 +41,23 @@ class TestRegularGrid(TestCase):
         assert (result[0] == [1, 21]).all()
         assert (result[1] == [2, 22]).all()
 
+    def test_points2grid_2D():
+        x1 = [.1, .2, .3]
+        x2 = [4, 5, 6, 7]
+        xx1, xx2 = np.meshgrid(x1, x2, indexing="ij")
+        V = np.arange(len(x1)*len(x2)*2).reshape(-1, 2)
+        pts = np.c_[xx1.ravel(), xx2.ravel()]
+
+        random_order = np.arange(len(pts))
+        np.random.shuffle(random_order)
+        pts_scrmbld = pts[random_order, :]
+        V_scrmbld = V[random_order, :]
+
+        reg = RegularGrid()
+
+        (x1, x2), V_unscrambled = reg.get_grid_axes(pts_scrmbld, V_scrmbld)
+
+        assert np.allclose(V_unscrambled, V)
+
     # TODO: test kvargs? depend on scipy version....
     # TODO: rom.fit() does not work, use reduction.fit() and approximation.fit() instead.
