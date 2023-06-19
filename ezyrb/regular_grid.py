@@ -11,13 +11,9 @@ class RegularGrid(Approximation):
     Multidimensional interpolator on regular grids.
     See scipy's RegularGridInterpolator
 
-    :param float fill_value: value used to fill in for requested points outside
-        of the convex hull of the input points. If not provided, then the
-        default is numpy.nan.
     """
 
-    def __init__(self, fill_value=np.nan):
-        self.fill_value = fill_value
+    def __init__(self):
         self.interpolator = None
         self.dim = None
         self.n_modes = 0
@@ -92,7 +88,6 @@ class RegularGrid(Approximation):
         self.interpolator = RegularGridInterpolator(extended_grid,
                                                     values_grd.T.reshape(
                                                         shape),
-                                                    fill_value=self.fill_value,
                                                     **kvargs)
 
     def predict(self, new_point):

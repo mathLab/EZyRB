@@ -4,13 +4,6 @@ from ezyrb import RegularGrid, Database, POD, ReducedOrderModel
 
 
 class TestRegularGrid(TestCase):
-    def test_params(self):
-        reg = RegularGrid(fill_value=0)
-        assert reg.fill_value == 0
-
-    def test_default_params(self):
-        reg = RegularGrid()
-        assert np.isnan(reg.fill_value)
 
     def test_1D_1mode(self):
         reg = RegularGrid()
@@ -101,4 +94,3 @@ class TestRegularGrid(TestCase):
         assert rom.predict([2]) == 5
         assert rom.predict([3]) == 3
     # TODO: test kvargs? depend on scipy version....
-    # TODO: rom.fit() does not work, use reduction.fit() and approximation.fit() instead.
