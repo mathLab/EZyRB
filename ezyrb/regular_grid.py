@@ -130,11 +130,11 @@ class RegularGrid(Approximation):
         if len(new_point.shape) == 1:
             new_point.shape = (-1, 1)
 
-        dim = self.dim
         if self.n_modes > 1:
-            xi_extended = np.zeros((len(self.mode_nr), len(new_point), dim+1))
+            shape = (len(self.mode_nr), len(new_point), self.dim+1)
+            xi_extended = np.zeros(shape)
             xi_extended[:, :, 0] = self.mode_nr[:, None]
-            for i in range(dim):
+            for i in range(self.dim):
                 xi_extended[:, :, i+1] = np.array(new_point)[:, i]
         else:
             xi_extended = new_point
