@@ -73,7 +73,6 @@ class RegularGrid(Approximation):
             nN.append(len(xn))
             iN.append(unique_inverse_n)
         if np.prod(nN) != len(vals_scrmbld):
-            print(nN, len(vals_scrmbld))
             msg = "Values don't match grid. Make sure to pass a list of "\
                   "points that are on a regular grid! Be aware of floating "\
                   "point precision."
@@ -96,7 +95,8 @@ class RegularGrid(Approximation):
         if not np.issubdtype(points.dtype, np.number):
             raise ValueError('Invalid format or dimension for the argument'
                              '`points`.')
-        points = np.atleast_2d(points)
+        if len(points.shape) == 1:
+            points.shape = (-1, 1)
         vals = np.asarray(values)
         grid_axes, values_grd = self.get_grid_axes(points, vals)
         shape = [len(ax) for ax in grid_axes]
