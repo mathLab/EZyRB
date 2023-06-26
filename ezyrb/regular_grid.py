@@ -119,6 +119,13 @@ class RegularGrid(Approximation):
                                 **kwargs)
 
     def predict(self, new_point):
+        """
+        Evaluate interpolator at given `new_point`, can be multiple points.
+
+        :param array_like new_point: the coordinates of the given point(s).
+        :return: the interpolated values.
+        :rtype: numpy.ndarray
+        """
         new_point = np.array(new_point)
         if len(new_point.shape) == 1:
             new_point.shape = (-1, 1)
