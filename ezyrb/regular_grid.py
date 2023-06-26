@@ -2,9 +2,8 @@
 Module for higher order interpolation on regular grids
 """
 import numpy as np
-from scipy.interpolate import RegularGridInterpolator
+from scipy.interpolate import RegularGridInterpolator as RGI
 from .approximation import Approximation
-from datetime import datetime as dt
 
 
 class RegularGrid(Approximation):
@@ -66,7 +65,6 @@ class RegularGrid(Approximation):
         :rtype: (list, numpy.ndarray)
 
         """
-        # be aware of floating point precision in points!
         grid_axes = []
         iN = []  # index in dimension N
         nN = []  # size of dimension N
@@ -78,7 +76,10 @@ class RegularGrid(Approximation):
             nN.append(len(xn))
             iN.append(unique_inverse_n)
         if np.prod(nN) != len(vals_scrmbld):
-            raise ValueError("points and values are not on a regular grid")
+            msg = "Values don't match grid. Make sure to pass a list of "\
+                  "points that are on a regular grid! Be aware of floating "\
+                  "point precision."
+            raise ValueError(msg)
         new_row_index = calculate_flat_index(iN, nN)
         reverse_scrambling = np.argsort(new_row_index)
         vals_on_regular_grid = vals_scrmbld[reverse_scrambling, :]
@@ -93,11 +94,6 @@ class RegularGrid(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        # we have two options
-        # 1.: we could make an interpolator for every mode and its coefficients
-        # or 2.: we "interpolate" the mode number
-        # option 1 is cleaner, but option 2 performs better
-        # X = U S VT, X being shaped (m, n)
         points = np.array(points)
         if not np.issubdtype(points.dtype, np.number):
             raise ValueError('Invalid format or dimension for the argument'
@@ -109,7 +105,7 @@ class RegularGrid(Approximation):
         self.dim = len(points[0])
         vals = np.asarray(values)
         grid_axes, values_grd = self.get_grid_axes(points, vals)
-        self.n_modes = vals.T.shape[0]  # vals = (S@VT).T = S@V
+        self.n_modes = vals.T.shape[0]
         if self.n_modes > 1:
             self.mode_nr = np.arange(self.n_modes)
             extended_grid = [self.mode_nr, *grid_axes]
@@ -119,14 +115,8 @@ class RegularGrid(Approximation):
             shape = []
         for i in range(self.dim):
             shape.append(len(grid_axes[i]))
-        assert np.prod(shape) == values_grd.size, "Values don't match grid. "\
-            "Make sure to pass a grid, not a list of points!\n"\
-            "HINT: did you use rom.fit()? This method does not work with a "\
-            "grid. Use reduction.fit(...) and approximation.fit(...) instead."
-        self.interpolator = RegularGridInterpolator(extended_grid,
-                                                    values_grd.T.reshape(
-                                                        shape),
-                                                    **kwargs)
+        self.interpolator = RGI(extended_grid, values_grd.T.reshape(shape),
+                                **kwargs)
 
     def predict(self, new_point):
         new_point = np.array(new_point)
