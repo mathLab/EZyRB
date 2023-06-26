@@ -80,7 +80,7 @@ class RegularGrid(Approximation):
                   "points that are on a regular grid! Be aware of floating "\
                   "point precision."
             raise ValueError(msg)
-        new_row_index = calculate_flat_index(iN, nN)
+        new_row_index = np.ravel_multi_index(iN, nN)
         reverse_scrambling = np.argsort(new_row_index)
         vals_on_regular_grid = vals_scrmbld[reverse_scrambling, :]
         return grid_axes, vals_on_regular_grid
@@ -139,28 +139,3 @@ class RegularGrid(Approximation):
         else:
             xi_extended = new_point
         return self.interpolator(xi_extended).T
-
-
-def calculate_flat_index(iN, nN):
-    """
-    Calculates the flat index for a multidimensional array given the indices
-    and dimensions.
-
-    :param list iN: indices representing the position of the element(s)
-                    in each dimension.
-    :param list nN: size of the array in each dimension.
-
-    :rtype: numpy.ndarray
-    """
-    # index = i1 + n1 * (i2 + n2 * (... (iN-1 + nN-1 * iN) ...))
-    if len(iN) != len(nN):
-        raise ValueError("The lengths of iN and nN should be the same.")
-
-    if any((i < 0).any() or (i >= n).any() for i, n in zip(iN, nN)):
-        raise ValueError("The indices are out of bounds.")
-
-    index = 0
-    for i, n in zip(iN, nN):
-        index = i + n * index
-
-    return index
