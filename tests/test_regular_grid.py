@@ -93,4 +93,3 @@ class TestRegularGrid(TestCase):
         assert rom.predict([1]) == 1
         assert rom.predict([2]) == 5
         assert rom.predict([3]) == 3
-    # TODO: test kvargs? depend on scipy version....
