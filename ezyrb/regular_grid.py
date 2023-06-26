@@ -82,7 +82,7 @@ class RegularGrid(Approximation):
             raise ValueError(msg)
         new_row_index = np.ravel_multi_index(iN, nN)
         reverse_scrambling = np.argsort(new_row_index)
-        vals_on_regular_grid = vals_scrmbld[reverse_scrambling, :]
+        vals_on_regular_grid = vals_scrmbld[reverse_scrambling]
         return grid_axes, vals_on_regular_grid
 
     def fit(self, points, values, **kwargs):
@@ -94,18 +94,16 @@ class RegularGrid(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        points = np.array(points)
+        points = np.asarray(points)
         if not np.issubdtype(points.dtype, np.number):
             raise ValueError('Invalid format or dimension for the argument'
                              '`points`.')
+        points = np.atleast_2d(points)
 
-        if len(points.shape) == 1:
-            points.shape = (-1, 1)
-
-        self.dim = len(points[0])
+        self.dim = points.shape[1]
         vals = np.asarray(values)
         grid_axes, values_grd = self.get_grid_axes(points, vals)
-        self.n_modes = vals.T.shape[0]
+        self.n_modes = vals.shape[-1]
         if self.n_modes > 1:
             self.mode_nr = np.arange(self.n_modes)
             extended_grid = [self.mode_nr, *grid_axes]
@@ -126,16 +124,15 @@ class RegularGrid(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        new_point = np.array(new_point)
+        new_point = np.asarray(new_point)
         if len(new_point.shape) == 1:
             new_point.shape = (-1, 1)
 
         if self.n_modes > 1:
             shape = (len(self.mode_nr), len(new_point), self.dim+1)
             xi_extended = np.zeros(shape)
-            xi_extended[:, :, 0] = self.mode_nr[:, None]
-            for i in range(self.dim):
-                xi_extended[:, :, i+1] = np.array(new_point)[:, i]
+            xi_extended[..., 0] = self.mode_nr[:, None]
+            xi_extended[..., 1:] = new_point
         else:
             xi_extended = new_point
         return self.interpolator(xi_extended).T
