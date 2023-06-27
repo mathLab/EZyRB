@@ -95,8 +95,8 @@ class RegularGrid(Approximation):
         if not np.issubdtype(points.dtype, np.number):
             raise ValueError('Invalid format or dimension for the argument'
                              '`points`.')
-        if len(points.shape) == 1:
-            points.shape = (-1, 1)
+        if points.ndim == 1:
+            points = points[:, None]
         vals = np.asarray(values)
         grid_axes, values_grd = self.get_grid_axes(points, vals)
         shape = [len(ax) for ax in grid_axes]
@@ -112,6 +112,6 @@ class RegularGrid(Approximation):
         :rtype: numpy.ndarray
         """
         new_point = np.asarray(new_point)
-        if len(new_point.shape) == 1:
-            new_point.shape = (-1, 1)
+        if new_point.ndim == 1:
+            new_point = new_point[:, None]
         return self.interpolator(new_point)
