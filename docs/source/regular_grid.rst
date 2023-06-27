@@ -10,10 +10,10 @@ RegularGrid
     :nosignatures:
 
     RegularGrid
+    RegularGrid.def
     RegularGrid.get_grid_axes
     RegularGrid.fit
     RegularGrid.predict
-    RegularGrid.calculate_flat_index
 
 .. autoclass:: RegularGrid
     :members:
