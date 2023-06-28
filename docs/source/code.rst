@@ -17,3 +17,4 @@ Code Documentation
    ae
    podae
    reducedordermodel
+   regular_grid
