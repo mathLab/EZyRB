@@ -1,5 +1,5 @@
 import numpy as np
-from unittest import TestCase
+from unittest import TestCase, main
 from ezyrb import RegularGrid, Database, POD, ReducedOrderModel
 
 
@@ -93,3 +93,15 @@ class TestRegularGrid(TestCase):
         assert rom.predict([1]) == 1
         assert rom.predict([2]) == 5
         assert rom.predict([3]) == 3
+
+    def test_fails(self):
+        reg = RegularGrid()
+        reg = RegularGrid()
+        p = [[1, 2]]
+        V = [[1, 1], [2, 2]]
+        with self.assertRaises(ValueError):
+            reg.fit(p, V)
+
+
+if __name__ == "__main__":
+    main()
