@@ -10,7 +10,6 @@ RegularGrid
     :nosignatures:
 
     RegularGrid
-    RegularGrid.def
     RegularGrid.get_grid_axes
     RegularGrid.fit
     RegularGrid.predict
