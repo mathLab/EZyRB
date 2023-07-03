@@ -3,25 +3,25 @@
 
 # # EZyRB Tutorial 1
 # ## Build and query a simple reduced order model
-# 
+#
 # In this tutorial we will show the typical workflow for the construcion of the Reduced Order Model based only on the outputs of the higher-order model. In detail, we consider here a POD-RBF framework (Proper Orthogonal Decomposition for dimensionality reduction and Radial Basis Function for manifold approximation), but the tutorial can be easily extended to other methods thanks to the modularity nature of **EZyRB**.
-# 
+#
 # We consider a parametric steady heat conduction problem in a two-dimensional domain $\Omega$. While in this tutorial we are going to focus on the data-driven approach, the same problem can be tackled in an intrusive manner (with the Reduced Basis method) using the [RBniCS](https://gitlab.com/RBniCS/RBniCS), as demonstrated in this [RBniCS tutorial](https://gitlab.com/RBniCS/RBniCS/tree/master/tutorials/01_thermal_block).<br>
 # This book is therefore exhaustively discussed in the book  *Certified reduced basis methods for parametrized partial differential equations*, J.S. Hesthaven, G. Rozza, B. Stamm, 2016, Springer. An additional description is available also at [https://rbnics.gitlab.io/RBniCS-jupyter/tutorial_thermal_block.html]().
-# 
+#
 # Since the good documentation already available for this problem and since the data-driven methodologies we will take into consideration, we just summarize the model to allow a better understanding.
-# 
+#
 # The domain is depicted below:
-# 
+#
 # <img src="pictures/tut1_sketch.png" alt="Drawing" style="width: 300px;"/>
-# 
+#
 # where:
 #  - the first parameter $\mu_o$ controls the conductivity in the circular subdomain $\Omega_0$;
 #  - the second parameter $\mu_1$ controls the flux over $\Gamma_\text{base}$.
-# 
-# 
+#
+#
 # ### Initial setting
-# 
+#
 # First of all import the required packages: we need the standard Numpy and Matplotlib, and some classes from EZyRB. In the EZyRB framework, we need three main ingredients to construct a reduced order model:
 #  - an initial database where the snapshots are stored;
 #  - a reduction method to reduce the dimensionality of the system, in this tutorial we will use the proper orthogonal decomposition (POD) method;
@@ -36,18 +36,20 @@ import matplotlib.pyplot as plt
 
 from ezyrb import POD, RBF, Database
 from ezyrb import ReducedOrderModel as ROM
+from smithers.dataset import TermalDataset as ThermalDataset
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # ## Offline phase
-# 
+#
 # In the *offline* phase, we need some samples of the parametric high-fidelity model. In this case, we extract 8 snapshots from the numerical model implemented in **FEniCS**, and we import them and the related parameters.
 
 # In[2]:
 
+data = ThermalDataset()
 
-snapshots = np.load('data/tut1_snapshots.npy')
-param = np.load('data/tut1_mu.npy')
+snapshots = data.snapshots
+param = data.params
 print(snapshots.shape, param.shape)
 
 
@@ -56,10 +58,7 @@ print(snapshots.shape, param.shape)
 # In[3]:
 
 
-tri = np.load('data/tut1_triangles.npy')
-coord = np.load('data/tut1_coord.npy')
-triang = mtri.Triangulation(coord[0],coord[1],tri)
-
+triang = data.triang
 
 # For the sake of clarity the snapshots are plotted.
 
@@ -150,8 +149,8 @@ interact(plot_solution, mu0=8, mu1=1);
 
 
 # ## Error Approximation & Improvement
-# 
-# At the moment, we used a database which is composed by 8 files. we would have an idea of the approximation accuracy we are able to reach with these high-fidelity solutions. Using the *leave-one-out* strategy, an error is computed for each parametric point in our database and these values are returned as array. 
+#
+# At the moment, we used a database which is composed by 8 files. we would have an idea of the approximation accuracy we are able to reach with these high-fidelity solutions. Using the *leave-one-out* strategy, an error is computed for each parametric point in our database and these values are returned as array.
 
 # In[12]:
 
