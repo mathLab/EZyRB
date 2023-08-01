@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.3.0.post2304 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ReducedOrderModel &mdash; EZyRB 1.3.0.post2308 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,7 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contact" href="contact.html" />
+    <link rel="next" title="RegularGrid" href="regular_grid.html" />
     <link rel="prev" title="PODAE" href="podae.html" /> 
 </head>
 
@@ -33,7 +33,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2304
+                1.3.0.post2308
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">ReducedOrderModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
@@ -178,7 +179,7 @@ simplex.
 Source from: <a class="reference external" href="https://en.wikipedia.org/wiki/Simplex">wikipedia.org/wiki/Simplex</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
+<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
 parameter values representing the vertices of a simplex. N is the
 dimensionality of the parameters.</p>
 </dd>
@@ -228,7 +229,7 @@ Default value is the L2 norm.</p></li>
 <dd class="field-even"><p>the vector containing the errors corresponding to each fold.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,7 +276,7 @@ returns a float. Default value is the L2 norm.</p></li>
 parametric points.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,7 +291,7 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
+<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
 snapshot; if error array is not passed, it is computed using
 <code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code> with the default function. Default value is None.</p></li>
 <li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of optimal points to return. Default value is
@@ -301,7 +302,7 @@ snapshot; if error array is not passed, it is computed using
 <dd class="field-even"><p>the optimal points</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -357,7 +358,7 @@ and returns a float. Default value is the L2 norm.</p></li>
 test snapshots.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -371,14 +372,14 @@ test snapshots.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="podae.html" class="btn btn-neutral float-left" title="PODAE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="regular_grid.html" class="btn btn-neutral float-right" title="RegularGrid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Apr 01, 2023.
+      <span class="lastupdated">Last updated on Aug 01, 2023.
       </span></p>
   </div>
 
