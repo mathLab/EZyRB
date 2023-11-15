@@ -55,4 +55,4 @@ class Linear(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        return self.interpolator(new_point)
+        return self.interpolator(new_point).squeeze()

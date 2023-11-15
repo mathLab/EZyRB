@@ -4,7 +4,7 @@ import warnings
 from unittest import TestCase
 from ezyrb import Linear, Database, POD, ReducedOrderModel
 
-class TestKNeighbors(TestCase):
+class TestLinear(TestCase):
     def test_params(self):
         reg = Linear(fill_value=0)
         assert reg.fill_value == 0
@@ -51,6 +51,13 @@ class TestKNeighbors(TestCase):
         assert rom.predict([1]) == 1
         assert rom.predict([2]) == 5
         assert rom.predict([3]) == 3
+
+        Y = np.random.uniform(size=(3, 3))
+        db = Database(np.array([1, 2, 3]), Y)
+        rom = ReducedOrderModel(db, POD(), Linear())
+        rom.fit()
+        assert rom.predict([1.]).shape == (3,)
+
 
     def test_wrong1(self):
         # wrong number of params
