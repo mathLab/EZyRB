@@ -56,7 +56,7 @@ class TestLinear(TestCase):
         db = Database(np.array([1, 2, 3]), Y)
         rom = ReducedOrderModel(db, POD(), Linear())
         rom.fit()
-        assert rom.predict([1.]).shape = 3
+        assert rom.predict([1.]).shape == 3
 
 
     def test_wrong1(self):
