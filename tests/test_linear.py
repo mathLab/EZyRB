@@ -52,6 +52,13 @@ class TestLinear(TestCase):
         assert rom.predict([2]) == 5
         assert rom.predict([3]) == 3
 
+        Y = np.random.uniform(size=(3, 3))
+        db = Database(np.array([1, 2, 3]), Y)
+        rom = ReducedOrderModel(db, POD(), Linear())
+        rom.fit()
+        assert rom.predict([1.]).shape = 3
+
+
     def test_wrong1(self):
         # wrong number of params
         with warnings.catch_warnings():
