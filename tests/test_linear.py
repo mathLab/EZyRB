@@ -4,7 +4,7 @@ import warnings
 from unittest import TestCase
 from ezyrb import Linear, Database, POD, ReducedOrderModel
 
-class TestKNeighbors(TestCase):
+class TestLinear(TestCase):
     def test_params(self):
         reg = Linear(fill_value=0)
         assert reg.fill_value == 0
