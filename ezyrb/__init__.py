@@ -13,3 +13,4 @@ from .parameter import Parameter
 from .reducedordermodel import ReducedOrderModel
 from .reduction import *
 from .approximation import *
+from .regular_grid import RegularGrid
