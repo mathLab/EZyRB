@@ -105,7 +105,7 @@ class Database():
         """
         if all(isinstance(n, int) for n in chunks):
             if sum(chunks) != len(self):
-                raise ValueError('chunk elements are incosistent')
+                raise ValueError('chunk elements are inconsistent')
 
             ids = [
                 j for j, chunk in enumerate(chunks)
@@ -116,7 +116,7 @@ class Database():
 
         elif all(isinstance(n, float) for n in chunks):
             if not np.isclose(sum(chunks), 1.):
-                raise ValueError('chunk elements are incosistent')
+                raise ValueError('chunk elements are inconsistent')
 
             cum_chunks = np.cumsum(chunks)
             cum_chunks = np.insert(cum_chunks, 0, 0.0)
