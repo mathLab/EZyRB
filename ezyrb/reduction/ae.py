@@ -4,7 +4,7 @@ Module for FNN-Autoencoders.
 
 import torch
 from .reduction import Reduction
-from .ann import ANN
+from ..approximation import ANN
 
 
 class AE(Reduction, ANN):

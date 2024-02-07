@@ -53,9 +53,10 @@ class TestRadius(TestCase):
         rom = ReducedOrderModel(db, pod, reg)
 
         rom.fit()
-        assert rom.predict([1]) == 1
-        assert rom.predict([2]) == 5
-        assert rom.predict([3]) == 3
+        pred = rom.predict([[1], [2], [3]])
+        np.testing.assert_equal(pred.snapshots_matrix, np.array([1, 5, 3])[:,None]) 
+
+
 
     def test_wrong1(self):
         # wrong number of params

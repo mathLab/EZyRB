@@ -31,16 +31,16 @@ class TestGPR(TestCase):
 
     def test_predict_01(self):
         x, y = get_xy()
-        gpr = GPR()
-        gpr.fit(x, y, optimization_restart=50)
+        gpr = GPR(optimization_restart=50)
+        gpr.fit(x, y)
         test_y, variance = gpr.predict(x, return_variance=True)
         np.testing.assert_array_almost_equal(y, test_y, decimal=6)
 
     def test_predict_02(self):
         np.random.seed(42)
         x, y = get_xy()
-        gpr = GPR()
-        gpr.fit(x, y, optimization_restart=50)
+        gpr = GPR(optimization_restart=50)
+        gpr.fit(x, y)
         test_y, variance = gpr.predict(x[:4], return_variance=True)
         true_var = np.array([[5.761689e-06, 2.017326e-06],
                              [5.761686e-06, 2.017325e-06],
@@ -51,14 +51,14 @@ class TestGPR(TestCase):
     def test_predict_03(self):
         np.random.seed(1)
         x, y = get_xy()
-        gpr = GPR()
-        gpr.fit(x, y, optimization_restart=50)
+        gpr = GPR(optimization_restart=50)
+        gpr.fit(x, y)
         test_y = gpr.predict(x)
         np.testing.assert_array_almost_equal(y, test_y, decimal=6)
 
     def test_optimal_mu(self):
         x, y = get_xy()
-        gpr = GPR()
-        gpr.fit(x, y, optimization_restart=10)
+        gpr = GPR(optimization_restart=50)
+        gpr.fit(x, y)
         new_mu = gpr.optimal_mu(np.array([[-1, 1], [-1, 1], [-1, 1], [-1, 1]]))
         np.testing.assert_array_almost_equal(np.abs(new_mu), np.ones(4).reshape(1, -1))

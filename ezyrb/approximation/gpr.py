@@ -16,7 +16,14 @@ class GPR(Approximation):
         arranged by row.
     :cvar numpy.ndarray Y_sample: the array containing the output values,
         arranged by row.
-    :cvar GPy.models.GPRegression model: the regression model.
+    :cvar sklearn.gaussian_process.GaussianProcessRegressor model: the
+        regression model.
+    :cvar sklearn.gaussian_process.kernels.Kernel kern: kernel object from
+        sklearn.
+    :cvar bool normalizer: whether to normilize `values` or not.  Defaults to
+        True.
+    :cvar int optimization_restart: number of restarts for the optimization.
+        Defaults to 20.
 
     :Example:
 
@@ -30,28 +37,21 @@ class GPR(Approximation):
         >>> print(np.allclose(y, y_pred))
 
     """
-    def __init__(self):
+    def __init__(self, kern=None, normalizer=True, optimization_restart=20):
+
         self.X_sample = None
         self.Y_sample = None
+        self.kern = kern
+        self.normalizer = normalizer  # TODO: avoid normalizer inside GPR class
+        self.optimization_restart = optimization_restart
         self.model = None
 
-    def fit(self,
-            points,
-            values,
-            kern=None,
-            normalizer=True,
-            optimization_restart=20):
+    def fit(self, points, values):
         """
         Construct the regression given `points` and `values`.
 
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
-        :param sklearn.gaussian_process.kernels.Kernel kern: kernel object from
-            sklearn.
-        :param bool normalizer: whether to normilize `values` or not.
-            Defaults to True.
-        :param int optimization_restart: number of restarts for the
-            optimization. Defaults to 20.
         """
         self.X_sample = np.array(points)
         self.Y_sample = np.array(values)
@@ -61,8 +61,8 @@ class GPR(Approximation):
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         self.model = GaussianProcessRegressor(
-            kernel=kern, n_restarts_optimizer=optimization_restart,
-            normalize_y=normalizer)
+            kernel=self.kern, n_restarts_optimizer=self.optimization_restart,
+            normalize_y=self.normalizer)
         self.model.fit(self.X_sample, self.Y_sample)
 
     def predict(self, new_points, return_variance=False):

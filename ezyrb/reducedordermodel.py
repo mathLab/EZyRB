@@ -6,6 +6,8 @@ import pickle
 import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
+from .database import Database
+
 
 class ReducedOrderModel():
     """
@@ -14,12 +16,12 @@ class ReducedOrderModel():
     This class performs the actual reduced order model using the selected
     methods for approximation and reduction.
 
-    :param ezyrb.Database database: the database to use for training the reduced
-        order model.
-    :param ezyrb.Reduction reduction: the reduction method to use in reduced order
-        model.
-    :param ezyrb.Approximation approximation: the approximation method to use in
+    :param ezyrb.Database database: the database to use for training the
         reduced order model.
+    :param ezyrb.Reduction reduction: the reduction method to use in reduced
+        order model.
+    :param ezyrb.Approximation approximation: the approximation method to use
+        in reduced order model.
     :param object scaler_red: the scaler for the reduced variables (eg. modal
         coefficients). Default is None.
 
@@ -44,58 +46,78 @@ class ReducedOrderModel():
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, database, reduction, approximation, scaler_red=None):
+    def __init__(self, database, reduction, approximation,
+                 plugins=None):
+
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
-        self.scaler_red = scaler_red
 
-    def fit(self, *args, **kwargs):
+        if plugins is None:
+            plugins = []
+
+        self.plugins = plugins
+
+    def fit(self):
         r"""
         Calculate reduced space
 
-        :param \*args: additional parameters to pass to the `fit` method.
-        :param \**kwargs: additional parameters to pass to the `fit` method.
         """
-        self.reduction.fit(self.database.snapshots.T)
-        reduced_output = self.reduction.transform(self.database.snapshots.T).T
 
-        if self.scaler_red:
-            reduced_output = self.scaler_red.fit_transform(reduced_output)
+        import copy
+        self._full_database = copy.deepcopy(self.database)
+
+        # FULL-ORDER PREPROCESSING here
+        for plugin in self.plugins:
+            plugin.fom_preprocessing(self)
+
+        self.reduction.fit(self._full_database.snapshots_matrix.T)
+        # print(self.reduction.singular_values)
+        # print(self._full_database.snapshots_matrix)
+        reduced_snapshots = self.reduction.transform(
+            self._full_database.snapshots_matrix.T).T
+
+        self._reduced_database = Database(
+            self._full_database.parameters_matrix, reduced_snapshots)
+
+        # REDUCED-ORDER PREPROCESSING here
+        for plugin in self.plugins:
+            plugin.rom_preprocessing(self)
 
         self.approximation.fit(
-            self.database.parameters,
-            reduced_output,
-            *args,
-            **kwargs)
+            self._reduced_database.parameters_matrix,
+            self._reduced_database.snapshots_matrix)
 
         return self
 
     def predict(self, mu):
         """
         Calculate predicted solution for given mu
+
+        :return: the database containing all the predicted solution (with
+            corresponding parameters).
+        :rtype: Database
         """
         mu = np.atleast_2d(mu)
-        if hasattr(self, 'database') and self.database.scaler_parameters:
-            mu = self.database.scaler_parameters.transform(mu)
 
-        predicted_red_sol = np.atleast_2d(self.approximation.predict(mu))
+        self._reduced_database = Database(
+                mu, np.atleast_2d(self.approximation.predict(mu)))
 
-        if self.scaler_red:  # rescale modal coefficients
-            predicted_red_sol = self.scaler_red.inverse_transform(
-                predicted_red_sol)
+        # REDUCED-ORDER POSTPROCESSING here
+        for plugin in self.plugins:
+            plugin.rom_postprocessing(self)
 
-        predicted_sol = self.reduction.inverse_transform(predicted_red_sol.T)
+        self._full_database = Database(
+            np.atleast_2d(mu),
+            self.reduction.inverse_transform(
+                    self._reduced_database.snapshots_matrix.T).T
+        )
 
-        if hasattr(self, 'database') and self.database.scaler_snapshots:
-            predicted_sol = self.database.scaler_snapshots.inverse_transform(
-                    predicted_sol.T).T
+        # REDUCED-ORDER POSTPROCESSING here
+        for plugin in self.plugins:
+            plugin.fom_postprocessing(self)
 
-        if 1 in predicted_sol.shape:
-            predicted_sol = predicted_sol.ravel()
-        else:
-            predicted_sol = predicted_sol.T
-        return predicted_sol
+        return self._full_database
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
@@ -159,10 +181,10 @@ class ReducedOrderModel():
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters)
+        predicted_test = self.predict(test.parameters_matrix)
         return np.mean(
-            norm(predicted_test - test.snapshots, axis=1) /
-            norm(test.snapshots, axis=1))
+            norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+            axis=1) / norm(test.snapshots_matrix, axis=1))
 
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
         r"""
@@ -222,8 +244,7 @@ class ReducedOrderModel():
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
-                                 *args, **kwargs)
+                             copy.deepcopy(self.approximation)).fit()
 
             error[j] = rom.test_error(test_db)
 
@@ -247,7 +268,7 @@ class ReducedOrderModel():
         if error is None:
             error = self.loo_error()
 
-        mu = self.database.parameters
+        mu = self.database.parameters_matrix
         tria = Delaunay(mu)
 
         error_on_simplex = np.array([
