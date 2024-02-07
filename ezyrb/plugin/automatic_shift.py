@@ -8,10 +8,10 @@ from .plugin import Plugin
 
 class AutomaticShiftSnapshots(Plugin):
     """
-    The plugin implements the atomatic "shifting" preprocessing: exploiting a
+    The plugin implements the automatic "shifting" preprocessing: exploiting a
     machine learning framework, it is able to detect the quantity to shift the
     snapshots composing the database, such that the reduction method performs
-    better, dipendentely by the problem at hand.
+    better, depending on the problem at hand.
 
     Reference: Papapicco, D., Demo, N., Girfoglio, M., Stabile, G., & Rozza, G.
     (2022). The Neural Network shifted-proper orthogonal decomposition: A
@@ -31,19 +31,21 @@ class AutomaticShiftSnapshots(Plugin):
 
     Example:
 
-
-    >>> def shift(time):
-    >>>     return time-0.5
-    >>> pod = POD()
+    >>> from ezyrb import POD, RBF, Database, Snapshot, Parameter, Linear, ANN
+    >>> from ezyrb import ReducedOrderModel as ROM
+    >>> from ezyrb.plugin import AutomaticShiftSnapshots
+    >>> interp = ANN([10, 10], torch.nn.Softplus(), 1000, frequency_print=50, lr=0.03)
+    >>> shift = ANN([], torch.nn.LeakyReLU(), [2000, 1e-3], frequency_print=50, l2_regularization=0,  lr=0.002)
+    >>> nnspod = AutomaticShiftSnapshots(shift, interp, Linear(fill_value=0.0), barycenter_loss=10.)
+    >>> pod = POD(rank=1)
     >>> rbf = RBF()
     >>> db = Database()
     >>> for param in params:
     >>>     space, values = wave(param)
     >>>     snap = Snapshot(values=values, space=space)
     >>>     db.add(Parameter(param), snap)
-    >>> rom = ROM(db, pod, rbf, plugins=[ShiftSnapshots(shift, RBF())])
+    >>> rom = ROM(db, pod, rbf, plugins=[nnspod])
     >>> rom.fit()
-
     """
     def __init__(self, shift_network, interp_network, interpolator,
                  parameter_index=0, reference_index=0, barycenter_loss=0):
