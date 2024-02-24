@@ -113,7 +113,7 @@ class ReducedOrderModel():
                     self._reduced_database.snapshots_matrix.T).T
         )
 
-        # REDUCED-ORDER POSTPROCESSING here
+        # FULL-ORDER POSTPROCESSING here
         for plugin in self.plugins:
             plugin.fom_postprocessing(self)
 
