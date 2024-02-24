@@ -116,8 +116,7 @@ rom.fit();
 
 
 new_mu = [8,   1]
-pred_sol = rom.predict(new_mu)
-
+pred_sol = rom.predict(new_mu).snapshots_matrix
 
 # We can so plot the predicted solution for a fixed parameter...
 
@@ -126,7 +125,7 @@ pred_sol = rom.predict(new_mu)
 
 plt.figure(figsize=(7, 5))
 plt.triplot(triang, 'b-', lw=0.1)
-plt.tripcolor(triang, pred_sol)
+plt.tripcolor(triang, *pred_sol)
 plt.colorbar();
 
 
@@ -139,10 +138,10 @@ from ipywidgets import interact
 
 def plot_solution(mu0, mu1):
     new_mu = [mu0, mu1]
-    pred_sol = rom.predict(new_mu)
+    pred_sol = rom.predict(new_mu).snapshots_matrix
     plt.figure(figsize=(8, 7))
     plt.triplot(triang, 'b-', lw=0.1)
-    plt.tripcolor(triang, pred_sol)
+    plt.tripcolor(triang, *pred_sol)
     plt.colorbar()
 
 interact(plot_solution, mu0=8, mu1=1);
@@ -155,7 +154,7 @@ interact(plot_solution, mu0=8, mu1=1);
 # In[12]:
 
 
-for pt, error in zip(rom.database.parameters, rom.loo_error()):
+for pt, error in zip(rom.database.parameters_matrix, rom.loo_error()):
     print(pt, error)
 
 

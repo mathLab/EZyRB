@@ -123,7 +123,7 @@ new_params = np.random.uniform(size=(2))*79.+1.
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 3))
 for i, param in enumerate(new_params):
-    ax[i].tricontourf(data.triang, rom.predict([param]))
+    ax[i].tricontourf(data.triang, *rom.predict([param]).snapshots_matrix)
     ax[i].set_title('Predicted snapshots at inlet velocity = {}'.format(param))
 
 
