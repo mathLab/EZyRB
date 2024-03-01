@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPR &mdash; EZyRB 1.3.0.post2402 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>GPR &mdash; EZyRB 1.3.0.post2403 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
 
@@ -35,7 +35,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2402
+                1.3.0.post2403
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,9 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.gpr">
-<span id="gpr"></span><h1>GPR<a class="headerlink" href="#module-ezyrb.gpr" title="Permalink to this headline">¶</a></h1>
-<p>Module wrapper exploiting <cite>GPy</cite> for Gaussian Process Regression</p>
+  <div class="section" id="gpr">
+<h1>GPR<a class="headerlink" href="#gpr" title="Permalink to this headline">¶</a></h1>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -103,115 +102,19 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR</span></code></p></td>
-<td><p>Multidimensional regression using Gaussian process.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.fit</span></code></p></td>
-<td><p>Construct the regression given <cite>points</cite> and <cite>values</cite>.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.predict</span></code></p></td>
-<td><p>Predict the mean and the variance of Gaussian distribution at given <cite>new_points</cite>.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPR.optimal_mu</span></code></p></td>
-<td><p>Proposes the next sampling point by looking at the point where the Gaussian covariance is maximized.</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">GPR</code><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
-<p>Multidimensional regression using Gaussian process.</p>
-<dl class="field-list">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the array containing the input points,
-arranged by row.</p></li>
-<li><p><strong>Y_sample</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the array containing the output values,
-arranged by row.</p></li>
-<li><p><strong>model</strong> (<em>GPy.models.GPRegression</em>) – the regression model.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Example</dt>
-<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ezyrb</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gpr</span> <span class="o">=</span> <span class="n">ezyrb</span><span class="o">.</span><span class="n">GPR</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gpr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">gpr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em>, <em class="sig-param">kern=None</em>, <em class="sig-param">normalizer=True</em>, <em class="sig-param">optimization_restart=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.fit"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Construct the regression given <cite>points</cite> and <cite>values</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>array_like</em>) – the coordinates of the points.</p></li>
-<li><p><strong>values</strong> (<em>array_like</em>) – the values in the points.</p></li>
-<li><p><strong>kern</strong> (<em>sklearn.gaussian_process.kernels.Kernel</em>) – kernel object from
-sklearn.</p></li>
-<li><p><strong>normalizer</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether to normilize <cite>values</cite> or not.
-Defaults to True.</p></li>
-<li><p><strong>optimization_restart</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – number of restarts for the
-optimization. Defaults to 20.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">optimal_mu</code><span class="sig-paren">(</span><em class="sig-param">bounds</em>, <em class="sig-param">optimization_restart=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.optimal_mu"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Proposes the next sampling point by looking at the point where the
-Gaussian covariance is maximized. A gradient method (with multi
-starting points) is adopted for the optimization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the boundaries in the gradient
-optimization. The shape must be (<em>input_dim</em>, 2), where <em>input_dim</em>
-is the dimension of the input points.</p></li>
-<li><p><strong>optimization_restart</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of restart in the gradient
-optimization. Default is 10.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">new_points</em>, <em class="sig-param">return_variance=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/gpr.html#GPR.predict"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Predict the mean and the variance of Gaussian distribution at given
-<cite>new_points</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>new_points</strong> (<em>array_like</em>) – the coordinates of the given points.</p></li>
-<li><p><strong>return_variance</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – flag to return also the variance.
-Default is False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the mean and the variance</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -226,7 +129,7 @@ Default is False.</p></li>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2024.
+      <span class="lastupdated">Last updated on Mar 01, 2024.
       </span></p>
   </div>
 

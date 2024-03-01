@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.3.0.post2402 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>ReducedOrderModel &mdash; EZyRB 1.3.0.post2403 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
 
@@ -35,7 +35,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2402
+                1.3.0.post2403
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -130,7 +130,7 @@
 </table>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="sig-name descname">ReducedOrderModel</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">reduction</em>, <em class="sig-param">approximation</em>, <em class="sig-param">scaler_red=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-name descname">ReducedOrderModel</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">reduction</em>, <em class="sig-param">approximation</em>, <em class="sig-param">plugins=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Reduced Order Model class.</p>
 <p>This class performs the actual reduced order model using the selected
@@ -138,12 +138,12 @@ methods for approximation and reduction.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database</strong> (<em>ezyrb.Database</em>) – the database to use for training the reduced
-order model.</p></li>
-<li><p><strong>reduction</strong> (<em>ezyrb.Reduction</em>) – the reduction method to use in reduced order
-model.</p></li>
-<li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method to use in
+<li><p><strong>database</strong> (<em>ezyrb.Database</em>) – the database to use for training the
 reduced order model.</p></li>
+<li><p><strong>reduction</strong> (<em>ezyrb.Reduction</em>) – the reduction method to use in reduced
+order model.</p></li>
+<li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method to use
+in reduced order model.</p></li>
 <li><p><strong>scaler_red</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – the scaler for the reduced variables (eg. modal
 coefficients). Default is None.</p></li>
 </ul>
@@ -196,16 +196,8 @@ dimensionality of the parameters.</p>
 
 <dl class="method">
 <dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Calculate reduced space</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> – additional parameters to pass to the <cite>fit</cite> method.</p></li>
-<li><p><strong>**kwargs</strong> – additional parameters to pass to the <cite>fit</cite> method.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -313,6 +305,15 @@ snapshot; if error array is not passed, it is computed using
 <dt>
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">mu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.predict"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Calculate predicted solution for given mu</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the database containing all the predicted solution (with
+corresponding parameters).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Database</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -381,7 +382,7 @@ test snapshots.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2024.
+      <span class="lastupdated">Last updated on Mar 01, 2024.
       </span></p>
   </div>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linear &mdash; EZyRB 1.3.0.post2402 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Linear &mdash; EZyRB 1.3.0.post2403 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
 
@@ -35,7 +35,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2402
+                1.3.0.post2403
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,9 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.linear">
-<span id="linear"></span><h1>Linear<a class="headerlink" href="#module-ezyrb.linear" title="Permalink to this headline">¶</a></h1>
-<p>Module for Linear N-Dimensional Interpolation</p>
+  <div class="section" id="linear">
+<h1>Linear<a class="headerlink" href="#linear" title="Permalink to this headline">¶</a></h1>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -103,66 +102,16 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear</span></code></p></td>
-<td><p>Multidimensional linear interpolator.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear.fit</span></code></p></td>
-<td><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear.predict</span></code></p></td>
-<td><p>Evaluate interpolator at given <cite>new_points</cite>.</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">Linear</code><span class="sig-paren">(</span><em class="sig-param">fill_value=nan</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/linear.html#Linear"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.approximation.Approximation</span></code></p>
-<p>Multidimensional linear interpolator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fill_value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – value used to fill in for requested points outside
-of the convex hull of the input points. If not provided, then the
-default is numpy.nan.</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/linear.html#Linear.fit"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>array_like</em>) – the coordinates of the points.</p></li>
-<li><p><strong>values</strong> (<em>array_like</em>) – the values in the points.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">new_point</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/linear.html#Linear.predict"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Evaluate interpolator at given <cite>new_points</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_points</strong> (<em>array_like</em>) – the coordinates of the given points.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the interpolated values.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -177,7 +126,7 @@ default is numpy.nan.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2024.
+      <span class="lastupdated">Last updated on Mar 01, 2024.
       </span></p>
   </div>
 

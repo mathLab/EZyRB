@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.3.0.post2402 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ezyrb.reducedordermodel &mdash; EZyRB 1.3.0.post2403 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
 
@@ -33,7 +33,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2402
+                1.3.0.post2403
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -83,6 +83,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.qhull</span> <span class="kn">import</span> <span class="n">Delaunay</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">.database</span> <span class="kn">import</span> <span class="n">Database</span>
+
 
 <div class="viewcode-block" id="ReducedOrderModel"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel">[docs]</a><span class="k">class</span> <span class="nc">ReducedOrderModel</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -91,12 +93,12 @@
 <span class="sd">    This class performs the actual reduced order model using the selected</span>
 <span class="sd">    methods for approximation and reduction.</span>
 
-<span class="sd">    :param ezyrb.Database database: the database to use for training the reduced</span>
-<span class="sd">        order model.</span>
-<span class="sd">    :param ezyrb.Reduction reduction: the reduction method to use in reduced order</span>
-<span class="sd">        model.</span>
-<span class="sd">    :param ezyrb.Approximation approximation: the approximation method to use in</span>
+<span class="sd">    :param ezyrb.Database database: the database to use for training the</span>
 <span class="sd">        reduced order model.</span>
+<span class="sd">    :param ezyrb.Reduction reduction: the reduction method to use in reduced</span>
+<span class="sd">        order model.</span>
+<span class="sd">    :param ezyrb.Approximation approximation: the approximation method to use</span>
+<span class="sd">        in reduced order model.</span>
 <span class="sd">    :param object scaler_red: the scaler for the reduced variables (eg. modal</span>
 <span class="sd">        coefficients). Default is None.</span>
 
@@ -121,58 +123,78 @@
 <span class="sd">         &gt;&gt;&gt; rom.predict(new_param)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">,</span> <span class="n">scaler_red</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">,</span>
+                 <span class="n">plugins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span> <span class="o">=</span> <span class="n">approximation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span> <span class="o">=</span> <span class="n">scaler_red</span>
 
-<div class="viewcode-block" id="ReducedOrderModel.fit"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">plugins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plugins</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">plugins</span>
+
+<div class="viewcode-block" id="ReducedOrderModel.fit"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate reduced space</span>
 
-<span class="sd">        :param \*args: additional parameters to pass to the `fit` method.</span>
-<span class="sd">        :param \**kwargs: additional parameters to pass to the `fit` method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-        <span class="n">reduced_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="p">:</span>
-            <span class="n">reduced_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">reduced_output</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">copy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
+
+        <span class="c1"># FULL-ORDER PREPROCESSING here</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="n">plugin</span><span class="o">.</span><span class="n">fom_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="c1"># print(self.reduction.singular_values)</span>
+        <span class="c1"># print(self._full_database.snapshots_matrix)</span>
+        <span class="n">reduced_snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">,</span> <span class="n">reduced_snapshots</span><span class="p">)</span>
+
+        <span class="c1"># REDUCED-ORDER PREPROCESSING here</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="n">plugin</span><span class="o">.</span><span class="n">rom_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
-            <span class="n">reduced_output</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ReducedOrderModel.predict"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate predicted solution for given mu</span>
+
+<span class="sd">        :return: the database containing all the predicted solution (with</span>
+<span class="sd">            corresponding parameters).</span>
+<span class="sd">        :rtype: Database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_parameters</span><span class="p">:</span>
-            <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_parameters</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
 
-        <span class="n">predicted_red_sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span>
+                <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mu</span><span class="p">)))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="p">:</span>  <span class="c1"># rescale modal coefficients</span>
-            <span class="n">predicted_red_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler_red</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
-                <span class="n">predicted_red_sol</span><span class="p">)</span>
+        <span class="c1"># REDUCED-ORDER POSTPROCESSING here</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="n">plugin</span><span class="o">.</span><span class="n">rom_postprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">predicted_red_sol</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">mu</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_snapshots</span><span class="p">:</span>
-            <span class="n">predicted_sol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">scaler_snapshots</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
-                    <span class="n">predicted_sol</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1"># FULL-ORDER POSTPROCESSING here</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="n">plugin</span><span class="o">.</span><span class="n">fom_postprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">predicted_sol</span> <span class="o">=</span> <span class="n">predicted_sol</span><span class="o">.</span><span class="n">T</span>
-        <span class="k">return</span> <span class="n">predicted_sol</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full_database</span></div>
 
 <div class="viewcode-block" id="ReducedOrderModel.save"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">save_db</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_approx</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -236,10 +258,10 @@
 <span class="sd">            test snapshots.</span>
 <span class="sd">        :rtype: numpy.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">predicted_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="n">predicted_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-            <span class="n">norm</span><span class="p">(</span><span class="n">predicted_test</span> <span class="o">-</span> <span class="n">test</span><span class="o">.</span><span class="n">snapshots</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span>
-            <span class="n">norm</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">snapshots</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+            <span class="n">norm</span><span class="p">(</span><span class="n">predicted_test</span><span class="o">.</span><span class="n">snapshots_matrix</span> <span class="o">-</span> <span class="n">test</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ReducedOrderModel.kfold_cv_error"><a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error">[docs]</a>    <span class="k">def</span> <span class="nf">kfold_cv_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -299,8 +321,7 @@
             <span class="n">new_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="n">indeces</span><span class="p">]</span>
             <span class="n">test_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">[</span><span class="o">~</span><span class="n">indeces</span><span class="p">]</span>
             <span class="n">rom</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">new_db</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="p">),</span>
-                             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-                                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                             <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">approximation</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
             <span class="n">error</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">test_error</span><span class="p">(</span><span class="n">test_db</span><span class="p">)</span>
 
@@ -324,7 +345,7 @@
         <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loo_error</span><span class="p">()</span>
 
-        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">parameters_matrix</span>
         <span class="n">tria</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
 
         <span class="n">error_on_simplex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
@@ -368,7 +389,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2024.
+      <span class="lastupdated">Last updated on Mar 01, 2024.
       </span></p>
   </div>
 

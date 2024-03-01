@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>POD &mdash; EZyRB 1.3.0.post2402 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>POD &mdash; EZyRB 1.3.0.post2403 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
 
@@ -35,7 +35,7 @@
             EZyRB
           </a>
               <div class="version">
-                1.3.0.post2402
+                1.3.0.post2403
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,12 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.pod">
-<span id="pod"></span><h1>POD<a class="headerlink" href="#module-ezyrb.pod" title="Permalink to this headline">¶</a></h1>
-<p>Module for Proper Orthogonal Decomposition (POD).
-Three different methods can be employed: Truncated Singular Value
-Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
-Singular Value Decomposition via correlation matrix.</p>
+  <div class="section" id="pod">
+<h1>POD<a class="headerlink" href="#pod" title="Permalink to this headline">¶</a></h1>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -106,260 +102,40 @@ Singular Value Decomposition via correlation matrix.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD</span></code></p></td>
-<td><p>Perform the Proper Orthogonal Decomposition.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.modes</span></code></p></td>
-<td><p>The POD modes.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.singular_values</span></code></p></td>
-<td><p>The singular values</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.reduce</span></code></p></td>
-<td><p>Reduces the given snapshots.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.expand</span></code></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.transform</span></code></p></td>
-<td><p>Reduces the given snapshots.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.inverse_transform</span></code></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._truncation</span></code></p></td>
-<td><p>Return the number of modes to select according to the <cite>rank</cite> parameter.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._svd</span></code></p></td>
-<td><p>Truncated Singular Value Decomposition.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._rsvd</span></code></p></td>
-<td><p>Truncated randomized Singular Value Decomposition.</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._corrm</span></code></p></td>
-<td><p>Truncated POD calculated with correlation matrix.</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">POD</code><span class="sig-paren">(</span><em class="sig-param">method='svd'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ezyrb.reduction.Reduction</span></code></p>
-<p>Perform the Proper Orthogonal Decomposition.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>method</strong> (<em>{'svd'</em><em>, </em><em>'randomized_svd'</em><em>, </em><em>'correlation_matrix'}</em>) – the implementation to use for the computation of the POD
-modes. Default is ‘svd’.</p></li>
-<li><p><strong>rank</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the rank for the truncation; If 0, the method computes
-the optimal rank and uses it for truncation; if positive interger,
-the method uses the argument for the truncation; if float between 0
-and 1, the rank is the number of the biggest singular values that
-are needed to reach the ‘energy’ specified by <cite>svd_rank</cite>; if -1,
-the method does not compute truncation. Default is 0. The <cite>rank</cite>
-parameter is available using all the available methods.</p></li>
-<li><p><strong>subspace_iteration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of subspace iteration in the
-randomized svd. It is available only using the ‘randomized_svd’
-method. Default value is 1.</p></li>
-<li><p><strong>omega_rank</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of columns of the Omega random
-matrix. If set to 0, the number of columns is equal to twice the
-<cite>rank</cite> (if it has explicitly passed as integer) or twice the number
-of input snapshots. Default value is 0. It is available only using
-the ‘randomized_svd’ method.</p></li>
-<li><p><strong>save_memory</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – reduce the usage of the memory, despite an
-higher number of operations. It is available only using the
-‘correlation_matrix’ method. Default value is False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Example</dt>
-<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reduced_snapshots</span> <span class="o">=</span> <span class="n">pod</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Other possible constructors are ...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subspace_iteration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<span class="go">              omega_rank=10)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;correlation_matrix&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">_corrm</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD._corrm"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Truncated POD calculated with correlation matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
-singular values array, the truncated right-singular vectors matrix.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">_rsvd</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD._rsvd"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Truncated randomized Singular Value Decomposition.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
-singular values array, the truncated right-singular vectors matrix.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-<p>References:
-Finding structure with randomness: probabilistic algorithms for
-constructing approximate matrix decompositions. N. Halko, P. G.
-Martinsson, J. A. Tropp.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">_svd</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD._svd"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Truncated Singular Value Decomposition.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
-singular values array, the truncated right-singular vectors matrix.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-<p>References:
-Gavish, Matan, and David L. Donoho, The optimal hard threshold for
-singular values is, IEEE Transactions on Information Theory 60.8
-(2014): 5040-5053.</p>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">_truncation</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD._truncation"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Return the number of modes to select according to the <cite>rank</cite> parameter.
-See POD.__init__ for further info.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p></li>
-<li><p><strong>s</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the singular values of X.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the number of modes</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">expand</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.expand"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Projects a reduced to full order solution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Same as <cite>inverse_transform</cite>. Kept for backward compatibility.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.fit"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Create the reduced space for the given snapshots <cite>X</cite> using the
-specified method</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.inverse_transform"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Projects a reduced to full order solution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">modes</code></dt>
-<dd><p>The POD modes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.reduce"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Reduces the given snapshots.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Same as <cite>transform</cite>. Kept for backward compatibility.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">singular_values</code></dt>
-<dd><p>The singular values</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/pod.html#POD.transform"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Reduces the given snapshots.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -374,7 +150,7 @@ specified method</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Feb 01, 2024.
+      <span class="lastupdated">Last updated on Mar 01, 2024.
       </span></p>
   </div>
 
