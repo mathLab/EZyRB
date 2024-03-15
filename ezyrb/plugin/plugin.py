@@ -10,18 +10,37 @@ class Plugin(ABC):
     All the classes that implement the input-output mapping should be inherited
     from this class.
     """
-    def fom_preprocessing(self, rom):
+    def fit_preprocessing(self, rom):
         """ Void """
         pass
 
-    def rom_preprocessing(self, rom):
+    def before_fit_reduction(self, rom):
         """ Void """
         pass
 
-    def rom_postprocessing(self, rom):
+    def after_fit_reduction(self, rom):
+        """ Void """
+        pass
+    
+    def before_fit_approximation(self, rom):
         """ Void """
         pass
 
-    def fom_postprocessing(self, rom):
+    def after_fit_approximation(self, rom):
         """ Void """
         pass
+
+    def fit_postprocessing(self, rom):
+        """ Void """
+        pass
+
+    def predict_preprocessing(self, rom):
+        """ Void """
+        pass
+
+    def predict_postprocessing(self, rom):
+        """ Void """
+        pass
+
+
+

@@ -7,6 +7,8 @@ import numpy as np
 from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
 from .database import Database
+from .reduction import Reduction
+from .approximation import Approximation
 
 
 class ReducedOrderModel():
@@ -22,8 +24,7 @@ class ReducedOrderModel():
         order model.
     :param ezyrb.Approximation approximation: the approximation method to use
         in reduced order model.
-    :param object scaler_red: the scaler for the reduced variables (eg. modal
-        coefficients). Default is None.
+    :param list plugins: list of plugins to use in the reduced order model.
 
     :cvar ezyrb.Database database: the database used for training the reduced
         order model.
@@ -31,8 +32,7 @@ class ReducedOrderModel():
         model.
     :cvar ezyrb.Approximation approximation: the approximation method used in
         reduced order model.
-    :cvar object scaler_red: the scaler for the reduced variables (eg. modal
-        coefficients).
+    :cvar list plugins: list of plugins used in the reduced order model.
 
     :Example:
 
@@ -57,6 +57,67 @@ class ReducedOrderModel():
             plugins = []
 
         self.plugins = plugins
+        
+        self.train_full_database = None
+        self.train_reduced_database = None
+        self.test_full_database = None
+        self.test_reduced_database = None
+        self.validation_full_database = None
+        self.validation_reduced_database = None
+
+
+    @property
+    def database(self):
+        return self._database
+    
+    @database.setter
+    def database(self, value):
+
+        if not isinstance(value, (Database, dict)):
+            raise TypeError(
+                "The database has to be an instance of the Database class, or a dictionary of Database.")
+        
+        self._database = value
+
+    @property
+    def n_database(self):
+        value_, class_ = self.database, Database
+        return len(value_) if isinstance(value_, class_) else 1
+
+    @property
+    def n_reduction(self):
+        value_, class_ = self.reduction, Reduction
+        return len(value_) if isinstance(value_, class_) else 1
+
+    @property
+    def n_approximation(self):
+        value_, class_ = self.approximation, Approximation
+        return len(value_) if isinstance(value_, class_) else 1
+
+    def fit_reduction(self):
+
+        if self.n_database == 1 and self.n_reduction == 1:
+            self.train_full_database = self.database
+            self.reduction.fit(self.database.snapshots_matrix.T)
+
+        elif self.n_database == 1 and self.n_reduction > 1:
+            self.train_full_database = self.database
+            for reduction in self.reduction:
+                reduction.fit(self.database.snapshots_matrix.T)
+
+        elif self.n_database > 1 and self.n_reduction == 1:
+            self.train_full_database = self.database
+            self.reduction = [
+                (k, copy.deepcopy(self.reduction))
+                for k in self.train_full_database
+            ]
+            for reduction, database in zip(self.reduction, self.train_full_database):
+                self.reduction[reduction].fit(self.train_full_database[database].snapshots_matrix.T)
+                 
+        elif self.n_database > 1 and self.n_reduction > 1:
+            raise NotImplementedError
+        else:
+            raise RuntimeError
 
     def fit(self):
         r"""
@@ -64,7 +125,6 @@ class ReducedOrderModel():
 
         """
 
-        import copy
         self._full_database = copy.deepcopy(self.database)
 
         # FULL-ORDER PREPROCESSING here
