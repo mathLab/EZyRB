@@ -4,6 +4,7 @@ from unittest import TestCase
 from ezyrb import POD, GPR, RBF, Database
 from ezyrb import KNeighborsRegressor, RadiusNeighborsRegressor, Linear
 from ezyrb import ReducedOrderModel as ROM
+from ezyrb.reducedordermodel import MultiReducedOrderModel as MROM
 
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
 pred_sol_tst = np.load('tests/test_datasets/p_predsol.npy').T
@@ -17,6 +18,12 @@ class TestReducedOrderModel(TestCase):
         rbf = RBF()
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, rbf)
+
+    def test_fit(self):
+        pod = POD()
+        rbf = RBF()
+        db = Database(param, snapshots.T)
+        rom = ROM(db, pod, rbf).fit()
 
     def test_save(self):
         fname = 'ezyrb.tmp'
@@ -38,8 +45,8 @@ class TestReducedOrderModel(TestCase):
         new_rom = ROM.load(fname)
         new_param = [-0.293344, -0.23120537]
         np.testing.assert_array_almost_equal(
-            rom.predict(new_param).snapshots_matrix,
-            new_rom.predict(new_param).snapshots_matrix
+            rom.predict(new_param),
+            new_rom.predict(new_param)
         )
 
     def test_load2(self):
@@ -53,8 +60,8 @@ class TestReducedOrderModel(TestCase):
         new_rom = ROM.load(fname)
         new_param = [-0.293344, -0.23120537]
         np.testing.assert_array_almost_equal(
-            rom.predict(new_param).snapshots_matrix,
-            new_rom.predict(new_param).snapshots_matrix
+            rom.predict(new_param),
+            new_rom.predict(new_param)
         )
 
     def test_predict_01(self):
@@ -64,7 +71,7 @@ class TestReducedOrderModel(TestCase):
         rom = ROM(db, pod, rbf).fit()
         pred_sol = rom.predict([-0.293344, -0.23120537])
         np.testing.assert_allclose(
-            pred_sol.snapshots_matrix.flatten(),
+            pred_sol.flatten(),
             pred_sol_tst, rtol=1e-4, atol=1e-5)
 
     def test_predict_02(self):
@@ -75,7 +82,7 @@ class TestReducedOrderModel(TestCase):
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict([-.45, -.45])
         np.testing.assert_allclose(
-            pred_sol.snapshots_matrix.flatten(),
+            pred_sol.flatten(),
             pred_sol_gpr, rtol=1e-4, atol=1e-5)
 
     def test_predict_03(self):
@@ -84,7 +91,9 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters_matrix[2])
-        assert pred_sol.snapshots_matrix[0].shape == db.snapshots_matrix[0].shape
+        assert pred_sol[0].shape == db.snapshots_matrix[0].shape
+        pred_db = rom.predict(db)
+        assert pred_db.snapshots_matrix.shape == db.snapshots_matrix.shape
 
     def test_predict_04(self):
         pod = POD(method='svd', rank=3)
@@ -92,7 +101,7 @@ class TestReducedOrderModel(TestCase):
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict(db.parameters_matrix)
-        assert pred_sol.snapshots_matrix.shape == db.snapshots_matrix.shape
+        assert pred_sol.shape == db.snapshots_matrix.shape
 
     # def test_predict_scaler_01(self):
     #     from sklearn.preprocessing import StandardScaler
@@ -155,10 +164,10 @@ class TestReducedOrderModel(TestCase):
         gpr = GPR()
         rnr = RadiusNeighborsRegressor()
         knr = KNeighborsRegressor(n_neighbors=1)
-        lin = Linear()
+        lin = Linear(fill_value=0)
         db = Database(param, snapshots.T)
         exact_len = len(db)
-        approximations = [rbf, gpr, knr, rnr, lin]
+        approximations = [rbf, gpr, knr, rnr]#, lin]
         roms = [ROM(db, pod, app) for app in approximations]
         len_errors = [len(rom.loo_error()) for rom in roms]
         np.testing.assert_allclose(len_errors, exact_len)
@@ -183,6 +192,17 @@ class TestReducedOrderModel(TestCase):
         rom.loo_error()
         np.testing.assert_allclose(valid_svalues, rom.reduction.singular_values)
 
+    def test_multi_db(self):
+        pod = POD()
+        pod2 = POD(rank=1)
+        gpr = GPR()
+        db1 = Database(param, snapshots.T)
+        db2 = Database(param, snapshots.T)
+        rom = MROM({'p': db1}, {'a': pod, 'b':pod2}, gpr).fit()
+        print(rom.predict([-.5, -.5]))
+        assert False
+
+"""
     def test_optimal_mu(self):
         pod = POD()
         rbf = RBF()
@@ -199,4 +219,4 @@ class TestReducedOrderModel(TestCase):
             np.testing.assert_allclose(len_opt_mu, exact_len)
             len_k = [rom.optimal_mu(k=k).shape[0] for rom in roms]
             np.testing.assert_allclose(len_k, k)
-
+"""

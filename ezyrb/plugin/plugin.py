@@ -14,19 +14,19 @@ class Plugin(ABC):
         """ Void """
         pass
 
-    def before_fit_reduction(self, rom):
+    def fit_before_reduction(self, rom):
         """ Void """
         pass
 
-    def after_fit_reduction(self, rom):
+    def fit_after_reduction(self, rom):
         """ Void """
         pass
     
-    def before_fit_approximation(self, rom):
+    def fit_before_approximation(self, rom):
         """ Void """
         pass
 
-    def after_fit_approximation(self, rom):
+    def fit_after_approximation(self, rom):
         """ Void """
         pass
 
@@ -35,6 +35,22 @@ class Plugin(ABC):
         pass
 
     def predict_preprocessing(self, rom):
+        """ Void """
+        pass
+
+    def predict_before_approximation(self, rom):
+        """ Void """
+        pass
+
+    def predict_after_approximation(self, rom):
+        """ Void """
+        pass
+
+    def predict_before_expansion(self, rom):
+        """ Void """
+        pass
+    
+    def predict_after_expansion(self, rom):
         """ Void """
         pass
 
