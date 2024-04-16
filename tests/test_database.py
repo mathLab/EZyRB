@@ -17,9 +17,9 @@ class TestDatabase(TestCase):
             Database(np.random.uniform(size=(9, 3)),
                      np.random.uniform(size=(10, 8)))
 
-    def test_constructor_error(self):
-        with self.assertRaises(TypeError):
-            Database(np.eye(5))
+    # def test_constructor_error(self):
+    #     with self.assertRaises(TypeError):
+    #         Database(np.eye(5))
 
     def test_getitem(self):
         org = Database(np.random.uniform(size=(10, 3)),

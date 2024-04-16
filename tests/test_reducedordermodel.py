@@ -197,10 +197,11 @@ class TestReducedOrderModel(TestCase):
         pod2 = POD(rank=1)
         gpr = GPR()
         db1 = Database(param, snapshots.T)
-        db2 = Database(param, snapshots.T)
         rom = MROM({'p': db1}, {'a': pod, 'b':pod2}, gpr).fit()
-        print(rom.predict([-.5, -.5]))
-        assert False
+        pred = rom.predict([-.5, -.5])
+        assert isinstance(pred, dict)
+        assert len(pred) == 2
+
 
 """
     def test_optimal_mu(self):

@@ -44,7 +44,7 @@ def test_fit_train():
     rom = ROM(db, pod, rbf, plugins=[nnspod])
     rom.fit()
 
-    pred = rom.predict(db.parameters_matrix)
+    pred = rom.predict(db)
 
     error = 0.0
     for (_, snap), (_, truth_snap) in zip(pred._pairs, db._pairs):

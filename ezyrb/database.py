@@ -23,13 +23,13 @@ class Database():
         if parameters is None and snapshots is None:
             return
 
-        # if len(parameters) != len(snapshots):
-        #     raise ValueError
-
         if parameters is None:
             parameters = [None] * len(snapshots)
         elif snapshots is None:
             snapshots = [None] * len(parameters)
+
+        if len(parameters) != len(snapshots):
+            raise ValueError
         
         for param, snap in zip(parameters, snapshots):
             self.add(Parameter(param), Snapshot(snap))
@@ -41,8 +41,6 @@ class Database():
 
         :rtype: numpy.ndarray
         """
-        print(self._pairs)
-        print(self._pairs[0])
         return np.asarray([pair[0].values for pair in self._pairs])
 
     @property
@@ -81,7 +79,9 @@ class Database():
 
     def __str__(self):
         """ Print minimal info about the Database """
-        return str(self.parameters_matrix)
+        s = 'Database with {} snapshots and {} parameters'.format(
+            self.snapshots_matrix.shape[1], self.parameters_matrix.shape[1])
+        return s
 
     def add(self, parameter, snapshot):
         """

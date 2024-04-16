@@ -54,7 +54,7 @@ class TestRadius(TestCase):
 
         rom.fit()
         pred = rom.predict([[1], [2], [3]])
-        np.testing.assert_equal(pred.snapshots_matrix, np.array([1, 5, 3])[:,None]) 
+        np.testing.assert_equal(pred, np.array([1, 5, 3])[:,None]) 
 
 
 

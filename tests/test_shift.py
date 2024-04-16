@@ -53,8 +53,9 @@ def test_predict_ref():
     ])
     rom.fit()
     pred = rom.predict(db._pairs[0][0].values)
+    print(pred)
     np.testing.assert_array_almost_equal(
-        pred._pairs[0][1].values, db._pairs[0][1].values, decimal=1)
+        pred[0], db._pairs[0][1].values, decimal=1)
 
 
 def test_predict():
@@ -69,12 +70,12 @@ def test_predict():
         ShiftSnapshots(shift, Linear(fill_value=0.0))
     ])
     rom.fit()
-    pred = rom.predict(db._pairs[10][0].values)
+    pred_db = rom.predict(db)
 
     from scipy import spatial
     tree = spatial.KDTree(db._pairs[10][1].space.reshape(-1, 1))
     error = 0.0
-    for coord, value in zip(pred._pairs[0][1].space, pred._pairs[0][1].values):
+    for coord, value in zip(pred_db._pairs[0][1].space, pred_db._pairs[0][1].values):
         a = tree.query(coord)
         error += np.abs(value - db._pairs[10][1].values[a[1]])
         

@@ -266,10 +266,15 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         # print(self.predict_reduced_database._pairs[0])
         # print(self.predict_reduced_database._pairs[0][1].values)
 
+        print(self.predict_reduced_database.parameters_matrix)
+        print(self.approximation.predict(
+                self.predict_reduced_database.parameters_matrix))
         self.predict_reduced_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.approximation.predict(
-                self.predict_reduced_database.parameters_matrix)
+                self.predict_reduced_database.parameters_matrix).reshape(
+                    self.predict_reduced_database.parameters_matrix.shape[0], -1
+                )
         )
         # print(self.predict_reduced_database)
         # print(self.predict_reduced_database._pairs)

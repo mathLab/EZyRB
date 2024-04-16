@@ -12,7 +12,9 @@ class Snapshot:
 
     @property
     def values(self):
-        """ Get the snapshot values. """
+        """ 
+        Get the snapshot values.
+        """
         return self._values
 
     @values.setter
@@ -25,7 +27,9 @@ class Snapshot:
 
     @property
     def space(self):
-        """ Get the snapshot space. """
+        """ 
+        Get the snapshot space.
+        """
         return self._space
 
     @space.setter

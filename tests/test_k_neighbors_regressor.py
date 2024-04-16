@@ -53,7 +53,7 @@ class TestKNeighbors(TestCase):
         rom = ReducedOrderModel(db, pod, reg)
 
         rom.fit()
-        pred = rom.predict([[1], [2], [3]])
+        pred = rom.predict(db)
         np.testing.assert_equal(pred.snapshots_matrix, np.array([1, 5, 3])[:,None]) 
 
     def test_wrong1(self):
