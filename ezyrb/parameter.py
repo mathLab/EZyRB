@@ -4,7 +4,10 @@ import numpy as np
 class Parameter:
 
     def __init__(self, values):
-        self.values = values
+        if isinstance(values, Parameter):
+            self.values = values.values
+        else:
+            self.values = values
 
     @property
     def values(self):
@@ -15,4 +18,5 @@ class Parameter:
     def values(self, new_values):
         if np.asarray(new_values).ndim != 1:
             raise ValueError('only 1D array are usable as parameter.')
-        self._values = new_values
+
+        self._values = np.asarray(new_values)

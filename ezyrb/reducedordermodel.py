@@ -489,7 +489,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         return np.abs(
             np.linalg.det(distance) / math.factorial(vertices.shape[1]))
 
-class MultiReducedOrderModel:
+class MultiReducedOrderModel(ReducedOrderModelInterface):
     """
     Multiple Reduced Order Model class.
 
@@ -524,7 +524,7 @@ class MultiReducedOrderModel:
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, *args, plugins=None):
+    def __init__(self, *args, plugins=None, rom_plugin=None):
 
         if len(args) == 3:
             self.database = args[0]
@@ -553,8 +553,11 @@ class MultiReducedOrderModel:
 
         if plugins is None:
             plugins = []
-
         self.plugins = plugins
+
+        if rom_plugin is not None:
+            for rom_ in self.roms.values():
+                rom_.plugins.append(rom_plugin)
 
     @property
     def database(self):
@@ -657,8 +660,12 @@ class MultiReducedOrderModel:
         Calculate reduced space
 
         """
+        self._execute_plugins('fit_preprocessing')
+
         for rom_ in self.roms.values():
             rom_.fit()
+
+        self._execute_plugins('fit_postprocessing')
         # print(self.database)
         # print(self.reduction)
         # print(self.approximation)
@@ -714,11 +721,20 @@ class MultiReducedOrderModel:
         :rtype: Database
         """
 
-        pred = {}
+        self._execute_plugins('predict_preprocessing')
+
+        self.multi_predict_database = {}
         for k, rom_ in self.roms.items():
-            pred[k] = rom_.predict(parameters)
+            print(rom_.predict_full_database)
+            print(rom_.predict_full_database.snapshots_matrix)
+            print(rom_.predict_full_database.parameters_matrix)
+            self.multi_predict_database[k] = rom_.predict(rom_.predict_full_database)
+            print(self.multi_predict_database)
             
-        return pred
+
+        self._execute_plugins('predict_postprocessing')
+            
+        return self.multi_predict_database
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
