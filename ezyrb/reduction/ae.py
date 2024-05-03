@@ -90,14 +90,14 @@ class AE(Reduction, ANN):
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
-        
+
         if torch.cuda.is_available(): # Check if GPU is available
             print("Using cuda device")
             torch.cuda.empty_cache()
             self.use_cuda = True
         else:
             self.use_cuda = False
-        
+
         self.layers_encoder = layers_encoder
         self.layers_decoder = layers_decoder
         self.function_encoder = function_encoder
