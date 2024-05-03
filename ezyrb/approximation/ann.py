@@ -160,7 +160,7 @@ class ANN(Approximation):
         """
 
         self._build_model(points, values)
-        
+
         if self.use_cuda:
             self.model = self.model.cuda()
             points = self._convert_numpy_to_torch(points).cuda()
@@ -168,7 +168,7 @@ class ANN(Approximation):
         else:
             points = self._convert_numpy_to_torch(points)
             values = self._convert_numpy_to_torch(values)
-        
+
         optimizer = self.optimizer(
             self.model.parameters(),
             lr=self.lr, weight_decay=self.l2_regularization)
