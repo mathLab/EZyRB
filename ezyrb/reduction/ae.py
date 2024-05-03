@@ -3,6 +3,7 @@ Module for FNN-Autoencoders.
 """
 
 import torch
+import numpy as np
 from .reduction import Reduction
 from ..approximation import ANN
 
