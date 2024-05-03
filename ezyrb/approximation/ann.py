@@ -59,7 +59,14 @@ class ANN(Approximation):
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
-
+        
+        if torch.cuda.is_available(): # Check if GPU is available
+            print("Using cuda device")
+            torch.cuda.empty_cache()
+            self.use_cuda = True
+        else:
+            self.use_cuda = False
+        
         self.layers = layers
         self.function = function
         self.loss = loss
@@ -153,12 +160,18 @@ class ANN(Approximation):
         """
 
         self._build_model(points, values)
+        
+        if self.use_cuda:
+            self.model = self.model.cuda()
+            points = self._convert_numpy_to_torch(points).cuda()
+            values = self._convert_numpy_to_torch(values).cuda()
+        else:
+            points = self._convert_numpy_to_torch(points)
+            values = self._convert_numpy_to_torch(values)
+        
         optimizer = self.optimizer(
             self.model.parameters(),
             lr=self.lr, weight_decay=self.l2_regularization)
-
-        points = self._convert_numpy_to_torch(points)
-        values = self._convert_numpy_to_torch(values)
 
         n_epoch = 1
         flag = True
@@ -198,6 +211,11 @@ class ANN(Approximation):
         :return: the predicted values via the ANN.
         :rtype: numpy.ndarray
         """
-        new_point = self._convert_numpy_to_torch(np.array(new_point))
-        y_new = self.model(new_point)
-        return self._convert_torch_to_numpy(y_new)
+        if self.use_cuda :
+            new_point = self._convert_numpy_to_torch(new_point).cuda()
+            new_point = self._convert_numpy_to_torch(np.array(new_point.cpu())).cuda()
+            y_new = self._convert_torch_to_numpy(self.model(new_point).cpu())
+        else:
+            new_point = self._convert_numpy_to_torch(np.array(new_point))
+            y_new = self._convert_torch_to_numpy(self.model(new_point))
+        return y_new
