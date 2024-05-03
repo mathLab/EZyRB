@@ -59,14 +59,14 @@ class ANN(Approximation):
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
-        
+
         if torch.cuda.is_available(): # Check if GPU is available
             print("Using cuda device")
             torch.cuda.empty_cache()
             self.use_cuda = True
         else:
             self.use_cuda = False
-        
+
         self.layers = layers
         self.function = function
         self.loss = loss
@@ -213,7 +213,8 @@ class ANN(Approximation):
         """
         if self.use_cuda :
             new_point = self._convert_numpy_to_torch(new_point).cuda()
-            new_point = self._convert_numpy_to_torch(np.array(new_point.cpu())).cuda()
+            new_point = self._convert_numpy_to_torch(
+                np.array(new_point.cpu())).cuda()
             y_new = self._convert_torch_to_numpy(self.model(new_point).cpu())
         else:
             new_point = self._convert_numpy_to_torch(np.array(new_point))
