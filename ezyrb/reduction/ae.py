@@ -3,6 +3,7 @@ Module for FNN-Autoencoders.
 """
 
 import torch
+import numpy as np
 from .reduction import Reduction
 from ..approximation import ANN
 
@@ -90,6 +91,13 @@ class AE(Reduction, ANN):
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
 
+        if torch.cuda.is_available(): # Check if GPU is available
+            print("Using cuda device")
+            torch.cuda.empty_cache()
+            self.use_cuda = True
+        else:
+            self.use_cuda = False
+
         self.layers_encoder = layers_encoder
         self.layers_decoder = layers_decoder
         self.function_encoder = function_encoder
@@ -153,7 +161,12 @@ class AE(Reduction, ANN):
             list(self.encoder.parameters()) + list(self.decoder.parameters()),
             lr=self.lr, weight_decay=self.l2_regularization)
 
-        values = self._convert_numpy_to_torch(values)
+        if self.use_cuda:
+            self.encoder = self.encoder.cuda()
+            self.decoder = self.decoder.cuda()
+            values = self._convert_numpy_to_torch(values).cuda()
+        else:
+            values = self._convert_numpy_to_torch(values)
 
         n_epoch = 1
         flag = True
@@ -191,7 +204,11 @@ class AE(Reduction, ANN):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        X = self._convert_numpy_to_torch(X).T
+        if self.use_cuda:
+            X = self._convert_numpy_to_torch(X).T.cuda()
+            X = self._convert_numpy_to_torch(np.array(X.cpu())).cuda()
+        else:
+            X = self._convert_numpy_to_torch(X).T
         g = self.encoder(X)
         return g.cpu().detach().numpy().T
 
@@ -201,7 +218,11 @@ class AE(Reduction, ANN):
 
         :param: numpy.ndarray g the latent variables.
         """
-        g = self._convert_numpy_to_torch(g).T
+        if self.use_cuda:
+            g = self._convert_numpy_to_torch(g).T.cuda()
+            g = self._convert_numpy_to_torch(np.array(g.cpu())).cuda()
+        else:
+            g = self._convert_numpy_to_torch(g).T
         u = self.decoder(g)
         return u.cpu().detach().numpy().T
 
