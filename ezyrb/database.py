@@ -23,11 +23,19 @@ class Database():
         if parameters is None and snapshots is None:
             return
 
-        if len(parameters) != len(snapshots):
-            raise ValueError
+        if parameters is None:
+            parameters = [None] * len(snapshots)
+        elif snapshots is None:
+            snapshots = [None] * len(parameters)
 
+        if len(parameters) != len(snapshots):
+            raise ValueError('parameters and snapshots must have the same length')
+        
         for param, snap in zip(parameters, snapshots):
-            self.add(Parameter(param), Snapshot(snap))
+            param = Parameter(param)
+            snap = Snapshot(snap)
+
+            self.add(param, snap)
 
     @property
     def parameters_matrix(self):
@@ -74,7 +82,9 @@ class Database():
 
     def __str__(self):
         """ Print minimal info about the Database """
-        return str(self.parameters_matrix)
+        s = 'Database with {} snapshots and {} parameters'.format(
+            self.snapshots_matrix.shape[1], self.parameters_matrix.shape[1])
+        return s
 
     def add(self, parameter, snapshot):
         """
@@ -103,6 +113,10 @@ class Database():
         >>> train, test = db.split([80, 20])   # n snapshots
 
         """
+        
+        if seed is not None:
+            np.random.seed(seed)
+
         if all(isinstance(n, int) for n in chunks):
             if sum(chunks) != len(self):
                 raise ValueError('chunk elements are inconsistent')
@@ -117,6 +131,7 @@ class Database():
         elif all(isinstance(n, float) for n in chunks):
             if not np.isclose(sum(chunks), 1.):
                 raise ValueError('chunk elements are inconsistent')
+
 
             cum_chunks = np.cumsum(chunks)
             cum_chunks = np.insert(cum_chunks, 0, 0.0)

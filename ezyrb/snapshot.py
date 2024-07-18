@@ -7,12 +7,18 @@ import matplotlib.pyplot as plt
 class Snapshot:
 
     def __init__(self, values, space=None):
-        self.values = values
-        self.space = space
+        if isinstance(values, Snapshot):
+            self.values = values.values
+            self.space = values.space
+        else:
+            self.values = values
+            self.space = space
 
     @property
     def values(self):
-        """ Get the snapshot values. """
+        """ 
+        Get the snapshot values.
+        """
         return self._values
 
     @values.setter
@@ -25,7 +31,9 @@ class Snapshot:
 
     @property
     def space(self):
-        """ Get the snapshot space. """
+        """ 
+        Get the snapshot space.
+        """
         return self._space
 
     @space.setter

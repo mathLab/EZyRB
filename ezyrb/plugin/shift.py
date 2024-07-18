@@ -53,8 +53,8 @@ class ShiftSnapshots(Plugin):
         self.parameter_index = parameter_index
         self.reference_index = reference_index
 
-    def fom_preprocessing(self, rom):
-        db = rom._full_database
+    def fit_preprocessing(self, rom):
+        db = rom.database
 
         reference_snapshot = db._pairs[self.reference_index][1]
 
@@ -68,10 +68,10 @@ class ShiftSnapshots(Plugin):
             snap.values = self.interpolator.predict(
                 reference_snapshot.space.reshape(-1, 1)).flatten()
 
-        rom._full_database = db
+        rom.database = db
 
-    def fom_postprocessing(self, rom):
-        for param, snap in rom._full_database._pairs:
+    def predict_postprocessing(self, rom):
+        for param, snap in rom.predict_full_database._pairs:
             snap.space = (
                 rom.database._pairs[self.reference_index][1].space +
                 self.__shift_function(param.values)
