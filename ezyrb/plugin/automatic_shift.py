@@ -158,6 +158,8 @@ class AutomaticShiftSnapshots(Plugin):
         
         ref_space = self.reference_snapshot.space
 
+        snaps = []
+
         for param, snap in rom._full_database._pairs:
             input_shift = np.hstack([
                 ref_space.reshape(-1, 1),
@@ -165,3 +167,10 @@ class AutomaticShiftSnapshots(Plugin):
             shift = self.shift_network.predict(input_shift)
             snap.space = ref_space + shift.flatten()
             snap.space = snap.space.flatten()
+
+            self.interpolator.fit(snap.space, snap.values.reshape(-1, 1))
+            snap.values = self.interpolator.predict(ref_space)
+
+            snaps.append(snap)
+
+        rom._full_database = snaps
