@@ -3,6 +3,7 @@
 import numpy as np
 import torch
 
+from ezyrb import Database, Snapshot, Parameter
 from .plugin import Plugin
 
 
@@ -152,25 +153,25 @@ class AutomaticShiftSnapshots(Plugin):
                 snap.values.reshape(-1, 1))
 
             snap.values = self.interpolator.predict(
-                reference_snapshot.space.reshape(-1, 1)).flatten()
+                reference_snapshot.space.reshape(-1, 1)).flatten()  # reconstructing shifted snapshots in physical space 
 
     def fom_postprocessing(self, rom):
         
         ref_space = self.reference_snapshot.space
-
-        snaps = []
+        db = Database()
 
         for param, snap in rom._full_database._pairs:
             input_shift = np.hstack([
                 ref_space.reshape(-1, 1),
                 np.ones(shape=(ref_space.shape[0], 1))*param.values])
             shift = self.shift_network.predict(input_shift)
-            snap.space = ref_space + shift.flatten()
+            snap.space = ref_space + shift.flatten()    # shifted space transports to correct physical frame 
             snap.space = snap.space.flatten()
 
             self.interpolator.fit(snap.space, snap.values.reshape(-1, 1))
-            snap.values = self.interpolator.predict(ref_space)
+            snap.values = self.interpolator.predict(ref_space)  # reconstruct snapshot in physical space
 
-            snaps.append(snap)
+            snaps = Snapshot(values = snap.values, space = ref_space)
+            db.add(Parameter(param.values), snaps)
 
-        rom._full_database = snaps
+        rom._full_database = db
