@@ -27,11 +27,11 @@ def test_constructor():
 
 
 def test_fit_train():
-    seed = 147
+    seed = 1
     torch.manual_seed(seed)
     np.random.seed(seed)
-    interp = ANN([10, 10], torch.nn.Softplus(), 1000, frequency_print=200, lr=0.03)
-    shift = ANN([], torch.nn.LeakyReLU(), [2500, 1e-3], frequency_print=200, l2_regularization=0,  lr=0.0005)
+    interp = ANN([10, 10], torch.nn.Softplus(), 10000, frequency_print=200, lr=0.03)
+    shift  = ANN([], torch.nn.LeakyReLU(), [1e-4, 5000], frequency_print=200, l2_regularization=0,  lr=0.0023)
     nnspod = AutomaticShiftSnapshots(shift, interp, Linear(fill_value=0.0), barycenter_loss=10.)
     pod = POD(rank=1)
     rbf = RBF()
