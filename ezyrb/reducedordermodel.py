@@ -4,7 +4,7 @@ import math
 import copy
 import pickle
 import numpy as np
-from scipy.spatial.qhull import Delaunay
+from scipy.spatial import Delaunay
 from sklearn.model_selection import KFold
 from .database import Database
 
@@ -70,10 +70,10 @@ class ReducedOrderModel():
         # FULL-ORDER PREPROCESSING here
         for plugin in self.plugins:
             plugin.fom_preprocessing(self)
+            
+        self.shifted_database = self._full_database
 
         self.reduction.fit(self._full_database.snapshots_matrix.T)
-        # print(self.reduction.singular_values)
-        # print(self._full_database.snapshots_matrix)
         reduced_snapshots = self.reduction.transform(
             self._full_database.snapshots_matrix.T).T
 
