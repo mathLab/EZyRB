@@ -4,13 +4,14 @@ Three different methods can be employed: Truncated Singular Value
 Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
 Singular Value Decomposition via correlation matrix.
 """
+
 import numpy as np
 
 from .reduction import Reduction
 
 
 class POD(Reduction):
-    def __init__(self, method='svd', **kwargs):
+    def __init__(self, method="svd", **kwargs):
         """
         Perform the Proper Orthogonal Decomposition.
 
@@ -50,18 +51,9 @@ class POD(Reduction):
             >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
         available_methods = {
-            'svd': (self._svd, {
-                'rank': -1
-            }),
-            'randomized_svd': (self._rsvd, {
-                'rank': -1,
-                'subspace_iteration': 1,
-                'omega_rank': 0
-            }),
-            'correlation_matrix': (self._corrm, {
-                'rank': -1,
-                'save_memory': False
-            }),
+            "svd": (self._svd, {"rank": -1}),
+            "randomized_svd": (self._rsvd, {"rank": -1, "subspace_iteration": 1, "omega_rank": 0}),
+            "correlation_matrix": (self._corrm, {"rank": -1, "save_memory": False}),
         }
 
         self._modes = None
@@ -73,7 +65,7 @@ class POD(Reduction):
                 f"Invalid method for POD. Please chose one among {', '.join(available_methods)}"
             )
 
-        self.__method, args = method
+        self._method, args = method
         args.update(kwargs)
 
         for hyperparam, value in args.items():
@@ -104,7 +96,7 @@ class POD(Reduction):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column)
         """
-        self._modes, self._singular_values = self.__method(X)
+        self._modes, self._singular_values = self._method(X)
         return self
 
     def transform(self, X):
@@ -158,6 +150,7 @@ class POD(Reduction):
         :return: the number of modes
         :rtype: int
         """
+
         def omega(x):
             return 0.56 * x**3 - 0.95 * x**2 + 1.82 * x + 1.43
 
@@ -208,8 +201,7 @@ class POD(Reduction):
         constructing approximate matrix decompositions. N. Halko, P. G.
         Martinsson, J. A. Tropp.
         """
-        if (self.omega_rank == 0 and isinstance(self.rank, int)
-                and self.rank not in [0, -1]):
+        if self.omega_rank == 0 and isinstance(self.rank, int) and self.rank not in [0, -1]:
             omega_rank = self.rank * 2
         elif self.omega_rank == 0:
             omega_rank = X.shape[1] * 2
