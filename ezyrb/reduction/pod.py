@@ -11,7 +11,14 @@ from .reduction import Reduction
 
 
 class POD(Reduction):
-    def __init__(self, method="svd", **kwargs):
+    def __init__(
+        self,
+        method="svd",
+        rank=-1,
+        subspace_iteration=1,
+        omega_rank=0,
+        save_memory=False,
+    ):
         """
         Perform the Proper Orthogonal Decomposition.
 
@@ -50,26 +57,22 @@ class POD(Reduction):
                           omega_rank=10)
             >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
-        available_methods = {
-            "svd": (self._svd, {"rank": -1}),
-            "randomized_svd": (self._rsvd, {"rank": -1, "subspace_iteration": 1, "omega_rank": 0}),
-            "correlation_matrix": (self._corrm, {"rank": -1, "save_memory": False}),
-        }
+        self.available_methods = ["svd", "randomized_svd", "correlation_matrix"]
+        self.rank = rank
+        if method == "svd":
+            self._method = self._svd
+        elif method == "randomized_svd":
+            self.subspace_iteration = subspace_iteration
+            self.omega_rank = omega_rank
+            self._method = self._rsvd
+        elif method == "correlation_matrix":
+            self.save_memory = save_memory
+            self._method = self._corrm
+        else:
+            self._method = None
 
         self._modes = None
         self._singular_values = None
-
-        method = available_methods.get(method)
-        if method is None:
-            raise RuntimeError(
-                f"Invalid method for POD. Please chose one among {', '.join(available_methods)}"
-            )
-
-        self._method, args = method
-        args.update(kwargs)
-
-        for hyperparam, value in args.items():
-            setattr(self, hyperparam, value)
 
     @property
     def modes(self):
@@ -96,6 +99,11 @@ class POD(Reduction):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column)
         """
+        if self._method is None:
+            m = self.available_methods
+            raise RuntimeError(
+                f"Invalid method for POD. Please chose one among {', '.join(m)}"
+            )
         self._modes, self._singular_values = self._method(X)
         return self
 
@@ -201,7 +209,11 @@ class POD(Reduction):
         constructing approximate matrix decompositions. N. Halko, P. G.
         Martinsson, J. A. Tropp.
         """
-        if self.omega_rank == 0 and isinstance(self.rank, int) and self.rank not in [0, -1]:
+        if (
+            self.omega_rank == 0
+            and isinstance(self.rank, int)
+            and self.rank not in [0, -1]
+        ):
             omega_rank = self.rank * 2
         elif self.omega_rank == 0:
             omega_rank = X.shape[1] * 2
