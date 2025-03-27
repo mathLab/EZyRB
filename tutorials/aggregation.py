@@ -16,7 +16,7 @@
 
 # In[1]:
 
-
+import os
 from smithers.dataset import NavierStokesDataset
 from sklearn.ensemble import RandomForestRegressor
 data = NavierStokesDataset()
@@ -92,6 +92,7 @@ warnings.filterwarnings("ignore", message="Ill-conditioned matrix ")
 # Before starting with the reduced order model, we reduce the dimension
 # of the dataset
 field = 'vx'
+rank = 2
 data.params = data.params[:300, :]
 data.snapshots[field] = data.snapshots[field][:300, :]
 
@@ -105,10 +106,12 @@ db_train = Database(mu_train, snap_train)
 db_val = Database(mu_val, snap_val)
 db_test = Database(mu_test, snap_test)
 
+new_params = db_test.parameters_matrix[:3]
+
 # Define some reduction and approximation methods to test
 reductions = {
-    'POD': POD('svd', rank=3),
-    'AE': AE([100, 10, 3], [3, 10, 100], nn.Softplus(), nn.Softplus(), 1000),
+    'POD': POD('svd', rank=rank),
+    'AE': AE([100, 10, rank], [rank, 10, 100], nn.Softplus(), nn.Softplus(), 3000),
 }
 
 approximations = {
@@ -120,49 +123,94 @@ approximations = {
 #    'ANN': ANN([20, 20], nn.Tanh(), 10),
 }
 
-# Define a dictionary to store the ROMs
-roms_dict = {}
-for redname, redclass in reductions.items():
-    for approxname, approxclass in approximations.items():
-        rom = ROM(db_train, copy.deepcopy(redclass), copy.deepcopy(approxclass))
-        rom.fit()
-        roms_dict[redname+'-'+approxname] = rom
+def fit_multirom(multirom, db_val, model, fname):
+    sigma = multirom.optimize_sigma(db_val, model, sigma_range=[1e-5, 1])
+    multirom.fit_weights(db_val, model, sigma=sigma)
+    multirom.save(f'multirom_{fname}.pkl')
+    return multirom
+
+# Save the dictionary of roms (fitted), if no file is found
+if not os.path.exists('multirom.pkl'):
+    # Define a dictionary to store the ROMs
+    roms_dict = {}
+    for redname, redclass in reductions.items():
+        for approxname, approxclass in approximations.items():
+            rom = ROM(db_train, copy.deepcopy(redclass), copy.deepcopy(approxclass))
+            rom.fit()
+            roms_dict[redname+'-'+approxname] = rom
+    multirom = MultiROM(roms_dict)
+    multirom.save('multirom.pkl')
+
+    # Visualize the results on new parameters
+
+    fig, ax = plt.subplots(nrows=3, ncols=int(len(roms_dict.keys()))+1,
+            figsize=(16, 8), sharex=True, sharey=True)
+    for i, param in enumerate(new_params):
+        for j, rom in enumerate(roms_dict.values()):
+            ax[i, j].tricontourf(data.triang, *rom.predict([param]))
+            ax[i, j].set_title(f'{list(roms_dict.keys())[j]}')
+        ax[i, -1].tricontourf(data.triang, db_test.snapshots_matrix[i])
+        ax[i, -1].set_title(f'Original at mu={param}')
+    plt.show()
+    fig.savefig(f'roms_prediction_{rank}modes.png')
+
+
+
+# load the multirom
+multirom_pre = MultiROM.load('multirom.pkl')
+roms_dict = multirom_pre.roms
+
+# build different multiroms with different models
+ann = ANN([20, 20], nn.Softplus(), 1000)
+models = {
+        'GPR': GPR(),
+        'KNeighbors': KNeighborsRegressor(),
+        'RandomForest': RandomForestRegressor(),
+        #'ANN': ann,
+        }
 
 multirom = MultiROM(roms_dict)
-rf = RandomForestRegressor()
-sigma = multirom.optimize_sigma(db_val, rf, sigma_range=[1e-5, 1])
-multirom.fit_weights(db_val, rf, sigma=sigma)
-db_test_predicted = multirom.predict(db_test)
-multirom.save('multirom.pkl')
+multiroms = {}
+for model_name in models:
+    if not os.path.exists(f'multirom_{model_name}.pkl'):
+        multirom_ = copy.deepcopy(multirom)
+        multiroms[model_name] = fit_multirom(multirom_, db_val,
+                models[model_name], model_name)
 
+    multiroms[model_name] = MultiROM.load(f'multirom_{model_name}.pkl')
+
+# print the errors of the individual ROMs and of the multirom
 header = '{:10s}'.format('')
 for name in approximations:
     header += ' {:>16s}'.format(name)
 
 print(header)
-for type_, db_ in zip(['train', 'val', 'test'], [db_train, db_val, db_test]):
-    for redname, redclass in reductions.items():
-        row = '{:10s} ({})'.format(redname, type_)
-        for approxname, approxclass in approximations.items():
-            rom = roms_dict[redname+'-'+approxname]
-            row += ' {:16e}'.format(rom.test_error(db_))
+for redname, redclass in reductions.items():
+    row = '{:10s}'.format(redname)
+    for approxname, approxclass in approximations.items():
+        rom = roms_dict[redname+'-'+approxname]
+        row += ' {:16e}'.format(rom.test_error(db_test))
     print(row)
 
-print('Mixed-ROM {:16e}'.format(multirom.test_error(db_test)))
+for model_name in models:
+    row = '{:10s}'.format(model_name)
+    multirom_ = multiroms[model_name]
+    row += 'MultiROM - {:16e}'.format(multirom_.test_error(db_test))
+    print(row)
 
-# Visualize the results on new parameters
-new_params = db_test.parameters_matrix[:3]
+# POD-RBF                   8.323814e-03
+# AE-RBF                    2.725386e-03
+# Mixed-ROM (GPR)           4.751706e-03
+# Mixed-ROM (KNeighbors)    2.177482e-03
+# Mixed-ROM (RandomForest)  2.090957e-03
 
-fig, ax = plt.subplots(nrows=3, ncols=int(len(roms_dict.keys())+2),
+fig2, ax2 = plt.subplots(nrows=3, ncols=int(len(multiroms.keys())+1),
         figsize=(16, 8), sharex=True, sharey=True)
 for i, param in enumerate(new_params):
-    for j, rom in enumerate(roms_dict.values()):
-        ax[i, j].tricontourf(data.triang, *rom.predict([param]))
-        ax[i, j].set_title(f'{list(roms_dict.keys())[j]}')
-    ax[i, -2].tricontourf(data.triang, db_test_predicted.snapshots_matrix[i])
-    ax[i, -2].set_title(f'Mixed-ROM')# at mu={param}')
-    ax[i, -1].tricontourf(data.triang, db_test.snapshots_matrix[i])
-    ax[i, -1].set_title(f'Original at mu={param}')
+    for j, model_name in enumerate(multiroms.keys()):
+        ax2[i, j].tricontourf(data.triang, *multiroms[model_name].predict([param]))
+        ax2[i, j].set_title(f'{model_name}')
+    ax2[i, -1].tricontourf(data.triang, db_test.snapshots_matrix[i])
+    ax2[i, -1].set_title(f'Original at mu={param}')
 plt.show()
-
-
+fig2.savefig(f'multiroms_prediction_{rank}modes.png')

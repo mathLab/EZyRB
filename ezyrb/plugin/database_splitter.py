@@ -22,8 +22,8 @@ class DatabaseSplitter(Plugin):
             train, test, validation, predict = db.split(
                 [self.train, self.test, self.validation, self.predict],
                 seed=self.seed
-            )   
-            
+            )
+
         elif isinstance(db, dict):
             train, test, validation, predict = list(db.values())[0].split(
                 [self.train, self.test, self.validation, self.predict],
@@ -31,14 +31,14 @@ class DatabaseSplitter(Plugin):
             )
             # TODO improve this splitting if needed (now only reading the database of
             # the first ROM)
-            
+
 
         rom.train_full_database = train
         rom.test_full_database = test
         rom.validation_full_database = validation
         rom.predict_full_database = predict
-        print('train', train.snapshots_matrix.shape)
-        print('test', test.snapshots_matrix.shape)
-        print('validation', validation.snapshots_matrix.shape)
-        print('predict', predict.snapshots_matrix.shape)
+        #print('train', train.snapshots_matrix.shape)
+        #print('test', test.snapshots_matrix.shape)
+        #print('validation', validation.snapshots_matrix.shape)
+        #print('predict', predict.snapshots_matrix.shape)
 

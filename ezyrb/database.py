@@ -30,12 +30,15 @@ class Database():
 
         if len(parameters) != len(snapshots):
             raise ValueError('parameters and snapshots must have the same length')
-        
+
         for param, snap in zip(parameters, snapshots):
             param = Parameter(param)
             snap = Snapshot(snap, space=space)
 
             self.add(param, snap)
+
+        # TODO: eventually improve the `space` assignment in the snapshots,
+        # snapshots can have different space coordinates
 
     @property
     def parameters_matrix(self):
@@ -113,7 +116,7 @@ class Database():
         >>> train, test = db.split([80, 20])   # n snapshots
 
         """
-        
+
         if seed is not None:
             np.random.seed(seed)
 
