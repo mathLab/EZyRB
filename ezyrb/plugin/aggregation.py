@@ -38,23 +38,34 @@ class Aggregation(Plugin):
 
     def fit_postprocessing(self, mrom):
         rom = list(mrom.roms.values())[0]
-
+        
         # concatenate params and space
-        # TODO: space should be handled in a different way (snapshots can have
-        # different spaces)
-        space = rom.validation_full_database._pairs[0][1].space
         params = rom.validation_full_database.parameters_matrix
-
-        input_ = np.hstack([
-            np.tile(space, (params.shape[0], 1)),
-            np.repeat(params, space.shape[0], axis=0)
-        ])
+        input_list = []
+        # Loop over the number of snapshots in the validation database
+        for i in range(rom.validation_full_database.snapshots_matrix.shape[0]):
+            # Get the space coordinates for the i-th snapshot
+            space = rom.validation_full_database.get_snapshot_space(i)
+            # Get the parameters for the i-th snapshot
+            param = rom.validation_full_database.parameters_matrix[i, :]
+            # Create the input array for the i-th snapshot
+            snapshot_input = np.hstack([
+                space,
+                np.tile(param, (space.shape[0], 1))
+            ])
+            # Append the input array to the list
+            input_list.append(snapshot_input)
+        # Concatenate the input arrays for all snapshots
+        input_ = np.vstack(input_list)
 
         # Fit the regression/interpolation that will be used to predict the
         # weights in the test database
         if self.fit_function is None:
+            
+            ### NOTE: didn't work on this part of the plugin about standard aggregation
+            
             g_tensor = self.validation_weights(mrom, normalized=False)
-
+ 
             self.predict_functions = []
             for i, rom in enumerate(mrom.roms.values()):
                 g_ = g_tensor[i, ...].reshape(space.shape[0] * params.shape[0], -1)
@@ -73,34 +84,53 @@ class Aggregation(Plugin):
             for i, rom in enumerate(mrom.roms):
                 mrom.weights_validation[rom] = g_tensor[i, ...]/np.sum(
                         g_tensor, axis=0)
-
-
-        # directly fit a neural network to minimize the discrepancy between the aggregation and the snapshots
+ 
+ 
+         # directly fit a neural network to minimize the discrepancy between the aggregation and the snapshots
         elif self.fit_function is not None:
             snaps = rom.validation_full_database.snapshots_matrix
             self.fit_function.fit(input_, snaps.reshape(space.shape[0] * params.shape[0], 1))
 
 
     def predict_postprocessing(self, mrom):
-        # prepare the input for the prediction
-        space = list(mrom.roms.values())[0].validation_full_database._pairs[0][1].space
-        predict_weights = {}
 
+        # prepare the input for the prediction
+        predict_weights = {}
+        
         db = list(mrom.multi_predict_database.values())[0]
-        input_ = np.hstack([
-            np.tile(space, (db.parameters_matrix.shape[0], 1)),
-            np.repeat(db.parameters_matrix, space.shape[0], axis=0)
-        ])
+        
+        rom = list(mrom.roms.values())[0]
+        
+        input_list = []
+        
+        # Loop over the number of snapshots in the prediction database
+        for i in range(rom.predict_full_database.snapshots_matrix.shape[0]):  
+            # Get the space coordinates for the i-th snapshot
+            space = rom.predict_full_database.get_snapshot_space(i)
+            # Get the parameters for the i-th snapshot
+            param = rom.predict_full_database.parameters_matrix[i, :]
+            # Create the input array for the i-th snapshot
+            snapshot_input = np.hstack([
+                space,
+                np.tile(param, (space.shape[0], 1))
+            ])
+            # Append the input array to the list
+            input_list.append(snapshot_input)
+        # Concatenate the input arrays for all snapshots
+        input_ = np.vstack(input_list)
+        
         # initialize the predicted solution
         predicted_solution = np.zeros((db.parameters_matrix.shape[0],
-                db.snapshots_matrix.shape[1]))
-
+            db.snapshots_matrix.shape[1]))
+        
         # initialize weights
         mrom.weights_predict = {}
-
         # predict weights with regression and normalize them
-        # case with fit_function (ANN)
+        # case without fit_function (where we use the standard space-dependent aggregation methods)
         if self.fit_function is None:
+            
+            ### NOTE: didn't work on this part of the plugin about standard aggregation
+            
             gaussians_test = []
             for i, rom in enumerate(mrom.roms.values()):
                 g_ = self.predict_functions[i].predict(input_)
@@ -115,18 +145,17 @@ class Aggregation(Plugin):
                 mrom.weights_predict[rom] = predict_weights[i, ...]
                 db = mrom.multi_predict_database[rom]
                 predicted_solution += db.snapshots_matrix * mrom.weights_predict[rom]
-
-        # case without fit_function (where we use the standard space-dependent aggregation methods)
+ 
+        # case with fit_function (ANN)
         elif self.fit_function is not None:
             weights = self.fit_function.predict(input_)
-            weights /= np.sum(weights, axis=-1)[:, np.newaxis]
             # compute predicted solution as convex combination of the reduced solutions
             for i, rom in enumerate(mrom.roms):
                 rom_pred = mrom.roms[rom].predict(db.parameters_matrix)
                 mrom.weights_predict[rom] = weights[..., i].reshape(
-                    db.parameters_matrix.shape[0], space.shape[0])
+                    db.parameters_matrix.shape[0], -1)
                 predicted_solution += mrom.weights_predict[rom] * rom_pred
-
+ 
         # store the predicted solution in the reduced database
         mrom.predict_reduced_database = Database(
                 mrom.predict_full_database.parameters_matrix,
