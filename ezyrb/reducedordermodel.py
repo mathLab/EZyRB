@@ -674,91 +674,93 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         return self
 
-    #def optimize_sigma(self, db_val, model, sigma_range=[1e-3, 1]):
-    #    '''
-    #    Optimize the parameter sigma in the validation set.
-    #    '''
-    #    def obj_func(sigma):
-    #        self.fit_weights(db_val, model, sigma=sigma)
-    #        return self.test_error(db_val)
-    #    res = minimize(obj_func, x0=sigma_range[0],
-    #            method="L-BFGS-B", bounds=[sigma_range])
-    #    print('Optimal sigma value in weights: ', res.x)
-    #    return res.x
+    def optimize_sigma(self, db_val, model, sigma_range=[1e-4, 1]):
+       '''
+       Optimize the parameter sigma in the validation set.
+       '''
+       def obj_func(sigma):
+           self.fit_weights(db_val, model, sigma=sigma)
+           return self.test_error(db_val)
+       res = minimize(obj_func, x0=sigma_range[0],
+               method="L-BFGS-B", bounds=[sigma_range])
+       print('Optimal sigma value in weights: ', res.x)
+       return res.x
 
-    #def _check_sum_gaussians(self, sum_gaussians, gaussians):
-    #    # replace zero values with small numbers
-    #    zero_values = sum_gaussians < 1e-4
-    #    sum_gaussians_new = copy.deepcopy(sum_gaussians)
-    #    if zero_values.any():
-    #        sum_gaussians_new[zero_values] = 1
-    #        gaussians[zero_values] = 1/len(self.roms)
-    #    return sum_gaussians_new, gaussians
+    def _check_sum_gaussians(self, sum_gaussians, gaussians):
+       # replace zero values with small numbers
+       zero_values = sum_gaussians < 1e-4
+       sum_gaussians_new = copy.deepcopy(sum_gaussians)
+       if zero_values.any():
+           sum_gaussians_new[zero_values] = 1
+           gaussians[zero_values] = 1/len(self.roms)
+       return sum_gaussians_new, gaussians
 
-    #def _predict_weights(self, param_test):
-    #    '''
-    #    Predict the weights in the test set (after fitting the model in the
-    #    validation set).
-    #    '''
-    #    # predict the gaussians in the test set
-    #    self.gaussians_test_database = {}
-    #    for k, gauss_ in self.gaussians_val_database.items():
-    #        self.gaussians_test_database[k] = self.aggregation_models[k].predict(
-    #                param_test)
-    #    sum_gaussians = np.sum(np.array(list(self.gaussians_test_database.values())),
-    #            axis=0)
-    #    for k, gauss_ in self.gaussians_val_database.items():
-    #        self.gaussians_test_database[k] = self.aggregation_models[k].predict(
-    #                param_test)
-    #        _, self.gaussians_test_database[k] = self._check_sum_gaussians(
-    #                sum_gaussians, self.gaussians_test_database[k])
-    #    # compute the weights in the test set (normalized gaussians)
-    #    self.weights_test_database = {}
-    #    for k in list(self.roms.keys()):
-    #        self.weights_test_database[k] = (self.gaussians_test_database[k]
-    #                /_)
-    #    return self.weights_test_database
-
-
-    #def fit_weights(self, db_val, model, sigma=None, sigma_range=[1e-3, 1]):
-    #    '''
-    #    Fit the aggregation model.
-    #    '''
-    #    if not isinstance(db_val, Database):
-    #        raise TypeError
-    #    # compute the weights in the validation set
-    #    self.multi_val_database = {}
-    #    self.weights_val_database = {}
-    #    self.gaussians_val_database = {}
-    #    self.aggregation_models = {}
-
-    #    for k, rom_ in self.roms.items():
-    #        if not isinstance(model, dict):
-    #            self.aggregation_models[k] = copy.deepcopy(model)
-    #        else:
-    #            self.aggregation_models[k] = model[k]
-    #        self.multi_val_database[k] = rom_.predict(db_val) #rom prediction
-    #        # gaussian computation (weights numerator)
-    #        g_ = (db_val.snapshots_matrix -
-    #                self.multi_val_database[k].snapshots_matrix)**2
-    #        self.gaussians_val_database[k] = np.exp(- g_/(2*sigma**2))
-    #        # fit regression in validation set
-    #        self.aggregation_models[k].fit(db_val.parameters_matrix,
-    #                self.gaussians_val_database[k])
-
-    #    # check sum gaussians
-    #    sum_gaussians = np.sum(np.array(list(self.gaussians_val_database.values())),
-    #            axis=0)
-    #    for k, gauss_ in self.gaussians_val_database.items():
-    #        _, self.gaussians_val_database[k] = self._check_sum_gaussians(
-    #                sum_gaussians, self.gaussians_val_database[k])
-    #        self.gaussians_val_database[k] = self.gaussians_val_database[k]/_
-    #    return self
+    def _predict_weights(self, param_test):
+       '''
+       Predict the weights in the test set (after fitting the model in the
+       validation set).
+       '''
+       # predict the gaussians in the test set
+       self.gaussians_test_database = {}
+       for k, gauss_ in self.gaussians_val_database.items():
+           self.gaussians_test_database[k] = self.aggregation_models[k].predict(
+                   param_test)
+       sum_gaussians = np.sum(np.array(list(self.gaussians_test_database.values())),
+               axis=0)
+       for k, gauss_ in self.gaussians_val_database.items():
+           self.gaussians_test_database[k] = self.aggregation_models[k].predict(
+                   param_test)
+           _, self.gaussians_test_database[k] = self._check_sum_gaussians(
+                   sum_gaussians, self.gaussians_test_database[k])
+       # compute the weights in the test set (normalized gaussians)
+       self.weights_test_database = {}
+       for k in list(self.roms.keys()):
+           self.weights_test_database[k] = (self.gaussians_test_database[k]
+                   /_)
+       return self.weights_test_database
 
 
-    def predict(self, parameters=None):
+    def fit_weights(self, db_val, model, sigma=None, sigma_range=[1e-3, 1]):
+       '''
+       Fit the aggregation model.
+       '''
+       if not isinstance(db_val, Database):
+           raise TypeError
+       # compute the weights in the validation set
+       self.multi_val_database = {}
+       self.weights_val_database = {}
+       self.gaussians_val_database = {}
+       self.aggregation_models = {}
+
+       for k, rom_ in self.roms.items():
+           if not isinstance(model, dict):
+               self.aggregation_models[k] = copy.deepcopy(model)
+           else:
+               self.aggregation_models[k] = model[k]
+           self.multi_val_database[k] = rom_.predict(db_val) #rom prediction
+           # gaussian computation (weights numerator)
+           g_ = (db_val.snapshots_matrix -
+                   self.multi_val_database[k].snapshots_matrix)**2
+           self.gaussians_val_database[k] = np.exp(- g_/(2*sigma**2))
+           # fit regression in validation set
+           self.aggregation_models[k].fit(db_val.parameters_matrix,
+                   self.gaussians_val_database[k])
+
+       # check sum gaussians
+       sum_gaussians = np.sum(np.array(list(self.gaussians_val_database.values())),
+               axis=0)
+       for k, gauss_ in self.gaussians_val_database.items():
+           _, self.gaussians_val_database[k] = self._check_sum_gaussians(
+                   sum_gaussians, self.gaussians_val_database[k])
+           self.gaussians_val_database[k] = self.gaussians_val_database[k]/_
+       return self
+
+
+    def predict(self, parameters=None, gaussians=True):
         """
         Calculate predicted solution for given mu
+        If gaussians is True, the standard aggregation technique (gaussians) is used,
+        otherwise the ANNs are used.
 
         :return: the database containing all the predicted solution (with
             corresponding parameters).
@@ -782,21 +784,32 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         for k, rom_ in self.roms.items():
             self.multi_predict_database[k] = rom_.predict(self.predict_full_database)
 
-        ## compute weights
-        #self.weights_test_database = self._predict_weights(parameters_array)
+        if gaussians:
 
-        ## compute the prediction
-        #prediction = np.sum([self.weights_test_database[k] *
-        #    self.multi_predict_database[k] for k in
-        #    list(self.roms.keys())], axis=0)
+            # compute weights
+            self.weights_test_database = self._predict_weights(self.predict_full_database.parameters_matrix) # parameters array
+
+            # compute the prediction
+            prediction = np.sum([self.weights_test_database[k] *
+            self.multi_predict_database[k].snapshots_matrix for k in
+            list(self.roms.keys())], axis=0)
+
+            self.predict_full_database = Database(
+                self.predict_full_database.parameters_matrix,
+                prediction
+            )
 
         self._execute_plugins('predict_postprocessing')
         if isinstance(parameters, Database):
-            return self.predict_reduced_database
+            if gaussians:
+                return self.predict_full_database # STANDARD AGGREGATION (GAUSSIANS)
+            else:
+                return self.predict_reduced_database # ANNs
         else:
-            return self.predict_reduced_database.snapshots_matrix
-
-
+            if gaussians:
+                return self.predict_full_database.snapshots_matrix # STANDARD AGGREGATION (GAUSSIANS)
+            else:
+                return self.predict_reduced_database.snapshots_matrix # ANNs
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
@@ -847,7 +860,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         return rom
 
-    def test_error(self, test, norm=np.linalg.norm):
+    def test_error(self, test, norm=np.linalg.norm, gaussians=True):
         """
         Compute the mean norm of the relative error vectors of predicted
         test snapshots.
@@ -856,11 +869,18 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
+        :param bool gaussians: if True, the standard aggregation technique
+            (gaussians) is used, otherwise the ANNs are used.
         :return: the mean L2 norm of the relative errors of the estimated
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters_matrix)
+        if gaussians:
+            print('Using standard aggregation (gaussians)')
+            predicted_test = self.predict(test.parameters_matrix)
+        else:
+            print('Using ANNs')
+            predicted_test = self.predict(test.parameters_matrix, gaussians=False)
         return np.mean(
             norm(predicted_test - test.snapshots_matrix,
             axis=1) / norm(test.snapshots_matrix, axis=1))
