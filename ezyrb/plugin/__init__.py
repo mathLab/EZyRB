@@ -6,7 +6,8 @@ __all__ = [
     'ShiftSnapshots',
     'AutomaticShiftSnapshots',
     'Aggregation',
-    'DatabaseSplitter'
+    'DatabaseSplitter',
+    'DatabaseDictionarySplitter'
 ]
 
 from .scaler import DatabaseScaler
@@ -15,3 +16,4 @@ from .shift import ShiftSnapshots
 from .automatic_shift import AutomaticShiftSnapshots
 from .aggregation import Aggregation
 from .database_splitter import DatabaseSplitter
+from .database_splitter import DatabaseDictionarySplitter
