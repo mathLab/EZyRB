@@ -33,7 +33,12 @@ class Database():
 
         for param, snap in zip(parameters, snapshots):
             param = Parameter(param)
-            snap = Snapshot(snap, space=space)
+            if isinstance(space, dict):
+                snap_space = space.get(tuple(param.values), None)
+                # print('snap_space', snap_space)
+            else:
+                snap_space = space
+            snap = Snapshot(snap, space=snap_space)
 
             self.add(param, snap)
 
@@ -155,3 +160,15 @@ class Database():
                 new_database[i].add(p, s)
 
         return new_database
+    
+    def get_snapshot_space(self, index):
+        """
+        Get the space coordinates of a snapshot by its index.
+
+        :param int index: The index of the snapshot.
+        :return: The space coordinates of the snapshot.
+        :rtype: numpy.ndarray
+        """
+        if index < 0 or index >= len(self._pairs):
+            raise IndexError("Snapshot index out of range.")
+        return self._pairs[index][1].space
