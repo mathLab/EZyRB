@@ -102,7 +102,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     @database.setter
     def database(self, value):
 
-        if not isinstance(value, Database):
+        if not isinstance(value, (Database, dict)):
             raise TypeError(
                 "The database has to be an instance of the Database class, or a dictionary of Database.")
 
@@ -287,7 +287,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         # print(self.reduction.inverse_transform(
         #             self.predict_reduced_database.snapshots_matrix.T).T)
 
-        self.predict_full_database = Database(
+        self.predicted_full_database = Database( #predict_full_database
             self.predict_reduced_database.parameters_matrix,
             self.reduction.inverse_transform(
                     self.predict_reduced_database.snapshots_matrix.T).T
@@ -297,9 +297,9 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         self._execute_plugins('predict_postprocessing')
 
         if isinstance(parameters, Database):
-            return self.predict_full_database
+            return self.predicted_full_database #predict_full_database
         else:
-            return self.predict_full_database.snapshots_matrix
+            return self.predicted_full_database.snapshots_matrix #predict_full_database
 
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
@@ -680,7 +680,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
        '''
        def obj_func(sigma):
            self.fit_weights(db_val, model, sigma=sigma)
-           return self.test_error(db_val)
+           return self.test_error(db_val, gaussians=True)
        res = minimize(obj_func, x0=sigma_range[0],
                method="L-BFGS-B", bounds=[sigma_range])
        print('Optimal sigma value in weights: ', res.x)
@@ -743,6 +743,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
                    self.multi_val_database[k].snapshots_matrix)**2
            self.gaussians_val_database[k] = np.exp(- g_/(2*sigma**2))
            # fit regression in validation set
+
            self.aggregation_models[k].fit(db_val.parameters_matrix,
                    self.gaussians_val_database[k])
 
@@ -783,7 +784,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         self.multi_predict_database = {}
         for k, rom_ in self.roms.items():
             self.multi_predict_database[k] = rom_.predict(self.predict_full_database)
-
+            
         if gaussians:
 
             # compute weights
@@ -876,10 +877,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :rtype: numpy.ndarray
         """
         if gaussians:
-            print('Using standard aggregation (gaussians)')
             predicted_test = self.predict(test.parameters_matrix)
         else:
-            print('Using ANNs')
             predicted_test = self.predict(test.parameters_matrix, gaussians=False)
         return np.mean(
             norm(predicted_test - test.snapshots_matrix,
