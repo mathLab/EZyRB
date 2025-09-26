@@ -3,7 +3,8 @@
 __all__ = [
     'Database', 'Snapshot', 'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
     'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor', 'AE',
-    'ReducedOrderModel', 'PODAE', 'RegularGrid'
+    'ReducedOrderModel', 'PODAE', 'RegularGrid',
+    'MultiReducedOrderModel'
 ]
 
 from .meta import *

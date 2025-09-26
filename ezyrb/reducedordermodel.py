@@ -9,7 +9,7 @@ from sklearn.model_selection import KFold
 from .database import Database
 from .reduction import Reduction
 from .approximation import Approximation
-from scipy.optimize import minimize
+
 
 from abc import ABC, abstractmethod
 
@@ -229,6 +229,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         self._execute_plugins('fit_after_approximation')
 
+        self._execute_plugins('fit_postprocessing')
+
         return self
 
     def predict(self, parameters):
@@ -258,14 +260,6 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             raise TypeError
 
         self._execute_plugins('predict_before_approximation')
-        # print(self.predict_reduced_database)
-        # print(self.predict_reduced_database._pairs)
-        # print(self.predict_reduced_database._pairs[0])
-        # print(self.predict_reduced_database._pairs[0][1].values)
-
-        #print(self.predict_reduced_database.parameters_matrix)
-        #print(self.approximation.predict(
-        #        self.predict_reduced_database.parameters_matrix))
         self.predict_reduced_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.approximation.predict(
@@ -273,21 +267,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                     self.predict_reduced_database.parameters_matrix.shape[0], -1
                 )
         )
-        # print(self.predict_reduced_database)
-        # print(self.predict_reduced_database._pairs)
-        # print(self.predict_reduced_database._pairs[0])
-        # print(self.predict_reduced_database._pairs[0][1].values)
-
+        
         self._execute_plugins('predict_after_approximation')
 
         self._execute_plugins('predict_before_expansion')
 
-
-        # print(self.predict_reduced_database.snapshots_matrix)
-        # print(self.reduction.inverse_transform(
-        #             self.predict_reduced_database.snapshots_matrix.T).T)
-
-        self.predicted_full_database = Database( #predict_full_database
+        self.predicted_full_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.reduction.inverse_transform(
                     self.predict_reduced_database.snapshots_matrix.T).T
@@ -632,132 +617,23 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def n_approximation(self):
         value_, class_ = self.approximation, Approximation
         return len(value_) if isinstance(value_, class_) else 1
-
-        # if self.n_database == 1 and self.n_reduction == 1:
-        #     self.train_full_database = self.database
-        #     self.reduction.fit(self.database.snapshots_matrix.T)
-
-        # elif self.n_database == 1 and self.n_reduction > 1:
-        #     self.train_full_database = self.database
-        #     for reduction in self.reduction:
-        #         reduction.fit(self.database.snapshots_matrix.T)
-
-        # elif self.n_database > 1 and self.n_reduction == 1:
-        #     self.train_full_database = self.database
-        #     self.reduction = [
-        #         (k, copy.deepcopy(self.reduction))
-        #         for k in self.train_full_database
-        #     ]
-        #     print(self.reduction)
-        #     for reduction, database in zip(self.reduction, self.train_full_database):
-        #         self.reduction[reduction].fit(self.train_full_database[database].snapshots_matrix.T)
-
-        # elif self.n_database > 1 and self.n_reduction > 1:
-        #     raise NotImplementedError
-        # else:
-        #     raise RuntimeError
-
+        
     def fit(self):
         r"""
         Calculate reduced space
-
         """
         self._execute_plugins('fit_preprocessing')
 
         for rom_ in self.roms.values():
             if rom_.train_reduced_database==None:
                 rom_.fit()
-
+        
         self._execute_plugins('fit_postprocessing')
-
-
-
         return self
 
-    def optimize_sigma(self, db_val, model, sigma_range=[1e-4, 1]):
-       '''
-       Optimize the parameter sigma in the validation set.
-       '''
-       def obj_func(sigma):
-           self.fit_weights(db_val, model, sigma=sigma)
-           return self.test_error(db_val, gaussians=True)
-       res = minimize(obj_func, x0=sigma_range[0],
-               method="L-BFGS-B", bounds=[sigma_range])
-       print('Optimal sigma value in weights: ', res.x)
-       return res.x
+    
 
-    def _check_sum_gaussians(self, sum_gaussians, gaussians):
-       # replace zero values with small numbers
-       zero_values = sum_gaussians < 1e-4
-       sum_gaussians_new = copy.deepcopy(sum_gaussians)
-       if zero_values.any():
-           sum_gaussians_new[zero_values] = 1
-           gaussians[zero_values] = 1/len(self.roms)
-       return sum_gaussians_new, gaussians
-
-    def _predict_weights(self, param_test):
-       '''
-       Predict the weights in the test set (after fitting the model in the
-       validation set).
-       '''
-       # predict the gaussians in the test set
-       self.gaussians_test_database = {}
-       for k, gauss_ in self.gaussians_val_database.items():
-           self.gaussians_test_database[k] = self.aggregation_models[k].predict(
-                   param_test)
-       sum_gaussians = np.sum(np.array(list(self.gaussians_test_database.values())),
-               axis=0)
-       for k, gauss_ in self.gaussians_val_database.items():
-           self.gaussians_test_database[k] = self.aggregation_models[k].predict(
-                   param_test)
-           _, self.gaussians_test_database[k] = self._check_sum_gaussians(
-                   sum_gaussians, self.gaussians_test_database[k])
-       # compute the weights in the test set (normalized gaussians)
-       self.weights_test_database = {}
-       for k in list(self.roms.keys()):
-           self.weights_test_database[k] = (self.gaussians_test_database[k]
-                   /_)
-       return self.weights_test_database
-
-
-    def fit_weights(self, db_val, model, sigma=None, sigma_range=[1e-3, 1]):
-       '''
-       Fit the aggregation model.
-       '''
-       if not isinstance(db_val, Database):
-           raise TypeError
-       # compute the weights in the validation set
-       self.multi_val_database = {}
-       self.weights_val_database = {}
-       self.gaussians_val_database = {}
-       self.aggregation_models = {}
-
-       for k, rom_ in self.roms.items():
-           if not isinstance(model, dict):
-               self.aggregation_models[k] = copy.deepcopy(model)
-           else:
-               self.aggregation_models[k] = model[k]
-           self.multi_val_database[k] = rom_.predict(db_val) #rom prediction
-           # gaussian computation (weights numerator)
-           g_ = (db_val.snapshots_matrix -
-                   self.multi_val_database[k].snapshots_matrix)**2
-           self.gaussians_val_database[k] = np.exp(- g_/(2*sigma**2))
-           # fit regression in validation set
-
-           self.aggregation_models[k].fit(db_val.parameters_matrix,
-                   self.gaussians_val_database[k])
-
-       # check sum gaussians
-       sum_gaussians = np.sum(np.array(list(self.gaussians_val_database.values())),
-               axis=0)
-       for k, gauss_ in self.gaussians_val_database.items():
-           _, self.gaussians_val_database[k] = self._check_sum_gaussians(
-                   sum_gaussians, self.gaussians_val_database[k])
-           self.gaussians_val_database[k] = self.gaussians_val_database[k]/_
-       return self
-
-
-    def predict(self, parameters=None, gaussians=True):
+    def predict(self, parameters=None):
         """
         Calculate predicted solution for given mu
         If gaussians is True, the standard aggregation technique (gaussians) is used,
@@ -784,33 +660,13 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         self.multi_predict_database = {}
         for k, rom_ in self.roms.items():
             self.multi_predict_database[k] = rom_.predict(self.predict_full_database)
-            
-        if gaussians:
-
-            # compute weights
-            self.weights_test_database = self._predict_weights(self.predict_full_database.parameters_matrix) # parameters array
-
-            # compute the prediction
-            prediction = np.sum([self.weights_test_database[k] *
-            self.multi_predict_database[k].snapshots_matrix for k in
-            list(self.roms.keys())], axis=0)
-
-            self.predict_full_database = Database(
-                self.predict_full_database.parameters_matrix,
-                prediction
-            )
-
         self._execute_plugins('predict_postprocessing')
+
         if isinstance(parameters, Database):
-            if gaussians:
-                return self.predict_full_database # STANDARD AGGREGATION (GAUSSIANS)
-            else:
-                return self.predict_reduced_database # ANNs
+            return self.predict_full_database 
         else:
-            if gaussians:
-                return self.predict_full_database.snapshots_matrix # STANDARD AGGREGATION (GAUSSIANS)
-            else:
-                return self.predict_reduced_database.snapshots_matrix # ANNs
+            return self.predict_full_database.snapshots_matrix 
+            
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
@@ -861,7 +717,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         return rom
 
-    def test_error(self, test, norm=np.linalg.norm, gaussians=True):
+    def test_error(self, test, norm=np.linalg.norm):
         """
         Compute the mean norm of the relative error vectors of predicted
         test snapshots.
@@ -876,10 +732,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             test snapshots.
         :rtype: numpy.ndarray
         """
-        if gaussians:
-            predicted_test = self.predict(test.parameters_matrix)
-        else:
-            predicted_test = self.predict(test.parameters_matrix, gaussians=False)
+        predicted_test = self.predict(test.parameters_matrix)
         return np.mean(
             norm(predicted_test - test.snapshots_matrix,
             axis=1) / norm(test.snapshots_matrix, axis=1))
