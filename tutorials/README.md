@@ -7,6 +7,11 @@ In this folder you can find a collection of useful tutorials in order to underst
 [Tutorial 2](tutorial-2.ipynb) shows how test different methods for reduced order modeling on a NavierStokes 2D problem.
 
 
+[Tutorial 3](tutorial-3.ipynb) shows how to implement the Neural Network Shifted-Proper Orthogonal Decomposition.
+
+[Tutorial 4](tutorial-4.ipynb) shows the potential of aggregation strategies for ROMs, namely combining different ROM predictions in a multiROM.
+
+
 #### More to come...
 We plan to add more tutorials but the time is often against us. If you want to contribute with a notebook on a feature not covered yet we will be very happy and give you support on editing!
 
