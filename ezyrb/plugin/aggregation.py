@@ -59,13 +59,13 @@ class Aggregation(Plugin):
 
         :return: the corrected Gaussian functions.
         """
-        zero_values = sum_gaussians < 1e-4 # tolerance to avoid numerical issues
+        zero_values = sum_gaussians < 1e-5 # tolerance to avoid numerical issues
        
         if zero_values.any():
             gaussians[:, zero_values] = 1/len(mrom.roms) # equal weights
         return gaussians
 
-    def _optimize_sigma(self, mrom, sigma_range=[1e-2, 1]):
+    def _optimize_sigma(self, mrom, sigma_range=[1e-5, 1e-2]):
         """
         Method to optimize the sigma parameter in the Gaussian functions
         through a minimization procedure on the validation set.
