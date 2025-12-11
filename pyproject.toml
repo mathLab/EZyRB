@@ -1,6 +1,6 @@
 [project]
 name = "ezyrb"
-version = "1.3.1"
+version = "1.3.2"
 description = "Easy Reduced Basis"
 readme = "README.md"
 authors = [
@@ -36,14 +36,11 @@ dev = [
     "black",
     "pylint"
 ]
-tutorial = [
-    "jupyter",
-    "notebook"
-]
 
 [project.urls]
 Homepage = "https://github.com/mathLab/EZyRB"
 Repository = "https://github.com/mathLab/EZyRB"
+Documentation = "http://mathlab.github.io/EZyRB/"
 
 [build-system]
 requires = ["setuptools>=45", "wheel"]
