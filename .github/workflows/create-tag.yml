@@ -1,0 +1,44 @@
+name: Create Git Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag name (eg. v1.3.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure git with PAT
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.PAT_EZYRB_PUSH }}@github.com/${{ github.repository }}.git"
+
+      - name: Check if the tag is already existing
+        run: |
+          TAG="${{ inputs.tag_name }}"
+          git fetch --tags
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "❌ Tag $TAG already exists"
+            exit 1
+          fi
+
+      - name: Create and push the tag
+        run: |
+          TAG="${{ inputs.tag_name }}"
+          git tag "$TAG"
+          git push origin "$TAG"
