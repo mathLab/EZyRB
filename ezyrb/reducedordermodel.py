@@ -666,9 +666,12 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         # convert parameters from Database to numpy array (if database)
         if isinstance(parameters, Database):
-            self.predict_full_database = parameters
+            self.predict_reduced_database = parameters
+
         elif isinstance(parameters, (list, np.ndarray, tuple)):
-            self.predict_full_database = Database(parameters, [None]*len(parameters))
+            print(parameters)
+            parameters = np.atleast_2d(parameters)
+            self.predict_reduced_database = Database(parameters, [None]*len(parameters))
         elif parameters is None:
             if self.predict_full_database is None:
                 raise RuntimeError
@@ -677,13 +680,17 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         self.multi_predict_database = {}
         for k, rom_ in self.roms.items():
-            self.multi_predict_database[k] = rom_.predict(self.predict_full_database)
+            self.multi_predict_database[k] = rom_.predict(self.predict_reduced_database)
+        print(self.multi_predict_database)
         self._execute_plugins('predict_postprocessing')
 
         if isinstance(parameters, Database):
-            return self.predict_full_database 
+            return self.multi_predict_database
         else:
-            return self.predict_full_database.snapshots_matrix 
+            return {
+                k:db.snapshots_matrix 
+                for k, db in self.multi_predict_database.items()
+            }
             
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):

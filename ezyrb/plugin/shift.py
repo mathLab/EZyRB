@@ -71,7 +71,7 @@ class ShiftSnapshots(Plugin):
         rom.database = db
 
     def predict_postprocessing(self, rom):
-        for param, snap in rom.predict_full_database._pairs:
+        for param, snap in rom.predicted_full_database._pairs:
             snap.space = (
                 rom.database._pairs[self.reference_index][1].space +
                 self.__shift_function(param.values)

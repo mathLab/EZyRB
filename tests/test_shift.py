@@ -53,7 +53,6 @@ def test_predict_ref():
     ])
     rom.fit()
     pred = rom.predict(db._pairs[0][0].values)
-    print(pred)
     np.testing.assert_array_almost_equal(
         pred[0], db._pairs[0][1].values, decimal=1)
 
