@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.ae.AE.expand
+============================
+
+.. currentmodule:: ezyrb.reduction.ae
+
+.. automethod:: AE.expand

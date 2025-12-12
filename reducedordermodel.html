@@ -1,26 +1,27 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; EZyRB 1.3.0.post2404 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+  <title>ReducedOrderModel &mdash; ezyrb 1.3.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="RegularGrid" href="regular_grid.html" />
-    <link rel="prev" title="PODAE" href="podae.html" /> 
+    <link rel="next" title="ezyrb.reducedordermodel.ReducedOrderModel" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html" />
+    <link rel="prev" title="ezyrb.reduction.pod_ae.PODAE.inverse_transform" href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -32,11 +33,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            EZyRB
+            ezyrb
           </a>
-              <div class="version">
-                1.3.0.post2404
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,18 +46,31 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ReducedOrderModel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ReducedOrderModel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html">ezyrb.reducedordermodel.ReducedOrderModel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.fit.html">ezyrb.reducedordermodel.ReducedOrderModel.fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.predict.html">ezyrb.reducedordermodel.ReducedOrderModel.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.test_error.html">ezyrb.reducedordermodel.ReducedOrderModel.test_error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error.html">ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html">ezyrb.reducedordermodel.ReducedOrderModel.loo_error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu.html">ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html">ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
 </ul>
 </li>
@@ -74,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">EZyRB</a>
+          <a href="index.html">ezyrb</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -93,50 +104,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.reducedordermodel">
-<span id="reducedordermodel"></span><h1>ReducedOrderModel<a class="headerlink" href="#module-ezyrb.reducedordermodel" title="Permalink to this headline">¶</a></h1>
+  <section id="module-ezyrb.reducedordermodel">
+<span id="reducedordermodel"></span><h1>ReducedOrderModel<a class="headerlink" href="#module-ezyrb.reducedordermodel" title="Link to this heading"></a></h1>
 <p>Module for the Reduced Order Modeling.</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html#ezyrb.reducedordermodel.ReducedOrderModel" title="ezyrb.reducedordermodel.ReducedOrderModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel</span></code></a></p></td>
 <td><p>Reduced Order Model class.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.fit</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.fit.html#ezyrb.reducedordermodel.ReducedOrderModel.fit" title="ezyrb.reducedordermodel.ReducedOrderModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.fit</span></code></a></p></td>
 <td><p>Calculate reduced space</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.predict</span></code></p></td>
-<td><p>Calculate predicted solution for given mu</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.predict.html#ezyrb.reducedordermodel.ReducedOrderModel.predict" title="ezyrb.reducedordermodel.ReducedOrderModel.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.predict</span></code></a></p></td>
+<td><p>Calculate predicted solution for given parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.test_error</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.test_error.html#ezyrb.reducedordermodel.ReducedOrderModel.test_error" title="ezyrb.reducedordermodel.ReducedOrderModel.test_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.test_error</span></code></a></p></td>
 <td><p>Compute the mean norm of the relative error vectors of predicted test snapshots.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.kfold_cv_error</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error.html#ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error" title="ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.kfold_cv_error</span></code></a></p></td>
 <td><p>Split the database into k consecutive folds (no shuffling by default).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.loo_error</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html#ezyrb.reducedordermodel.ReducedOrderModel.loo_error" title="ezyrb.reducedordermodel.ReducedOrderModel.loo_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.loo_error</span></code></a></p></td>
 <td><p>Estimate the approximation error using <em>leave-one-out</em> strategy.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.optimal_mu</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu.html#ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu" title="ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.optimal_mu</span></code></a></p></td>
 <td><p>Return the parametric points where new high-fidelity solutions have to be computed in order to globally reduce the estimated error.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel._simplex_volume</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html#ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume" title="ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel._simplex_volume</span></code></a></p></td>
 <td><p>Method implementing the computation of the volume of a N dimensional simplex.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">ReducedOrderModel</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">reduction</em>, <em class="sig-param">approximation</em>, <em class="sig-param">plugins=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReducedOrderModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approximation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ReducedOrderModelInterface</span></code></p>
 <p>Reduced Order Model class.</p>
 <p>This class performs the actual reduced order model using the selected
 methods for approximation and reduction.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>database</strong> (<em>ezyrb.Database</em>) – the database to use for training the
 reduced order model.</p></li>
@@ -144,23 +151,21 @@ reduced order model.</p></li>
 order model.</p></li>
 <li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method to use
 in reduced order model.</p></li>
-<li><p><strong>scaler_red</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – the scaler for the reduced variables (eg. modal
-coefficients). Default is None.</p></li>
+<li><p><strong>plugins</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of plugins to use in the reduced order model.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Variables</dt>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="database.html#module-ezyrb.database" title="ezyrb.database"><strong>database</strong></a> (<em>ezyrb.Database</em>) – the database used for training the reduced
+<li><p><strong>database</strong> (<em>ezyrb.Database</em>) – the database used for training the reduced
 order model.</p></li>
-<li><p><a class="reference internal" href="reduction.html#module-ezyrb.reduction" title="ezyrb.reduction"><strong>reduction</strong></a> (<em>ezyrb.Reduction</em>) – the reduction method used in reduced order
+<li><p><strong>reduction</strong> (<em>ezyrb.Reduction</em>) – the reduction method used in reduced order
 model.</p></li>
-<li><p><a class="reference internal" href="approximation.html#module-ezyrb.approximation" title="ezyrb.approximation"><strong>approximation</strong></a> (<em>ezyrb.Approximation</em>) – the approximation method used in
+<li><p><strong>approximation</strong> (<em>ezyrb.Approximation</em>) – the approximation method used in
 reduced order model.</p></li>
-<li><p><strong>scaler_red</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) – the scaler for the reduced variables (eg. modal
-coefficients).</p></li>
+<li><p><strong>plugins</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of plugins used in the reduced order model.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Example</dt>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
 <dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">ReducedOrderModel</span> <span class="k">as</span> <span class="n">ROM</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">POD</span><span class="p">,</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">Database</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">()</span>
@@ -173,45 +178,80 @@ coefficients).</p></li>
 </div>
 </dd>
 </dl>
-<dl class="method">
-<dt>
-<code class="sig-name descname">_simplex_volume</code><span class="sig-paren">(</span><em class="sig-param">vertices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel._simplex_volume"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_reduce_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel._reduce_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_simplex_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel._simplex_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Method implementing the computation of the volume of a N dimensional
 simplex.
 Source from: <a class="reference external" href="https://en.wikipedia.org/wiki/Simplex">wikipedia.org/wiki/Simplex</a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
 parameter values representing the vertices of a simplex. N is the
 dimensionality of the parameters.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>N dimensional volume of the simplex.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">approximation</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">database</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate reduced space</p>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">kfold_cv_error</code><span class="sig-paren">(</span><em class="sig-param">n_splits</em>, <em class="sig-param">*args</em>, <em class="sig-param">norm=&lt;function norm&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.kfold_cv_error"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">fit_approximation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit_approximation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">fit_reduction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit_reduction"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">kfold_cv_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_splits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm=&lt;function</span> <span class="pre">norm&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.kfold_cv_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split the database into k consecutive folds (no shuffling by default).
 Each fold is used once as a validation while the k - 1 remaining folds
 form the training set. If <cite>n_splits</cite> is equal to the number of
 snapshots this function is the same as <cite>loo_error</cite> but the error here
 is relative and not absolute.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_splits</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – number of folds. Must be at least 2.</p></li>
+<li><p><strong>n_splits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – number of folds. Must be at least 2.</p></li>
 <li><p><strong>norm</strong> (<em>function</em>) – function to apply to compute the relative error
 between the true snapshot and the predicted one.
 Default value is the L2 norm.</p></li>
@@ -219,21 +259,21 @@ Default value is the L2 norm.</p></li>
 <li><p><strong>**kwargs</strong> – additional parameters to pass to the <cite>fit</cite> method.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the vector containing the errors corresponding to each fold.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.load"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Load the object from <cite>fname</cite> using the pickle module.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The <cite>ReducedOrderModel</cite> loaded</p>
 </dd>
 </dl>
@@ -245,9 +285,9 @@ Default value is the L2 norm.</p></li>
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">loo_error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">norm=&lt;function norm&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.loo_error"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">loo_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm=&lt;function</span> <span class="pre">norm&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.loo_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Estimate the approximation error using <em>leave-one-out</em> strategy. The
 main idea is to create several reduced spaces by combining all the
 snapshots except one. The error vector is computed as the difference
@@ -256,7 +296,7 @@ reduced space. The procedure repeats for each snapshot in the database.
 The <cite>norm</cite> is applied on each vector of error to obtained a float
 number.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>norm</strong> (<em>function</em>) – the function used to assign at each vector of
 error a float number. It has to take as input a ‘numpy.ndarray` and
@@ -265,70 +305,93 @@ returns a float. Default value is the L2 norm.</p></li>
 <li><p><strong>**kwargs</strong> – additional parameters to pass to the <cite>fit</cite> method.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the vector that contains the errors estimated for all
 parametric points.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">optimal_mu</code><span class="sig-paren">(</span><em class="sig-param">error=None</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.optimal_mu"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_approximation</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_database</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_reduction</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">optimal_mu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.optimal_mu"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Return the parametric points where new high-fidelity solutions have to
 be computed in order to globally reduce the estimated error. These
 points are the barycentric center of the region (simplex) with higher
 error.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
+<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
 snapshot; if error array is not passed, it is computed using
-<code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code> with the default function. Default value is None.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – the number of optimal points to return. Default value is
+<a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html#ezyrb.reducedordermodel.ReducedOrderModel.loo_error" title="ezyrb.reducedordermodel.ReducedOrderModel.loo_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code></a> with the default function. Default value is None.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – the number of optimal points to return. Default value is
 1.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the optimal points</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">mu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.predict"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Calculate predicted solution for given mu</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate predicted solution for given parameters. If <cite>parameters</cite> is
+a 2D array, the function returns a 2D array of predicted solutions.
+If <cite>parameters</cite> is a Database, the function returns the database of
+predicted solutions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the database containing all the predicted solution (with
 corresponding parameters).</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Database</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="_summaries/ezyrb.database.Database.html#ezyrb.database.Database" title="ezyrb.database.Database">Database</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">fname</em>, <em class="sig-param">save_db=True</em>, <em class="sig-param">save_reduction=True</em>, <em class="sig-param">save_approx=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.save"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reduction</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_approx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Save the object to <cite>fname</cite> using the pickle module.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the name of file where the reduced order model will
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the name of file where the reduced order model will
 be saved.</p></li>
-<li><p><strong>save_db</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Database</cite> will be saved.</p></li>
-<li><p><strong>save_reduction</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Reduction</cite> will be
+<li><p><strong>save_db</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag to select if the <cite>Database</cite> will be saved.</p></li>
+<li><p><strong>save_reduction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag to select if the <cite>Reduction</cite> will be
 saved.</p></li>
-<li><p><strong>save_approx</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Flag to select if the <cite>Approximation</cite> will be
+<li><p><strong>save_approx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag to select if the <cite>Approximation</cite> will be
 saved.</p></li>
 </ul>
 </dd>
@@ -342,47 +405,47 @@ saved.</p></li>
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">test_error</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">norm=&lt;function norm&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.test_error"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm=&lt;function</span> <span class="pre">norm&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.test_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compute the mean norm of the relative error vectors of predicted
 test snapshots.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>test</strong> (<em>database.Database</em>) – the input test database.</p></li>
+<li><p><strong>test</strong> (<a class="reference internal" href="_summaries/ezyrb.database.Database.html#ezyrb.database.Database" title="ezyrb.database.Database"><em>database.Database</em></a>) – the input test database.</p></li>
 <li><p><strong>norm</strong> (<em>function</em>) – the function used to assign at the vector of
 errors a float number. It has to take as input a ‘numpy.ndarray’
 and returns a float. Default value is the L2 norm.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the mean L2 norm of the relative errors of the estimated
 test snapshots.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="podae.html" class="btn btn-neutral float-left" title="PODAE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="regular_grid.html" class="btn btn-neutral float-right" title="RegularGrid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html" class="btn btn-neutral float-left" title="ezyrb.reduction.pod_ae.PODAE.inverse_transform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html" class="btn btn-neutral float-right" title="ezyrb.reducedordermodel.ReducedOrderModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Apr 01, 2024.
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 12, 2025.
       </span></p>
   </div>
 

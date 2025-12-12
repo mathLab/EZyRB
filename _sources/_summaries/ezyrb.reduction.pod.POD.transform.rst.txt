@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.transform
+=================================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. automethod:: POD.transform

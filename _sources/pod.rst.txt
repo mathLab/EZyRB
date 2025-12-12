@@ -1,9 +1,9 @@
 POD
 =====================
 
-.. currentmodule:: ezyrb.pod
+.. currentmodule:: ezyrb.reduction.pod
 
-.. automodule:: ezyrb.pod
+.. automodule:: ezyrb.reduction.pod
 
 .. autosummary::
     :toctree: _summaries

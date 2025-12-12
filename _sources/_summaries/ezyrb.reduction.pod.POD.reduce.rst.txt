@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.reduce
+==============================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. automethod:: POD.reduce

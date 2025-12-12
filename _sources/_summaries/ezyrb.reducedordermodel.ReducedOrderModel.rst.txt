@@ -1,0 +1,44 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel
+=========================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. autoclass:: ReducedOrderModel
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ReducedOrderModel.__init__
+      ~ReducedOrderModel.clean
+      ~ReducedOrderModel.fit
+      ~ReducedOrderModel.fit_approximation
+      ~ReducedOrderModel.fit_reduction
+      ~ReducedOrderModel.kfold_cv_error
+      ~ReducedOrderModel.load
+      ~ReducedOrderModel.loo_error
+      ~ReducedOrderModel.optimal_mu
+      ~ReducedOrderModel.predict
+      ~ReducedOrderModel.save
+      ~ReducedOrderModel.test_error
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ReducedOrderModel.approximation
+      ~ReducedOrderModel.database
+      ~ReducedOrderModel.n_approximation
+      ~ReducedOrderModel.n_database
+      ~ReducedOrderModel.n_reduction
+      ~ReducedOrderModel.reduction
+   
+   

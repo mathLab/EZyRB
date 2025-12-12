@@ -1,0 +1,6 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel.optimal\_mu
+=====================================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. automethod:: ReducedOrderModel.optimal_mu

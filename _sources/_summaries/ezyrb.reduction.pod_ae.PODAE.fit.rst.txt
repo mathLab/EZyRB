@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod\_ae.PODAE.fit
+=================================
+
+.. currentmodule:: ezyrb.reduction.pod_ae
+
+.. automethod:: PODAE.fit

@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.ae.AE.reduce
+============================
+
+.. currentmodule:: ezyrb.reduction.ae
+
+.. automethod:: AE.reduce

@@ -1,0 +1,25 @@
+﻿ezyrb.regular\_grid.RegularGrid
+===============================
+
+.. currentmodule:: ezyrb.regular_grid
+
+.. autoclass:: RegularGrid
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegularGrid.__init__
+      ~RegularGrid.fit
+      ~RegularGrid.get_grid_axes
+      ~RegularGrid.predict
+   
+   
+
+   
+   
+   

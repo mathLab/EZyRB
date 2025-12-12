@@ -1,0 +1,6 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel.fit
+=============================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. automethod:: ReducedOrderModel.fit

@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.singular\_values
+========================================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. autoproperty:: POD.singular_values

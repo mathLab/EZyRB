@@ -1,0 +1,6 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel.loo\_error
+====================================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. automethod:: ReducedOrderModel.loo_error

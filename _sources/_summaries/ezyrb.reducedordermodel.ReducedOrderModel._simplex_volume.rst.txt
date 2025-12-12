@@ -1,0 +1,6 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel.\_simplex\_volume
+===========================================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. automethod:: ReducedOrderModel._simplex_volume

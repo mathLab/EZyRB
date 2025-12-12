@@ -1,0 +1,6 @@
+﻿ezyrb.approximation.Approximation.predict
+=========================================
+
+.. currentmodule:: ezyrb.approximation
+
+.. automethod:: Approximation.predict

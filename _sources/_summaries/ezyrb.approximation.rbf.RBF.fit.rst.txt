@@ -1,0 +1,6 @@
+﻿ezyrb.approximation.rbf.RBF.fit
+===============================
+
+.. currentmodule:: ezyrb.approximation.rbf
+
+.. automethod:: RBF.fit

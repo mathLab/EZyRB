@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.Reduction.inverse\_transform
+============================================
+
+.. currentmodule:: ezyrb.reduction
+
+.. automethod:: Reduction.inverse_transform

@@ -1,0 +1,6 @@
+﻿ezyrb.reducedordermodel.ReducedOrderModel.kfold\_cv\_error
+==========================================================
+
+.. currentmodule:: ezyrb.reducedordermodel
+
+.. automethod:: ReducedOrderModel.kfold_cv_error

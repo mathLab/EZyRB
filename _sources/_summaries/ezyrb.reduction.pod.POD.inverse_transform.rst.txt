@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.inverse\_transform
+==========================================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. automethod:: POD.inverse_transform

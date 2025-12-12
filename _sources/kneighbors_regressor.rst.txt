@@ -1,9 +1,9 @@
 KNeighborsRegressor
 =====================
 
-.. currentmodule:: ezyrb.kneighbors_regressor
+.. currentmodule:: ezyrb.approximation.kneighbors_regressor
 
-.. automodule:: ezyrb.kneighbors_regressor
+.. automodule:: ezyrb.approximation.kneighbors_regressor
 
 .. autosummary::
     :toctree: _summaries

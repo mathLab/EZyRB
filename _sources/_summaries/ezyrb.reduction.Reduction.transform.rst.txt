@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.Reduction.transform
+===================================
+
+.. currentmodule:: ezyrb.reduction
+
+.. automethod:: Reduction.transform

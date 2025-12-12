@@ -1,0 +1,32 @@
+﻿ezyrb.database.Database
+=======================
+
+.. currentmodule:: ezyrb.database
+
+.. autoclass:: Database
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Database.__init__
+      ~Database.add
+      ~Database.get_snapshot_space
+      ~Database.split
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Database.parameters_matrix
+      ~Database.snapshots_matrix
+   
+   

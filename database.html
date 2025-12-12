@@ -1,25 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Database &mdash; EZyRB 1.3.0.post2404 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+  <title>Database &mdash; ezyrb 1.3.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Approximation" href="approximation.html" />
+    <link rel="next" title="ezyrb.database.Database" href="_summaries/ezyrb.database.Database.html" />
     <link rel="prev" title="Code Documentation" href="code.html" /> 
 </head>
 
@@ -32,11 +33,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            EZyRB
+            ezyrb
           </a>
-              <div class="version">
-                1.3.0.post2404
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -47,12 +45,21 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Database</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.database.Database.html">ezyrb.database.Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.database.Database.__getitem__.html">ezyrb.database.Database.__getitem__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.database.Database.__len__.html">ezyrb.database.Database.__len__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.database.Database.add.html">ezyrb.database.Database.add</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
@@ -74,7 +81,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">EZyRB</a>
+          <a href="index.html">ezyrb</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -93,42 +100,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.database">
-<span id="database"></span><h1>Database<a class="headerlink" href="#module-ezyrb.database" title="Permalink to this headline">¶</a></h1>
+  <section id="module-ezyrb.database">
+<span id="database"></span><h1>Database<a class="headerlink" href="#module-ezyrb.database" title="Link to this heading"></a></h1>
 <p>Module for the snapshots database collected during the Offline stage.</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.database.Database.html#ezyrb.database.Database" title="ezyrb.database.Database"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database</span></code></a></p></td>
 <td><p>Database class</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.parameters</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.snapshots</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__getitem__</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.database.Database.__getitem__.html#ezyrb.database.Database.__getitem__" title="ezyrb.database.Database.__getitem__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__getitem__</span></code></a></p></td>
 <td><p>This method returns a new Database with the selected parameters and snapshots.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__len__</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.database.Database.__len__.html#ezyrb.database.Database.__len__" title="ezyrb.database.Database.__len__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.__len__</span></code></a></p></td>
 <td><p>This method returns the number of snapshots.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.add</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.database.Database.add.html#ezyrb.database.Database.add" title="ezyrb.database.Database.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Database.add</span></code></a></p></td>
 <td><p>Add (by row) new sets of snapshots and parameters to the original database.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em>, <em class="sig-param">snapshots=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapshots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Database class</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parameters</strong> (<em>array_like</em>) – the input parameters</p></li>
 <li><p><strong>snapshots</strong> (<em>array_like</em>) – the input snapshots</p></li>
@@ -140,13 +137,13 @@ None meaning no scaling.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt>
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">parameter</em>, <em class="sig-param">snapshot</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.add"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapshot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Add (by row) new sets of snapshots and parameters to the original
 database.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parameter</strong> (<em>Parameter</em>) – the parameter to add.</p></li>
 <li><p><strong>snapshot</strong> (<em>Snapshot</em>) – the snapshot to add.</p></li>
@@ -155,31 +152,48 @@ database.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">parameters_matrix</code></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_snapshot_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.get_snapshot_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the space coordinates of a snapshot by its index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The index of the snapshot.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The space coordinates of the snapshot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters_matrix</span></span></dt>
 <dd><p>The matrix containing the input parameters (by row).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">snapshots_matrix</code></dt>
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snapshots_matrix</span></span></dt>
 <dd><p>The matrix containing the snapshots (by row).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)">numpy.ndarray</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<code class="sig-name descname">split</code><span class="sig-paren">(</span><em class="sig-param">chunks</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.split"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/database.html#Database.split"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">split</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span> <span class="c1"># ratio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">split</span><span class="p">([</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>   <span class="c1"># n snapshots</span>
@@ -189,21 +203,21 @@ database.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="code.html" class="btn btn-neutral float-left" title="Code Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="approximation.html" class="btn btn-neutral float-right" title="Approximation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="_summaries/ezyrb.database.Database.html" class="btn btn-neutral float-right" title="ezyrb.database.Database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Apr 01, 2024.
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 12, 2025.
       </span></p>
   </div>
 

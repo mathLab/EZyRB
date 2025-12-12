@@ -1,0 +1,6 @@
+﻿ezyrb.approximation.ann.ANN.fit
+===============================
+
+.. currentmodule:: ezyrb.approximation.ann
+
+.. automethod:: ANN.fit

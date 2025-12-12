@@ -1,9 +1,9 @@
 GPR
 =====================
 
-.. currentmodule:: ezyrb.gpr
+.. currentmodule:: ezyrb.approximation.gpr
 
-.. automodule:: ezyrb.gpr
+.. automodule:: ezyrb.approximation.gpr
 
 .. autosummary::
     :toctree: _summaries

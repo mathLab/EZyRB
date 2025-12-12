@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.ae.AE.inverse\_transform
+========================================
+
+.. currentmodule:: ezyrb.reduction.ae
+
+.. automethod:: AE.inverse_transform

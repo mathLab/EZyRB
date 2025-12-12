@@ -1,0 +1,25 @@
+﻿ezyrb.approximation.gpr.GPR
+===========================
+
+.. currentmodule:: ezyrb.approximation.gpr
+
+.. autoclass:: GPR
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GPR.__init__
+      ~GPR.fit
+      ~GPR.optimal_mu
+      ~GPR.predict
+   
+   
+
+   
+   
+   

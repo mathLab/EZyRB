@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod\_ae.PODAE.inverse\_transform
+================================================
+
+.. currentmodule:: ezyrb.reduction.pod_ae
+
+.. automethod:: PODAE.inverse_transform

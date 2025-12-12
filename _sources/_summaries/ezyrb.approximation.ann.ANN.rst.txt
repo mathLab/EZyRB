@@ -1,0 +1,24 @@
+﻿ezyrb.approximation.ann.ANN
+===========================
+
+.. currentmodule:: ezyrb.approximation.ann
+
+.. autoclass:: ANN
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ANN.__init__
+      ~ANN.fit
+      ~ANN.predict
+   
+   
+
+   
+   
+   

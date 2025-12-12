@@ -1,0 +1,6 @@
+﻿ezyrb.approximation.radius\_neighbors\_regressor.RadiusNeighborsRegressor.predict
+=================================================================================
+
+.. currentmodule:: ezyrb.approximation.radius_neighbors_regressor
+
+.. automethod:: RadiusNeighborsRegressor.predict

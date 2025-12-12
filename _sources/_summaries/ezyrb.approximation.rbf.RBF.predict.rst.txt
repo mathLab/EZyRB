@@ -1,0 +1,6 @@
+﻿ezyrb.approximation.rbf.RBF.predict
+===================================
+
+.. currentmodule:: ezyrb.approximation.rbf
+
+.. automethod:: RBF.predict

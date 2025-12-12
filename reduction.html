@@ -1,26 +1,27 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reduction &mdash; EZyRB 1.3.0.post2404 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+  <title>Reduction &mdash; ezyrb 1.3.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="POD" href="pod.html" />
-    <link rel="prev" title="ANN" href="ann.html" /> 
+    <link rel="next" title="ezyrb.reduction.Reduction" href="_summaries/ezyrb.reduction.Reduction.html" />
+    <link rel="prev" title="ezyrb.approximation.ann.ANN._build_model" href="_summaries/ezyrb.approximation.ann.ANN._build_model.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -32,11 +33,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            EZyRB
+            ezyrb
           </a>
-              <div class="version">
-                1.3.0.post2404
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,14 +46,24 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Reduction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.html">ezyrb.reduction.Reduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.reduce.html">ezyrb.reduction.Reduction.reduce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.expand.html">ezyrb.reduction.Reduction.expand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.transform.html">ezyrb.reduction.Reduction.transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.inverse_transform.html">ezyrb.reduction.Reduction.inverse_transform</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
@@ -74,7 +82,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">EZyRB</a>
+          <a href="index.html">ezyrb</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -93,79 +101,87 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-ezyrb.reduction">
-<span id="reduction"></span><h1>Reduction<a class="headerlink" href="#module-ezyrb.reduction" title="Permalink to this headline">¶</a></h1>
+  <section id="module-ezyrb.reduction">
+<span id="reduction"></span><h1>Reduction<a class="headerlink" href="#module-ezyrb.reduction" title="Link to this heading"></a></h1>
 <p>Reduction submodule</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.html#ezyrb.reduction.Reduction" title="ezyrb.reduction.Reduction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction</span></code></a></p></td>
 <td><p>The abstract <cite>Approximation</cite> class.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.reduce</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.reduce.html#ezyrb.reduction.Reduction.reduce" title="ezyrb.reduction.Reduction.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.reduce</span></code></a></p></td>
+<td><p>Abstract <cite>reduce</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.expand</span></code></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.expand.html#ezyrb.reduction.Reduction.expand" title="ezyrb.reduction.Reduction.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.expand</span></code></a></p></td>
+<td><p>Abstract <cite>expand</cite></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.transform</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.transform.html#ezyrb.reduction.Reduction.transform" title="ezyrb.reduction.Reduction.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.transform</span></code></a></p></td>
 <td><p>Abstract <cite>transform</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.inverse_transform</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.inverse_transform.html#ezyrb.reduction.Reduction.inverse_transform" title="ezyrb.reduction.Reduction.inverse_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reduction.inverse_transform</span></code></a></p></td>
 <td><p>Abstract <cite>inverse_transform</cite></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-name descname">Reduction</code><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Reduction</span></span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>The abstract <cite>Approximation</cite> class.</p>
 <p>All the classes that implement the input-output mapping should be inherited
 from this class.</p>
-<dl class="attribute">
-<dt>
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">abstract </em><code class="sig-name descname">fit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.fit"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">expand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.expand"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Abstract <cite>expand</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Abstract <cite>fit</cite></p>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">abstract </em><code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.inverse_transform"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Abstract <cite>inverse_transform</cite></p>
 </dd></dl>
 
-<dl class="method">
-<dt>
-<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.transform"><span class="viewcode-link">[source]</span></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.reduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Abstract <cite>reduce</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/reduction.html#Reduction.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Abstract <cite>transform</cite></p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ann.html" class="btn btn-neutral float-left" title="ANN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pod.html" class="btn btn-neutral float-right" title="POD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="_summaries/ezyrb.approximation.ann.ANN._build_model.html" class="btn btn-neutral float-left" title="ezyrb.approximation.ann.ANN._build_model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="_summaries/ezyrb.reduction.Reduction.html" class="btn btn-neutral float-right" title="ezyrb.reduction.Reduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright 2016-2021, EZyRB contributors.
-      <span class="lastupdated">Last updated on Apr 01, 2024.
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 12, 2025.
       </span></p>
   </div>
 

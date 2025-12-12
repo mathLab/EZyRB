@@ -1,0 +1,6 @@
+﻿ezyrb.database.Database.\_\_getitem\_\_
+=======================================
+
+.. currentmodule:: ezyrb.database
+
+.. automethod:: Database.__getitem__

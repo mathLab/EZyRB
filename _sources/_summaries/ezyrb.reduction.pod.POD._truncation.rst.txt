@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.\_truncation
+====================================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. automethod:: POD._truncation

@@ -1,0 +1,6 @@
+﻿ezyrb.reduction.pod.POD.\_rsvd
+==============================
+
+.. currentmodule:: ezyrb.reduction.pod
+
+.. automethod:: POD._rsvd

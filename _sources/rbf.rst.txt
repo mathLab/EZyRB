@@ -1,9 +1,9 @@
 RBF
 =====================
 
-.. currentmodule:: ezyrb.rbf
+.. currentmodule:: ezyrb.approximation.rbf
 
-.. automodule:: ezyrb.rbf
+.. automodule:: ezyrb.approximation.rbf
 
 .. autosummary::
     :toctree: _summaries
