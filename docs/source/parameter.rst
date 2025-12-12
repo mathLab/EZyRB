@@ -1,19 +1,15 @@
-RBF
+Parameter
 =====================
 
-.. currentmodule:: ezyrb.approximation.rbf
+.. currentmodule:: ezyrb.parameter
 
-.. automodule:: ezyrb.approximation.rbf
+.. automodule:: ezyrb.parameter
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-    RBF
-    RBF.fit
-    RBF.predict
-
-.. autoclass:: RBF
+.. autoclass:: Parameter
     :members:
     :private-members:
     :undoc-members:

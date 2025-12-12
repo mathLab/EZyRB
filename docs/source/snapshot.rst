@@ -1,19 +1,15 @@
-RBF
+Snapshot
 =====================
 
-.. currentmodule:: ezyrb.approximation.rbf
+.. currentmodule:: ezyrb.snapshot
 
-.. automodule:: ezyrb.approximation.rbf
+.. automodule:: ezyrb.snapshot
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-    RBF
-    RBF.fit
-    RBF.predict
-
-.. autoclass:: RBF
+.. autoclass:: Snapshot
     :members:
     :private-members:
     :undoc-members:

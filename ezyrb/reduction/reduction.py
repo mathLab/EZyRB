@@ -21,3 +21,11 @@ class Reduction(ABC):
     @abstractmethod
     def inverse_transform(self):
         """Abstract `inverse_transform`"""
+
+    @abstractmethod
+    def expand(self):
+        """Abstract `expand`"""
+
+    @abstractmethod
+    def reduce(self):
+        """Abstract `reduce`"""

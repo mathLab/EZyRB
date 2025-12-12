@@ -14,10 +14,7 @@
 
 import sys
 import os
-import shlex
 import sphinx
-from sphinx.errors import VersionRequirementError
-import sphinx_rtd_theme
 import time
 import importlib.metadata
 
@@ -32,16 +29,10 @@ sys.path.insert(0, os.path.abspath('../..'))
 _DISTRIBUTION_METADATA = importlib.metadata.metadata("ezyrb")
 project = _DISTRIBUTION_METADATA["Name"]
 copyright = f'2016-{time.strftime("%Y")}, EZyRB contributors'
-author = _DISTRIBUTION_METADATA["Author"]
+author = _DISTRIBUTION_METADATA["Author-email"]
 
 
 # -- General configuration ------------------------------------------------
-
-# If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '1.4'
-if needs_sphinx > sphinx.__display_version__:
-    message = 'This project needs at least Sphinx v{0!s}'.format(needs_sphinx)
-    raise VersionRequirementError(message)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -56,14 +47,16 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'sphinx.ext.coverage',
-    'sphinx.ext.imgmath',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.mathjax',
 ]
 
-intersphinx_mapping = {'python': ('http://docs.python.org/2', None),
-                       'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-                       'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       'matplotlib': ('http://matplotlib.sourceforge.net/', None)}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -97,7 +90,7 @@ release = version
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -142,7 +135,7 @@ todo_include_todos = True
 # classes and attributes. As side effects, this option ... ???
 # If false, ... ???.
 # The default is True.
-viewcode_import = True
+viewcode_follow_imported_members = True
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -157,7 +150,7 @@ html_theme = "sphinx_rtd_theme"
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".

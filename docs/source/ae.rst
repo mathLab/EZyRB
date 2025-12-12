@@ -1,9 +1,9 @@
 AE
 =====================
 
-.. currentmodule:: ezyrb.ae
+.. currentmodule:: ezyrb.reduction.ae
 
-.. automodule:: ezyrb.ae
+.. automodule:: ezyrb.reduction.ae
 
 .. autosummary::
     :toctree: _summaries

@@ -1,9 +1,9 @@
 Linear
 =====================
 
-.. currentmodule:: ezyrb.linear
+.. currentmodule:: ezyrb.approximation.linear
 
-.. automodule:: ezyrb.linear
+.. automodule:: ezyrb.approximation.linear
 
 .. autosummary::
     :toctree: _summaries

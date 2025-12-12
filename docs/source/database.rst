@@ -10,8 +10,6 @@ Database
     :nosignatures:
 
     Database
-    Database.parameters
-    Database.snapshots
     Database.__getitem__
     Database.__len__
     Database.add

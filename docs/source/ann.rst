@@ -1,9 +1,9 @@
 ANN
 =====================
 
-.. currentmodule:: ezyrb.ann
+.. currentmodule:: ezyrb.approximation.ann
 
-.. automodule:: ezyrb.ann
+.. automodule:: ezyrb.approximation.ann
 
 .. autosummary::
     :toctree: _summaries
