@@ -9,13 +9,6 @@ PODAE
     :toctree: _summaries
     :nosignatures:
 
-    PODAE
-    PODAE.fit
-    PODAE.reduce
-    PODAE.expand
-    PODAE.transform
-    PODAE.inverse_transform
-
 .. autoclass:: PODAE
     :members:
     :private-members:

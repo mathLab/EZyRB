@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>POD &mdash; ezyrb 1.3.2 documentation</title>
+  <title>POD &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.reduction.pod.POD" href="_summaries/ezyrb.reduction.pod.POD.html" />
-    <link rel="prev" title="ezyrb.reduction.Reduction.inverse_transform" href="_summaries/ezyrb.reduction.Reduction.inverse_transform.html" /> 
+    <link rel="next" title="AE" href="ae.html" />
+    <link rel="prev" title="Reduction" href="reduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,42 +43,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">POD</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.html">ezyrb.reduction.pod.POD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.modes.html">ezyrb.reduction.pod.POD.modes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.singular_values.html">ezyrb.reduction.pod.POD.singular_values</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.reduce.html">ezyrb.reduction.pod.POD.reduce</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.expand.html">ezyrb.reduction.pod.POD.expand</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.transform.html">ezyrb.reduction.pod.POD.transform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.inverse_transform.html">ezyrb.reduction.pod.POD.inverse_transform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._truncation.html">ezyrb.reduction.pod.POD._truncation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._svd.html">ezyrb.reduction.pod.POD._svd</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._rsvd.html">ezyrb.reduction.pod.POD._rsvd</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._corrm.html">ezyrb.reduction.pod.POD._corrm</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="reduction.html">Reduction</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">POD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ae.html">AE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="podae.html">PODAE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -115,45 +102,12 @@ Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
 Singular Value Decomposition via correlation matrix.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.html#ezyrb.reduction.pod.POD" title="ezyrb.reduction.pod.POD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD</span></code></a></p></td>
-<td><p>Perform the Proper Orthogonal Decomposition.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.modes.html#ezyrb.reduction.pod.POD.modes" title="ezyrb.reduction.pod.POD.modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.modes</span></code></a></p></td>
-<td><p>The POD modes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.singular_values.html#ezyrb.reduction.pod.POD.singular_values" title="ezyrb.reduction.pod.POD.singular_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.singular_values</span></code></a></p></td>
-<td><p>The singular values</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.reduce.html#ezyrb.reduction.pod.POD.reduce" title="ezyrb.reduction.pod.POD.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.reduce</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.expand.html#ezyrb.reduction.pod.POD.expand" title="ezyrb.reduction.pod.POD.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.expand</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.transform.html#ezyrb.reduction.pod.POD.transform" title="ezyrb.reduction.pod.POD.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.transform</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.inverse_transform.html#ezyrb.reduction.pod.POD.inverse_transform" title="ezyrb.reduction.pod.POD.inverse_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD.inverse_transform</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._truncation.html#ezyrb.reduction.pod.POD._truncation" title="ezyrb.reduction.pod.POD._truncation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._truncation</span></code></a></p></td>
-<td><p>Return the number of modes to select according to the <cite>rank</cite> parameter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._svd.html#ezyrb.reduction.pod.POD._svd" title="ezyrb.reduction.pod.POD._svd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._svd</span></code></a></p></td>
-<td><p>Truncated Singular Value Decomposition.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._rsvd.html#ezyrb.reduction.pod.POD._rsvd" title="ezyrb.reduction.pod.POD._rsvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._rsvd</span></code></a></p></td>
-<td><p>Truncated randomized Singular Value Decomposition.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD._corrm.html#ezyrb.reduction.pod.POD._corrm" title="ezyrb.reduction.pod.POD._corrm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POD._corrm</span></code></a></p></td>
-<td><p>Truncated POD calculated with correlation matrix.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">POD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'svd'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subspace_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/pod.html#POD"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.html#ezyrb.reduction.Reduction" title="ezyrb.reduction.reduction.Reduction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Reduction</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Reduction</span></code></p>
 <p>Perform the Proper Orthogonal Decomposition.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -205,14 +159,14 @@ higher number of operations. It is available only using the
 <dd><p>Truncated POD calculated with correlation matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
 singular values array, the truncated right-singular vectors matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -221,22 +175,24 @@ singular values array, the truncated right-singular vectors matrix.</p>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_rsvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/pod.html#POD._rsvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Truncated randomized Singular Value Decomposition.</p>
+<p>Computes an approximate SVD using randomized algorithms for efficiency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – The matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
-singular values array, the truncated right-singular vectors matrix.</p>
+<dd class="field-even"><p>Tuple of (truncated left-singular vectors, truncated singular values).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
-<p>References:
-Finding structure with randomness: probabilistic algorithms for
+<dl class="simple">
+<dt>References:</dt><dd><p>Finding structure with randomness: probabilistic algorithms for
 constructing approximate matrix decompositions. N. Halko, P. G.
 Martinsson, J. A. Tropp.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -245,14 +201,14 @@ Martinsson, J. A. Tropp.</p>
 <dd><p>Truncated Singular Value Decomposition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the truncated left-singular vectors matrix, the truncated
 singular values array, the truncated right-singular vectors matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 <p>References:
@@ -269,8 +225,8 @@ See POD.__init__ for further info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p></li>
-<li><p><strong>s</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the singular values of X.</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the matrix to decompose.</p></li>
+<li><p><strong>s</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the singular values of X.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -288,7 +244,7 @@ See POD.__init__ for further info.</p>
 <dd><p>Projects a reduced to full order solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -300,11 +256,14 @@ See POD.__init__ for further info.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/pod.html#POD.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Create the reduced space for the given snapshots <cite>X</cite> using the
-specified method</p>
+<dd><p>Create the reduced space for the given snapshots using POD.</p>
+<p>Computes the POD modes and singular values using the specified method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column)</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – The input snapshots matrix (stored by column).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
 </dd>
 </dl>
 </dd></dl>
@@ -315,7 +274,7 @@ specified method</p>
 <dd><p>Projects a reduced to full order solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,7 +285,7 @@ specified method</p>
 <dd><p>The POD modes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,7 +296,7 @@ specified method</p>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -352,7 +311,7 @@ specified method</p>
 <dd><p>The singular values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -363,7 +322,7 @@ specified method</p>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,15 +335,15 @@ specified method</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.reduction.Reduction.inverse_transform.html" class="btn btn-neutral float-left" title="ezyrb.reduction.Reduction.inverse_transform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.reduction.pod.POD.html" class="btn btn-neutral float-right" title="ezyrb.reduction.pod.POD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="reduction.html" class="btn btn-neutral float-left" title="Reduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ae.html" class="btn btn-neutral float-right" title="AE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

@@ -9,10 +9,6 @@ KNeighborsRegressor
     :toctree: _summaries
     :nosignatures:
 
-    KNeighborsRegressor
-    KNeighborsRegressor.fit
-    KNeighborsRegressor.predict
-
 .. autoclass:: KNeighborsRegressor
     :members:
     :private-members:

@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.ae.AE.fit
-=========================
-
-.. currentmodule:: ezyrb.reduction.ae
-
-.. automethod:: AE.fit

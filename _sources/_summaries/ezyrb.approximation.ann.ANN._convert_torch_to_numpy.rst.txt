@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.ann.ANN.\_convert\_torch\_to\_numpy
-=======================================================
-
-.. currentmodule:: ezyrb.approximation.ann
-
-.. automethod:: ANN._convert_torch_to_numpy

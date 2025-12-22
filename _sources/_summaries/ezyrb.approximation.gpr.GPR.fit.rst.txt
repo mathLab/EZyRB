@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.gpr.GPR.fit
-===============================
-
-.. currentmodule:: ezyrb.approximation.gpr
-
-.. automethod:: GPR.fit

@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.gpr.GPR.optimal\_mu
-=======================================
-
-.. currentmodule:: ezyrb.approximation.gpr
-
-.. automethod:: GPR.optimal_mu

@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.Reduction.reduce
-================================
-
-.. currentmodule:: ezyrb.reduction
-
-.. automethod:: Reduction.reduce

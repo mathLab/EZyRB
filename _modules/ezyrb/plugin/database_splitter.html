@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ezyrb.plugin.database_splitter &mdash; ezyrb 1.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=28d163b9"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ezyrb
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ezyrb</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ezyrb.plugin.database_splitter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ezyrb.plugin.database_splitter</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">.plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+<span class="kn">from</span> <span class="nn">..database</span> <span class="kn">import</span> <span class="n">Database</span>
+
+
+<div class="viewcode-block" id="DatabaseSplitter">
+<a class="viewcode-back" href="../../../database_splitter.html#ezyrb.plugin.database_splitter.DatabaseSplitter">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseSplitter</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plugin for splitting the database into training, test, validation, and prediction sets.</span>
+<span class="sd">    </span>
+<span class="sd">    This plugin automatically splits the database according to specified ratios</span>
+<span class="sd">    before the fitting process begins.</span>
+<span class="sd">    </span>
+<span class="sd">    :param float train: Ratio or number of samples for training set. Default is 0.9.</span>
+<span class="sd">    :param float test: Ratio or number of samples for test set. Default is 0.1.</span>
+<span class="sd">    :param float validation: Ratio or number of samples for validation set. Default is 0.0.</span>
+<span class="sd">    :param float predict: Ratio or number of samples for prediction set. Default is 0.0.</span>
+<span class="sd">    :param int seed: Random seed for reproducibility. Default is None.</span>
+<span class="sd">    </span>
+<span class="sd">    :Example:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import POD, RBF, Database</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb.plugin import DatabaseSplitter</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; params = np.random.rand(100, 2)</span>
+<span class="sd">        &gt;&gt;&gt; snapshots = np.random.rand(100, 50)</span>
+<span class="sd">        &gt;&gt;&gt; db = Database(params, snapshots)</span>
+<span class="sd">        &gt;&gt;&gt; pod = POD(rank=5)</span>
+<span class="sd">        &gt;&gt;&gt; rbf = RBF()</span>
+<span class="sd">        &gt;&gt;&gt; splitter = DatabaseSplitter(train=0.7, test=0.2, validation=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; rom = ROM(db, pod, rbf, plugins=[splitter])</span>
+<span class="sd">        &gt;&gt;&gt; rom.fit()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validation</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">predict</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the DatabaseSplitter plugin.</span>
+<span class="sd">        </span>
+<span class="sd">        :param float train: Ratio for training set. Default is 0.9.</span>
+<span class="sd">        :param float test: Ratio for test set. Default is 0.1.</span>
+<span class="sd">        :param float validation: Ratio for validation set. Default is 0.0.</span>
+<span class="sd">        :param float predict: Ratio for prediction set. Default is 0.0.</span>
+<span class="sd">        :param int seed: Random seed. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">validation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">predict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+
+<div class="viewcode-block" id="DatabaseSplitter.fit_preprocessing">
+<a class="viewcode-back" href="../../../database_splitter.html#ezyrb.plugin.database_splitter.DatabaseSplitter.fit_preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split the database before fitting begins.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ReducedOrderModel rom: The ROM instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">_database</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">Database</span><span class="p">):</span>
+            <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">predict</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">],</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">predict</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">],</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+            <span class="p">)</span>
+            <span class="c1"># TODO improve this splitting if needed (now only reading the database of</span>
+            <span class="c1"># the first ROM)</span>
+
+
+        <span class="n">rom</span><span class="o">.</span><span class="n">train_full_database</span> <span class="o">=</span> <span class="n">train</span>
+        <span class="n">rom</span><span class="o">.</span><span class="n">test_full_database</span> <span class="o">=</span> <span class="n">test</span>
+        <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span> <span class="o">=</span> <span class="n">validation</span>
+        <span class="n">rom</span><span class="o">.</span><span class="n">predict_full_database</span> <span class="o">=</span> <span class="n">predict</span></div>
+</div>
+
+        <span class="c1">#print(&#39;train&#39;, train.snapshots_matrix.shape)</span>
+        <span class="c1">#print(&#39;test&#39;, test.snapshots_matrix.shape)</span>
+        <span class="c1">#print(&#39;validation&#39;, validation.snapshots_matrix.shape)</span>
+        <span class="c1">#print(&#39;predict&#39;, predict.snapshots_matrix.shape)</span>
+
+<div class="viewcode-block" id="DatabaseDictionarySplitter">
+<a class="viewcode-back" href="../../../database_splitter.html#ezyrb.plugin.database_splitter.DatabaseDictionarySplitter">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseDictionarySplitter</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This plugin class is used to define the train, test, validation and predict</span>
+<span class="sd">    databases when the databases are already split: train, test, validation and</span>
+<span class="sd">    predict are already database objects stored in a dictionary. Given the desired keys</span>
+<span class="sd">    of the dictionary as input, the plugin will assign the corresponding database</span>
+<span class="sd">    objects to the train, test, validation and predict attributes of the ROM.</span>
+<span class="sd">    </span>
+<span class="sd">    :Example:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import POD, RBF, Database</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb.plugin import DatabaseDictionarySplitter</span>
+<span class="sd">        &gt;&gt;&gt; db_dict = {</span>
+<span class="sd">        ...     &#39;train&#39;: Database(train_params, train_snaps),</span>
+<span class="sd">        ...     &#39;test&#39;: Database(test_params, test_snaps)</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &gt;&gt;&gt; pod = POD(rank=5)</span>
+<span class="sd">        &gt;&gt;&gt; rbf = RBF()</span>
+<span class="sd">        &gt;&gt;&gt; splitter = DatabaseDictionarySplitter(train_key=&#39;train&#39;, test_key=&#39;test&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; rom = ROM(db_dict[&#39;train&#39;], pod, rbf, plugins=[splitter])</span>
+<span class="sd">        &gt;&gt;&gt; rom.fit()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validation_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">predict_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the DatabaseDictionarySplitter plugin.</span>
+<span class="sd">        </span>
+<span class="sd">        :param str train_key: Dictionary key for training database. Default is None.</span>
+<span class="sd">        :param str test_key: Dictionary key for test database. Default is None.</span>
+<span class="sd">        :param str validation_key: Dictionary key for validation database. Default is None.</span>
+<span class="sd">        :param str predict_key: Dictionary key for prediction database. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_key</span> <span class="o">=</span> <span class="n">train_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_key</span> <span class="o">=</span> <span class="n">test_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_key</span> <span class="o">=</span> <span class="n">validation_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict_key</span> <span class="o">=</span> <span class="n">predict_key</span>
+
+<div class="viewcode-block" id="DatabaseDictionarySplitter.fit_preprocessing">
+<a class="viewcode-back" href="../../../database_splitter.html#ezyrb.plugin.database_splitter.DatabaseDictionarySplitter.fit_preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign the database splits from the dictionary before fitting.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ReducedOrderModel rom: The ROM instance.</span>
+<span class="sd">        :raises ValueError: If the database is not a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">_database</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rom</span><span class="o">.</span><span class="n">train_full_database</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">train_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rom</span><span class="o">.</span><span class="n">test_full_database</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">test_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rom</span><span class="o">.</span><span class="n">predict_full_database</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The database must be a dictionary of databases.&quot;</span><span class="p">)</span></div>
+</div>
+
+           
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

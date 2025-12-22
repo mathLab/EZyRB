@@ -9,10 +9,6 @@ Linear
     :toctree: _summaries
     :nosignatures:
 
-    Linear
-    Linear.fit
-    Linear.predict
-
 .. autoclass:: Linear
     :members:
     :private-members:

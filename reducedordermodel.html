@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReducedOrderModel &mdash; ezyrb 1.3.2 documentation</title>
+  <title>ReducedOrderModel &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.reducedordermodel.ReducedOrderModel" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html" />
-    <link rel="prev" title="ezyrb.reduction.pod_ae.PODAE.inverse_transform" href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html" /> 
+    <link rel="next" title="Approximation" href="approximation.html" />
+    <link rel="prev" title="Snapshot" href="snapshot.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,39 +43,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ReducedOrderModel</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html">ezyrb.reducedordermodel.ReducedOrderModel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.fit.html">ezyrb.reducedordermodel.ReducedOrderModel.fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.predict.html">ezyrb.reducedordermodel.ReducedOrderModel.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.test_error.html">ezyrb.reducedordermodel.ReducedOrderModel.test_error</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error.html">ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html">ezyrb.reducedordermodel.ReducedOrderModel.loo_error</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu.html">ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html">ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#core-classes">Core Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parameter.html">Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ReducedOrderModel</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -109,30 +99,6 @@
 <p>Module for the Reduced Order Modeling.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html#ezyrb.reducedordermodel.ReducedOrderModel" title="ezyrb.reducedordermodel.ReducedOrderModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel</span></code></a></p></td>
-<td><p>Reduced Order Model class.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.fit.html#ezyrb.reducedordermodel.ReducedOrderModel.fit" title="ezyrb.reducedordermodel.ReducedOrderModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.fit</span></code></a></p></td>
-<td><p>Calculate reduced space</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.predict.html#ezyrb.reducedordermodel.ReducedOrderModel.predict" title="ezyrb.reducedordermodel.ReducedOrderModel.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.predict</span></code></a></p></td>
-<td><p>Calculate predicted solution for given parameters.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.test_error.html#ezyrb.reducedordermodel.ReducedOrderModel.test_error" title="ezyrb.reducedordermodel.ReducedOrderModel.test_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.test_error</span></code></a></p></td>
-<td><p>Compute the mean norm of the relative error vectors of predicted test snapshots.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error.html#ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error" title="ezyrb.reducedordermodel.ReducedOrderModel.kfold_cv_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.kfold_cv_error</span></code></a></p></td>
-<td><p>Split the database into k consecutive folds (no shuffling by default).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html#ezyrb.reducedordermodel.ReducedOrderModel.loo_error" title="ezyrb.reducedordermodel.ReducedOrderModel.loo_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.loo_error</span></code></a></p></td>
-<td><p>Estimate the approximation error using <em>leave-one-out</em> strategy.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu.html#ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu" title="ezyrb.reducedordermodel.ReducedOrderModel.optimal_mu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel.optimal_mu</span></code></a></p></td>
-<td><p>Return the parametric points where new high-fidelity solutions have to be computed in order to globally reduce the estimated error.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html#ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume" title="ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReducedOrderModel._simplex_volume</span></code></a></p></td>
-<td><p>Method implementing the computation of the volume of a N dimensional simplex.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
@@ -178,6 +144,17 @@ reduced order model.</p></li>
 </div>
 </dd>
 </dl>
+<p>Initialize a Reduced Order Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> (<em>Database</em>) – The database for training.</p></li>
+<li><p><strong>reduction</strong> (<em>Reduction</em>) – The reduction method.</p></li>
+<li><p><strong>approximation</strong> (<em>Approximation</em>) – The approximation method.</p></li>
+<li><p><strong>plugins</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of plugins. Default is None.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
@@ -186,7 +163,19 @@ reduced order model.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_reduce_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel._reduce_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Reduce a database using the fitted reduction method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db</strong> (<em>Database</em>) – The database to reduce.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new database with reduced snapshots.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Database</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -196,7 +185,7 @@ simplex.
 Source from: <a class="reference external" href="https://en.wikipedia.org/wiki/Simplex">wikipedia.org/wiki/Simplex</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
+<dd class="field-odd"><p><strong>simplex_vertices</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – Nx3 array containing the
 parameter values representing the vertices of a simplex. N is the
 dimensionality of the parameters.</p>
 </dd>
@@ -217,7 +206,10 @@ dimensionality of the parameters.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Clean all internal databases used during training and prediction.</p>
+<p>This method resets all training, prediction, test, and validation
+databases to None.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py">
@@ -233,12 +225,28 @@ dimensionality of the parameters.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">fit_approximation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit_approximation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Fit the approximation method on the reduced training database.</p>
+<p>This method trains the approximation technique on the reduced space
+representation of the snapshots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the reduced training database has not been created.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">fit_reduction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reducedordermodel.html#ReducedOrderModel.fit_reduction"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Fit the reduction method on the training database.</p>
+<p>This method applies the reduction technique to the snapshots matrix
+of the training database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the training database has not been set.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -263,7 +271,7 @@ Default value is the L2 norm.</p></li>
 <dd class="field-even"><p>the vector containing the errors corresponding to each fold.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,7 +318,7 @@ returns a float. Default value is the L2 norm.</p></li>
 parametric points.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,9 +348,9 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
+<li><p><strong>error</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the estimated error evaluated for each
 snapshot; if error array is not passed, it is computed using
-<a class="reference internal" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.loo_error.html#ezyrb.reducedordermodel.ReducedOrderModel.loo_error" title="ezyrb.reducedordermodel.ReducedOrderModel.loo_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code></a> with the default function. Default value is None.</p></li>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">loo_error()</span></code> with the default function. Default value is None.</p></li>
 <li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – the number of optimal points to return. Default value is
 1.</p></li>
 </ul>
@@ -351,7 +359,7 @@ snapshot; if error array is not passed, it is computed using
 <dd class="field-even"><p>the optimal points</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,7 +377,7 @@ predicted solutions.</p>
 corresponding parameters).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="_summaries/ezyrb.database.Database.html#ezyrb.database.Database" title="ezyrb.database.Database">Database</a></p>
+<dd class="field-even"><p>Database</p>
 </dd>
 </dl>
 </dd></dl>
@@ -413,7 +421,7 @@ test snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>test</strong> (<a class="reference internal" href="_summaries/ezyrb.database.Database.html#ezyrb.database.Database" title="ezyrb.database.Database"><em>database.Database</em></a>) – the input test database.</p></li>
+<li><p><strong>test</strong> (<em>database.Database</em>) – the input test database.</p></li>
 <li><p><strong>norm</strong> (<em>function</em>) – the function used to assign at the vector of
 errors a float number. It has to take as input a ‘numpy.ndarray’
 and returns a float. Default value is the L2 norm.</p></li>
@@ -424,7 +432,7 @@ and returns a float. Default value is the L2 norm.</p></li>
 test snapshots.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -437,15 +445,15 @@ test snapshots.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html" class="btn btn-neutral float-left" title="ezyrb.reduction.pod_ae.PODAE.inverse_transform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html" class="btn btn-neutral float-right" title="ezyrb.reducedordermodel.ReducedOrderModel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="snapshot.html" class="btn btn-neutral float-left" title="Snapshot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="approximation.html" class="btn btn-neutral float-right" title="Approximation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

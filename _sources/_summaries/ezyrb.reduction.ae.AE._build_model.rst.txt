@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.ae.AE.\_build\_model
-====================================
-
-.. currentmodule:: ezyrb.reduction.ae
-
-.. automethod:: AE._build_model

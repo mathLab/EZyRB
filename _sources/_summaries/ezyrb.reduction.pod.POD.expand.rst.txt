@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.pod.POD.expand
-==============================
-
-.. currentmodule:: ezyrb.reduction.pod
-
-.. automethod:: POD.expand

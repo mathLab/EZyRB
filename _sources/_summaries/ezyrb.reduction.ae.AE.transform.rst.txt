@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.ae.AE.transform
-===============================
-
-.. currentmodule:: ezyrb.reduction.ae
-
-.. automethod:: AE.transform

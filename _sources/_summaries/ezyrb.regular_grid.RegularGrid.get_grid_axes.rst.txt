@@ -1,6 +1,0 @@
-﻿ezyrb.regular\_grid.RegularGrid.get\_grid\_axes
-===============================================
-
-.. currentmodule:: ezyrb.regular_grid
-
-.. automethod:: RegularGrid.get_grid_axes

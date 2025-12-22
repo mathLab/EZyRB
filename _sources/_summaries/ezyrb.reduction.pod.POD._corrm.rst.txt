@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.pod.POD.\_corrm
-===============================
-
-.. currentmodule:: ezyrb.reduction.pod
-
-.. automethod:: POD._corrm

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RegularGrid &mdash; ezyrb 1.3.2 documentation</title>
+  <title>RegularGrid &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.regular_grid.RegularGrid" href="_summaries/ezyrb.regular_grid.RegularGrid.html" />
-    <link rel="prev" title="ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume" href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html" /> 
+    <link rel="next" title="Reduction" href="reduction.html" />
+    <link rel="prev" title="RadiusNeighborsRegressor" href="radius_neighbors_regressor.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,35 +43,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">RegularGrid</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.html">ezyrb.regular_grid.RegularGrid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.get_grid_axes.html">ezyrb.regular_grid.RegularGrid.get_grid_axes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.fit.html">ezyrb.regular_grid.RegularGrid.fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.predict.html">ezyrb.regular_grid.RegularGrid.predict</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="approximation.html">Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear.html">Linear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html">RBF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpr.html">GPR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ann.html">ANN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RegularGrid</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -105,24 +104,12 @@
 <p>Module for higher order interpolation on regular grids</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.html#ezyrb.regular_grid.RegularGrid" title="ezyrb.regular_grid.RegularGrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGrid</span></code></a></p></td>
-<td><p>Multidimensional interpolator on regular grids.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.get_grid_axes.html#ezyrb.regular_grid.RegularGrid.get_grid_axes" title="ezyrb.regular_grid.RegularGrid.get_grid_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGrid.get_grid_axes</span></code></a></p></td>
-<td><p>Calculates the grid axes from a meshed grid and re-orders the values so they fit on a mesh generated with numpy.meshgrid(ax1, ax2, ..., axn, indexing=&quot;ij&quot;)</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.fit.html#ezyrb.regular_grid.RegularGrid.fit" title="ezyrb.regular_grid.RegularGrid.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGrid.fit</span></code></a></p></td>
-<td><p>Construct the interpolator given <cite>points</cite> and <cite>values</cite>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.regular_grid.RegularGrid.predict.html#ezyrb.regular_grid.RegularGrid.predict" title="ezyrb.regular_grid.RegularGrid.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGrid.predict</span></code></a></p></td>
-<td><p>Evaluate interpolator at given <cite>new_point</cite>, can be multiple points.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RegularGrid</span></span><a class="reference internal" href="_modules/ezyrb/regular_grid.html#RegularGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.approximation.Approximation.html#ezyrb.approximation.Approximation" title="ezyrb.approximation.approximation.Approximation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Approximation</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Approximation</span></code></p>
 <p>Multidimensional interpolator on regular grids.
 See also scipy’s RegularGridInterpolator for information on kwargs.</p>
 <dl class="field-list">
@@ -144,7 +131,7 @@ n dimensions.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xg</span><span class="p">,</span> <span class="n">yg</span><span class="p">,</span> <span class="n">zg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">xg</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yg</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">zg</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data_mode_x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span> <span class="n">yg</span><span class="p">,</span> <span class="n">zg</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="go"># lets assume we have 2 modes, i.e. a rank 2 model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># lets assume we have 2 modes, i.e. a rank 2 model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">data_mode_x</span><span class="p">,</span> <span class="n">data_mode_x</span><span class="o">/</span><span class="mi">10</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rgi</span> <span class="o">=</span> <span class="n">ezyrb</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rgi</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">)</span>
@@ -165,6 +152,8 @@ n dimensions.</p></li>
 </div>
 </dd>
 </dl>
+<p>Initialize a RegularGrid interpolator.</p>
+<p>The interpolator will be configured during the fit method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
@@ -204,7 +193,7 @@ numpy.meshgrid(ax1, ax2, …, axn, indexing=”ij”)</p>
 (m1, ), …, (mn, ) and values mapped on the ordered grid.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -221,7 +210,7 @@ numpy.meshgrid(ax1, ax2, …, axn, indexing=”ij”)</p>
 <dd class="field-even"><p>the interpolated values.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,15 +223,15 @@ numpy.meshgrid(ax1, ax2, …, axn, indexing=”ij”)</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume.html" class="btn btn-neutral float-left" title="ezyrb.reducedordermodel.ReducedOrderModel._simplex_volume" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.regular_grid.RegularGrid.html" class="btn btn-neutral float-right" title="ezyrb.regular_grid.RegularGrid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="radius_neighbors_regressor.html" class="btn btn-neutral float-left" title="RadiusNeighborsRegressor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reduction.html" class="btn btn-neutral float-right" title="Reduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

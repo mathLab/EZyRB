@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; ezyrb 1.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code Documentation" href="code.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ezyrb
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-workflow">Basic Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#minimal-example">Minimal Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-components">Understanding the Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#database">Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reduction-methods">Reduction Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#approximation-methods">Approximation Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ezyrb</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
+<p>This guide will help you get started with EZyRB in just a few minutes.</p>
+<section id="basic-workflow">
+<h2>Basic Workflow<a class="headerlink" href="#basic-workflow" title="Link to this heading"></a></h2>
+<p>The typical workflow for using EZyRB consists of three main steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Create a Database</strong>: Collect your parameter-snapshot pairs</p></li>
+<li><p><strong>Build a ROM</strong>: Choose reduction and approximation methods</p></li>
+<li><p><strong>Make Predictions</strong>: Evaluate the ROM at new parameter values</p></li>
+</ol>
+</section>
+<section id="minimal-example">
+<h2>Minimal Example<a class="headerlink" href="#minimal-example" title="Link to this heading"></a></h2>
+<p>Here’s a complete example to get you started:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">POD</span><span class="p">,</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">Database</span><span class="p">,</span> <span class="n">ReducedOrderModel</span>
+
+<span class="c1"># Step 1: Create a database</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">]])</span>
+<span class="n">snapshots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># 4 snapshots of size 100</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Build a ROM</span>
+<span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Use 5 POD modes</span>
+<span class="n">rbf</span> <span class="o">=</span> <span class="n">RBF</span><span class="p">()</span>        <span class="c1"># Radial Basis Function interpolation</span>
+<span class="n">rom</span> <span class="o">=</span> <span class="n">ReducedOrderModel</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pod</span><span class="p">,</span> <span class="n">rbf</span><span class="p">)</span>
+<span class="n">rom</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Step 3: Predict for new parameters</span>
+<span class="n">new_param</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">2.5</span><span class="p">]])</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_param</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prediction</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (1, 100)</span>
+</pre></div>
+</div>
+</section>
+<section id="understanding-the-components">
+<h2>Understanding the Components<a class="headerlink" href="#understanding-the-components" title="Link to this heading"></a></h2>
+<section id="database">
+<h3>Database<a class="headerlink" href="#database" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Database</span></code> class stores parameter-snapshot pairs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">Snapshot</span>
+
+<span class="c1"># Simple creation</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">)</span>
+
+<span class="c1"># Or add pairs individually</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Parameter</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]),</span> <span class="n">Snapshot</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="reduction-methods">
+<h3>Reduction Methods<a class="headerlink" href="#reduction-methods" title="Link to this heading"></a></h3>
+<p>Reduce the dimensionality of your snapshots:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">POD</span><span class="p">,</span> <span class="n">AE</span>
+
+<span class="c1"># Proper Orthogonal Decomposition</span>
+<span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Autoencoder</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">ae</span> <span class="o">=</span> <span class="n">AE</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="approximation-methods">
+<h3>Approximation Methods<a class="headerlink" href="#approximation-methods" title="Link to this heading"></a></h3>
+<p>Interpolate in the reduced space:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">GPR</span><span class="p">,</span> <span class="n">ANN</span><span class="p">,</span> <span class="n">Linear</span>
+
+<span class="c1"># Radial Basis Functions</span>
+<span class="n">rbf</span> <span class="o">=</span> <span class="n">RBF</span><span class="p">()</span>
+
+<span class="c1"># Gaussian Process Regression</span>
+<span class="n">gpr</span> <span class="o">=</span> <span class="n">GPR</span><span class="p">()</span>
+
+<span class="c1"># Artificial Neural Network</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">ann</span> <span class="o">=</span> <span class="n">ANN</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">(),</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Linear interpolation</span>
+<span class="n">linear</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Check out the <a class="reference internal" href="tutorials.html"><span class="doc">Tutorials</span></a> for detailed examples</p></li>
+<li><p>Explore the <a class="reference internal" href="code.html"><span class="doc">Code Documentation</span></a> for complete API reference</p></li>
+<li><p>Learn about <a class="reference internal" href="plugin.html"><span class="doc">Plugin</span></a> system for advanced customization</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="code.html" class="btn btn-neutral float-right" title="Code Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

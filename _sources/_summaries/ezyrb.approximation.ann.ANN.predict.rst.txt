@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.ann.ANN.predict
-===================================
-
-.. currentmodule:: ezyrb.approximation.ann
-
-.. automethod:: ANN.predict

@@ -1,6 +1,0 @@
-﻿ezyrb.reducedordermodel.ReducedOrderModel.test\_error
-=====================================================
-
-.. currentmodule:: ezyrb.reducedordermodel
-
-.. automethod:: ReducedOrderModel.test_error

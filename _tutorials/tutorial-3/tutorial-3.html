@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using Plugin for implementing NNsPOD-ROM &mdash; ezyrb 1.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=28d163b9"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Build a Multi Reduced Order Model (MultiROM)" href="../tutorial-4/tutorial-4.html" />
+    <link rel="prev" title="Test several frameworks at once" href="../tutorial-2/tutorial-2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ezyrb
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">API Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../tutorial-1/tutorial-1.html">Build and query a simple reduced order model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial-2/tutorial-2.html">Test several frameworks at once</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using Plugin for implementing NNsPOD-ROM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#problem-defintion">Problem defintion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-setting">Initial setting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#offline-phase">Offline phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#online-phase">Online phase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial-4/tutorial-4.html">Build a Multi Reduced Order Model (MultiROM)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ezyrb</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Using Plugin for implementing NNsPOD-ROM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/_tutorials/tutorial-3/tutorial-3.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-plugin-for-implementing-nnspod-rom">
+<h1>Using Plugin for implementing NNsPOD-ROM<a class="headerlink" href="#using-plugin-for-implementing-nnspod-rom" title="Link to this heading"></a></h1>
+<p>In this tutorial we will explain how to use the <strong>NNsPOD-ROM</strong> algorithm
+implemented in <strong>EZyRB</strong> library.</p>
+<p>NNsPOD algorithm is purely a data-driven machine learning method that
+seeks for an optimal mapping of the various snapshots to a reference
+configuration via an automatic detection [1] and seeking for the
+low-rank linear approximation subspace of the solution manifold. The
+nonlinear transformation of the manifold leads to an accelerated KnW
+decay, resulting in a low-dimensional linear approximation subspace, and
+enabling the construction of efficient and accurate reduced order
+models. The complete workflow of the NNsPOD-ROM algorithm, comprising of
+both the offline and online phases is presented in [2].</p>
+<p>References:</p>
+<p>[1] Papapicco, D., Demo, N., Girfoglio, M., Stabile, G., &amp; Rozza,
+G.(2022). The Neural Network shifted-proper orthogonal decomposition: A
+machine learning approach for non-linear reduction of hyperbolic
+equations.Computer Methods in Applied Mechanics and Engineering, 392,
+114687 - <a class="reference external" href="https://doi.org/10.1016/j.cma.2022.114687">https://doi.org/10.1016/j.cma.2022.114687</a></p>
+<p>[2] Gowrachari, H., Demo, N., Stabile, G., &amp; Rozza, G. (2024).
+Non-intrusive model reduction of advection-dominated hyperbolic problems
+using neural network shift augmented manifold transformations. arXiv
+preprint - <a class="reference external" href="https://arxiv.org/abs/2407.18419">https://arxiv.org/abs/2407.18419</a>.</p>
+<section id="problem-defintion">
+<h2>Problem defintion<a class="headerlink" href="#problem-defintion" title="Link to this heading"></a></h2>
+<p>We consider <strong>1D gaussian distribution functions</strong>, in wihch <span class="math notranslate nohighlight">\(x\)</span>
+is random variable, $ <a href="#id1"><span class="problematic" id="id2">:raw-latex:`\mu `$ is mean and $
+:raw-latex:`</span></a>sigma`^2 $ is variance, where $ :raw-latex:<a href="#id3"><span class="problematic" id="id4">`</span></a>sigma <a href="#id5"><span class="problematic" id="id6">`</span></a>$ is
+the standard deviation or the width of gaussian.</p>
+<div class="math notranslate nohighlight">
+\[f(x)=\frac{1}{\sigma \sqrt{2 \pi}} e^{-(x-\mu)^2 /\left(2 \sigma^2\right)}\]</div>
+<p>To mimic travelling waves, here we parameterize the mean <span class="math notranslate nohighlight">\(\mu\)</span>
+values, where changing <span class="math notranslate nohighlight">\(\mu\)</span> shifts the distribution along x-axis,</p>
+</section>
+<section id="initial-setting">
+<h2>Initial setting<a class="headerlink" href="#initial-setting" title="Link to this heading"></a></h2>
+<p>First of all import the required packages: We need the standard Numpy,
+Torch, Matplotlib, and some classes from EZyRB.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy:</span></code> to handle arrays and matrices we will be working with.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">torch:</span></code> to enable the usage of Neural Networks</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib:</span></code> to handle the plotting environment.</p></li>
+</ul>
+<p>From <code class="docutils literal notranslate"><span class="pre">EZyRB</span></code> we need: 1. The <code class="docutils literal notranslate"><span class="pre">ROM</span></code> class, which performs the model
+order reduction process. 2. A module such as <code class="docutils literal notranslate"><span class="pre">Database</span></code>, where the
+matrices of snapshots and parameters are stored. 3. A dimensionality
+reduction method such as Proper Orthogonal Decomposition <code class="docutils literal notranslate"><span class="pre">POD</span></code> 4. An
+interpolation method to obtain an approximation for the parametric
+solution for a new set of parameters such as the Radial Basis Function
+<code class="docutils literal notranslate"><span class="pre">RBF</span></code>, or Multidimensional Linear Interpolator <code class="docutils literal notranslate"><span class="pre">Linear</span></code>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import torch
+from scipy import spatial
+from matplotlib import pyplot as plt
+
+from ezyrb import POD, RBF, Database, Snapshot, Parameter, Linear, ANN
+from ezyrb import ReducedOrderModel as ROM
+from ezyrb.plugin import AutomaticShiftSnapshots
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def gaussian(x, mu, sig):
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+
+def wave(t, res=256):
+    x = np.linspace(0, 11, res)
+    return x, gaussian(x, t, 0.2).T   # parameterizing mean value
+</pre></div>
+</div>
+<section id="offline-phase">
+<h3>Offline phase<a class="headerlink" href="#offline-phase" title="Link to this heading"></a></h3>
+<p>In this case, we obtain 15 snapshots from the analytical model.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_params = 20
+params = np.linspace(0.75, 10.25, n_params).reshape(-1, 1)
+
+pod = POD(rank=1)
+rbf = RBF()
+db = Database()
+
+for param in params:
+    space, values = wave(param)
+    snap = Snapshot(values=values.T, space=space)
+    db.add(Parameter(param), snap)
+
+print(&quot;Snapshot shape : &quot;, db.snapshots_matrix.shape)
+print(&quot;Parameter shape : &quot;, db.parameters_matrix.shape)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Snapshot</span> <span class="n">shape</span> <span class="p">:</span>  <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">Parameter</span> <span class="n">shape</span> <span class="p">:</span>  <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>db_train, db_test = db.split([0.7,0.3])
+print(&quot;Lenght of training data set:&quot;, len(db_train))
+print(f&quot;Parameters of training set: \n {db_train.parameters_matrix.flatten()}&quot;)
+
+print(&quot;Lenght of test data set:&quot;, len(db_test))
+print(f&quot;Parameters of testing set: \n {db_test.parameters_matrix.flatten()}&quot;)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Lenght</span> <span class="n">of</span> <span class="n">training</span> <span class="n">data</span> <span class="nb">set</span><span class="p">:</span> <span class="mi">12</span>
+<span class="n">Parameters</span> <span class="n">of</span> <span class="n">training</span> <span class="nb">set</span><span class="p">:</span>
+ <span class="p">[</span> <span class="mf">0.75</span>  <span class="mf">1.25</span>  <span class="mf">2.25</span>  <span class="mf">2.75</span>  <span class="mf">4.75</span>  <span class="mf">5.25</span>  <span class="mf">7.25</span>  <span class="mf">7.75</span>  <span class="mf">8.25</span>  <span class="mf">9.25</span>  <span class="mf">9.75</span> <span class="mf">10.25</span><span class="p">]</span>
+<span class="n">Lenght</span> <span class="n">of</span> <span class="n">test</span> <span class="n">data</span> <span class="nb">set</span><span class="p">:</span> <span class="mi">8</span>
+<span class="n">Parameters</span> <span class="n">of</span> <span class="n">testing</span> <span class="nb">set</span><span class="p">:</span>
+ <span class="p">[</span><span class="mf">1.75</span> <span class="mf">3.25</span> <span class="mf">3.75</span> <span class="mf">4.25</span> <span class="mf">5.75</span> <span class="mf">6.25</span> <span class="mf">6.75</span> <span class="mf">8.75</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.rcParams.update({
+    &quot;text.usetex&quot;: True,
+    &quot;font.family&quot;: &quot;serif&quot;,
+    &quot;font.serif&quot;: [&quot;Times New Roman&quot;],
+})
+
+fig1 = plt.figure(figsize=(5,5))
+ax = fig1.add_subplot(111,projection=&#39;3d&#39;)
+
+for param in params:
+    space, values = wave(param)
+    snap = Snapshot(values=values.T, space=space)
+    ax.plot(space, param*np.ones(space.shape), values, label = f&quot;{param}&quot;)
+ax.set_xlabel(&#39;x&#39;)
+ax.set_ylabel(&#39;t&#39;)
+ax.set_zlabel(&#39;$f_{g}$(t)&#39;)
+ax.set_xlim(0,11)
+ax.set_ylim(0,11)
+ax.set_zlim(0,1)
+ax.legend(loc=&quot;upper center&quot;, ncol=7, prop = { &quot;size&quot;: 7})
+ax.grid(False)
+ax.view_init(elev=20, azim=-60, roll=0)
+ax.set_title(&quot;Snapshots at original position&quot;)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_6_0.png" src="../../_images/output_6_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% 3D PLOT : db_train snpashots at original position
+fig2 = plt.figure(figsize=(5,5))
+ax = fig2.add_subplot(111, projection=&#39;3d&#39;)
+
+for i in range(len(db_train)):
+    ax.plot(space,(db_train.parameters_matrix[i]*np.ones(space.shape)), db_train.snapshots_matrix[i], label = db_train.parameters_matrix[i])
+ax.set_xlabel(&#39;x&#39;)
+ax.set_ylabel(&#39;t&#39;)
+ax.set_zlabel(&#39;$f_{g}$(t)&#39;)
+ax.set_xlim(0,11)
+ax.set_ylim(0,11)
+ax.set_zlim(0,1)
+ax.legend(loc=&quot;upper center&quot;, ncol=7, prop = { &quot;size&quot;: 7})
+ax.grid(False)
+ax.view_init(elev=20, azim=-60, roll=0)
+ax.set_title(&quot;Training set snapshots at original position&quot;)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_7_0.png" src="../../_images/output_7_0.png" />
+<p><code class="docutils literal notranslate"><span class="pre">InterpNet:</span></code> must learn the reference configuration in the best
+possible way w.r.t its grid point distribution such that it will be able
+to reconstruct field values for every shifted centroid disrtribution.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ShiftNet:</span></code> will learn the shift operator for a given problem, which
+quantifies the optimal-shift, resulting in shifted space that transports
+all the snapshots to the reference frame.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Training:</span></code> The training of ShiftNet and InterpNet are seperated with
+the latter being trained first. Once the network has learned the
+best-possible reconstruct of the solution field of the reference
+configuration, its forward map will be used for the training of Shiftnet
+as well, in a cascaded fashion. For this reason, we must optimise the
+loss of interpnet considerably more than ShiftNet’s.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>torch.manual_seed(1)
+
+interp = ANN([10,10], torch.nn.Softplus(), [1e-6, 200000], frequency_print=1000, lr=0.03)
+shift  = ANN([], torch.nn.LeakyReLU(), [1e-4, 10000], optimizer=torch.optim.Adam, frequency_print=500, l2_regularization=0,  lr=0.0023)
+
+rom = ROM(
+    database=db_train,
+    reduction=pod,
+    approximation=rbf,
+    plugins=[
+        AutomaticShiftSnapshots(
+                shift_network= shift,
+                interp_network=interp,
+                interpolator=Linear(fill_value=0),
+                reference_index=4,
+                parameter_index=4,
+                barycenter_loss=20.)
+            ]
+        )
+rom.fit()
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">epoch</span>      <span class="mi">1</span><span class="p">]</span>      <span class="mf">9.325559e-02</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">1000</span><span class="p">]</span>      <span class="mf">1.529361e-03</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">2000</span><span class="p">]</span>      <span class="mf">4.970222e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">3000</span><span class="p">]</span>      <span class="mf">4.387998e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">4000</span><span class="p">]</span>      <span class="mf">4.628130e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">5000</span><span class="p">]</span>      <span class="mf">3.835012e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">6000</span><span class="p">]</span>      <span class="mf">3.140604e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">7000</span><span class="p">]</span>      <span class="mf">3.919086e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">8000</span><span class="p">]</span>      <span class="mf">4.268886e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">9000</span><span class="p">]</span>      <span class="mf">9.304365e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">10000</span><span class="p">]</span>      <span class="mf">4.048840e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">11000</span><span class="p">]</span>      <span class="mf">3.448661e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">12000</span><span class="p">]</span>      <span class="mf">1.810824e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">13000</span><span class="p">]</span>      <span class="mf">1.608639e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">14000</span><span class="p">]</span>      <span class="mf">1.410103e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">15000</span><span class="p">]</span>      <span class="mf">1.369342e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">16000</span><span class="p">]</span>      <span class="mf">3.215274e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">17000</span><span class="p">]</span>      <span class="mf">1.686200e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">18000</span><span class="p">]</span>      <span class="mf">1.850619e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">19000</span><span class="p">]</span>      <span class="mf">5.792178e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">20000</span><span class="p">]</span>      <span class="mf">1.031569e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">21000</span><span class="p">]</span>      <span class="mf">5.006416e-04</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">22000</span><span class="p">]</span>      <span class="mf">7.024280e-06</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">23000</span><span class="p">]</span>      <span class="mf">3.728175e-06</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">24000</span><span class="p">]</span>      <span class="mf">2.684203e-06</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">25000</span><span class="p">]</span>      <span class="mf">2.088043e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">26000</span><span class="p">]</span>      <span class="mf">2.364460e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">27000</span><span class="p">]</span>      <span class="mf">5.422693e-05</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">28000</span><span class="p">]</span>      <span class="mf">8.736612e-06</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">29000</span><span class="p">]</span>      <span class="mf">1.406125e-03</span>
+<span class="p">[</span><span class="n">epoch</span>  <span class="mi">29941</span><span class="p">]</span>      <span class="mf">9.978612e-07</span>
+<span class="p">[</span><span class="n">epoch</span>      <span class="mi">1</span><span class="p">]</span>      <span class="mf">1.996005e+01</span>
+<span class="p">[</span><span class="n">epoch</span>    <span class="mi">500</span><span class="p">]</span>      <span class="mf">3.647174e+00</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">1000</span><span class="p">]</span>      <span class="mf">2.648998e+00</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">1500</span><span class="p">]</span>      <span class="mf">1.878768e+00</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">2000</span><span class="p">]</span>      <span class="mf">1.296257e+00</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">2500</span><span class="p">]</span>      <span class="mf">8.012146e-01</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">3000</span><span class="p">]</span>      <span class="mf">3.615186e-01</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">3500</span><span class="p">]</span>      <span class="mf">8.892784e-03</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">4000</span><span class="p">]</span>      <span class="mf">4.733771e-03</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">4500</span><span class="p">]</span>      <span class="mf">2.296455e-03</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">5000</span><span class="p">]</span>      <span class="mf">9.881203e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">5500</span><span class="p">]</span>      <span class="mf">3.655896e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">6000</span><span class="p">]</span>      <span class="mf">1.145256e-04</span>
+<span class="p">[</span><span class="n">epoch</span>   <span class="mi">6055</span><span class="p">]</span>      <span class="mf">9.997654e-05</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ezyrb</span><span class="o">.</span><span class="n">reducedordermodel</span><span class="o">.</span><span class="n">ReducedOrderModel</span> <span class="n">at</span> <span class="mh">0x7f70089f4a90</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% Snapshots shifted reference position after training
+for i in range(len(db_train.parameters_matrix)):
+    plt.plot(space, rom.shifted_database.snapshots_matrix[i], label = f&quot;t = {db_train.parameters_matrix[i]}&quot;) #rom._shifted_reference_database.parameters_matrix
+    plt.legend(prop={&#39;size&#39;: 8})
+    plt.ylabel(&#39;$f_{g}$(t)&#39;)
+    plt.xlabel(&#39;X&#39;)
+    plt.title(f&#39;After training : Snapshot of db_train set shifted to reference snapshot {db_train.parameters_matrix[5]}&#39;)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_10_0.png" src="../../_images/output_10_0.png" />
+<p>Showing the snapshots before (left) and after pre-processing (right) of
+solution manifold</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig3 = plt.figure(figsize=(10, 5))
+
+# First subplot
+ax1 = fig3.add_subplot(121, projection=&#39;3d&#39;)
+for i in range(len(db_train)):
+    ax1.plot(space, (db_train.parameters_matrix[i] * np.ones(space.shape)), db_train.snapshots_matrix[i])
+ax1.set_xlabel(&#39;x&#39;)
+ax1.set_ylabel(&#39;t&#39;)
+ax1.set_zlabel(&#39;$f_{g}$(t)&#39;)
+ax1.set_xlim(0,11)
+ax1.set_ylim(0,11)
+ax1.set_zlim(0,1)
+ax1.grid(False)
+ax1.view_init(elev=20, azim=-60, roll=0)
+
+# Second subplot
+ax2 = fig3.add_subplot(122, projection=&#39;3d&#39;)
+for i in range(len(rom.shifted_database)):
+    ax2.plot(space, (rom.shifted_database.parameters_matrix[i] * np.ones(space.shape)),
+             rom.shifted_database.snapshots_matrix[i], label=rom.shifted_database.parameters_matrix[i])
+ax2.set_xlabel(&#39;x&#39;)
+ax2.set_ylabel(&#39;t&#39;)
+ax2.set_zlabel(&#39;$f_{g}$(t)&#39;)
+ax2.set_xlim(0, 11)
+ax2.set_ylim(0, 11)
+ax2.set_zlim(0, 1)
+ax2.grid(False)
+ax2.view_init(elev=20, azim=-60, roll=0)
+handles, labels = ax2.get_legend_handles_labels()
+fig3.legend(handles, labels, loc=&#39;center right&#39;, ncol=1, prop={&#39;size&#39;: 8})
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_12_01.png" src="../../_images/output_12_01.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% Singular values of original snapshots and shifted snapshots
+U, s = np.linalg.svd(db.snapshots_matrix.T, full_matrices=False)[:2]
+N_modes = np.linspace(1, len(s),len(s))
+
+# Singular values of shifted snapshots
+U_shifted , s_shifted = np.linalg.svd(rom.shifted_database.snapshots_matrix.T, full_matrices=False)[:2]
+N_modes_shifted = np.linspace(1, len(s_shifted),len(s_shifted))
+
+# Compare singular values
+plt.figure(figsize=(6,4))
+plt.plot(N_modes[:10], s[:10]/np.max(s),&quot;-s&quot;,color = &quot;blue&quot;, label=&#39;POD&#39;)
+plt.plot(N_modes_shifted, s_shifted/np.max(s_shifted),&quot;-o&quot;, color = &quot;red&quot;, label=&#39;NNsPOD&#39;)
+plt.ylabel(&#39;$\sigma/\sigma_{1}$&#39;, size=15)
+plt.xlabel(&#39;Modes&#39;, size=15)
+plt.xlim(0, 11)
+plt.legend(fontsize=12)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_13_0.png" src="../../_images/output_13_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% POD MODES
+modes = pod.modes
+plt.figure(figsize=(6,4))
+plt.plot(space, modes*-1)
+plt.ylabel(&#39;$f_{g}$(t)&#39;, size=15)
+plt.xlabel(&#39;x&#39;, size=15)
+plt.title(&#39;NNsPOD mode&#39;, size=15)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_14_0.png" src="../../_images/output_14_0.png" />
+</section>
+<section id="online-phase">
+<h3>Online phase<a class="headerlink" href="#online-phase" title="Link to this heading"></a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% Test set predictions using NNsPOD
+pred = rom.predict(db_test.parameters_matrix) # Calculate predicted solution for given mu
+
+fig5 = plt.figure(figsize=(5,5))
+ax = fig5.add_subplot(111, projection=&#39;3d&#39;)
+for i in range(len(pred)):
+    space, orig = wave(db_test.parameters_matrix[i])
+    ax.plot(space,(db_test.parameters_matrix[i]*np.ones(space.shape)), pred.snapshots_matrix[i], label = f&#39;Predict={db_test.parameters_matrix[i]}&#39;)
+    ax.plot(space,(db_test.parameters_matrix[i]*np.ones(space.shape)), orig, &#39;--&#39;, label = f&#39;Truth={db_test.parameters_matrix[i]}&#39;)
+ax.set_xlabel(&#39;x&#39;)
+ax.set_ylabel(&#39;t&#39;)
+ax.set_zlabel(&#39;$f_{g}$(t)&#39;)
+ax.set_xlim(0,11)
+ax.set_ylim(0,11)
+ax.set_zlim(0,1)
+ax.legend(loc=&quot;upper center&quot;, ncol=5, prop = { &quot;size&quot;: 7})
+ax.grid(False)
+ax.view_init(elev=20, azim=-60, roll=0)
+ax.set_title(&#39;Predicted Snapshots for db_test set parameters&#39;)
+plt.show()
+</pre></div>
+</div>
+<img alt="../../_images/output_16_0.png" src="../../_images/output_16_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#%% Reconstruction and prediction error
+train_err = rom.test_error(db_train)
+test_err = rom.test_error(db_test)
+
+print(&#39;Mean Train error: &#39;, train_err)
+print(&#39;Mean Test error: &#39;, test_err)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Mean</span> <span class="n">Train</span> <span class="n">error</span><span class="p">:</span>  <span class="mf">0.18585298603714098</span>
+<span class="n">Mean</span> <span class="n">Test</span> <span class="n">error</span><span class="p">:</span>  <span class="mf">0.11119321870633797</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorial-2/tutorial-2.html" class="btn btn-neutral float-left" title="Test several frameworks at once" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorial-4/tutorial-4.html" class="btn btn-neutral float-right" title="Build a Multi Reduced Order Model (MultiROM)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

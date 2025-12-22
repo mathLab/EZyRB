@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.linear.Linear.predict
-=========================================
-
-.. currentmodule:: ezyrb.approximation.linear
-
-.. automethod:: Linear.predict

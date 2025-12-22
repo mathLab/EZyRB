@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DatabaseScaler &mdash; ezyrb 1.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DatabaseSplitter" href="database_splitter.html" />
+    <link rel="prev" title="Plugin" href="plugin.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ezyrb
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#plugin-system">Plugin System</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DatabaseScaler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database_splitter.html">DatabaseSplitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shift_snapshots.html">ShiftSnapshots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="automatic_shift_snapshots.html">AutomaticShiftSnapshots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aggregation.html">Aggregation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ezyrb</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="code.html">Code Documentation</a></li>
+      <li class="breadcrumb-item active">DatabaseScaler</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/database_scaler.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ezyrb.plugin.scaler">
+<span id="databasescaler"></span><h1>DatabaseScaler<a class="headerlink" href="#module-ezyrb.plugin.scaler" title="Link to this heading"></a></h1>
+<p>Module for Scaler plugin</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DatabaseScaler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Plugin</span></code></p>
+<p>The plugin to rescale the database of the reduced order model. It uses a
+user defined <cite>scaler</cite>, which has to have implemented the <cite>fit</cite>, <cite>transform</cite>
+and  <cite>inverse_trasform</cite> methods (i.e. <cite>sklearn</cite> interface), to rescale
+the parameters and/or the snapshots. It can be applied at the full order
+(<cite>mode=’full’</cite>), at the reduced one (<cite>mode=’reduced’</cite>) or both of them
+(<cite>mode=’both’</cite>).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scaler</strong> (<em>obj</em>) – a generic object which has to have implemented the
+<cite>fit</cite>, <cite>transform</cite> and  <cite>inverse_trasform</cite> methods (i.e. <cite>sklearn</cite>
+interface).</p></li>
+<li><p><strong>mode</strong> (<em>{'full'</em><em>, </em><em>'reduced'}</em>) – define if the rescaling has to be
+applied at the full order (‘full’) or at the reduced one (‘reduced’).</p></li>
+<li><p><strong>params</strong> (<em>{'parameters'</em><em>, </em><em>'snapshots'}</em>) – define if the rescaling has to
+be applied to the parameters or to the snapshots.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">ReducedOrderModel</span> <span class="k">as</span> <span class="n">ROM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb</span> <span class="kn">import</span> <span class="n">POD</span><span class="p">,</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">Database</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ezyrb.plugin</span> <span class="kn">import</span> <span class="n">DatabaseScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rbf</span> <span class="o">=</span> <span class="n">RBF</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scaler</span> <span class="o">=</span> <span class="n">DatabaseScaler</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="s1">&#39;snapshots&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span> <span class="o">=</span> <span class="n">ROM</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pod</span><span class="p">,</span> <span class="n">rbf</span><span class="p">,</span> <span class="n">plugins</span><span class="o">=</span><span class="p">[</span><span class="n">scaler</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rom</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Initialize the DatabaseScaler plugin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scaler</strong> – Scaler object with fit, transform, and inverse_transform methods.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – ‘full’ or ‘reduced’ - where to apply the scaling.</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – ‘parameters’ or ‘snapshots’ - what to scale.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_select_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler._select_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Helper function to select the proper matrix to rescale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db</strong> (<em>Database</em>) – The database object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The selected matrix (parameters or snapshots).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">fom_postprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler.fom_postprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">fom_preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler.fom_preprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mode</span></span></dt>
+<dd><p>Get the type of scaling. See class documentation for more info.</p>
+<p>rtype: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">rom_postprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler.rom_postprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">rom_preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/plugin/scaler.html#DatabaseScaler.rom_preprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Apply scaling to the reduced database before ROM processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rom</strong> (<em>ReducedOrderModel</em>) – The ROM instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target</span></span></dt>
+<dd><p>Get the type of scaling. See class documentation for more info.</p>
+<p>rtype: str</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plugin.html" class="btn btn-neutral float-left" title="Plugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="database_splitter.html" class="btn btn-neutral float-right" title="DatabaseSplitter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

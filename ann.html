@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANN &mdash; ezyrb 1.3.2 documentation</title>
+  <title>ANN &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.approximation.ann.ANN" href="_summaries/ezyrb.approximation.ann.ANN.html" />
-    <link rel="prev" title="ezyrb.approximation.gpr.GPR.optimal_mu" href="_summaries/ezyrb.approximation.gpr.GPR.optimal_mu.html" /> 
+    <link rel="next" title="NeighborsRegressor" href="neighbors_regressor.html" />
+    <link rel="prev" title="GPR" href="gpr.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,37 +43,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ANN</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.html">ezyrb.approximation.ann.ANN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.fit.html">ezyrb.approximation.ann.ANN.fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.predict.html">ezyrb.approximation.ann.ANN.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._convert_numpy_to_torch.html">ezyrb.approximation.ann.ANN._convert_numpy_to_torch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._convert_torch_to_numpy.html">ezyrb.approximation.ann.ANN._convert_torch_to_numpy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._build_model.html">ezyrb.approximation.ann.ANN._build_model</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="approximation.html">Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear.html">Linear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html">RBF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpr.html">GPR</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ANN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -107,30 +104,12 @@
 <p>Module for Artificial Neural Network (ANN) Prediction.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.html#ezyrb.approximation.ann.ANN" title="ezyrb.approximation.ann.ANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN</span></code></a></p></td>
-<td><p>Feed-Forward Artifical Neural Network (ANN).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.fit.html#ezyrb.approximation.ann.ANN.fit" title="ezyrb.approximation.ann.ANN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN.fit</span></code></a></p></td>
-<td><p>Build the ANN given 'points' and 'values' and perform training.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.predict.html#ezyrb.approximation.ann.ANN.predict" title="ezyrb.approximation.ann.ANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN.predict</span></code></a></p></td>
-<td><p>Evaluate the ANN at given 'new_points'.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._convert_numpy_to_torch.html#ezyrb.approximation.ann.ANN._convert_numpy_to_torch" title="ezyrb.approximation.ann.ANN._convert_numpy_to_torch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN._convert_numpy_to_torch</span></code></a></p></td>
-<td><p>Converting data type.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._convert_torch_to_numpy.html#ezyrb.approximation.ann.ANN._convert_torch_to_numpy" title="ezyrb.approximation.ann.ANN._convert_torch_to_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN._convert_torch_to_numpy</span></code></a></p></td>
-<td><p>Converting data type.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN._build_model.html#ezyrb.approximation.ann.ANN._build_model" title="ezyrb.approximation.ann.ANN._build_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANN._build_model</span></code></a></p></td>
-<td><p>Build the torch model. Considering the number of neurons per layer (self.layers), a feed-forward NN is defined: -  activation function from layer i&gt;=0 to layer i+1:    self.function[i]; activation function at the output layer:    Identity (by default). :param numpy.ndarray points: the coordinates of the given (training) points. :param numpy.ndarray values: the (training) values in the points.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ANN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_training</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_regularization=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_print=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_identity=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/approximation/ann.html#ANN"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.approximation.Approximation.html#ezyrb.approximation.Approximation" title="ezyrb.approximation.approximation.Approximation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Approximation</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Approximation</span></code></p>
 <p>Feed-Forward Artifical Neural Network (ANN).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -174,6 +153,22 @@ value is True.</p></li>
 </div>
 </dd>
 </dl>
+<p>Initialize an Artificial Neural Network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Ordered list with the number of neurons of each hidden layer.</p></li>
+<li><p><strong>function</strong> – Activation function(s) for each layer.</p></li>
+<li><p><strong>stop_training</strong> – Stopping criteria for training (iterations and/or tolerance).</p></li>
+<li><p><strong>loss</strong> – Loss function to use. Default is MSELoss.</p></li>
+<li><p><strong>optimizer</strong> – Optimizer class to use. Default is Adam.</p></li>
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Learning rate. Default is 0.001.</p></li>
+<li><p><strong>l2_regularization</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – L2 regularization coefficient. Default is 0.</p></li>
+<li><p><strong>frequency_print</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Frequency of printing during training. Default is 10.</p></li>
+<li><p><strong>last_identity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether the last activation is identity. Default is True.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em></dt>
@@ -182,21 +177,17 @@ value is True.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_build_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/approximation/ann.html#ANN._build_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Build the torch model.
-Considering the number of neurons per layer (self.layers), a
-feed-forward NN is defined:
--  activation function from layer i&gt;=0 to layer i+1:</p>
-<blockquote>
-<div><p>self.function[i]; activation function at the output layer:
-Identity (by default).</p>
-</div></blockquote>
+<dd><p>Build the torch neural network model.</p>
+<p>Constructs a feed-forward neural network with the specified layers
+and activation functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the coordinates of the given (training)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – The coordinates of the training points.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – The training values at the points.</p></li>
+</ul>
 </dd>
 </dl>
-<p>points.
-:param numpy.ndarray values: the (training) values in the points.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -205,7 +196,7 @@ Identity (by default).</p>
 <dd><p>Converting data type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>array</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – input array.</p>
+<dd class="field-odd"><p><strong>array</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – input array.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the tensorial counter-part of the input array.</p>
@@ -261,9 +252,9 @@ respectively.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the coordinates of the given (training)
+<li><p><strong>points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the coordinates of the given (training)
 points.</p></li>
-<li><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p></li>
 </ul>
 </dd>
 </dl>
@@ -281,7 +272,7 @@ points.</p></li>
 <dd class="field-even"><p>the predicted values via the ANN.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -294,15 +285,15 @@ points.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.approximation.gpr.GPR.optimal_mu.html" class="btn btn-neutral float-left" title="ezyrb.approximation.gpr.GPR.optimal_mu" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.approximation.ann.ANN.html" class="btn btn-neutral float-right" title="ezyrb.approximation.ann.ANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="gpr.html" class="btn btn-neutral float-left" title="GPR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="neighbors_regressor.html" class="btn btn-neutral float-right" title="NeighborsRegressor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

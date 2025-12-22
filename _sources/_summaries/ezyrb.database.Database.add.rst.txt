@@ -1,6 +1,0 @@
-﻿ezyrb.database.Database.add
-===========================
-
-.. currentmodule:: ezyrb.database
-
-.. automethod:: Database.add

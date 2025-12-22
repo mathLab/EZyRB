@@ -1,6 +1,0 @@
-﻿ezyrb.regular\_grid.RegularGrid.predict
-=======================================
-
-.. currentmodule:: ezyrb.regular_grid
-
-.. automethod:: RegularGrid.predict

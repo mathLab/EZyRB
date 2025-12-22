@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AE &mdash; ezyrb 1.3.2 documentation</title>
+  <title>AE &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.reduction.ae.AE" href="_summaries/ezyrb.reduction.ae.AE.html" />
-    <link rel="prev" title="ezyrb.reduction.pod.POD._corrm" href="_summaries/ezyrb.reduction.pod.POD._corrm.html" /> 
+    <link rel="next" title="PODAE" href="podae.html" />
+    <link rel="prev" title="POD" href="pod.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,38 +43,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">AE</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.html">ezyrb.reduction.ae.AE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.fit.html">ezyrb.reduction.ae.AE.fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.reduce.html">ezyrb.reduction.ae.AE.reduce</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.expand.html">ezyrb.reduction.ae.AE.expand</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.transform.html">ezyrb.reduction.ae.AE.transform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.inverse_transform.html">ezyrb.reduction.ae.AE.inverse_transform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE._build_model.html">ezyrb.reduction.ae.AE._build_model</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="reduction.html">Reduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pod.html">POD</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="podae.html">PODAE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="podae.html">PODAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -108,33 +99,12 @@
 <p>Module for FNN-Autoencoders.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.html#ezyrb.reduction.ae.AE" title="ezyrb.reduction.ae.AE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE</span></code></a></p></td>
-<td><p>Feed-Forward AutoEncoder class (AE)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.fit.html#ezyrb.reduction.ae.AE.fit" title="ezyrb.reduction.ae.AE.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.fit</span></code></a></p></td>
-<td><p>Build the AE given 'values' and perform training.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.reduce.html#ezyrb.reduction.ae.AE.reduce" title="ezyrb.reduction.ae.AE.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.reduce</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.expand.html#ezyrb.reduction.ae.AE.expand" title="ezyrb.reduction.ae.AE.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.expand</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.transform.html#ezyrb.reduction.ae.AE.transform" title="ezyrb.reduction.ae.AE.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.transform</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.inverse_transform.html#ezyrb.reduction.ae.AE.inverse_transform" title="ezyrb.reduction.ae.AE.inverse_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE.inverse_transform</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE._build_model.html#ezyrb.reduction.ae.AE._build_model" title="ezyrb.reduction.ae.AE._build_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AE._build_model</span></code></a></p></td>
-<td><p>Build the torch model.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers_decoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_decoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_training</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_regularization=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency_print=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_identity=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/ae.html#AE"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.reduction.Reduction.html#ezyrb.reduction.Reduction" title="ezyrb.reduction.reduction.Reduction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Reduction</span></code></a>, <a class="reference internal" href="_summaries/ezyrb.approximation.ann.ANN.html#ezyrb.approximation.ann.ANN" title="ezyrb.approximation.ann.ANN"><code class="xref py py-class docutils literal notranslate"><span class="pre">ANN</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Reduction</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ANN</span></code></p>
 <p>Feed-Forward AutoEncoder class (AE)</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -208,7 +178,7 @@ Identity (by default).</p></li>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the set values one wants to reduce.</p>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the set values one wants to reduce.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -250,7 +220,7 @@ respectively.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the (training) values in the points.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -272,7 +242,7 @@ respectively.</p></li>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -287,7 +257,7 @@ respectively.</p></li>
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,15 +270,15 @@ respectively.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.reduction.pod.POD._corrm.html" class="btn btn-neutral float-left" title="ezyrb.reduction.pod.POD._corrm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.reduction.ae.AE.html" class="btn btn-neutral float-right" title="ezyrb.reduction.ae.AE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pod.html" class="btn btn-neutral float-left" title="POD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="podae.html" class="btn btn-neutral float-right" title="PODAE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

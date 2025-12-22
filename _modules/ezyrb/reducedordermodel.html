@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.reducedordermodel &mdash; ezyrb 1.3.2 documentation</title>
+  <title>ezyrb.reducedordermodel &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="../../_static/documentation_options.js?v=28d163b9"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -40,10 +40,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
 </ul>
 
@@ -88,6 +95,26 @@
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
 <span class="k">class</span> <span class="nc">ReducedOrderModelInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract interface for Reduced Order Model classes.</span>
+<span class="sd">    </span>
+<span class="sd">    This class defines the common interface and plugin execution mechanism</span>
+<span class="sd">    for all ROM implementations.</span>
+<span class="sd">    </span>
+<span class="sd">    :Example:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import POD, RBF, Database</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; params = np.array([[1.0], [2.0], [3.0]])</span>
+<span class="sd">        &gt;&gt;&gt; snapshots = np.random.rand(3, 100)</span>
+<span class="sd">        &gt;&gt;&gt; db = Database(params, snapshots)</span>
+<span class="sd">        &gt;&gt;&gt; pod = POD(rank=5)</span>
+<span class="sd">        &gt;&gt;&gt; rbf = RBF()</span>
+<span class="sd">        &gt;&gt;&gt; rom = ROM(db, pod, rbf)</span>
+<span class="sd">        &gt;&gt;&gt; rom.fit()</span>
+<span class="sd">        &gt;&gt;&gt; prediction = rom.predict([[1.5]])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_execute_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">when</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -147,10 +174,16 @@
 <span class="sd">         &gt;&gt;&gt; rom.predict(new_param)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ReducedOrderModel.__init__">
-<a class="viewcode-back" href="../../_summaries/ezyrb.reducedordermodel.ReducedOrderModel.html#ezyrb.reducedordermodel.ReducedOrderModel.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">approximation</span><span class="p">,</span>
                  <span class="n">plugins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Reduced Order Model.</span>
+<span class="sd">        </span>
+<span class="sd">        :param Database database: The database for training.</span>
+<span class="sd">        :param Reduction reduction: The reduction method.</span>
+<span class="sd">        :param Approximation approximation: The approximation method.</span>
+<span class="sd">        :param list plugins: List of plugins. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span>
@@ -161,12 +194,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">plugins</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ReducedOrderModel.clean">
 <a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.clean">[docs]</a>
     <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clean all internal databases used during training and prediction.</span>
+<span class="sd">        </span>
+<span class="sd">        This method resets all training, prediction, test, and validation</span>
+<span class="sd">        databases to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_full_database</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_reduced_database</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">predict_full_database</span> <span class="o">=</span> <span class="kc">None</span>
@@ -244,6 +282,14 @@
 <div class="viewcode-block" id="ReducedOrderModel.fit_reduction">
 <a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit_reduction">[docs]</a>
     <span class="k">def</span> <span class="nf">fit_reduction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the reduction method on the training database.</span>
+<span class="sd">        </span>
+<span class="sd">        This method applies the reduction technique to the snapshots matrix</span>
+<span class="sd">        of the training database.</span>
+<span class="sd">        </span>
+<span class="sd">        :raises RuntimeError: If the training database has not been set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># for k, rom_ in self.roms.items():</span>
         <span class="c1">#     rom_[&#39;reduction&#39;].fit(rom_[&#39;database&#39;].snapshots_matrix.T)</span>
@@ -256,6 +302,13 @@
 <div class="viewcode-block" id="ReducedOrderModel._reduce_database">
 <a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel._reduce_database">[docs]</a>
     <span class="k">def</span> <span class="nf">_reduce_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduce a database using the fitted reduction method.</span>
+<span class="sd">        </span>
+<span class="sd">        :param Database db: The database to reduce.</span>
+<span class="sd">        :return: A new database with reduced snapshots.</span>
+<span class="sd">        :rtype: Database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Database</span><span class="p">(</span>
             <span class="n">db</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -265,6 +318,14 @@
 <div class="viewcode-block" id="ReducedOrderModel.fit_approximation">
 <a class="viewcode-back" href="../../reducedordermodel.html#ezyrb.reducedordermodel.ReducedOrderModel.fit_approximation">[docs]</a>
     <span class="k">def</span> <span class="nf">fit_approximation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the approximation method on the reduced training database.</span>
+<span class="sd">        </span>
+<span class="sd">        This method trains the approximation technique on the reduced space</span>
+<span class="sd">        representation of the snapshots.</span>
+<span class="sd">        </span>
+<span class="sd">        :raises RuntimeError: If the reduced training database has not been created.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;train_reduced_database&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span>
@@ -644,6 +705,18 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">plugins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rom_plugin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Multi-ROM with multiple databases and methods.</span>
+<span class="sd">        </span>
+<span class="sd">        Supports multiple initialization signatures:</span>
+<span class="sd">        - (database_dict, reduction_dict, approximation_dict)</span>
+<span class="sd">        - (database, roms_dict)</span>
+<span class="sd">        - (roms_dict,)</span>
+<span class="sd">        </span>
+<span class="sd">        :param args: Variable arguments for different initialization modes.</span>
+<span class="sd">        :param list plugins: Global plugins for the Multi-ROM. Default is None.</span>
+<span class="sd">        :param rom_plugin: Plugin to add to each individual ROM. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1119,7 +1192,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

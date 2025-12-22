@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.approximation.ann &mdash; ezyrb 1.3.2 documentation</title>
+  <title>ezyrb.approximation.ann &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="../../../_static/documentation_options.js?v=28d163b9"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -40,10 +40,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../code.html">Code Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">License</a></li>
 </ul>
 
@@ -123,11 +130,22 @@
 <span class="sd">        &gt;&gt;&gt; print(len(ann.loss_trend))</span>
 <span class="sd">        &gt;&gt;&gt; print(ann.loss_trend[-1])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ANN.__init__">
-<a class="viewcode-back" href="../../../_summaries/ezyrb.approximation.ann.ANN.html#ezyrb.approximation.ann.ANN.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">stop_training</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">l2_regularization</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">frequency_print</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">last_identity</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an Artificial Neural Network.</span>
+<span class="sd">        </span>
+<span class="sd">        :param list layers: Ordered list with the number of neurons of each hidden layer.</span>
+<span class="sd">        :param function: Activation function(s) for each layer.</span>
+<span class="sd">        :param stop_training: Stopping criteria for training (iterations and/or tolerance).</span>
+<span class="sd">        :param loss: Loss function to use. Default is MSELoss.</span>
+<span class="sd">        :param optimizer: Optimizer class to use. Default is Adam.</span>
+<span class="sd">        :param float lr: Learning rate. Default is 0.001.</span>
+<span class="sd">        :param float l2_regularization: L2 regularization coefficient. Default is 0.</span>
+<span class="sd">        :param int frequency_print: Frequency of printing during training. Default is 10.</span>
+<span class="sd">        :param bool last_identity: Whether the last activation is identity. Default is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
 
@@ -156,8 +174,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">frequency_print</span> <span class="o">=</span> <span class="n">frequency_print</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">l2_regularization</span> <span class="o">=</span> <span class="n">l2_regularization</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">l2_regularization</span> <span class="o">=</span> <span class="n">l2_regularization</span>
 
 <div class="viewcode-block" id="ANN._convert_numpy_to_torch">
 <a class="viewcode-back" href="../../../ann.html#ezyrb.approximation.ann.ANN._convert_numpy_to_torch">[docs]</a>
@@ -211,15 +228,13 @@
 <a class="viewcode-back" href="../../../ann.html#ezyrb.approximation.ann.ANN._build_model">[docs]</a>
     <span class="k">def</span> <span class="nf">_build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Build the torch model.</span>
-<span class="sd">        Considering the number of neurons per layer (self.layers), a</span>
-<span class="sd">        feed-forward NN is defined:</span>
-<span class="sd">        -  activation function from layer i&gt;=0 to layer i+1:</span>
-<span class="sd">           self.function[i]; activation function at the output layer:</span>
-<span class="sd">           Identity (by default).</span>
-<span class="sd">        :param numpy.ndarray points: the coordinates of the given (training)</span>
-<span class="sd">        points.</span>
-<span class="sd">        :param numpy.ndarray values: the (training) values in the points.</span>
+<span class="sd">        Build the torch neural network model.</span>
+<span class="sd">        </span>
+<span class="sd">        Constructs a feed-forward neural network with the specified layers</span>
+<span class="sd">        and activation functions.</span>
+<span class="sd">        </span>
+<span class="sd">        :param numpy.ndarray points: The coordinates of the training points.</span>
+<span class="sd">        :param numpy.ndarray values: The training values at the points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">layers</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -331,7 +346,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

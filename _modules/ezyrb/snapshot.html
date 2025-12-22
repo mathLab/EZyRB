@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ezyrb.snapshot &mdash; ezyrb 1.3.2 documentation</title>
+  <title>ezyrb.snapshot &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="../../_static/documentation_options.js?v=28d163b9"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -40,10 +40,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
 </ul>
 
@@ -81,8 +88,37 @@
 <div class="viewcode-block" id="Snapshot">
 <a class="viewcode-back" href="../../snapshot.html#ezyrb.snapshot.Snapshot">[docs]</a>
 <span class="k">class</span> <span class="nc">Snapshot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for representing a discretized solution snapshot.</span>
+<span class="sd">    </span>
+<span class="sd">    This class encapsulates solution values and their spatial coordinates,</span>
+<span class="sd">    providing methods for manipulation and visualization.</span>
+<span class="sd">    </span>
+<span class="sd">    :param array_like values: The solution values.</span>
+<span class="sd">    :param array_like space: The spatial coordinates corresponding to the values.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    </span>
+<span class="sd">    :Example:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from ezyrb import Snapshot</span>
+<span class="sd">        &gt;&gt;&gt; space = np.linspace(0, 1, 50)</span>
+<span class="sd">        &gt;&gt;&gt; values = np.sin(2 * np.pi * space)</span>
+<span class="sd">        &gt;&gt;&gt; snap = Snapshot(values, space)</span>
+<span class="sd">        &gt;&gt;&gt; print(snap.values.shape)</span>
+<span class="sd">        (50,)</span>
+<span class="sd">        &gt;&gt;&gt; print(snap.space.shape)</span>
+<span class="sd">        (50,)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Snapshot object.</span>
+<span class="sd">        </span>
+<span class="sd">        :param values: The solution values. Can be a Snapshot instance or</span>
+<span class="sd">            an array-like object.</span>
+<span class="sd">        :param space: The spatial coordinates. Default is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">Snapshot</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">values</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">space</span>
@@ -99,6 +135,12 @@
 
     <span class="nd">@values</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_values</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the snapshot values with validation.</span>
+<span class="sd">        </span>
+<span class="sd">        :param array_like new_values: The new snapshot values.</span>
+<span class="sd">        :raises ValueError: If the length of new values doesn&#39;t match the space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;space&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_values</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid ndof for the current space.&#39;</span><span class="p">)</span>
@@ -114,6 +156,12 @@
 
     <span class="nd">@space</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_space</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the snapshot space with validation.</span>
+<span class="sd">        </span>
+<span class="sd">        :param array_like new_space: The new spatial coordinates.</span>
+<span class="sd">        :raises ValueError: If the length of new space doesn&#39;t match the values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">new_space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_space</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid ndof for the current space.&#39;</span><span class="p">)</span>
@@ -150,7 +198,7 @@
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

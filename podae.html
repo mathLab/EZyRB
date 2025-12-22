@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PODAE &mdash; ezyrb 1.3.2 documentation</title>
+  <title>PODAE &mdash; ezyrb 1.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -14,14 +14,14 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8ca9e7a0"></script>
+      <script src="_static/documentation_options.js?v=28d163b9"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ezyrb.reduction.pod_ae.PODAE" href="_summaries/ezyrb.reduction.pod_ae.PODAE.html" />
-    <link rel="prev" title="ezyrb.reduction.ae.AE._build_model" href="_summaries/ezyrb.reduction.ae.AE._build_model.html" /> 
+    <link rel="next" title="Plugin" href="plugin.html" />
+    <link rel="prev" title="AE" href="ae.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,37 +43,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter.html">Parameter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="snapshot.html">Snapshot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="approximation.html">Approximation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linear.html">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rbf.html">RBF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radius_neighbors_regressor.html">RadiusNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kneighbors_regressor.html">KNeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neighbors_regressor.html">NeighborsRegressor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gpr.html">GPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ann.html">ANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reduction.html">Reduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pod.html">POD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ae.html">AE</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PODAE</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.html">ezyrb.reduction.pod_ae.PODAE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.fit.html">ezyrb.reduction.pod_ae.PODAE.fit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.reduce.html">ezyrb.reduction.pod_ae.PODAE.reduce</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.expand.html">ezyrb.reduction.pod_ae.PODAE.expand</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.transform.html">ezyrb.reduction.pod_ae.PODAE.transform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html">ezyrb.reduction.pod_ae.PODAE.inverse_transform</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="code.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#approximation-methods">Approximation Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="code.html#reduction-methods">Reduction Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="reduction.html">Reduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pod.html">POD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ae.html">AE</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PODAE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="reducedordermodel.html">ReducedOrderModel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regular_grid.html">RegularGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code.html#plugin-system">Plugin System</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
@@ -107,69 +99,30 @@
 <p>Module for FNN-Autoencoders.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.html#ezyrb.reduction.pod_ae.PODAE" title="ezyrb.reduction.pod_ae.PODAE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE</span></code></a></p></td>
-<td><p>Feed-Forward AutoEncoder class with POD (AE)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.fit.html#ezyrb.reduction.pod_ae.PODAE.fit" title="ezyrb.reduction.pod_ae.PODAE.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE.fit</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.reduce.html#ezyrb.reduction.pod_ae.PODAE.reduce" title="ezyrb.reduction.pod_ae.PODAE.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE.reduce</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.expand.html#ezyrb.reduction.pod_ae.PODAE.expand" title="ezyrb.reduction.pod_ae.PODAE.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE.expand</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.transform.html#ezyrb.reduction.pod_ae.PODAE.transform" title="ezyrb.reduction.pod_ae.PODAE.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE.transform</span></code></a></p></td>
-<td><p>Reduces the given snapshots.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_summaries/ezyrb.reduction.pod_ae.PODAE.inverse_transform.html#ezyrb.reduction.pod_ae.PODAE.inverse_transform" title="ezyrb.reduction.pod_ae.PODAE.inverse_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PODAE.inverse_transform</span></code></a></p></td>
-<td><p>Projects a reduced to full order solution.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PODAE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pod</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ae</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/pod_ae.html#PODAE"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="_summaries/ezyrb.reduction.pod.POD.html#ezyrb.reduction.pod.POD" title="ezyrb.reduction.pod.POD"><code class="xref py py-class docutils literal notranslate"><span class="pre">POD</span></code></a>, <a class="reference internal" href="_summaries/ezyrb.reduction.ae.AE.html#ezyrb.reduction.ae.AE" title="ezyrb.reduction.ae.AE"><code class="xref py py-class docutils literal notranslate"><span class="pre">AE</span></code></a></p>
-<p>Feed-Forward AutoEncoder class with POD (AE)</p>
-<p>Perform the Proper Orthogonal Decomposition.</p>
-<dl class="field-list">
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">POD</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">AE</span></code></p>
+<p>Combined POD and AutoEncoder reduction class.</p>
+<p>This class first applies POD to reduce the dimensionality, then uses
+an autoencoder for further reduction in the latent space.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>method</strong> (<em>{'svd'</em><em>, </em><em>'randomized_svd'</em><em>, </em><em>'correlation_matrix'}</em>) – the implementation to use for the computation of the POD
-modes. Default is ‘svd’.</p></li>
-<li><p><strong>rank</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – the rank for the truncation; If 0, the method computes
-the optimal rank and uses it for truncation; if positive interger,
-the method uses the argument for the truncation; if float between 0
-and 1, the rank is the number of the biggest singular values that
-are needed to reach the ‘energy’ specified by <cite>svd_rank</cite>; if -1,
-the method does not compute truncation. Default is 0. The <cite>rank</cite>
-parameter is available using all the available methods.</p></li>
-<li><p><strong>subspace_iteration</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – the number of subspace iteration in the
-randomized svd. It is available only using the ‘randomized_svd’
-method. Default value is 1.</p></li>
-<li><p><strong>omega_rank</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – the number of columns of the Omega random
-matrix. If set to 0, the number of columns is equal to twice the
-<cite>rank</cite> (if it has explicitly passed as integer) or twice the number
-of input snapshots. Default value is 0. It is available only using
-the ‘randomized_svd’ method.</p></li>
-<li><p><strong>save_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – reduce the usage of the memory, despite an
-higher number of operations. It is available only using the
-‘correlation_matrix’ method. Default value is False.</p></li>
+<li><p><strong>pod</strong> (<em>POD</em>) – The POD instance for initial reduction.</p></li>
+<li><p><strong>ae</strong> (<em>AE</em>) – The AutoEncoder instance for latent space reduction.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Example<span class="colon">:</span></dt>
-<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reduced_snapshots</span> <span class="o">=</span> <span class="n">pod</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Other possible constructors are ...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;randomized_svd&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subspace_iteration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<span class="go">              omega_rank=10)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pod</span> <span class="o">=</span> <span class="n">POD</span><span class="p">(</span><span class="s1">&#39;correlation_matrix&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
+</dl>
+<p>Initialize the PODAE reducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pod</strong> (<em>POD</em>) – The POD instance.</p></li>
+<li><p><strong>ae</strong> (<em>AE</em>) – The AutoEncoder instance.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -195,7 +148,14 @@ higher number of operations. It is available only using the
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ezyrb/reduction/pod_ae.html#PODAE.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Fit the PODAE on the snapshots.</p>
+<p>First applies POD, then trains the autoencoder on POD coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – The input snapshots matrix (stored by column).</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -214,7 +174,7 @@ higher number of operations. It is available only using the
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -229,7 +189,7 @@ higher number of operations. It is available only using the
 <dd><p>Reduces the given snapshots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
+<dd class="field-odd"><p><strong>X</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – the input snapshots matrix (stored by column).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,15 +202,15 @@ higher number of operations. It is available only using the
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="_summaries/ezyrb.reduction.ae.AE._build_model.html" class="btn btn-neutral float-left" title="ezyrb.reduction.ae.AE._build_model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="_summaries/ezyrb.reduction.pod_ae.PODAE.html" class="btn btn-neutral float-right" title="ezyrb.reduction.pod_ae.PODAE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ae.html" class="btn btn-neutral float-left" title="AE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plugin.html" class="btn btn-neutral float-right" title="Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2016-2025, EZyRB contributors.
-      <span class="lastupdated">Last updated on Dec 12, 2025.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
       </span></p>
   </div>
 

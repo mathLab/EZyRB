@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ezyrb.plugin.aggregation &mdash; ezyrb 1.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=28d163b9"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ezyrb
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ezyrb</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ezyrb.plugin.aggregation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ezyrb.plugin.aggregation</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">..approximation.rbf</span> <span class="kn">import</span> <span class="n">RBF</span>
+<span class="kn">from</span> <span class="nn">..approximation.linear</span> <span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span> <span class="nn">..database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+
+
+<div class="viewcode-block" id="Aggregation">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation">[docs]</a>
+<span class="k">class</span> <span class="nc">Aggregation</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The `Aggregation` plugin class.</span>
+<span class="sd">    It implements a general framework for space-dependent aggregation of</span>
+<span class="sd">    multiple reduced order models (ROMs). The aggregation weights can be</span>
+<span class="sd">    computed either through standard space-dependent methods (e.g., Gaussian</span>
+<span class="sd">    functions) or by fitting a regression/interpolation model (e.g., RBF,</span>
+<span class="sd">    linear, ANN) on the validation set.</span>
+
+<span class="sd">    Reference: Ivagnes A., Tonicello N., Rozza G. (2024). `Enhancing non-intrusive</span>
+<span class="sd">    reduced-order models with space-dependent aggregation methods`, Acta Mechanica.</span>
+
+<span class="sd">    :param fit_function: a regression/interpolation model to fit the weights</span>
+<span class="sd">        in the validation set. If None, standard space-dependent aggregation</span>
+<span class="sd">        methods are used (default is None).</span>
+<span class="sd">    :param predict_function: a regression/interpolation model to predict the</span>
+<span class="sd">        weights in the test set. Default is a linear interpolation.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    &gt;&gt;&gt; from ezyrb import POD, RBF, GPR, Database, Snapshot, Parameter, Linear, ANN</span>
+<span class="sd">    &gt;&gt;&gt; from ezyrb import ReducedOrderModel as ROM</span>
+<span class="sd">    &gt;&gt;&gt; from ezyrb.plugin import Aggregation</span>
+<span class="sd">    &gt;&gt;&gt; pod = POD(rank=10)</span>
+<span class="sd">    &gt;&gt;&gt; rbf = RBF()</span>
+<span class="sd">    &gt;&gt;&gt; gpr = GPR()</span>
+<span class="sd">    &gt;&gt;&gt; db = Database(param, snapshots.T)</span>
+<span class="sd">    &gt;&gt;&gt; rom1 = ROM(db, pod, rbf)</span>
+<span class="sd">    &gt;&gt;&gt; rom2 = ROM(db, pod, gpr)</span>
+<span class="sd">    &gt;&gt;&gt; mrom = MROM({&#39;rbf&#39;: rom1, &#39;gpr&#39;: rom2}, plugins=[Aggregation(</span>
+<span class="sd">    ...     fit_function=None, predict_function=Linear())])</span>
+<span class="sd">    &gt;&gt;&gt; mrom.fit()</span>
+<span class="sd">    &gt;&gt;&gt; pred = mrom.predict(new_param)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">predict_function</span><span class="o">=</span><span class="n">Linear</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Aggregation plugin.</span>
+<span class="sd">        </span>
+<span class="sd">        :param fit_function: Regression model to fit weights in validation set.</span>
+<span class="sd">            If None, uses standard space-dependent methods. Default is None.</span>
+<span class="sd">        :param predict_function: Regression model to predict weights in test set.</span>
+<span class="sd">            Default is Linear().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="o">=</span> <span class="n">fit_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict_function</span> <span class="o">=</span> <span class="n">predict_function</span>
+
+<div class="viewcode-block" id="Aggregation._check_sum_gaussians">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation._check_sum_gaussians">[docs]</a>
+    <span class="k">def</span> <span class="nf">_check_sum_gaussians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrom</span><span class="p">,</span> <span class="n">sum_gaussians</span><span class="p">,</span> <span class="n">gaussians</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to check if the sum of the Gaussian functions is</span>
+<span class="sd">        on-zero in all the points of the validation set.</span>
+<span class="sd">        If there are zero values, the same weight/gaussian is taken for all the ROMs</span>
+<span class="sd">        at those points.</span>
+
+<span class="sd">        :param mrom: the multi reduced order model.</span>
+<span class="sd">        :param sum_gaussians: the sum of the Gaussian functions.</span>
+<span class="sd">        :param gaussians: the Gaussian functions.</span>
+
+<span class="sd">        :return: the corrected Gaussian functions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zero_values</span> <span class="o">=</span> <span class="n">sum_gaussians</span> <span class="o">&lt;</span> <span class="mf">1e-5</span> <span class="c1"># tolerance to avoid numerical issues</span>
+       
+        <span class="k">if</span> <span class="n">zero_values</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">gaussians</span><span class="p">[:,</span> <span class="n">zero_values</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">)</span> <span class="c1"># equal weights</span>
+        <span class="k">return</span> <span class="n">gaussians</span></div>
+
+
+<div class="viewcode-block" id="Aggregation._optimize_sigma">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation._optimize_sigma">[docs]</a>
+    <span class="k">def</span> <span class="nf">_optimize_sigma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrom</span><span class="p">,</span> <span class="n">sigma_range</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to optimize the sigma parameter in the Gaussian functions</span>
+<span class="sd">        through a minimization procedure on the validation set.</span>
+
+<span class="sd">        :param mrom: the multi reduced order model.</span>
+<span class="sd">        :param sigma_range: the range of values to search for the optimal sigma.</span>
+
+<span class="sd">        :return: the optimal sigma value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">obj_func</span><span class="p">(</span><span class="n">sigma</span><span class="p">):</span>
+            <span class="c1"># compute test error of multiROM from current sigma</span>
+            <span class="n">g_sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_validation_weights</span><span class="p">(</span><span class="n">mrom</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">mrom_prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">):</span>
+                <span class="n">mrom_prediction</span> <span class="o">+=</span> <span class="n">g_sigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">*</span> <span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">[</span><span class="n">rom</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="p">)</span><span class="o">.</span><span class="n">snapshots_matrix</span>
+            <span class="n">test_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mrom_prediction</span> <span class="o">-</span> <span class="n">mrom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span>  <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">test_error</span>
+        <span class="c1"># minimization procedure</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">sigma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="n">method</span><span class="o">=</span><span class="s2">&quot;L-BFGS-B&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">sigma_range</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal sigma value in weights: &#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="Aggregation._compute_validation_weights">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation._compute_validation_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">_compute_validation_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrom</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to compute the weights in the validation set</span>
+<span class="sd">        through standard space-dependent aggregation methods.</span>
+
+<span class="sd">        :param mrom: the multi reduced order model.</span>
+<span class="sd">        :param sigma: the sigma parameter in the Gaussian functions.</span>
+<span class="sd">        :param normalized: if True, the weights are normalized to sum to 1</span>
+<span class="sd">            at each spatial point (default is False).</span>
+
+<span class="sd">        :return: the weights in the validation set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validation_predicted</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">validation_predicted</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="p">)</span><span class="o">.</span><span class="n">snapshots_matrix</span>
+
+        <span class="n">g</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">validation_predicted</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">snap</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span>
+            <span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">v</span> <span class="o">-</span> <span class="n">snap</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="n">g_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="n">g_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_sum_gaussians</span><span class="p">(</span><span class="n">mrom</span><span class="p">,</span> <span class="n">g_tensor</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">g_tensor</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">normalized</span><span class="p">:</span>
+            <span class="n">g_tensor</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">g_tensor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">g_tensor</span></div>
+
+
+<div class="viewcode-block" id="Aggregation.fit_postprocessing">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation.fit_postprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit_postprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute/fit the weights in the validation set.</span>
+<span class="sd">        If fit_function is None, the weights are computed through standard</span>
+<span class="sd">        space-dependent aggregation methods (e.g., Gaussian functions).</span>
+<span class="sd">        If fit_function is not None, the weights are fitted through the</span>
+<span class="sd">        provided regression/interpolation model (e.g., RBF, linear, ANN).</span>
+
+<span class="sd">        :param mrom: the multi reduced order model.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rom</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># concatenate params and space</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Loop over the number of snapshots in the validation database</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># Get the space coordinates for the i-th snapshot</span>
+            <span class="n">space</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">get_snapshot_space</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="c1"># Get the parameters for the i-th snapshot</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="c1"># Create the input array for the i-th snapshot</span>
+            <span class="n">snapshot_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span>
+                <span class="n">space</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="p">])</span>
+            <span class="c1"># Append the input array to the list</span>
+            <span class="n">input_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snapshot_input</span><span class="p">)</span>
+        <span class="c1"># Concatenate the input arrays for all snapshots</span>
+        <span class="n">input_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+
+        <span class="c1"># Fit the regression/interpolation that will be used to predict the</span>
+        <span class="c1"># weights in the test database</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            
+            <span class="n">optimal_sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimize_sigma</span><span class="p">(</span><span class="n">mrom</span><span class="p">)</span>
+            <span class="n">g_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_validation_weights</span><span class="p">(</span><span class="n">mrom</span><span class="p">,</span> <span class="n">optimal_sigma</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+ 
+            <span class="bp">self</span><span class="o">.</span><span class="n">predict_functions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="n">g_</span> <span class="o">=</span> <span class="n">g_tensor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="c1"># do a copy of the function used to predict the weights,</span>
+                <span class="c1"># otherwise we use the same for all the ROMs</span>
+                <span class="n">rom_func</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_function</span><span class="p">)</span>
+                <span class="c1"># replace NaN with 0</span>
+                <span class="c1"># TODO: this is a temporary fix, we should handle NaNs in a better way</span>
+                <span class="n">g_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">g_</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">)</span>
+                <span class="n">rom_func</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">g_</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">predict_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rom_func</span><span class="p">)</span>
+        
+ 
+         <span class="c1"># directly fit a regression to minimize the discrepancy between the aggregation and the snapshots</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snaps</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">validation_full_database</span><span class="o">.</span><span class="n">snapshots_matrix</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">snaps</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="Aggregation.predict_postprocessing">
+<a class="viewcode-back" href="../../../aggregation.html#ezyrb.plugin.aggregation.Aggregation.predict_postprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict_postprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the weights in the test set and the predicted solution</span>
+<span class="sd">        as a convex combination of the predicted solutions of the</span>
+<span class="sd">        individual ROMs.</span>
+
+<span class="sd">        :param mrom: the multi reduced order model.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># prepare the input for the prediction</span>
+        <span class="n">predict_weights</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="n">db</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">multi_predict_database</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="n">input_list</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Loop over the number of snapshots in the prediction database</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">predict_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>  
+            <span class="c1"># Get the space coordinates for the i-th snapshot</span>
+            <span class="n">space</span> <span class="o">=</span> <span class="n">mrom</span><span class="o">.</span><span class="n">train_full_database</span><span class="o">.</span><span class="n">get_snapshot_space</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="c1"># Get the parameters for the i-th snapshot</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">mrom</span><span class="o">.</span><span class="n">predict_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="c1"># Create the input array for the i-th snapshot</span>
+            <span class="n">snapshot_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span>
+                <span class="n">space</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="p">])</span>
+            <span class="c1"># Append the input array to the list</span>
+            <span class="n">input_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snapshot_input</span><span class="p">)</span>
+        <span class="c1"># Concatenate the input arrays for all snapshots</span>
+        <span class="n">input_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+        
+        <span class="c1"># initialize weights</span>
+        <span class="n">mrom</span><span class="o">.</span><span class="n">weights_predict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># predict weights with regression and normalize them</span>
+        <span class="c1"># case without fit_function (where we use the standard space-dependent aggregation methods)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            
+            <span class="n">gaussians_test</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="n">g_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_functions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
+                <span class="n">gaussians_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g_</span><span class="p">)</span>
+            <span class="n">gaussians_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gaussians_test</span><span class="p">)</span>
+            <span class="n">gaussians_test</span> <span class="o">=</span> <span class="n">gaussians_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">),</span>
+                    <span class="n">db</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="c1"># normalize weights</span>
+            <span class="n">predict_weights</span> <span class="o">=</span> <span class="n">gaussians_test</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gaussians_test</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># compute predicted solution as convex combination of the reduced solutions</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">):</span>
+                <span class="n">mrom</span><span class="o">.</span><span class="n">weights_predict</span><span class="p">[</span><span class="n">rom</span><span class="p">]</span> <span class="o">=</span> <span class="n">predict_weights</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+                <span class="n">db</span> <span class="o">=</span> <span class="n">mrom</span><span class="o">.</span><span class="n">multi_predict_database</span><span class="p">[</span><span class="n">rom</span><span class="p">]</span>
+ 
+        <span class="c1"># case with fit_function (ANN)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_function</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
+            <span class="c1"># compute predicted solution as convex combination of the reduced solutions</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="p">):</span>
+                <span class="n">mrom</span><span class="o">.</span><span class="n">weights_predict</span><span class="p">[</span><span class="n">rom</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                    <span class="n">db</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># compute the prediction</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">mrom</span><span class="o">.</span><span class="n">weights_predict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span>
+                <span class="n">mrom</span><span class="o">.</span><span class="n">multi_predict_database</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">snapshots_matrix</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">mrom</span><span class="o">.</span><span class="n">roms</span><span class="o">.</span><span class="n">keys</span><span class="p">())],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">mrom</span><span class="o">.</span><span class="n">predict_full_database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span>
+            <span class="n">mrom</span><span class="o">.</span><span class="n">predict_full_database</span><span class="o">.</span><span class="n">parameters_matrix</span><span class="p">,</span>
+            <span class="n">prediction</span>
+            <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2016-2025, EZyRB contributors.
+      <span class="lastupdated">Last updated on Dec 22, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

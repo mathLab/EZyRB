@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.gpr.GPR.predict
-===================================
-
-.. currentmodule:: ezyrb.approximation.gpr
-
-.. automethod:: GPR.predict

@@ -1,6 +1,0 @@
-﻿ezyrb.reduction.pod.POD.modes
-=============================
-
-.. currentmodule:: ezyrb.reduction.pod
-
-.. autoproperty:: POD.modes

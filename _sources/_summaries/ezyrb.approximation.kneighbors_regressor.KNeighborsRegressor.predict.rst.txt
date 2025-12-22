@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.kneighbors\_regressor.KNeighborsRegressor.predict
-=====================================================================
-
-.. currentmodule:: ezyrb.approximation.kneighbors_regressor
-
-.. automethod:: KNeighborsRegressor.predict

@@ -1,6 +1,0 @@
-﻿ezyrb.approximation.linear.Linear.fit
-=====================================
-
-.. currentmodule:: ezyrb.approximation.linear
-
-.. automethod:: Linear.fit

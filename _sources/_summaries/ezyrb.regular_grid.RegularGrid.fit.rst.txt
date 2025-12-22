@@ -1,6 +1,0 @@
-﻿ezyrb.regular\_grid.RegularGrid.fit
-===================================
-
-.. currentmodule:: ezyrb.regular_grid
-
-.. automethod:: RegularGrid.fit
