@@ -42,6 +42,14 @@ class Aggregation(Plugin):
     """
 
     def __init__(self, fit_function=None, predict_function=Linear()):
+        """
+        Initialize the Aggregation plugin.
+        
+        :param fit_function: Regression model to fit weights in validation set.
+            If None, uses standard space-dependent methods. Default is None.
+        :param predict_function: Regression model to predict weights in test set.
+            Default is Linear().
+        """
         super().__init__()
         self.fit_function = fit_function
         self.predict_function = predict_function

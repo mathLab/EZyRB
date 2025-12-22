@@ -7,9 +7,21 @@ from .approximation import Approximation
 class NeighborsRegressor(Approximation):
     """
     A generic superclass for wrappers of *NeighborsRegressor from sklearn.
+    
+    This class provides a common interface for neighbor-based regression methods.
 
-    :param kwargs: arguments passed to the internal instance of
+    :param kwargs: Arguments passed to the internal instance of
         *NeighborsRegressor.
+    
+    :Example:
+    
+        >>> import numpy as np
+        >>> from ezyrb import KNeighborsRegressor
+        >>> x = np.random.uniform(-1, 1, size=(20, 2))
+        >>> y = np.sin(x[:, 0]) + np.cos(x[:, 1])
+        >>> knn = KNeighborsRegressor(n_neighbors=5)
+        >>> knn.fit(x, y)
+        >>> y_pred = knn.predict(x[:5])
     """
     def fit(self, points, values):
         """

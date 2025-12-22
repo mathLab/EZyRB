@@ -14,6 +14,26 @@ from .approximation import Approximation
 from abc import ABC, abstractmethod
 
 class ReducedOrderModelInterface(ABC):
+    """
+    Abstract interface for Reduced Order Model classes.
+    
+    This class defines the common interface and plugin execution mechanism
+    for all ROM implementations.
+    
+    :Example:
+    
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> from ezyrb import POD, RBF, Database
+        >>> import numpy as np
+        >>> params = np.array([[1.0], [2.0], [3.0]])
+        >>> snapshots = np.random.rand(3, 100)
+        >>> db = Database(params, snapshots)
+        >>> pod = POD(rank=5)
+        >>> rbf = RBF()
+        >>> rom = ROM(db, pod, rbf)
+        >>> rom.fit()
+        >>> prediction = rom.predict([[1.5]])
+    """
 
     def _execute_plugins(self, when):
         """
@@ -73,6 +93,14 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     """
     def __init__(self, database, reduction, approximation,
                  plugins=None):
+        """
+        Initialize a Reduced Order Model.
+        
+        :param Database database: The database for training.
+        :param Reduction reduction: The reduction method.
+        :param Approximation approximation: The approximation method.
+        :param list plugins: List of plugins. Default is None.
+        """
 
         self.database = database
         self.reduction = reduction
@@ -86,6 +114,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         self.clean()
 
     def clean(self):
+        """
+        Clean all internal databases used during training and prediction.
+        
+        This method resets all training, prediction, test, and validation
+        databases to None.
+        """
         self.train_full_database = None
         self.train_reduced_database = None
         self.predict_full_database = None
@@ -160,6 +194,14 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         return len(value_) if isinstance(value_, class_) else 1
 
     def fit_reduction(self):
+        """
+        Fit the reduction method on the training database.
+        
+        This method applies the reduction technique to the snapshots matrix
+        of the training database.
+        
+        :raises RuntimeError: If the training database has not been set.
+        """
 
         # for k, rom_ in self.roms.items():
         #     rom_['reduction'].fit(rom_['database'].snapshots_matrix.T)
@@ -169,12 +211,27 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         self.reduction.fit(self.train_full_database.snapshots_matrix.T)
 
     def _reduce_database(self, db):
+        """
+        Reduce a database using the fitted reduction method.
+        
+        :param Database db: The database to reduce.
+        :return: A new database with reduced snapshots.
+        :rtype: Database
+        """
         return Database(
             db.parameters_matrix,
             self.reduction.transform(db.snapshots_matrix.T).T
         )
 
     def fit_approximation(self):
+        """
+        Fit the approximation method on the reduced training database.
+        
+        This method trains the approximation technique on the reduced space
+        representation of the snapshots.
+        
+        :raises RuntimeError: If the reduced training database has not been created.
+        """
 
         if not hasattr(self, 'train_reduced_database'):
             raise RuntimeError
@@ -525,6 +582,18 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
     """
     def __init__(self, *args, plugins=None, rom_plugin=None):
+        """
+        Initialize a Multi-ROM with multiple databases and methods.
+        
+        Supports multiple initialization signatures:
+        - (database_dict, reduction_dict, approximation_dict)
+        - (database, roms_dict)
+        - (roms_dict,)
+        
+        :param args: Variable arguments for different initialization modes.
+        :param list plugins: Global plugins for the Multi-ROM. Default is None.
+        :param rom_plugin: Plugin to add to each individual ROM. Default is None.
+        """
 
         if len(args) == 3:
             self.database = args[0]

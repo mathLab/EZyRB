@@ -50,6 +50,19 @@ class ANN(Approximation):
     def __init__(self, layers, function, stop_training, loss=None,
                  optimizer=torch.optim.Adam, lr=0.001, l2_regularization=0,
                  frequency_print=10, last_identity=True):
+        """
+        Initialize an Artificial Neural Network.
+        
+        :param list layers: Ordered list with the number of neurons of each hidden layer.
+        :param function: Activation function(s) for each layer.
+        :param stop_training: Stopping criteria for training (iterations and/or tolerance).
+        :param loss: Loss function to use. Default is MSELoss.
+        :param optimizer: Optimizer class to use. Default is Adam.
+        :param float lr: Learning rate. Default is 0.001.
+        :param float l2_regularization: L2 regularization coefficient. Default is 0.
+        :param int frequency_print: Frequency of printing during training. Default is 10.
+        :param bool last_identity: Whether the last activation is identity. Default is True.
+        """
         if loss is None:
             loss = torch.nn.MSELoss()
 
@@ -121,15 +134,13 @@ class ANN(Approximation):
 
     def _build_model(self, points, values):
         """
-        Build the torch model.
-        Considering the number of neurons per layer (self.layers), a
-        feed-forward NN is defined:
-        -  activation function from layer i>=0 to layer i+1:
-           self.function[i]; activation function at the output layer:
-           Identity (by default).
-        :param numpy.ndarray points: the coordinates of the given (training)
-        points.
-        :param numpy.ndarray values: the (training) values in the points.
+        Build the torch neural network model.
+        
+        Constructs a feed-forward neural network with the specified layers
+        and activation functions.
+        
+        :param numpy.ndarray points: The coordinates of the training points.
+        :param numpy.ndarray values: The training values at the points.
         """
         layers = self.layers.copy()
         layers.insert(0, points.shape[1])

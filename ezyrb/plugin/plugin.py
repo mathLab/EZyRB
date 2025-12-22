@@ -5,57 +5,105 @@ from abc import ABC
 
 class Plugin(ABC):
     """
-    The abstract `Approximation` class.
-
-    All the classes that implement the input-output mapping should be inherited
-    from this class.
+    The abstract Plugin class for ROM preprocessing and postprocessing.
+    
+    All plugin classes should inherit from this class and override the
+    methods corresponding to the stages where they need to intervene.
     """
     def fit_preprocessing(self, rom):
-        """ Void """
+        """
+        Execute before the fit process begins.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def fit_before_reduction(self, rom):
-        """ Void """
+        """
+        Execute before the reduction step during fit.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def fit_after_reduction(self, rom):
-        """ Void """
+        """
+        Execute after the reduction step during fit.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
     
     def fit_before_approximation(self, rom):
-        """ Void """
+        """
+        Execute before the approximation step during fit.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def fit_after_approximation(self, rom):
-        """ Void """
+        """
+        Execute after the approximation step during fit.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def fit_postprocessing(self, rom):
-        """ Void """
+        """
+        Execute after the fit process completes.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def predict_preprocessing(self, rom):
-        """ Void """
+        """
+        Execute before the prediction process begins.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def predict_before_approximation(self, rom):
-        """ Void """
+        """
+        Execute before the approximation step during prediction.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def predict_after_approximation(self, rom):
-        """ Void """
+        """
+        Execute after the approximation step during prediction.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def predict_before_expansion(self, rom):
-        """ Void """
+        """
+        Execute before the expansion step during prediction.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
     
     def predict_after_expansion(self, rom):
-        """ Void """
+        """
+        Execute after the expansion step during prediction.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
     def predict_postprocessing(self, rom):
-        """ Void """
+        """
+        Execute after the prediction process completes.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         pass
 
 

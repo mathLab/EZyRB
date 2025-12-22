@@ -27,7 +27,7 @@ class RegularGrid(Approximation):
         >>> xg, yg, zg = np.meshgrid(x, y, z, indexing='ij')
         >>> points = np.c_[xg.ravel(), yg.ravel(), zg.ravel()]
         >>> data_mode_x = f(xg, yg, zg).reshape(-1, 1)
-        # lets assume we have 2 modes, i.e. a rank 2 model
+        >>> # lets assume we have 2 modes, i.e. a rank 2 model
         >>> data = np.concatenate((data_mode_x, data_mode_x/10), axis=1)
         >>> rgi = ezyrb.RegularGrid()
         >>> rgi.fit(points, data, method="linear")
@@ -47,6 +47,11 @@ class RegularGrid(Approximation):
     """
 
     def __init__(self):
+        """
+        Initialize a RegularGrid interpolator.
+        
+        The interpolator will be configured during the fit method.
+        """
         self.interpolator = None
 
     def get_grid_axes(self, pts_scrmbld, vals_scrmbld):

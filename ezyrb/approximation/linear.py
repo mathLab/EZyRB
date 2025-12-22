@@ -18,6 +18,12 @@ class Linear(Approximation):
         default is numpy.nan.
     """
     def __init__(self, fill_value=np.nan):
+        """
+        Initialize a Linear interpolator.
+        
+        :param float fill_value: Value for points outside the convex hull.
+            Default is numpy.nan.
+        """
         self.fill_value = fill_value
         self.interpolator = None
 

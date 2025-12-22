@@ -94,10 +94,13 @@ class POD(Reduction):
 
     def fit(self, X):
         """
-        Create the reduced space for the given snapshots `X` using the
-        specified method
-
-        :param numpy.ndarray X: the input snapshots matrix (stored by column)
+        Create the reduced space for the given snapshots using POD.
+        
+        Computes the POD modes and singular values using the specified method.
+        
+        :param numpy.ndarray X: The input snapshots matrix (stored by column).
+        :return: self
+        """
         """
         if self._method is None:
             m = self.available_methods
@@ -198,16 +201,17 @@ class POD(Reduction):
     def _rsvd(self, X):
         """
         Truncated randomized Singular Value Decomposition.
-
-        :param numpy.ndarray X: the matrix to decompose.
-        :return: the truncated left-singular vectors matrix, the truncated
-            singular values array, the truncated right-singular vectors matrix.
-        :rtype: numpy.ndarray, numpy.ndarray, numpy.ndarray
-
+        
+        Computes an approximate SVD using randomized algorithms for efficiency.
+        
+        :param numpy.ndarray X: The matrix to decompose.
+        :return: Tuple of (truncated left-singular vectors, truncated singular values).
+        :rtype: tuple(numpy.ndarray, numpy.ndarray)
+        
         References:
-        Finding structure with randomness: probabilistic algorithms for
-        constructing approximate matrix decompositions. N. Halko, P. G.
-        Martinsson, J. A. Tropp.
+            Finding structure with randomness: probabilistic algorithms for
+            constructing approximate matrix decompositions. N. Halko, P. G.
+            Martinsson, J. A. Tropp.
         """
         if (
             self.omega_rank == 0

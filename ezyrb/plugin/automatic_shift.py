@@ -50,6 +50,16 @@ class AutomaticShiftSnapshots(Plugin):
     """
     def __init__(self, shift_network, interp_network, interpolator,
                  parameter_index=0, reference_index=0, barycenter_loss=0):
+        """
+        Initialize the AutomaticShiftSnapshots plugin.
+        
+        :param shift_network: Neural network for learning the shift function.
+        :param interp_network: Neural network for interpolation.
+        :param Approximation interpolator: Interpolator for shifted snapshots evaluation.
+        :param int parameter_index: Index of parameter component. Default is 0.
+        :param int reference_index: Index of reference snapshot. Default is 0.
+        :param float barycenter_loss: Weight for barycenter loss term. Default is 0.
+        """
         super().__init__()
 
         self.interpolator = interpolator
@@ -61,6 +71,7 @@ class AutomaticShiftSnapshots(Plugin):
 
     def _train_interp_network(self):
         """
+        Train the interpolation network on the reference snapshot.
         """
         self.interp_network.fit(
             self.reference_snapshot.space.reshape(-1, 1),
@@ -69,6 +80,9 @@ class AutomaticShiftSnapshots(Plugin):
 
     def _train_shift_network(self, db):
         """
+        Train the shift network using the database snapshots.
+        
+        :param Database db: The database containing snapshots.
         """
         ref_center = torch.tensor(np.average(
             self.reference_snapshot.space * self.reference_snapshot.values))

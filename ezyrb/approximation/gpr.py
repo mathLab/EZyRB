@@ -38,6 +38,14 @@ class GPR(Approximation):
 
     """
     def __init__(self, kern=None, normalizer=True, optimization_restart=20):
+        """
+        Initialize a Gaussian Process Regressor.
+        
+        :param kern: Kernel object from sklearn. Default is None.
+        :param bool normalizer: Whether to normalize values. Default is True.
+        :param int optimization_restart: Number of restarts for optimization.
+            Default is 20.
+        """
 
         self.X_sample = None
         self.Y_sample = None

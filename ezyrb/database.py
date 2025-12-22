@@ -7,7 +7,7 @@ from .snapshot import Snapshot
 
 class Database():
     """
-    Database class
+    Database class for storing parameter-snapshot pairs.
 
     :param array_like parameters: the input parameters
     :param array_like snapshots: the input snapshots
@@ -16,6 +16,20 @@ class Database():
     :param Scale scaler_snapshots: the scaler for the snapshots. Default is
         None meaning no scaling.
     :param array_like space: the input spatial data
+    
+    :Example:
+    
+        >>> import numpy as np
+        >>> from ezyrb import Database, Parameter, Snapshot
+        >>> params = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+        >>> snapshots = np.random.rand(3, 100)
+        >>> db = Database(params, snapshots)
+        >>> print(len(db))
+        3
+        >>> print(db.parameters_matrix.shape)
+        (3, 2)
+        >>> print(db.snapshots_matrix.shape)
+        (3, 100)
     """
     def __init__(self, parameters=None, snapshots=None, space=None):
         self._pairs = []

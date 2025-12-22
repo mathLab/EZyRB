@@ -5,8 +5,37 @@ import matplotlib.pyplot as plt
 
 
 class Snapshot:
+    """
+    Class for representing a discretized solution snapshot.
+    
+    This class encapsulates solution values and their spatial coordinates,
+    providing methods for manipulation and visualization.
+    
+    :param array_like values: The solution values.
+    :param array_like space: The spatial coordinates corresponding to the values.
+        Default is None.
+    
+    :Example:
+    
+        >>> import numpy as np
+        >>> from ezyrb import Snapshot
+        >>> space = np.linspace(0, 1, 50)
+        >>> values = np.sin(2 * np.pi * space)
+        >>> snap = Snapshot(values, space)
+        >>> print(snap.values.shape)
+        (50,)
+        >>> print(snap.space.shape)
+        (50,)
+    """
 
     def __init__(self, values, space=None):
+        """
+        Initialize a Snapshot object.
+        
+        :param values: The solution values. Can be a Snapshot instance or
+            an array-like object.
+        :param space: The spatial coordinates. Default is None.
+        """
         if isinstance(values, Snapshot):
             self.values = values.values
             self.space = values.space
@@ -23,6 +52,12 @@ class Snapshot:
 
     @values.setter
     def values(self, new_values):
+        """
+        Set the snapshot values with validation.
+        
+        :param array_like new_values: The new snapshot values.
+        :raises ValueError: If the length of new values doesn't match the space.
+        """
         if hasattr(self, 'space') and self.space is not None:
             if len(self.space) != len(new_values):
                 raise ValueError('invalid ndof for the current space.')
@@ -38,6 +73,12 @@ class Snapshot:
 
     @space.setter
     def space(self, new_space):
+        """
+        Set the snapshot space with validation.
+        
+        :param array_like new_space: The new spatial coordinates.
+        :raises ValueError: If the length of new space doesn't match the values.
+        """
         if hasattr(self, 'values') and self.values is not None:
             if new_space is not None and len(self.values) != len(new_space):
                 raise ValueError('invalid ndof for the current space.')

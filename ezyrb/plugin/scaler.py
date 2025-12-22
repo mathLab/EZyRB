@@ -19,8 +19,28 @@ class DatabaseScaler(Plugin):
         applied at the full order ('full') or at the reduced one ('reduced').
     :param {'parameters', 'snapshots'} params: define if the rescaling has to
         be applied to the parameters or to the snapshots.
+    
+    :Example:
+    
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> from ezyrb import POD, RBF, Database
+        >>> from ezyrb.plugin import DatabaseScaler
+        >>> from sklearn.preprocessing import StandardScaler
+        >>> pod = POD(rank=10)
+        >>> rbf = RBF()
+        >>> db = Database(params, snapshots)
+        >>> scaler = DatabaseScaler(StandardScaler(), 'full', 'snapshots')
+        >>> rom = ROM(db, pod, rbf, plugins=[scaler])
+        >>> rom.fit()
     """
     def __init__(self, scaler, mode, target) -> None:
+        """
+        Initialize the DatabaseScaler plugin.
+        
+        :param scaler: Scaler object with fit, transform, and inverse_transform methods.
+        :param str mode: 'full' or 'reduced' - where to apply the scaling.
+        :param str target: 'parameters' or 'snapshots' - what to scale.
+        """
         super().__init__()
 
         self.scaler = scaler
@@ -60,10 +80,20 @@ class DatabaseScaler(Plugin):
         self._mode = new_mode
 
     def _select_matrix(self, db):
-        """ Helper function to select the proper matrix to rescale. """
+        """
+        Helper function to select the proper matrix to rescale.
+        
+        :param Database db: The database object.
+        :return: The selected matrix (parameters or snapshots).
+        """
         return getattr(db, f'{self.target}_matrix')
 
     def rom_preprocessing(self, rom):
+        """
+        Apply scaling to the reduced database before ROM processing.
+        
+        :param ReducedOrderModel rom: The ROM instance.
+        """
         if self.mode != 'reduced':
             return
 

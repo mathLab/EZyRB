@@ -5,9 +5,9 @@ from abc import ABC, abstractmethod
 
 class Reduction(ABC):
     """
-    The abstract `Approximation` class.
+    The abstract Reduction class.
 
-    All the classes that implement the input-output mapping should be inherited
+    All the classes that implement dimensionality reduction should be inherited
     from this class.
     """
     @abstractmethod
