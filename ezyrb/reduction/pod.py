@@ -101,7 +101,6 @@ class POD(Reduction):
         :param numpy.ndarray X: The input snapshots matrix (stored by column).
         :return: self
         """
-        """
         if self._method is None:
             m = self.available_methods
             raise RuntimeError(

@@ -1,4 +1,4 @@
-Welcome to EZyRB's documentation!
+EZyRB - Easy Reduced Basis
 ===================================================
 
 .. image:: _static/logo_EZyRB.png
@@ -6,62 +6,45 @@ Welcome to EZyRB's documentation!
     :width: 150 px
     :align: right
 
-Easy Reduced Basis method.
+**Easy Reduced Basis method for Model Order Reduction**
+
+EZyRB is a Python library for **Model Order Reduction** based on various reduction and approximation techniques. It provides a flexible framework for creating fast surrogate models from high-fidelity simulations.
 
 
-Description
+Key Features
 ^^^^^^^^^^^^
 
-EZyRB is a python library for the Model Order Reduction based on baricentric triangulation for the selection of the parameter points and on Proper Orthogonal Decomposition for the selection of the modes. It is ideally suited for actual industrial problems, since its structure can interact with several simulation software simply providing the output file of the simulations. The software uses a POD interpolation approach in which the solutions are projected on the low dimensional space spanned by the POD modes (see "Bui-Thanh et al. - Proper orthogonal decomposition extensions for parametric applications in compressible aerodynamics" and "Chinesta et al. - Model Order Reduction: a survey"). The new solution is then obtained by interpolating the low rank solutions into the parametric space. This approach makes the package non intrusive with respect to the high fidelity solver actually used. This allows an easy integration into existing simulation pipelines, and it can deal with both vtk files and matlab files.
-
-In the EZyRB package we implemented in Python the algorithms described above. We also provide tutorials that show all the characteristics of the software, from the offline part in which it is possible to construct the database of snapshots, to the online part for fast evaluations of the fields for new parameters. There are also modules to allow the consistency of all the solutions (often with different degrees of freedom) in order to process them.
-
-
-Installation
---------------------
-EZyRB requires numpy, scipy, matplotlib, and sphinx (for the documentation). They can be easily installed via pip. Moreover EZyRB depends on vtk. The code is compatible with Python 2.7. It can be installed directly from the source code.
+- **Multiple Reduction Methods**: POD, Autoencoders (AE), POD-AE
+- **Flexible Approximation**: RBF, Linear, GPR, ANN, K-Neighbors, and more
+- **Non-Intrusive Approach**: Works with any simulation output format
+- **Plugin System**: Extensible architecture for preprocessing and postprocessing
+- **Easy Integration**: Simple API for building reduced order models
+- **Database Management**: Built-in tools for handling parameter-snapshot pairs
 
 
-The `official distribution <https://github.com/mathLab/EZyRB>`_ is on GitHub, and you can clone the repository using
-::
+User Guide
+----------
 
-    git clone https://github.com/mathLab/EZyRB
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide
 
-To install the package just type:
-::
-
-    python setup.py install
-
-To uninstall the package you have to rerun the installation and record the installed files in order to remove them:
-
-::
-
-    python setup.py install --record installed_files.txt
-    cat installed_files.txt | xargs rm -rf
+   Installation <installation>
+   Quick Start <quickstart>
+   API Documentation <code>
+   Tutorials <tutorials>
 
 
-
-
-Developer's Guide
---------------------
+Developer Info
+--------------
 
 .. toctree::
    :maxdepth: 1
+   :caption: Developer Info
 
-   code
-   contact
    contributing
+   contact
    LICENSE
-
-
-
-Tutorials
-^^^^^^^^^^
-
-We made some tutorial examples:
-
-- `Tutorial 1 <tutorial-1.html>`_ shows how to construct a simple reduced order model for a heat conduction problem.
-- `Tutorial 2 <tutorial-2.html>`_ shows how test different methods for reduced order modeling on a NavierStokes 2D problem.
 
 
 Indices and tables

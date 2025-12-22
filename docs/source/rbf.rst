@@ -9,10 +9,6 @@ RBF
     :toctree: _summaries
     :nosignatures:
 
-    RBF
-    RBF.fit
-    RBF.predict
-
 .. autoclass:: RBF
     :members:
     :private-members:

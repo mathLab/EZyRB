@@ -1,5 +1,5 @@
 RadiusNeighborsRegressor
-=====================
+========================
 
 .. currentmodule:: ezyrb.approximation.radius_neighbors_regressor
 
@@ -8,10 +8,6 @@ RadiusNeighborsRegressor
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
-
-    RadiusNeighborsRegressor
-    RadiusNeighborsRegressor.fit
-    RadiusNeighborsRegressor.predict
 
 .. autoclass:: RadiusNeighborsRegressor
     :members:

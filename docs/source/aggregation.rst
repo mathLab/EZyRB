@@ -1,15 +1,15 @@
-NeighborsRegressor
+Aggregation
 =====================
 
-.. currentmodule:: ezyrb.approximation.neighbors_regressor
+.. currentmodule:: ezyrb.plugin.aggregation
 
-.. automodule:: ezyrb.approximation.neighbors_regressor
+.. automodule:: ezyrb.plugin.aggregation
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: NeighborsRegressor
+.. autoclass:: Aggregation
     :members:
     :private-members:
     :undoc-members:

@@ -9,11 +9,6 @@ GPR
     :toctree: _summaries
     :nosignatures:
 
-    GPR
-    GPR.fit
-    GPR.predict
-    GPR.optimal_mu
-
 .. autoclass:: GPR
     :members:
     :private-members:

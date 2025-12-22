@@ -9,12 +9,6 @@ Reduction
     :toctree: _summaries
     :nosignatures:
 
-    Reduction
-    Reduction.reduce
-    Reduction.expand
-    Reduction.transform
-    Reduction.inverse_transform
-
 .. autoclass:: Reduction
     :members:
     :private-members:

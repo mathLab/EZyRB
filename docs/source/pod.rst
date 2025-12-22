@@ -9,18 +9,6 @@ POD
     :toctree: _summaries
     :nosignatures:
 
-    POD
-    POD.modes
-    POD.singular_values
-    POD.reduce
-    POD.expand
-    POD.transform
-    POD.inverse_transform
-    POD._truncation
-    POD._svd
-    POD._rsvd
-    POD._corrm
-
 .. autoclass:: POD
     :members:
     :private-members:

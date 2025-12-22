@@ -1,15 +1,15 @@
-NeighborsRegressor
+DatabaseScaler
 =====================
 
-.. currentmodule:: ezyrb.approximation.neighbors_regressor
+.. currentmodule:: ezyrb.plugin.scaler
 
-.. automodule:: ezyrb.approximation.neighbors_regressor
+.. automodule:: ezyrb.plugin.scaler
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: NeighborsRegressor
+.. autoclass:: DatabaseScaler
     :members:
     :private-members:
     :undoc-members:

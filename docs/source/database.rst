@@ -9,11 +9,6 @@ Database
     :toctree: _summaries
     :nosignatures:
 
-    Database
-    Database.__getitem__
-    Database.__len__
-    Database.add
-
 .. autoclass:: Database
     :members:
     :private-members:

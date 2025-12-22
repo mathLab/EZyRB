@@ -1,15 +1,15 @@
-NeighborsRegressor
+ShiftSnapshots
 =====================
 
-.. currentmodule:: ezyrb.approximation.neighbors_regressor
+.. currentmodule:: ezyrb.plugin.shift
 
-.. automodule:: ezyrb.approximation.neighbors_regressor
+.. automodule:: ezyrb.plugin.shift
 
 .. autosummary::
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: NeighborsRegressor
+.. autoclass:: ShiftSnapshots
     :members:
     :private-members:
     :undoc-members:

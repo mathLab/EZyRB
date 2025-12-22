@@ -9,11 +9,6 @@ RegularGrid
     :toctree: _summaries
     :nosignatures:
 
-    RegularGrid
-    RegularGrid.get_grid_axes
-    RegularGrid.fit
-    RegularGrid.predict
-
 .. autoclass:: RegularGrid
     :members:
     :private-members:

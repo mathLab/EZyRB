@@ -9,10 +9,6 @@ Approximation
     :toctree: _summaries
     :nosignatures:
 
-    Approximation
-    Approximation.fit
-    Approximation.predict
-
 .. autoclass:: Approximation
     :members:
     :private-members:
