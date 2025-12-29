@@ -202,6 +202,30 @@ class TestReducedOrderModel(TestCase):
         assert isinstance(pred, dict)
         assert len(pred) == 2
 
+def test_invariant_pod():
+    pod = POD()
+
+    rbf = RBF()
+    gpr = GPR()
+    rnr = RadiusNeighborsRegressor()
+    knr = KNeighborsRegressor(n_neighbors=1)
+    lin = Linear(fill_value=0)
+    db = Database(param, snapshots.T)
+
+    modal_coeffs = []
+    for approx in [rbf, gpr, knr, rnr, lin]:
+        rom = ROM(db, pod, approx).fit()
+        coeff = rom.reduction.transform(db.snapshots_matrix.T)
+        modal_coeffs.append(coeff)
+
+    for i in range(1, len(modal_coeffs)):
+        np.testing.assert_allclose(
+            modal_coeffs[0],
+            modal_coeffs[i],
+            rtol=1e-5,
+            atol=1e-8
+        )
+
 
 """
     def test_optimal_mu(self):

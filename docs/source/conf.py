@@ -49,6 +49,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.ifconfig',
     'sphinx.ext.mathjax',
+    'nbsphinx'
 ]
 
 intersphinx_mapping = {
@@ -316,3 +317,6 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# -- nbsphinx configuration -----------------------------------------------
+nbsphinx_execute = "never"
