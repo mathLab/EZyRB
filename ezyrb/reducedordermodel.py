@@ -451,7 +451,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
+                             copy.deepcopy(self.approximation),
+                             plugins=[copy.deepcopy(p) for p in self.plugins]).fit(
                                  *args, **kwargs)
 
             error.append(rom.test_error(self.database[test_index], norm))
@@ -487,7 +488,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit()
+                             copy.deepcopy(self.approximation),
+                             plugins=[copy.deepcopy(p) for p in self.plugins]).fit()
 
             error[j] = rom.test_error(test_db)
 
@@ -860,6 +862,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         kf = KFold(n_splits=n_splits)
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
+            # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
@@ -896,6 +899,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
+            # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
             rom = type(self)(new_db, copy.deepcopy(self.reduction),
                              copy.deepcopy(self.approximation)).fit()
 
