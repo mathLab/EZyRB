@@ -411,7 +411,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         return rom
 
-    def test_error(self, test, norm=np.linalg.norm):
+    def test_error(self, test, norm=np.linalg.norm, relative=True):
         """
         Compute the mean norm of the relative error vectors of predicted
         test snapshots.
@@ -420,16 +420,24 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
+        :param relative: True if the error computed is relative. Default is 
+            True. 
         :return: the mean L2 norm of the relative errors of the estimated
             test snapshots.
         :rtype: numpy.ndarray
         """
         predicted_test = self.predict(test.parameters_matrix)
-        return np.mean(
-            norm(predicted_test - test.snapshots_matrix,
-            axis=1) / norm(test.snapshots_matrix, axis=1))
+        if relative:
+            return np.mean(
+                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+                axis=1) / norm(test.snapshots_matrix, axis=1))
+        else:
+            return np.mean(
+                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+                axis=1))
 
-    def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
+    def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, relative=True, 
+                       **kwargs):
         r"""
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
@@ -441,6 +449,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: function to apply to compute the relative error
             between the true snapshot and the predicted one.
             Default value is the L2 norm.
+        :param relative: True if the error computed is relative. Default is 
+            True. 
         :param \*args: additional parameters to pass to the `fit` method.
         :param \**kwargs: additional parameters to pass to the `fit` method.
         :return: the vector containing the errors corresponding to each fold.
@@ -454,7 +464,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                              copy.deepcopy(self.approximation)).fit(
                                  *args, **kwargs)
 
-            error.append(rom.test_error(self.database[test_index], norm))
+            error.append(rom.test_error(self.database[test_index], norm, relative))
 
         return np.array(error)
 
@@ -545,6 +555,111 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
             np.linalg.det(distance) / math.factorial(vertices.shape[1]))
+
+    def reduction_error(self, db=None, relative=True, eps=1e-12):
+        """
+        Calculate the reconstruction error between the original snapshots and
+        the ones reconstructed by the ROM.
+        
+        :param database.Database db: the database to use to compute the error.
+            If None, the error is computed on the training database.
+            Default is None.
+        :param bool relative: True if the error computed is relative. Default is 
+            True.
+        :param float eps: small number to avoid division by zero in relative
+            error computation. Default is 1e-12.
+        :return: the vector containing the reconstruction errors.
+        
+        Esempio:    
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> from ezyrb import POD, RBF, Database
+        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        to be declared
+        >>> db_train = db[:10] # training database
+        >>> db_test = db[10:] # test database
+        >>> pod = POD()
+        >>> rbf = RBF()
+        >>> rom = ROM(db_train, pod, rbf)
+        >>> rom.fit()
+        >>> err_train_reduct = rom.reconstruction_error(relative=True)
+        >>> err_test_reduct = rom.reconstruction_error(db_test, relative=True)
+        """
+        
+        errs = []
+        if db is None:
+            db = self.database   
+        snap = db.snapshots_matrix
+        snap_red = self.reduction.transform(snap.T)
+        snap_full = self.reduction.inverse_transform(snap_red).T
+
+        E = snap - snap_full
+
+        if relative:
+            num = np.linalg.norm(E, axis=1)
+            den = np.linalg.norm(snap, axis=1) + eps
+            
+            err = float(np.mean(num/den))        
+        else:
+            err = float(np.mean(np.linalg.norm(E, axis=1)))
+        errs.append(err)
+        
+        return np.array(errs)
+
+    def approximation_error(self, db=None, relative=True, eps=1e-12):
+        """
+        Calculate the approximation error between the true modal coefficients
+        and the approximated ones.
+        
+        :param database.Database db: the database to use to compute the error.
+            If None, the error is computed on the training database.
+            Default is None.
+        :param bool relative: True if the error computed is relative. Default is 
+            True.
+        :param float eps: small number to avoid division by zero in relative
+            error computation. Default is 1e-12.
+            
+        :return: the vector containing the approximation errors.
+        
+        Esempio:
+        >>> from ezyrb import ReducedOrderModel as ROM
+        >>> from ezyrb import POD, RBF, Database
+        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        to be declared
+        >>> db_train = db[:10] # training database
+        >>> db_test = db[10:] # test database
+        >>> pod = POD()
+        >>> rbf = RBF()
+        >>> rom = ROM(db_train, pod, rbf)
+        >>> rom.fit()
+        >>> err_train_approx = rom.approximation_error(relative=True)
+        >>> err_test_approx = rom.approximation_error(db_test, relative=True)
+
+        """
+        errs = []
+        if db is None:
+            db = self.database
+
+        snap = db.snapshots_matrix
+        params_true = self.reduction.transform(snap.T).T
+
+        params = db.parameters_matrix
+
+        params_approx = self.approximation.predict(params)
+
+        E = params_true - params_approx
+
+        if relative:
+            num = np.linalg.norm(E, axis=1)
+            den = np.linalg.norm(params_true, axis=1) + eps
+
+            err = float(np.mean(num/den))
+        else:
+            err = float(np.mean(np.linalg.norm(E, axis=1)))
+        errs.append(err)
+
+        return np.array(errs)
+
+
 
 class MultiReducedOrderModel(ReducedOrderModelInterface):
     """
@@ -956,7 +1071,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         return np.abs(
             np.linalg.det(distance) / math.factorial(vertices.shape[1]))
 
-    def reconstruction_error(self, db=None, relative=True, eps=1e-12):
+    def reduction_error(self, db=None, relative=True, eps=1e-12):
         """
         Calculate the reconstruction error between the original snapshots and
         the ones reconstructed by the ROM.
