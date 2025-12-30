@@ -429,11 +429,11 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         predicted_test = self.predict(test.parameters_matrix)
         if relative:
             return np.mean(
-                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+                norm(predicted_test - test.snapshots_matrix,
                 axis=1) / norm(test.snapshots_matrix, axis=1))
         else:
             return np.mean(
-                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
+                norm(predicted_test - test.snapshots_matrix,
                 axis=1))
 
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, relative=True, 
