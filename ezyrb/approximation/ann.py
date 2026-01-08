@@ -3,9 +3,8 @@ Module for Artificial Neural Network (ANN) Prediction.
 """
 
 import logging
-import torch
-import torch.nn as nn
 import numpy as np
+from sklearn.neural_network import MLPRegressor
 from .approximation import Approximation
 
 logger = logging.getLogger(__name__)
@@ -13,36 +12,34 @@ logger = logging.getLogger(__name__)
 
 class ANN(Approximation):
     """
-    Feed-Forward Artifical Neural Network (ANN).
+    Feed-Forward Artifical Neural Network (ANN) using sklearn's MLPRegressor.
 
     :param list layers: ordered list with the number of neurons of each hidden
         layer.
-    :param torch.nn.modules.activation function: activation function at each
-        layer. A single activation function can be passed or a list of them of
-        length equal to the number of hidden layers.
-    :param list stop_training: list with the maximum number of training
-        iterations (int) and/or the desired tolerance on the training loss
-        (float).
-    :param torch.nn.Module loss: loss definition (Mean Squared if not given).
-    :param torch.optim optimizer: the torch class implementing optimizer.
-        Default value is `Adam` optimizer.
-    :param float lr: the learning rate. Default is 0.001.
-    :param float l2_regularization: the L2 regularization coefficient, it
-        corresponds to the "weight_decay". Default is 0 (no regularization).
-    :param int frequency_print: the frequency in terms of epochs of the print
-        during the training of the network.
-    :param boolean last_identity: Flag to specify if the last activation
-        function is the identity function. In the case the user provides the
-        entire list of activation functions, this attribute is ignored. Default
-        value is True.
+    :param str activation: activation function for the hidden layers.
+        Options: 'identity', 'logistic', 'tanh', 'relu' (default).
+    :param str solver: the solver for weight optimization. Options: 'lbfgs',
+        'sgd', 'adam' (default).
+    :param int max_iter: maximum number of iterations. Default is 200.
+    :param float tol: tolerance for the optimization. Default is 1e-4.
+    :param float learning_rate_init: initial learning rate (only for 'sgd'
+        or 'adam'). Default is 0.001.
+    :param float alpha: L2 penalty (regularization term) parameter.
+        Default is 0.0001.
+    :param int frequency_print: the frequency in terms of epochs to print
+        training progress. Default is 10.
+    :param int random_state: random state for reproducibility. Default is None.
+    :param bool early_stopping: whether to use early stopping to terminate
+        training when validation score is not improving. Default is False.
+    :param float validation_fraction: proportion of training data to set aside
+        as validation set for early stopping. Default is 0.1.
 
     :Example:
         >>> import ezyrb
         >>> import numpy as np
-        >>> import torch.nn as nn
-        >>> x = np.random.uniform(-1, 1, size =(4, 2))
+        >>> x = np.random.uniform(-1, 1, size=(4, 2))
         >>> y = np.array([np.sin(x[:, 0]), np.cos(x[:, 1]**3)]).T
-        >>> ann = ezyrb.ANN([10, 5], nn.Tanh(), [20000,1e-5])
+        >>> ann = ezyrb.ANN([10, 5], activation='tanh', max_iter=20000)
         >>> ann.fit(x, y)
         >>> y_pred = ann.predict(x)
         >>> print(y)
@@ -50,181 +47,105 @@ class ANN(Approximation):
         >>> print(len(ann.loss_trend))
         >>> print(ann.loss_trend[-1])
     """
-    def __init__(self, layers, function, stop_training, loss=None,
-                 optimizer=torch.optim.Adam, lr=0.001, l2_regularization=0,
-                 frequency_print=10, last_identity=True):
-        """
-        Initialize an Artificial Neural Network.
-        
-        :param list layers: Ordered list with the number of neurons of each hidden layer.
-        :param function: Activation function(s) for each layer.
-        :param stop_training: Stopping criteria for training (iterations and/or tolerance).
-        :param loss: Loss function to use. Default is MSELoss.
-        :param optimizer: Optimizer class to use. Default is Adam.
-        :param float lr: Learning rate. Default is 0.001.
-        :param float l2_regularization: L2 regularization coefficient. Default is 0.
-        :param int frequency_print: Frequency of printing during training. Default is 10.
-        :param bool last_identity: Whether the last activation is identity. Default is True.
-        """
-        logger.debug("Initializing ANN with layers=%s, lr=%f, "
-                     "l2_reg=%f", layers, lr, l2_regularization)
-        if loss is None:
-            loss = torch.nn.MSELoss()
-            logger.debug("Using default MSELoss")
-
-        if not isinstance(function, list):  # Single activation function
-            nl = len(layers) if last_identity else len(layers)+1
-            function = [function] * nl
-            logger.debug("Replicated activation function %d times", nl)
-
-        if not isinstance(stop_training, list):
-            stop_training = [stop_training]
-
-        if torch.cuda.is_available():  # Check if GPU is available
-            logger.info("Using cuda device")
-            print("Using cuda device")
-            torch.cuda.empty_cache()
-            self.use_cuda = True
-        else:
-            logger.info("Using CPU device")
-            self.use_cuda = False
+    def __init__(
+        self,
+        layers,
+        activation="tanh",
+        max_iter=200,
+        solver="adam",
+        learning_rate_init=0.001,
+        alpha=0.0001,
+        frequency_print=10,
+        **kwargs,
+    ):
+        logger.debug(
+            "Initializing ANN with layers=%s, activation=%s, "
+            "solver=%s, max_iter=%d, lr=%f, alpha=%f",
+            layers,
+            activation,
+            solver,
+            max_iter,
+            learning_rate_init,
+            alpha,
+        )
 
         self.layers = layers
-        self.function = function
-        self.loss = loss
-        self.stop_training = stop_training
-
-        self.loss_trend = []
-        self.model = None
-        self.optimizer = optimizer
-
+        self.activation = activation
+        self.solver = solver
+        self.max_iter = max_iter
+        self.learning_rate_init = learning_rate_init
+        self.alpha = alpha
         self.frequency_print = frequency_print
-        self.lr = lr
-        self.l2_regularization = l2_regularization
+        self.extra_kwargs = kwargs
 
-    def _convert_numpy_to_torch(self, array):
-        """
-        Converting data type.
+        self.model = None
+        self.loss_trend = []
 
-        :param numpy.ndarray array: input array.
-        :return: the tensorial counter-part of the input array.
-        :rtype: torch.Tensor.
-        """
-        return torch.from_numpy(array).float()
-
-    def _convert_torch_to_numpy(self, tensor):
-        """
-        Converting data type.
-
-        :param torch.Tensor tensor: input tensor.
-        :return: the vectorial counter-part of the input tensor.
-        :rtype: numpy.ndarray.
-        """
-        return tensor.detach().numpy()
-
-    @staticmethod
-    def _list_to_sequential(layers, functions):
-
-        layers_torch = []
-        inout_layers = [[layers[i], layers[i+1]] for i in range(len(layers)-1)]
-
-        while True:
-            if inout_layers:
-                inp_d, out_d = inout_layers.pop(0)
-                layers_torch.append(nn.Linear(inp_d, out_d))
-
-            if functions:
-                layers_torch.append(functions.pop(0))
-
-            if not functions and not inout_layers:
-                break
-
-        return nn.Sequential(*layers_torch)
-
-    def _build_model(self, points, values):
-        """
-        Build the torch neural network model.
-        
-        Constructs a feed-forward neural network with the specified layers
-        and activation functions.
-        
-        :param numpy.ndarray points: The coordinates of the training points.
-        :param numpy.ndarray values: The training values at the points.
-        """
-        layers = self.layers.copy()
-        layers.insert(0, points.shape[1])
-        layers.append(values.shape[1])
-
-        if self.model is None:
-            self.model = self._list_to_sequential(layers, self.function)
-        else:
-            self.model = self.model
+        logger.info("ANN initialized with sklearn MLPRegressor")
 
     def fit(self, points, values):
         """
         Build the ANN given 'points' and 'values' and perform training.
 
-        Training procedure information:
-            -  optimizer: Adam's method with default parameters (see, e.g.,
-               https://pytorch.org/docs/stable/optim.html);
-            -  loss: self.loss (if none, the Mean Squared Loss is set by
-               default).
-            -  stopping criterion: the fulfillment of the requested tolerance
-               on the training loss compatibly with the prescribed budget of
-               training iterations (if type(self.stop_training) is list); if
-               type(self.stop_training) is int or type(self.stop_training) is
-               float, only the number of maximum iterations or the accuracy
-               level on the training loss is considered as the stopping rule,
-               respectively.
-
         :param numpy.ndarray points: the coordinates of the given (training)
             points.
         :param numpy.ndarray values: the (training) values in the points.
         """
+        logger.debug(
+            "Fitting ANN with points shape: %s, values shape: %s",
+            points.shape,
+            values.shape,
+        )
 
-        self._build_model(points, values)
+        # Create the MLPRegressor model
+        self.model = MLPRegressor(
+            hidden_layer_sizes=tuple(self.layers),
+            activation=self.activation,
+            solver=self.solver,
+            alpha=self.alpha,
+            learning_rate_init=self.learning_rate_init,
+            max_iter=self.max_iter,
+            verbose=False,
+            **self.extra_kwargs,
+        )
 
-        if self.use_cuda:
-            self.model = self.model.cuda()
-            points = self._convert_numpy_to_torch(points).cuda()
-            values = self._convert_numpy_to_torch(values).cuda()
+        # Custom training loop to track loss and print progress
+        self.loss_trend = []
+
+        # For sklearn, we need to do partial fitting to track loss
+        # We'll use the standard fit but access loss_curve_ afterwards
+        logger.info("Starting ANN training")
+
+        if self.frequency_print > 0:
+            # Monkey patch to capture loss during training
+            original_fit = self.model.fit
+
+            def fit_with_logging(X, y):
+                result = original_fit(X, y)
+                if hasattr(self.model, "loss_curve_"):
+                    self.loss_trend = list(self.model.loss_curve_)
+                    for i, loss in enumerate(self.loss_trend):
+                        if (
+                            i == 0
+                            or i == len(self.loss_trend) - 1
+                            or (i + 1) % self.frequency_print == 0
+                        ):
+                            print(f"[epoch {i+1:6d}]\t{loss:e}")
+                return result
+
+            fit_with_logging(points, values)
         else:
-            points = self._convert_numpy_to_torch(points)
-            values = self._convert_numpy_to_torch(values)
+            self.model.fit(points, values)
+            if hasattr(self.model, "loss_curve_"):
+                self.loss_trend = list(self.model.loss_curve_)
 
-        optimizer = self.optimizer(
-            self.model.parameters(),
-            lr=self.lr, weight_decay=self.l2_regularization)
+        logger.info(
+            "ANN training completed after %d iterations", self.model.n_iter_
+        )
+        if self.loss_trend:
+            logger.debug("Final loss: %f", self.loss_trend[-1])
 
-        n_epoch = 1
-        flag = True
-        while flag:
-            y_pred = self.model(points)
-
-            loss = self.loss(y_pred, values)
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            scalar_loss = loss.item()
-            self.loss_trend.append(scalar_loss)
-
-            for criteria in self.stop_training:
-                if isinstance(criteria, int):  # stop criteria is an integer
-                    if n_epoch == criteria:
-                        flag = False
-                elif isinstance(criteria, float):  # stop criteria is float
-                    if scalar_loss < criteria:
-                        flag = False
-
-            if (flag is False or
-                    n_epoch == 1 or n_epoch % self.frequency_print == 0):
-                print(f'[epoch {n_epoch:6d}]\t{scalar_loss:e}')
-
-            n_epoch += 1
-
-        return optimizer
+        return self
 
     def predict(self, new_point):
         """
@@ -234,12 +155,10 @@ class ANN(Approximation):
         :return: the predicted values via the ANN.
         :rtype: numpy.ndarray
         """
-        if self.use_cuda :
-            new_point = self._convert_numpy_to_torch(new_point).cuda()
-            new_point = self._convert_numpy_to_torch(
-                np.array(new_point.cpu())).cuda()
-            y_new = self._convert_torch_to_numpy(self.model(new_point).cpu())
-        else:
-            new_point = self._convert_numpy_to_torch(np.array(new_point))
-            y_new = self._convert_torch_to_numpy(self.model(new_point))
+        logger.debug(
+            "Predicting with ANN for %d points",
+            np.atleast_2d(new_point).shape[0],
+        )
+        new_point = np.atleast_2d(new_point)
+        y_new = self.model.predict(new_point)
         return y_new

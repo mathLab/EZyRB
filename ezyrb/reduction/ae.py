@@ -3,7 +3,6 @@ Module for FNN-Autoencoders.
 """
 
 import logging
-import torch
 import numpy as np
 from .reduction import Reduction
 from ..approximation import ANN
@@ -11,234 +10,200 @@ from ..approximation import ANN
 logger = logging.getLogger(__name__)
 
 
-class AE(Reduction, ANN):
+class AE(Reduction):
     """
     Feed-Forward AutoEncoder class (AE)
 
+    :param int latent_dim: the dimension of the latent space
     :param list layers_encoder: ordered list with the number of neurons of
         each hidden layer for the encoder
     :param list layers_decoder: ordered list with the number of neurons of
         each hidden layer for the decoder
-    :param torch.nn.modules.activation function_encoder: activation function
-        at each layer for the encoder, except for the output layer at with
-        Identity is considered by default.  A single activation function can
-        be passed or a list of them of length equal to the number of hidden
-        layers.
-    :param torch.nn.modules.activation function_decoder: activation function
-        at each layer for the decoder, except for the output layer at with
-        Identity is considered by default.  A single activation function can
-        be passed or a list of them of length equal to the number of hidden
-        layers.
-    :param list stop_training: list with the maximum number of training
-        iterations (int) and/or the desired tolerance on the training loss
-        (float).
-    :param torch.nn.Module loss: loss definition (Mean Squared if not
-        given).
-    :param torch.optim optimizer: the torch class implementing optimizer.
-        Default value is `Adam` optimizer.
+    :param str activation: activation function for the encoder
+        ('relu', 'tanh', 'logistic', 'identity'). Default is 'tanh'.
+    :param int max_iter: maximum number of training
+        iterations (int) or desired tolerance on training loss (float).
+    :param str solver: the solver for weight optimization ('adam', 'sgd',
+        'lbfgs'). Default is 'adam'.
     :param float lr: the learning rate. Default is 0.001.
-    :param float l2_regularization: the L2 regularization coefficient, it
-        corresponds to the "weight_decay". Default is 0 (no regularization).
-    :param int frequency_print: the frequency in terms of epochs of the print
-        during the training of the network.
-    :param boolean last_identity: Flag to specify if the last activation
-        function is the identity function. In the case the user provides the
-        entire list of activation functions, this attribute is ignored. Default
-        value is True.
+    :param float alpha: L2 regularization coefficient. Default is 0.
+    :param int frequency_print: the frequency of printing during training.
+        Default is 10.
 
     :Example:
         >>> from ezyrb import AE
-        >>> import torch
-        >>> f = torch.nn.Softplus
         >>> low_dim = 5
-        >>> optim = torch.optim.Adam
-        >>> ae = AE([400, low_dim], [low_dim, 400], f(), f(), 2000)
-        >>> # or ...
-        >>> ae = AE([400, 10, 10, low_dim], [low_dim, 400], f(), f(), 1e-5,
-        >>>          optimizer=optim)
+        >>> ae = AE([400, low_dim], [low_dim, 400], 'tanh', 'tanh', 2000)
         >>> ae.fit(snapshots)
         >>> reduced_snapshots = ae.reduce(snapshots)
         >>> expanded_snapshots = ae.expand(reduced_snapshots)
     """
-    def __init__(self,
-                 layers_encoder,
-                 layers_decoder,
-                 function_encoder,
-                 function_decoder,
-                 stop_training,
-                 loss=None,
-                 optimizer=torch.optim.Adam,
-                 lr=0.001,
-                 l2_regularization=0,
-                 frequency_print=10,
-                 last_identity=True):
 
-        logger.debug("Initializing AE with encoder layers=%s, "
-                     "decoder layers=%s", layers_encoder, layers_decoder)
+    def __init__(
+        self,
+        latent_dim,
+        layers_encoder,
+        layers_decoder,
+        activation='tanh',
+        max_iter=200,
+        solver='adam',
+        learning_rate_init=0.001,
+        alpha=0,
+        frequency_print=10,
+        **kwargs,
+    ):
+
+        logger.debug(
+            "Initializing AE with encoder layers=%s, decoder layers=%s",
+            layers_encoder,
+            layers_decoder,
+        )
 
         if layers_encoder[-1] != layers_decoder[0]:
-            logger.error("Dimension mismatch: encoder output=%d, "
-                         "decoder input=%d",
-                         layers_encoder[-1], layers_decoder[0])
-            raise ValueError('Wrong dimension in encoder and decoder layers')
+            logger.error(
+                "Dimension mismatch: encoder output=%d, decoder input=%d",
+                layers_encoder[-1],
+                layers_decoder[0],
+            )
+            raise ValueError("Wrong dimension in encoder and decoder layers")
 
-        if loss is None:
-            loss = torch.nn.MSELoss()
-            logger.debug("Using default MSELoss")
-
-        if not isinstance(function_encoder, list):
-            # Single activation function passed
-            layers = layers_encoder
-            nl = len(layers)-1 if last_identity else len(layers)
-            function_encoder = [function_encoder] * nl
-            logger.debug("Replicated encoder activation %d times", nl)
-
-        if not isinstance(function_decoder, list):
-            # Single activation function passed
-            layers = layers_decoder
-            nl = len(layers)-1 if last_identity else len(layers)
-            function_decoder = [function_decoder] * nl
-            logger.debug("Replicated decoder activation %d times", nl)
-
-        if not isinstance(stop_training, list):
-            stop_training = [stop_training]
-
-        if torch.cuda.is_available():  # Check if GPU is available
-            logger.info("Using cuda device for AE")
-            print("Using cuda device")
-            torch.cuda.empty_cache()
-            self.use_cuda = True
-        else:
-            logger.info("Using CPU device for AE")
-            self.use_cuda = False
-
+        self.latent_dim = latent_dim
         self.layers_encoder = layers_encoder
         self.layers_decoder = layers_decoder
-        self.function_encoder = function_encoder
-        self.function_decoder = function_decoder
-        self.loss = loss
-
-        self.stop_training = stop_training
-        self.loss_trend = []
-        self.encoder = None
-        self.decoder = None
-        self.optimizer = optimizer
-        self.lr = lr
+        self.activation = activation
+        self.solver = solver
+        self.learning_rate_init = learning_rate_init
+        self.alpha = alpha
+        self.max_iter = max_iter
         self.frequency_print = frequency_print
-        self.l2_regularization = l2_regularization
-
-    def _build_model(self, values):
-        """
-        Build the torch model.
-
-        Considering the number of neurons per layer (self.layers), a
-        feed-forward NN is defined:
-            - activation function from layer i>=0 to layer i+1:
-              self.function[i]; activation function at the output layer:
-              Identity (by default).
-
-        :param numpy.ndarray values: the set values one wants to reduce.
-        """
-        layers_encoder = self.layers_encoder.copy()
-        layers_encoder.insert(0, values.shape[1])
-        self.encoder = self._list_to_sequential(layers_encoder,
-                                                self.function_encoder)
-
-        layers_decoder = self.layers_decoder.copy()
-        layers_decoder.append(values.shape[1])
-        self.decoder = self._list_to_sequential(layers_decoder,
-                                                self.function_decoder)
+        self.loss_trend = []
+        self.extra_kwargs = kwargs
+        
+        # Models
+        self._autoencoder = None  # Full trained model
+        self.encoder = None  # For encoding
+        self.decoder = None  # For decoding
 
     def fit(self, values):
         """
-        Build the AE given 'values' and perform training.
-
-        Training procedure information:
-            -  optimizer: Adam's method with default parameters (see, e.g.,
-               https://pytorch.org/docs/stable/optim.html);
-            -  loss: self.loss (if none, the Mean Squared Loss is set by
-               default).
-            -  stopping criterion: the fulfillment of the requested tolerance
-               on the training loss compatibly with the prescribed budget of
-               training iterations (if type(self.stop_training) is list); if
-               type(self.stop_training) is int or type(self.stop_training) is
-               float, only the number of maximum iterations or the accuracy
-               level on the training loss is considered as the stopping rule,
-               respectively.
+        Build and train the autoencoder.
 
         :param numpy.ndarray values: the (training) values in the points.
         """
+        logger.info("Starting AE training")
         values = values.T
-        self._build_model(values)
-
-        optimizer = self.optimizer(
-            list(self.encoder.parameters()) + list(self.decoder.parameters()),
-            lr=self.lr, weight_decay=self.l2_regularization)
-
-        if self.use_cuda:
-            self.encoder = self.encoder.cuda()
-            self.decoder = self.decoder.cuda()
-            values = self._convert_numpy_to_torch(values).cuda()
-        else:
-            values = self._convert_numpy_to_torch(values)
-
-        n_epoch = 1
-        flag = True
-        while flag:
-            y_pred = self.decoder(self.encoder(values))
-
-            loss = self.loss(y_pred, values)
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            scalar_loss = loss.item()
-            self.loss_trend.append(scalar_loss)
-
-            for criteria in self.stop_training:
-                if isinstance(criteria, int):  # stop criteria is an integer
-                    if n_epoch == criteria:
-                        flag = False
-                elif isinstance(criteria, float):  # stop criteria is float
-                    if scalar_loss < criteria:
-                        flag = False
-
-            if (flag is False or
-                    n_epoch == 1 or n_epoch % self.frequency_print == 0):
-                print(f'[epoch {n_epoch:6d}]\t{scalar_loss:e}')
-
-            n_epoch += 1
-
-        return optimizer
+        
+        # Combine encoder and decoder layers
+        combined_layers = self.layers_encoder + [self.latent_dim] + self.layers_decoder
+        
+        logger.debug(
+            "Training full autoencoder with layers: %s", combined_layers
+        )
+        
+        # Train full autoencoder: input -> latent -> reconstruction
+        self._autoencoder = ANN(
+            combined_layers,
+            activation=self.activation,
+            solver=self.solver,
+            max_iter=self.max_iter,
+            learning_rate_init=self.learning_rate_init,
+            alpha=self.alpha,
+            **self.extra_kwargs,
+        )
+        
+        # Train to reconstruct input
+        self._autoencoder.fit(values, values)
+        self.loss_trend = self._autoencoder.loss_trend
+        
+        # Now create encoder and decoder and copy weights
+        logger.debug("Creating encoder and decoder from trained autoencoder")
+        
+        # Create encoder
+        self.encoder = ANN(
+            self.layers_encoder,
+            activation=self.activation,
+            solver='adam',
+            max_iter=1,
+            learning_rate_init=self.learning_rate_init,
+            alpha=self.alpha,
+        )
+        # Create decoder
+        self.decoder = ANN(
+            self.layers_decoder,
+            activation=self.activation,
+            solver='adam',
+            max_iter=1,
+            learning_rate_init=self.learning_rate_init,
+            alpha=self.alpha,
+        )
+        # Dummy fit to initialize structure
+        dummy_latent = np.zeros((values.shape[0], self.latent_dim))
+        # Dummy fit to initialize structure
+        self.decoder.fit(dummy_latent, values)
+        self.encoder.fit(values, dummy_latent)
+        
+        # Copy encoder weights from autoencoder
+        n_encoder_layers = len(self.encoder.model.coefs_)
+        for i in range(n_encoder_layers):
+            self.encoder.model.coefs_[i] = (
+                self._autoencoder.model.coefs_[i].copy()
+            )
+            self.encoder.model.intercepts_[i] = (
+                self._autoencoder.model.intercepts_[i].copy()
+            )
+        
+        # Copy decoder weights from autoencoder
+        n_decoder_layers = len(self.decoder.model.coefs_)
+        for i in range(n_decoder_layers):
+            src_idx = len(self.encoder.model.coefs_) + i
+            self.decoder.model.coefs_[i] = (
+                self._autoencoder.model.coefs_[src_idx].copy()
+            )
+            self.decoder.model.intercepts_[i] = (
+                self._autoencoder.model.intercepts_[src_idx].copy()
+            )
+        
+        print('dentro fit')
+        print(values.shape)
+        print(self._autoencoder.predict(values))
+        red = self.encoder.predict(values)
+        print(red.shape)
+        full = self.decoder.predict(red)
+        print(full.shape)
+        print(self.decoder.predict(self.encoder.predict(values)))
+        logger.info("AE training completed")
 
     def transform(self, X):
         """
-        Reduces the given snapshots.
+        Reduces the given snapshots (encode).
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        if self.use_cuda:
-            X = self._convert_numpy_to_torch(X).T.cuda()
-            X = self._convert_numpy_to_torch(np.array(X.cpu())).cuda()
-        else:
-            X = self._convert_numpy_to_torch(X).T
-        g = self.encoder(X)
-        return g.cpu().detach().numpy().T
+        logger.debug("Encoding %d snapshots", X.shape[0])
+        if self.encoder is None:
+            raise RuntimeError("Autoencoder not fitted yet")
+        return self.encoder.predict(X.T).T
 
     def inverse_transform(self, g):
         """
-        Projects a reduced to full order solution.
+        Projects a reduced to full order solution (decode).
 
-        :param: numpy.ndarray g the latent variables.
+        :param numpy.ndarray g: the latent variables.
         """
-        if self.use_cuda:
-            g = self._convert_numpy_to_torch(g).T.cuda()
-            g = self._convert_numpy_to_torch(np.array(g.cpu())).cuda()
-        else:
-            g = self._convert_numpy_to_torch(g).T
-        u = self.decoder(g)
-        return u.cpu().detach().numpy().T
+        logger.debug("Decoding %d latent vectors", g.shape[0])
+        if self.decoder is None:
+            raise RuntimeError("Autoencoder not fitted yet")
+
+        if self.activation == 'tanh':
+            g = np.tanh(g)
+        elif self.activation == 'logistic':
+            g = 1 / (1 + np.exp(-g))
+        elif self.activation == 'relu':
+            g = np.maximum(0, g)
+        elif self.activation == 'identity':
+            pass
+
+        return self.decoder.predict(g.T).T
 
     def reduce(self, X):
         """
@@ -256,7 +221,7 @@ class AE(Reduction, ANN):
         """
         Projects a reduced to full order solution.
 
-        :param: numpy.ndarray g the latent variables.
+        :param numpy.ndarray g: the latent variables.
 
         .. note::
 
