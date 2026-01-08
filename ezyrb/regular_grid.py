@@ -1,9 +1,12 @@
 """
 Module for higher order interpolation on regular grids
 """
+import logging
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator as RGI
 from .approximation import Approximation
+
+logger = logging.getLogger(__name__)
 
 
 class RegularGrid(Approximation):
@@ -96,17 +99,26 @@ class RegularGrid(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
+        logger.debug("Fitting RegularGrid with points shape: %s, "
+                     "values shape: %s",
+                     np.asarray(points).shape, np.asarray(values).shape)
         points = np.asarray(points)
         if not np.issubdtype(points.dtype, np.number):
+            logger.error("Invalid points format/dimension")
             raise ValueError('Invalid format or dimension for the argument'
                              '`points`.')
         if points.ndim == 1:
             points = points[:, None]
+            logger.debug("Expanded points to 2D")
         vals = np.asarray(values)
+        logger.debug("Computing grid axes")
         grid_axes, values_grd = self.get_grid_axes(points, vals)
         shape = [len(ax) for ax in grid_axes]
         shape.append(-1)
-        self.interpolator = RGI(grid_axes, values_grd.reshape(shape), **kwargs)
+        logger.debug("Grid shape: %s", shape)
+        self.interpolator = RGI(grid_axes, values_grd.reshape(shape),
+                                **kwargs)
+        logger.info("RegularGrid fitted successfully")
 
     def predict(self, new_point):
         """

@@ -1,6 +1,9 @@
 """Module for Scaler plugin"""
 
+import logging
 from .plugin import Plugin
+
+logger = logging.getLogger(__name__)
 
 
 class DatabaseScaler(Plugin):
@@ -43,6 +46,8 @@ class DatabaseScaler(Plugin):
         :param str target: 'parameters' or 'snapshots' - what to scale.
         """
         super().__init__()
+        logger.debug("Initializing DatabaseScaler with mode=%s, target=%s",
+                     mode, target)
 
         self.scaler = scaler
         self.mode = mode

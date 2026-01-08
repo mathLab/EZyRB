@@ -1,5 +1,9 @@
 """ Module for parameter object """
+import logging
 import numpy as np
+
+logger = logging.getLogger(__name__)
+
 
 class Parameter:
     """
@@ -29,10 +33,15 @@ class Parameter:
         :param array_like values: The parameter values. Can be a Parameter
             instance or an array-like object that can be converted to a 1D numpy array.
         """
+        logger.debug("Initializing Parameter with values type: %s",
+                     type(values))
         if isinstance(values, Parameter):
             self.values = values.values
+            logger.debug("Copied values from existing Parameter")
         else:
             self.values = values
+            logger.debug("Created Parameter with shape: %s",
+                         np.asarray(values).shape)
 
     @property
     def values(self):
@@ -48,6 +57,10 @@ class Parameter:
         :raises ValueError: If the new values are not a 1D array.
         """
         if np.asarray(new_values).ndim != 1:
+            logger.error("Invalid parameter dimension: %d (expected 1D)",
+                         np.asarray(new_values).ndim)
             raise ValueError('only 1D array are usable as parameter.')
 
         self._values = np.asarray(new_values)
+        logger.debug("Parameter values set with shape: %s",
+                     self._values.shape)

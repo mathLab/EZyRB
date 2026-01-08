@@ -1,6 +1,9 @@
 """ Module for Scaler plugin """
 
+import logging
 from .plugin import Plugin
+
+logger = logging.getLogger(__name__)
 
 
 class ShiftSnapshots(Plugin):
@@ -55,6 +58,8 @@ class ShiftSnapshots(Plugin):
         :param int reference_index: Index of reference snapshot. Default is 0.
         """
         super().__init__()
+        logger.debug("Initializing ShiftSnapshots with parameter_index=%d, "
+                     "reference_index=%d", parameter_index, reference_index)
 
         self.__shift_function = shift_function
         self.interpolator = interpolator
@@ -67,13 +72,18 @@ class ShiftSnapshots(Plugin):
         
         :param ReducedOrderModel rom: The ROM instance.
         """
+        logger.debug("Applying shift preprocessing")
         db = rom.database
 
         reference_snapshot = db._pairs[self.reference_index][1]
+        logger.debug("Using reference snapshot at index %d",
+                     self.reference_index)
 
         for param, snap in db._pairs:
             snap.space = reference_snapshot.space
             shift = self.__shift_function(param.values[self.parameter_index])
+            logger.debug("Computed shift: %f for param: %s",
+                         shift, param.values)
             self.interpolator.fit(
                 snap.space.reshape(-1, 1) - shift,
                 snap.values.reshape(-1, 1))
@@ -82,6 +92,7 @@ class ShiftSnapshots(Plugin):
                 reference_snapshot.space.reshape(-1, 1)).flatten()
 
         rom.database = db
+        logger.info("Shift preprocessing completed")
 
     def predict_postprocessing(self, rom):
         """

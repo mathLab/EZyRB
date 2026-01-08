@@ -1,6 +1,9 @@
 
+import logging
 from .plugin import Plugin
 from ..database import Database
+
+logger = logging.getLogger(__name__)
 
 
 class DatabaseSplitter(Plugin):
@@ -32,7 +35,6 @@ class DatabaseSplitter(Plugin):
         >>> rom.fit()
     """
 
-
     def __init__(self, train=0.9, test=0.1, validation=0.0, predict=0.0,
             seed=None):
         """
@@ -45,6 +47,9 @@ class DatabaseSplitter(Plugin):
         :param int seed: Random seed. Default is None.
         """
         super().__init__()
+        logger.debug("Initializing DatabaseSplitter with train=%f, test=%f, "
+                     "validation=%f, predict=%f, seed=%s",
+                     train, test, validation, predict, seed)
 
         self.train = train
         self.test = test
@@ -58,30 +63,36 @@ class DatabaseSplitter(Plugin):
         
         :param ReducedOrderModel rom: The ROM instance.
         """
+        logger.debug("Splitting database for ROM")
         db = rom._database
         if isinstance(db, Database):
+            logger.debug("Splitting single Database")
             train, test, validation, predict = db.split(
                 [self.train, self.test, self.validation, self.predict],
                 seed=self.seed
             )
 
         elif isinstance(db, dict):
+            logger.debug("Splitting Database dictionary")
             train, test, validation, predict = list(db.values())[0].split(
                 [self.train, self.test, self.validation, self.predict],
                 seed=self.seed
             )
-            # TODO improve this splitting if needed (now only reading the database of
-            # the first ROM)
-
+            # TODO improve this splitting if needed (now only reading the
+            # database of the first ROM)
 
         rom.train_full_database = train
         rom.test_full_database = test
         rom.validation_full_database = validation
         rom.predict_full_database = predict
-        #print('train', train.snapshots_matrix.shape)
-        #print('test', test.snapshots_matrix.shape)
-        #print('validation', validation.snapshots_matrix.shape)
-        #print('predict', predict.snapshots_matrix.shape)
+        logger.info("Database split: train=%d, test=%d, validation=%d, "
+                    "predict=%d",
+                    len(train), len(test), len(validation), len(predict))
+        # print('train', train.snapshots_matrix.shape)
+        # print('test', test.snapshots_matrix.shape)
+        # print('validation', validation.snapshots_matrix.shape)
+        # print('predict', predict.snapshots_matrix.shape)
+
 
 class DatabaseDictionarySplitter(Plugin):
     """

@@ -2,10 +2,13 @@
 Module for FNN-Autoencoders.
 """
 
+import logging
 import torch
 import numpy as np
 from .reduction import Reduction
 from ..approximation import ANN
+
+logger = logging.getLogger(__name__)
 
 
 class AE(Reduction, ANN):
@@ -70,32 +73,43 @@ class AE(Reduction, ANN):
                  frequency_print=10,
                  last_identity=True):
 
+        logger.debug("Initializing AE with encoder layers=%s, "
+                     "decoder layers=%s", layers_encoder, layers_decoder)
+
         if layers_encoder[-1] != layers_decoder[0]:
+            logger.error("Dimension mismatch: encoder output=%d, "
+                         "decoder input=%d",
+                         layers_encoder[-1], layers_decoder[0])
             raise ValueError('Wrong dimension in encoder and decoder layers')
 
         if loss is None:
             loss = torch.nn.MSELoss()
+            logger.debug("Using default MSELoss")
 
         if not isinstance(function_encoder, list):
             # Single activation function passed
             layers = layers_encoder
             nl = len(layers)-1 if last_identity else len(layers)
             function_encoder = [function_encoder] * nl
+            logger.debug("Replicated encoder activation %d times", nl)
 
         if not isinstance(function_decoder, list):
             # Single activation function passed
             layers = layers_decoder
             nl = len(layers)-1 if last_identity else len(layers)
             function_decoder = [function_decoder] * nl
+            logger.debug("Replicated decoder activation %d times", nl)
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
 
-        if torch.cuda.is_available(): # Check if GPU is available
+        if torch.cuda.is_available():  # Check if GPU is available
+            logger.info("Using cuda device for AE")
             print("Using cuda device")
             torch.cuda.empty_cache()
             self.use_cuda = True
         else:
+            logger.info("Using CPU device for AE")
             self.use_cuda = False
 
         self.layers_encoder = layers_encoder

@@ -1,3 +1,4 @@
+import logging
 from .plugin import Plugin
 import numpy as np
 from ..approximation.rbf import RBF
@@ -5,6 +6,8 @@ from ..approximation.linear import Linear
 from ..database import Database
 import copy
 from scipy.optimize import minimize
+
+logger = logging.getLogger(__name__)
 
 
 class Aggregation(Plugin):
@@ -51,6 +54,10 @@ class Aggregation(Plugin):
             Default is Linear().
         """
         super().__init__()
+        logger.debug("Initializing Aggregation with fit_function=%s, "
+                     "predict_function=%s",
+                     type(fit_function).__name__ if fit_function else None,
+                     type(predict_function).__name__)
         self.fit_function = fit_function
         self.predict_function = predict_function
 

@@ -1,11 +1,14 @@
 """
 Module wrapper exploiting `GPy` for Gaussian Process Regression
 """
+import logging
 import numpy as np
 from scipy.optimize import minimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 
 from .approximation import Approximation
+
+logger = logging.getLogger(__name__)
 
 
 class GPR(Approximation):
@@ -47,10 +50,13 @@ class GPR(Approximation):
             Default is 20.
         """
 
+        logger.debug("Initializing GPR with kernel=%s, normalizer=%s, "
+                     "optimization_restart=%d",
+                     kern, normalizer, optimization_restart)
         self.X_sample = None
         self.Y_sample = None
         self.kern = kern
-        self.normalizer = normalizer  # TODO: avoid normalizer inside GPR class
+        self.normalizer = normalizer  # TODO: avoid normalizer inside GPR
         self.optimization_restart = optimization_restart
         self.model = None
 
@@ -61,17 +67,23 @@ class GPR(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
+        logger.debug("Fitting GPR with points shape: %s, values shape: %s",
+                     np.array(points).shape, np.array(values).shape)
         self.X_sample = np.array(points)
         self.Y_sample = np.array(values)
         if self.X_sample.ndim == 1:
             self.X_sample = self.X_sample.reshape(-1, 1)
+            logger.debug("Reshaped X_sample to 2D")
         if self.Y_sample.ndim == 1:
             self.Y_sample = self.Y_sample.reshape(-1, 1)
+            logger.debug("Reshaped Y_sample to 2D")
 
+        logger.debug("Creating GaussianProcessRegressor")
         self.model = GaussianProcessRegressor(
             kernel=self.kern, n_restarts_optimizer=self.optimization_restart,
             normalize_y=self.normalizer)
         self.model.fit(self.X_sample, self.Y_sample)
+        logger.info("GPR fitted successfully")
 
     def predict(self, new_points, return_variance=False):
         """

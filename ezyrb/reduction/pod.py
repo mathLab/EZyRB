@@ -5,9 +5,12 @@ Decomposition, Truncated Randomized Singular Value Decomposition, Truncated
 Singular Value Decomposition via correlation matrix.
 """
 
+import logging
 import numpy as np
 
 from .reduction import Reduction
+
+logger = logging.getLogger(__name__)
 
 
 class POD(Reduction):
@@ -57,19 +60,25 @@ class POD(Reduction):
                           omega_rank=10)
             >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
-        self.available_methods = ["svd", "randomized_svd", "correlation_matrix"]
+        logger.debug("Initializing POD with method=%s, rank=%s", method, rank)
+        self.available_methods = ["svd", "randomized_svd",
+                                   "correlation_matrix"]
         self.rank = rank
         if method == "svd":
             self._method = self._svd
+            logger.debug("Using SVD method")
         elif method == "randomized_svd":
             self.subspace_iteration = subspace_iteration
             self.omega_rank = omega_rank
             self._method = self._rsvd
+            logger.debug("Using Randomized SVD method")
         elif method == "correlation_matrix":
             self.save_memory = save_memory
             self._method = self._corrm
+            logger.debug("Using Correlation Matrix method")
         else:
             self._method = None
+            logger.error("Invalid POD method: %s", method)
 
         self._modes = None
         self._singular_values = None
@@ -101,12 +110,19 @@ class POD(Reduction):
         :param numpy.ndarray X: The input snapshots matrix (stored by column).
         :return: self
         """
+        logger.debug("Fitting POD with snapshots shape: %s", X.shape)
         if self._method is None:
             m = self.available_methods
+            logger.error("Invalid POD method")
             raise RuntimeError(
-                f"Invalid method for POD. Please chose one among {', '.join(m)}"
+                f"Invalid method for POD. "
+                f"Please chose one among {', '.join(m)}"
             )
         self._modes, self._singular_values = self._method(X)
+        logger.info("POD fitted: %d modes extracted", self._modes.shape[1])
+        logger.debug("Singular values range: [%f, %f]",
+                     self._singular_values.min(),
+                     self._singular_values.max())
         return self
 
     def transform(self, X):

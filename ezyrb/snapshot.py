@@ -1,7 +1,10 @@
 """ Module for discretized solution object """
 
+import logging
 import numpy as np
 import matplotlib.pyplot as plt
+
+logger = logging.getLogger(__name__)
 
 
 class Snapshot:
@@ -36,12 +39,18 @@ class Snapshot:
             an array-like object.
         :param space: The spatial coordinates. Default is None.
         """
+        logger.debug("Initializing Snapshot with values type: %s, "
+                     "space type: %s", type(values), type(space))
         if isinstance(values, Snapshot):
             self.values = values.values
             self.space = values.space
+            logger.debug("Copied Snapshot with shape: %s",
+                         np.asarray(values.values).shape)
         else:
             self.values = values
             self.space = space
+            logger.debug("Created Snapshot with shape: %s",
+                         np.asarray(values).shape)
 
     @property
     def values(self):
@@ -59,10 +68,17 @@ class Snapshot:
         :raises ValueError: If the length of new values doesn't match the space.
         """
         if hasattr(self, 'space') and self.space is not None:
-            if len(self.space) != len(new_values):
+            if new_values is not None and len(self.space) != len(new_values):
+                logger.error("Space length %d != values length %d",
+                             len(self.space), len(new_values))
                 raise ValueError('invalid ndof for the current space.')
 
         self._values = new_values
+        if new_values is not None:
+            logger.debug("Snapshot values set with length: %d",
+                         len(new_values))
+        else:
+            logger.debug("Snapshot values set to None")
 
     @property
     def space(self):

@@ -1,5 +1,6 @@
 """Module for the Reduced Order Modeling."""
 
+import logging
 import math
 import copy
 import pickle
@@ -12,6 +13,9 @@ from .approximation import Approximation
 
 
 from abc import ABC, abstractmethod
+
+logger = logging.getLogger(__name__)
+
 
 class ReducedOrderModelInterface(ABC):
     """
@@ -51,8 +55,11 @@ class ReducedOrderModelInterface(ABC):
                 - 'predict_preprocessing'
                 - 'predict_postprocessing'
         """
+        logger.debug("Executing plugins at stage: %s", when)
         for plugin in self.plugins:
             if hasattr(plugin, when):
+                logger.debug("Running plugin %s.%s",
+                             plugin.__class__.__name__, when)
                 getattr(plugin, when)(self)
 
 
@@ -101,6 +108,10 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param Approximation approximation: The approximation method.
         :param list plugins: List of plugins. Default is None.
         """
+        logger.debug("Initializing ReducedOrderModel")
+        logger.debug("Database type: %s", type(database))
+        logger.debug("Reduction type: %s", type(reduction))
+        logger.debug("Approximation type: %s", type(approximation))
 
         self.database = database
         self.reduction = reduction
@@ -108,10 +119,14 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         if plugins is None:
             plugins = []
+            logger.debug("No plugins provided")
+        else:
+            logger.debug("Initializing with %d plugins", len(plugins))
 
         self.plugins = plugins
 
         self.clean()
+        logger.info("ReducedOrderModel initialized successfully")
 
     def clean(self):
         """
@@ -268,35 +283,42 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         Calculate reduced space
 
         """
+        logger.info("Starting ROM fit process")
         self._execute_plugins('fit_preprocessing')
         if self.train_full_database is None:
-           self.train_full_database = copy.deepcopy(self.database)
+            self.train_full_database = copy.deepcopy(self.database)
+            logger.debug("Copied database to train_full_database")
 
         self._execute_plugins('fit_before_reduction')
 
+        logger.debug("Fitting reduction method")
         self.fit_reduction()
         self.train_reduced_database = self._reduce_database(
             self.train_full_database)
+        logger.info("Reduction completed. Reduced dimension: %s",
+                    self.train_reduced_database.snapshots_matrix.shape)
 
         self._execute_plugins('fit_after_reduction')
-        ## FULL-ORDER PREPROCESSING here
-        #for plugin in self.plugins:
+        # FULL-ORDER PREPROCESSING here
+        # for plugin in self.plugins:
         #    plugin.fom_preprocessing(self)
-            
-        #self.shifted_database = self._full_database
 
-        #self.reduction.fit(self._full_database.snapshots_matrix.T)
-        #reduced_snapshots = self.reduction.transform(
+        # self.shifted_database = self._full_database
+
+        # self.reduction.fit(self._full_database.snapshots_matrix.T)
+        # reduced_snapshots = self.reduction.transform(
         #    self._full_database.snapshots_matrix.T).T
 
         self._execute_plugins('fit_before_approximation')
 
+        logger.debug("Fitting approximation method")
         self.fit_approximation()
 
         self._execute_plugins('fit_after_approximation')
 
         self._execute_plugins('fit_postprocessing')
 
+        logger.info("ROM fit process completed successfully")
         return self
 
     def predict(self, parameters):
@@ -310,43 +332,52 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             corresponding parameters).
         :rtype: Database
         """
+        logger.info("Starting ROM predict process")
+        logger.debug("Parameters type: %s", type(parameters))
         self._execute_plugins('predict_preprocessing')
 
         if isinstance(parameters, Database):
             self.predict_reduced_database = parameters
+            logger.debug("Using Database with %d parameters",
+                         len(parameters))
 
         elif isinstance(parameters, (list, np.ndarray, tuple)):
 
             parameters = np.atleast_2d(parameters)
+            logger.debug("Parameters shape: %s", parameters.shape)
             self.predict_reduced_database = Database(
                 parameters=parameters,
                 snapshots=[None] * len(parameters)
             )
         else:
+            logger.error("Invalid parameters type: %s", type(parameters))
             raise TypeError
 
         self._execute_plugins('predict_before_approximation')
+        logger.debug("Predicting with approximation method")
         self.predict_reduced_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.approximation.predict(
                 self.predict_reduced_database.parameters_matrix).reshape(
-                    self.predict_reduced_database.parameters_matrix.shape[0], -1
+                    self.predict_reduced_database.parameters_matrix.shape[0],
+                    -1
                 )
         )
-        
+
         self._execute_plugins('predict_after_approximation')
-        #mu = np.atleast_2d(mu)
-        
-        #for plugin in self.plugins:
+        # mu = np.atleast_2d(mu)
+
+        # for plugin in self.plugins:
         #    if plugin.target == 'parameters':
         #        mu = plugin.scaler.transform(mu)
-            
- 
-        #self._reduced_database = Database(
+
+
+        # self._reduced_database = Database(
         #        mu, np.atleast_2d(self.approximation.predict(mu)))
 
         self._execute_plugins('predict_before_expansion')
 
+        logger.debug("Expanding to full space")
         self.predicted_full_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.reduction.inverse_transform(
@@ -356,10 +387,11 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         self._execute_plugins('predict_postprocessing')
 
+        logger.info("ROM predict process completed")
         if isinstance(parameters, Database):
-            return self.predicted_full_database #predict_full_database
+            return self.predicted_full_database  # predict_full_database
         else:
-            return self.predicted_full_database.snapshots_matrix #predict_full_database
+            return self.predicted_full_database.snapshots_matrix
 
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):

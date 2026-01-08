@@ -2,10 +2,13 @@
 Module for Artificial Neural Network (ANN) Prediction.
 """
 
+import logging
 import torch
 import torch.nn as nn
 import numpy as np
 from .approximation import Approximation
+
+logger = logging.getLogger(__name__)
 
 
 class ANN(Approximation):
@@ -63,21 +66,27 @@ class ANN(Approximation):
         :param int frequency_print: Frequency of printing during training. Default is 10.
         :param bool last_identity: Whether the last activation is identity. Default is True.
         """
+        logger.debug("Initializing ANN with layers=%s, lr=%f, "
+                     "l2_reg=%f", layers, lr, l2_regularization)
         if loss is None:
             loss = torch.nn.MSELoss()
+            logger.debug("Using default MSELoss")
 
-        if not isinstance(function, list):  # Single activation function passed
+        if not isinstance(function, list):  # Single activation function
             nl = len(layers) if last_identity else len(layers)+1
             function = [function] * nl
+            logger.debug("Replicated activation function %d times", nl)
 
         if not isinstance(stop_training, list):
             stop_training = [stop_training]
 
-        if torch.cuda.is_available(): # Check if GPU is available
+        if torch.cuda.is_available():  # Check if GPU is available
+            logger.info("Using cuda device")
             print("Using cuda device")
             torch.cuda.empty_cache()
             self.use_cuda = True
         else:
+            logger.info("Using CPU device")
             self.use_cuda = False
 
         self.layers = layers

@@ -1,8 +1,11 @@
 """Wrapper for K-Neighbors Regressor."""
 
+import logging
 from sklearn.neighbors import KNeighborsRegressor as Regressor
 
 from .neighbors_regressor import NeighborsRegressor
+
+logger = logging.getLogger(__name__)
 
 
 class KNeighborsRegressor(NeighborsRegressor):
@@ -29,4 +32,6 @@ class KNeighborsRegressor(NeighborsRegressor):
         
         :param kwargs: Arguments passed to sklearn's KNeighborsRegressor.
         """
+        logger.debug("Initializing KNeighborsRegressor with kwargs: %s",
+                     kwargs)
         self.regressor = Regressor(**kwargs)
