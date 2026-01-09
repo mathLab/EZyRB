@@ -2,9 +2,6 @@
 Module for FNN-Autoencoders.
 """
 
-import torch
-import torch.nn as nn
-from .reduction import Reduction
 from .ae import AE
 from .pod import POD
 
@@ -48,9 +45,8 @@ class PODAE(POD, AE):
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
         coeff = self.pod.reduce(X)
-        coeff = self._convert_numpy_to_torch(coeff).T
-        g = self.ae.encoder(coeff)
-        return g.cpu().detach().numpy().T
+        g = self.ae.encoder.predict(coeff)
+        return g.T
 
     def inverse_transform(self, g):
         """
@@ -58,9 +54,8 @@ class PODAE(POD, AE):
 
         :param: numpy.ndarray g the latent variables.
         """
-        g = self._convert_numpy_to_torch(g).T
-        u = self.ae.decoder(g)
-        u = u.cpu().detach().numpy().T
+        u = self.ae.decoder.predict(g.T)
+        u = u.T
         return self.pod.expand(u)
 
     def reduce(self, X):

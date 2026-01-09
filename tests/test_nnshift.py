@@ -1,5 +1,4 @@
 import numpy as np
-import torch
 from scipy import spatial
 # import pytest
 
@@ -21,8 +20,8 @@ def wave(t, res=256):
 
 
 def test_constructor():
-    interp = ANN([10, 10], torch.nn.Softplus, 1e-4)
-    shift = ANN([10, 10], torch.nn.Softplus, 1e-4)
+    interp = ANN([10, 10], 'relu', 500)
+    shift = ANN([10, 10], 'relu', 500 )
     AutomaticShiftSnapshots(shift, interp, RBF())
 
 

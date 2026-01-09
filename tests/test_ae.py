@@ -6,11 +6,11 @@ from ezyrb import AE
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
 
 def test_constructor_empty():
-    AE([20, 2], [2, 20], 'relu', 'relu', 20)
+    AE(2, [20], [20], 'relu', 'relu', 20)
 
 def test_wrong_constructor():
-    with self.assertRaises(ValueError):
-        AE([20, 2], [5, 20], 'relu', 'relu', 20)
+    with pytest.raises(ValueError):
+        AE('pippo', [20, 5], [5, 20], 'relu', 'relu', 20)
 
 @pytest.mark.parametrize("activation", ['tanh', 'relu', 'logistic'])
 def test_reconstruction(activation):
@@ -29,7 +29,7 @@ def test_reconstruction(activation):
 
 def test_decode_encode():
     low_dim = 5
-    ae = AE([400, low_dim], [low_dim, 400], 'tanh', 'tanh', 200)
+    ae = AE(low_dim, [400], [400], 'tanh', 200)
     ae.fit(snapshots)
     reduced_snapshots = ae.transform(snapshots)
     assert reduced_snapshots.shape[0] == low_dim
@@ -39,13 +39,13 @@ def test_decode_encode():
 def test_optimizer():
     low_dim = 5
     ae = AE(
-        [400, low_dim], [low_dim, 400], 'tanh', 'tanh', 20,
+        low_dim, [400], [400], 'tanh', 20,
         solver='adam'
     )
     ae.fit(snapshots)
     assert ae.solver == 'adam'
     ae = AE(
-        [200, 100, 10], [10, 100, 200], 'tanh', 'tanh', 10,
+        10, [200, 100], [100, 200], 'tanh', 10,
         solver='adam'
     )
     ae.fit(snapshots)
@@ -53,6 +53,6 @@ def test_optimizer():
 
 def test_optimizer_doublefit():
     low_dim = 5
-    ae = AE([400, low_dim], [low_dim, 400], 'tanh', 'tanh', 20)
+    ae = AE(low_dim, [400], [400], 'tanh', 20)
     ae.fit(snapshots)
     ae.fit(snapshots)

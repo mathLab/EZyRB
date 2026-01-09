@@ -5,7 +5,6 @@ from ezyrb import (GPR, Linear, RBF, ANN, KNeighborsRegressor,
 import sklearn
 import pytest
 
-import torch.nn as nn
 np.random.seed(17)
 
 def get_xy():
@@ -22,7 +21,7 @@ def get_xy():
 
 @pytest.mark.parametrize("model,kwargs", [
     (GPR, {}),
-    (ANN, {'layers': [20, 20], 'function': nn.Tanh(), 'stop_training': 1e-8, 'last_identity': True}),
+    (ANN, {'layers': [20, 10], 'activation': 'relu', 'max_iter': 2000, 'n_iter_no_change':2000, 'tol':1e-4, 'solver':'lbfgs'}),
     (KNeighborsRegressor, {'n_neighbors': 1}),
     (RadiusNeighborsRegressor, {'radius': 0.1}),
     (Linear, {}),

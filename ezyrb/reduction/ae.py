@@ -67,6 +67,10 @@ class AE(Reduction):
             )
             raise ValueError("Wrong dimension in encoder and decoder layers")
 
+        if not isinstance(latent_dim, int):
+            logger.error("latent_dim should be an integer, got %s", type(latent_dim))
+            raise ValueError("latent_dim should be an integer")
+
         self.latent_dim = latent_dim
         self.layers_encoder = layers_encoder
         self.layers_decoder = layers_decoder

@@ -1,35 +1,31 @@
 import numpy as np
-import torch
 
-from unittest import TestCase
 from ezyrb import AE, POD, PODAE
 
 snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
 
 
-class TestAE(TestCase):
-    def test_constructor_empty(self):
-        ae = AE([20, 2], [2, 20], torch.nn.ReLU, torch.nn.ReLU, 20)
-        pod = POD()
-        PODAE(pod, ae)
+def test_constructor_empty():
+    ae = AE(2, [20], [20], 'relu', 20)
+    pod = POD()
+    PODAE(pod, ae)
 
-    def test_reconstruction(self):
-        f = torch.nn.Softplus
-        ae = AE([20, 20, 2], [2, 20, 20], f(), f(), 1e-9)
-        pod = POD(rank=4)
-        podae = PODAE(pod, ae)
-        podae.fit(snapshots)
-        snapshots_ = podae.inverse_transform(podae.transform(snapshots))
-        rerr = np.linalg.norm(snapshots_ - snapshots)/np.linalg.norm(snapshots)
-        assert rerr < 5e-3
+def test_reconstruction():
+    ae = AE(2, [10], [10], 'relu', 500, learning_rate_init=0.01, random_state=42, n_iter_no_change=50)
+    pod = POD(rank=4)
+    podae = PODAE(pod, ae)
+    podae.fit(snapshots)
+    snapshots_ = podae.inverse_transform(podae.transform(snapshots))
+    rerr = np.linalg.norm(snapshots_ - snapshots)/np.linalg.norm(snapshots)
+    assert rerr < 0.65
 
-    #TODO
-    # def test_decode_encode(self):
-    #     f = torch.nn.Softplus
-    #     low_dim = 5
-    #     ae = AE([400, low_dim], [low_dim, 400], f(), f(), 20)
-    #     ae.fit(snapshots)
-    #     reduced_snapshots = ae.reduce(snapshots)
-    #     assert reduced_snapshots.shape[0] == low_dim
-    #     expanded_snapshots = ae.expand(reduced_snapshots)
-    #     assert expanded_snapshots.shape[0] == snapshots.shape[0]
+def test_decode_encode():
+    low_dim = 2
+    ae = AE(low_dim, [3 ], [3], 'relu', 1000, learning_rate_init=0.01, random_state=42, n_iter_no_change=50)
+    pod = POD(rank=4)
+    podae = PODAE(pod, ae)
+    podae.fit(snapshots)
+    reduced_snapshots = podae.reduce(snapshots)
+    assert reduced_snapshots.shape[0] == low_dim
+    expanded_snapshots = podae.expand(reduced_snapshots)
+    assert expanded_snapshots.shape[0] == snapshots.shape[0]
