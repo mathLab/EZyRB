@@ -16,7 +16,6 @@ param = np.array([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]])
 
 def test_constructor():
     pod = POD()
-    import torch
 
     rbf = RBF()
     # rbf = ANN([10, 10], function=torch.nn.Softplus(), stop_training=[1000])

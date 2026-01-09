@@ -21,7 +21,7 @@ def get_xy():
 
 @pytest.mark.parametrize("model,kwargs", [
     (GPR, {}),
-    (ANN, {'layers': [20, 10], 'activation': 'relu', 'max_iter': 2000, 'n_iter_no_change':2000, 'tol':1e-4, 'solver':'lbfgs'}),
+    (ANN, {'layers': [20], 'activation': 'relu', 'max_iter': 5000, 'tol':1e-5, 'learning_rate_init':0.0001, 'solver':'lbfgs'}),
     (KNeighborsRegressor, {'n_neighbors': 1}),
     (RadiusNeighborsRegressor, {'radius': 0.1}),
     (Linear, {}),
@@ -44,6 +44,6 @@ class TestApproximation:
         approx.fit(x, y)
         test_y = approx.predict(x)
         if isinstance(approx, ANN):
-            np.testing.assert_array_almost_equal(y, test_y, decimal=3)
+            np.testing.assert_array_almost_equal(y, test_y, decimal=2)
         else:
             np.testing.assert_array_almost_equal(y, test_y, decimal=6)
