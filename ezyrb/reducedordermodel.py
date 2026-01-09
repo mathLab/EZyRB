@@ -20,12 +20,12 @@ logger = logging.getLogger(__name__)
 class ReducedOrderModelInterface(ABC):
     """
     Abstract interface for Reduced Order Model classes.
-    
+
     This class defines the common interface and plugin execution mechanism
     for all ROM implementations.
-    
+
     :Example:
-    
+
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
         >>> import numpy as np
@@ -58,8 +58,9 @@ class ReducedOrderModelInterface(ABC):
         logger.debug("Executing plugins at stage: %s", when)
         for plugin in self.plugins:
             if hasattr(plugin, when):
-                logger.debug("Running plugin %s.%s",
-                             plugin.__class__.__name__, when)
+                logger.debug(
+                    "Running plugin %s.%s", plugin.__class__.__name__, when
+                )
                 getattr(plugin, when)(self)
 
 
@@ -98,11 +99,11 @@ class ReducedOrderModel(ReducedOrderModelInterface):
          >>> rom.predict(new_param)
 
     """
-    def __init__(self, database, reduction, approximation,
-                 plugins=None):
+
+    def __init__(self, database, reduction, approximation, plugins=None):
         """
         Initialize a Reduced Order Model.
-        
+
         :param Database database: The database for training.
         :param Reduction reduction: The reduction method.
         :param Approximation approximation: The approximation method.
@@ -131,7 +132,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def clean(self):
         """
         Clean all internal databases used during training and prediction.
-        
+
         This method resets all training, prediction, test, and validation
         databases to None.
         """
@@ -153,7 +154,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         if not isinstance(value, (Database, dict)):
             raise TypeError(
-                "The database has to be an instance of the Database class, or a dictionary of Database.")
+                "The database has to be an instance of the Database class, or a dictionary of Database."
+            )
 
         self._database = value
 
@@ -169,7 +171,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def reduction(self, value):
         if not isinstance(value, Reduction):
             raise TypeError(
-                "The reduction has to be an instance of the Reduction class, or a dict of Reduction.")
+                "The reduction has to be an instance of the Reduction class, or a dict of Reduction."
+            )
 
         self._reduction = value
 
@@ -185,7 +188,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def approximation(self, value):
         if not isinstance(value, Approximation):
             raise TypeError(
-                "The approximation has to be an instance of the Approximation class, or a dict of Approximation.")
+                "The approximation has to be an instance of the Approximation class, or a dict of Approximation."
+            )
 
         self._approximation = value
 
@@ -211,16 +215,16 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def fit_reduction(self):
         """
         Fit the reduction method on the training database.
-        
+
         This method applies the reduction technique to the snapshots matrix
         of the training database.
-        
+
         :raises RuntimeError: If the training database has not been set.
         """
 
         # for k, rom_ in self.roms.items():
         #     rom_['reduction'].fit(rom_['database'].snapshots_matrix.T)
-        if not hasattr(self, 'train_full_database'):
+        if not hasattr(self, "train_full_database"):
             raise RuntimeError
 
         self.reduction.fit(self.train_full_database.snapshots_matrix.T)
@@ -228,31 +232,33 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def _reduce_database(self, db):
         """
         Reduce a database using the fitted reduction method.
-        
+
         :param Database db: The database to reduce.
         :return: A new database with reduced snapshots.
         :rtype: Database
         """
         return Database(
             db.parameters_matrix,
-            self.reduction.transform(db.snapshots_matrix.T).T
+            self.reduction.transform(db.snapshots_matrix.T).T,
         )
 
     def fit_approximation(self):
         """
         Fit the approximation method on the reduced training database.
-        
+
         This method trains the approximation technique on the reduced space
         representation of the snapshots.
-        
+
         :raises RuntimeError: If the reduced training database has not been created.
         """
 
-        if not hasattr(self, 'train_reduced_database'):
+        if not hasattr(self, "train_reduced_database"):
             raise RuntimeError
 
-        self.approximation.fit(self.train_reduced_database.parameters_matrix,
-                           self.train_reduced_database.snapshots_matrix)
+        self.approximation.fit(
+            self.train_reduced_database.parameters_matrix,
+            self.train_reduced_database.snapshots_matrix,
+        )
 
         # if self.n_database == 1 and self.n_reduction == 1:
         #     self.train_full_database = self.database
@@ -284,21 +290,24 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         """
         logger.info("Starting ROM fit process")
-        self._execute_plugins('fit_preprocessing')
+        self._execute_plugins("fit_preprocessing")
         if self.train_full_database is None:
             self.train_full_database = copy.deepcopy(self.database)
             logger.debug("Copied database to train_full_database")
 
-        self._execute_plugins('fit_before_reduction')
+        self._execute_plugins("fit_before_reduction")
 
         logger.debug("Fitting reduction method")
         self.fit_reduction()
         self.train_reduced_database = self._reduce_database(
-            self.train_full_database)
-        logger.info("Reduction completed. Reduced dimension: %s",
-                    self.train_reduced_database.snapshots_matrix.shape)
+            self.train_full_database
+        )
+        logger.info(
+            "Reduction completed. Reduced dimension: %s",
+            self.train_reduced_database.snapshots_matrix.shape,
+        )
 
-        self._execute_plugins('fit_after_reduction')
+        self._execute_plugins("fit_after_reduction")
         # FULL-ORDER PREPROCESSING here
         # for plugin in self.plugins:
         #    plugin.fom_preprocessing(self)
@@ -309,14 +318,14 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         # reduced_snapshots = self.reduction.transform(
         #    self._full_database.snapshots_matrix.T).T
 
-        self._execute_plugins('fit_before_approximation')
+        self._execute_plugins("fit_before_approximation")
 
         logger.debug("Fitting approximation method")
         self.fit_approximation()
 
-        self._execute_plugins('fit_after_approximation')
+        self._execute_plugins("fit_after_approximation")
 
-        self._execute_plugins('fit_postprocessing')
+        self._execute_plugins("fit_postprocessing")
 
         logger.info("ROM fit process completed successfully")
         return self
@@ -334,65 +343,62 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         """
         logger.info("Starting ROM predict process")
         logger.debug("Parameters type: %s", type(parameters))
-        self._execute_plugins('predict_preprocessing')
+        self._execute_plugins("predict_preprocessing")
 
         if isinstance(parameters, Database):
             self.predict_reduced_database = parameters
-            logger.debug("Using Database with %d parameters",
-                         len(parameters))
+            logger.debug("Using Database with %d parameters", len(parameters))
 
         elif isinstance(parameters, (list, np.ndarray, tuple)):
 
             parameters = np.atleast_2d(parameters)
             logger.debug("Parameters shape: %s", parameters.shape)
             self.predict_reduced_database = Database(
-                parameters=parameters,
-                snapshots=[None] * len(parameters)
+                parameters=parameters, snapshots=[None] * len(parameters)
             )
         else:
             logger.error("Invalid parameters type: %s", type(parameters))
             raise TypeError
 
-        self._execute_plugins('predict_before_approximation')
+        self._execute_plugins("predict_before_approximation")
         logger.debug("Predicting with approximation method")
         self.predict_reduced_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.approximation.predict(
-                self.predict_reduced_database.parameters_matrix).reshape(
-                    self.predict_reduced_database.parameters_matrix.shape[0],
-                    -1
-                )
+                self.predict_reduced_database.parameters_matrix
+            ).reshape(
+                self.predict_reduced_database.parameters_matrix.shape[0], -1
+            ),
         )
 
-        self._execute_plugins('predict_after_approximation')
+        self._execute_plugins("predict_after_approximation")
         # mu = np.atleast_2d(mu)
 
         # for plugin in self.plugins:
         #    if plugin.target == 'parameters':
         #        mu = plugin.scaler.transform(mu)
 
-
         # self._reduced_database = Database(
         #        mu, np.atleast_2d(self.approximation.predict(mu)))
 
-        self._execute_plugins('predict_before_expansion')
+        self._execute_plugins("predict_before_expansion")
 
         logger.debug("Expanding to full space")
         self.predicted_full_database = Database(
             self.predict_reduced_database.parameters_matrix,
             self.reduction.inverse_transform(
-                    self.predict_reduced_database.snapshots_matrix.T).T
+                self.predict_reduced_database.snapshots_matrix.T
+            ).T,
         )
-        self._execute_plugins('predict_after_expansion')
+        self._execute_plugins("predict_after_expansion")
 
-        self._execute_plugins('predict_postprocessing')
+        self._execute_plugins("predict_postprocessing")
 
         logger.info("ROM predict process completed")
         if isinstance(parameters, Database):
             return self.predicted_full_database  # predict_full_database
         else:
             return self.predicted_full_database.snapshots_matrix
-
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
@@ -422,7 +428,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         if not save_approx:
             del rom_to_store.approximation
 
-        with open(fname, 'wb') as output:
+        with open(fname, "wb") as output:
             pickle.dump(rom_to_store, output, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
@@ -438,7 +444,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         >>> rom = ROM.load('ezyrb.rom')
         >>> rom.predict(new_param)
         """
-        with open(fname, 'rb') as output:
+        with open(fname, "rb") as output:
             rom = pickle.load(output)
 
         return rom
@@ -452,8 +458,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
-        :param relative: True if the error computed is relative. Default is 
-            True. 
+        :param relative: True if the error computed is relative. Default is
+            True.
         :return: the mean L2 norm of the relative errors of the estimated
             test snapshots.
         :rtype: numpy.ndarray
@@ -461,15 +467,15 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         predicted_test = self.predict(test.parameters_matrix)
         if relative:
             return np.mean(
-                norm(predicted_test - test.snapshots_matrix,
-                axis=1) / norm(test.snapshots_matrix, axis=1))
+                norm(predicted_test - test.snapshots_matrix, axis=1)
+                / norm(test.snapshots_matrix, axis=1)
+            )
         else:
-            return np.mean(
-                norm(predicted_test - test.snapshots_matrix,
-                axis=1))
+            return np.mean(norm(predicted_test - test.snapshots_matrix, axis=1))
 
-    def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, relative=True, 
-                       **kwargs):
+    def kfold_cv_error(
+        self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
+    ):
         r"""
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
@@ -481,8 +487,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: function to apply to compute the relative error
             between the true snapshot and the predicted one.
             Default value is the L2 norm.
-        :param relative: True if the error computed is relative. Default is 
-            True. 
+        :param relative: True if the error computed is relative. Default is
+            True.
         :param \*args: additional parameters to pass to the `fit` method.
         :param \**kwargs: additional parameters to pass to the `fit` method.
         :return: the vector containing the errors corresponding to each fold.
@@ -492,12 +498,16 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         kf = KFold(n_splits=n_splits)
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation),
-                             plugins=[copy.deepcopy(p) for p in self.plugins]).fit(
-                                 *args, **kwargs)
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+                plugins=[copy.deepcopy(p) for p in self.plugins],
+            ).fit(*args, **kwargs)
 
-            error.append(rom.test_error(self.database[test_index], norm, relative))
+            error.append(
+                rom.test_error(self.database[test_index], norm, relative)
+            )
 
         return np.array(error)
 
@@ -529,9 +539,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation),
-                             plugins=[copy.deepcopy(p) for p in self.plugins]).fit()
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+                plugins=[copy.deepcopy(p) for p in self.plugins],
+            ).fit()
 
             error[j] = rom.test_error(test_db)
 
@@ -558,10 +571,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         mu = self.database.parameters_matrix
         tria = Delaunay(mu)
 
-        error_on_simplex = np.array([
-            np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
-            for smpx in tria.simplices
-        ])
+        error_on_simplex = np.array(
+            [
+                np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
+                for smpx in tria.simplices
+            ]
+        )
 
         barycentric_point = []
         for index in np.argpartition(error_on_simplex, -k)[-k:]:
@@ -569,7 +584,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
+            )
 
         return np.asarray(barycentric_point)
 
@@ -588,26 +604,27 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         """
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
-            np.linalg.det(distance) / math.factorial(vertices.shape[1]))
+            np.linalg.det(distance) / math.factorial(vertices.shape[1])
+        )
 
     def reduction_error(self, db=None, relative=True, eps=1e-12):
         """
         Calculate the reconstruction error between the original snapshots and
         the ones reconstructed by the ROM.
-        
+
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is 
+        :param bool relative: True if the error computed is relative. Default is
             True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
         :return: the vector containing the reconstruction errors.
-        
-        Esempio:    
+
+        Esempio:
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
-        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        >>> db = Database(param, snapshots) # param and snapshots are assumed
         to be declared
         >>> db_train = db[:10] # training database
         >>> db_test = db[10:] # test database
@@ -618,10 +635,10 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         >>> err_train_reduct = rom.reconstruction_error(relative=True)
         >>> err_test_reduct = rom.reconstruction_error(db_test, relative=True)
         """
-        
+
         errs = []
         if db is None:
-            db = self.database   
+            db = self.database
         snap = db.snapshots_matrix
         snap_red = self.reduction.transform(snap.T)
         snap_full = self.reduction.inverse_transform(snap_red).T
@@ -631,33 +648,33 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         if relative:
             num = np.linalg.norm(E, axis=1)
             den = np.linalg.norm(snap, axis=1) + eps
-            
-            err = float(np.mean(num/den))        
+
+            err = float(np.mean(num / den))
         else:
             err = float(np.mean(np.linalg.norm(E, axis=1)))
         errs.append(err)
-        
+
         return np.array(errs)
 
     def approximation_error(self, db=None, relative=True, eps=1e-12):
         """
         Calculate the approximation error between the true modal coefficients
         and the approximated ones.
-        
+
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is 
+        :param bool relative: True if the error computed is relative. Default is
             True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
-            
+
         :return: the vector containing the approximation errors.
-        
+
         Esempio:
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
-        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        >>> db = Database(param, snapshots) # param and snapshots are assumed
         to be declared
         >>> db_train = db[:10] # training database
         >>> db_test = db[10:] # test database
@@ -686,13 +703,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             num = np.linalg.norm(E, axis=1)
             den = np.linalg.norm(params_true, axis=1) + eps
 
-            err = float(np.mean(num/den))
+            err = float(np.mean(num / den))
         else:
             err = float(np.mean(np.linalg.norm(E, axis=1)))
         errs.append(err)
 
         return np.array(errs)
-
 
 
 class MultiReducedOrderModel(ReducedOrderModelInterface):
@@ -730,15 +746,16 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
          >>> rom.predict(new_param)
 
     """
+
     def __init__(self, *args, plugins=None, rom_plugin=None):
         """
         Initialize a Multi-ROM with multiple databases and methods.
-        
+
         Supports multiple initialization signatures:
         - (database_dict, reduction_dict, approximation_dict)
         - (database, roms_dict)
         - (roms_dict,)
-        
+
         :param args: Variable arguments for different initialization modes.
         :param list plugins: Global plugins for the Multi-ROM. Default is None.
         :param rom_plugin: Plugin to add to each individual ROM. Default is None.
@@ -754,27 +771,31 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             element_keys = product(
                 self.database.keys(),
                 self.reduction.keys(),
-                self.approximation.keys()
+                self.approximation.keys(),
             )
             self.roms = {
-
                 tuple(key): ReducedOrderModel(
                     copy.deepcopy(self.database[key[0]]),
                     copy.deepcopy(self.reduction[key[1]]),
-                    copy.deepcopy(self.approximation[key[2]])
+                    copy.deepcopy(self.approximation[key[2]]),
                 )
                 for key in element_keys
             }
-        elif (len(args) == 2 and isinstance(args[0], Database)
-            and isinstance(args[1], dict)):
+        elif (
+            len(args) == 2
+            and isinstance(args[0], Database)
+            and isinstance(args[1], dict)
+        ):
             self.database = args[0]
             self.roms = args[1]
 
         elif len(args) == 1 and isinstance(args[0], dict):
             self.roms = args[0]
             roms_keys = list(self.roms.keys())
-            self.database = {roms_keys[i]: self.roms[roms_keys[i]].database
-                        for i in range(len(self.roms))}
+            self.database = {
+                roms_keys[i]: self.roms[roms_keys[i]].database
+                for i in range(len(self.roms))
+            }
 
         if plugins is None:
             plugins = []
@@ -783,7 +804,6 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         if rom_plugin is not None:
             for rom_ in self.roms.values():
                 rom_.plugins.append(rom_plugin)
-
 
     @property
     def database(self):
@@ -794,7 +814,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         if not isinstance(value, (Database, dict)):
             raise TypeError(
-                "The database has to be an instance of the Database class, or a dictionary of Database.")
+                "The database has to be an instance of the Database class, or a dictionary of Database."
+            )
 
         if isinstance(value, Database):
             self._database = {0: value}
@@ -813,7 +834,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def reduction(self, value):
         if not isinstance(value, (Reduction, dict)):
             raise TypeError(
-                "The reduction has to be an instance of the Reduction class, or a dict of Reduction.")
+                "The reduction has to be an instance of the Reduction class, or a dict of Reduction."
+            )
 
         if isinstance(value, Reduction):
             self._reduction = {0: value}
@@ -832,7 +854,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def approximation(self, value):
         if not isinstance(value, (Approximation, dict)):
             raise TypeError(
-                "The approximation has to be an instance of the Approximation class, or a dict of Approximation.")
+                "The approximation has to be an instance of the Approximation class, or a dict of Approximation."
+            )
 
         if isinstance(value, Approximation):
             self._approximation = {0: value}
@@ -853,21 +876,19 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def n_approximation(self):
         value_, class_ = self.approximation, Approximation
         return len(value_) if isinstance(value_, class_) else 1
-        
+
     def fit(self):
         r"""
         Calculate reduced space
         """
-        self._execute_plugins('fit_preprocessing')
+        self._execute_plugins("fit_preprocessing")
 
         for rom_ in self.roms.values():
-            if rom_.train_reduced_database==None:
+            if rom_.train_reduced_database == None:
                 rom_.fit()
-        
-        self._execute_plugins('fit_postprocessing')
-        return self
 
-    
+        self._execute_plugins("fit_postprocessing")
+        return self
 
     def predict(self, parameters=None):
         """
@@ -880,7 +901,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :rtype: Database
         """
 
-        self._execute_plugins('predict_preprocessing')
+        self._execute_plugins("predict_preprocessing")
 
         # convert parameters from Database to numpy array (if database)
         if isinstance(parameters, Database):
@@ -889,7 +910,9 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         elif isinstance(parameters, (list, np.ndarray, tuple)):
             print(parameters)
             parameters = np.atleast_2d(parameters)
-            self.predict_reduced_database = Database(parameters, [None]*len(parameters))
+            self.predict_reduced_database = Database(
+                parameters, [None] * len(parameters)
+            )
         elif parameters is None:
             if self.predict_full_database is None:
                 raise RuntimeError
@@ -898,18 +921,19 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         self.multi_predict_database = {}
         for k, rom_ in self.roms.items():
-            self.multi_predict_database[k] = rom_.predict(self.predict_reduced_database)
+            self.multi_predict_database[k] = rom_.predict(
+                self.predict_reduced_database
+            )
         print(self.multi_predict_database)
-        self._execute_plugins('predict_postprocessing')
+        self._execute_plugins("predict_postprocessing")
 
         if isinstance(parameters, Database):
             return self.multi_predict_database
         else:
             return {
-                k:db.snapshots_matrix 
+                k: db.snapshots_matrix
                 for k, db in self.multi_predict_database.items()
             }
-            
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """
@@ -939,7 +963,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         if not save_approx:
             del rom_to_store.approximation
 
-        with open(fname, 'wb') as output:
+        with open(fname, "wb") as output:
             pickle.dump(rom_to_store, output, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
@@ -955,7 +979,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         >>> rom = ROM.load('ezyrb.rom')
         >>> rom.predict(new_param)
         """
-        with open(fname, 'rb') as output:
+        with open(fname, "rb") as output:
             rom = pickle.load(output)
 
         return rom
@@ -969,8 +993,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: the function used to assign at the vector of
             errors a float number. It has to take as input a 'numpy.ndarray'
             and returns a float. Default value is the L2 norm.
-        :param relative: True if the error computed is relative. Default is 
-            True. 
+        :param relative: True if the error computed is relative. Default is
+            True.
         :return: the mean L2 norm of the relative errors of the estimated
             test snapshots.
         :rtype: numpy.ndarray
@@ -978,15 +1002,23 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         predicted_test = self.predict(test.parameters_matrix)
         if relative:
             return np.mean(
-                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
-                axis=1) / norm(test.snapshots_matrix, axis=1))
+                norm(
+                    predicted_test.snapshots_matrix - test.snapshots_matrix,
+                    axis=1,
+                )
+                / norm(test.snapshots_matrix, axis=1)
+            )
         else:
             return np.mean(
-                norm(predicted_test.snapshots_matrix - test.snapshots_matrix,
-                axis=1))
+                norm(
+                    predicted_test.snapshots_matrix - test.snapshots_matrix,
+                    axis=1,
+                )
+            )
 
-    def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, relative=True, 
-                       **kwargs):
+    def kfold_cv_error(
+        self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
+    ):
         r"""
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
@@ -998,8 +1030,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :param function norm: function to apply to compute the relative error
             between the true snapshot and the predicted one.
             Default value is the L2 norm.
-        :param relative: True if the error computed is relative. Default is 
-            True. 
+        :param relative: True if the error computed is relative. Default is
+            True.
         :param \*args: additional parameters to pass to the `fit` method.
         :param \**kwargs: additional parameters to pass to the `fit` method.
         :return: the vector containing the errors corresponding to each fold.
@@ -1010,11 +1042,15 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
             # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
-                                 *args, **kwargs)
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+            ).fit(*args, **kwargs)
 
-            error.append(rom.test_error(self.database[test_index], norm, relative))
+            error.append(
+                rom.test_error(self.database[test_index], norm, relative)
+            )
 
         return np.array(error)
 
@@ -1047,8 +1083,11 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
             # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit()
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+            ).fit()
 
             error[j] = rom.test_error(test_db)
 
@@ -1075,10 +1114,12 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         mu = self.database.parameters_matrix
         tria = Delaunay(mu)
 
-        error_on_simplex = np.array([
-            np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
-            for smpx in tria.simplices
-        ])
+        error_on_simplex = np.array(
+            [
+                np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
+                for smpx in tria.simplices
+            ]
+        )
 
         barycentric_point = []
         for index in np.argpartition(error_on_simplex, -k)[-k:]:
@@ -1086,7 +1127,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
+            )
 
         return np.asarray(barycentric_point)
 
@@ -1105,26 +1147,27 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         """
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
-            np.linalg.det(distance) / math.factorial(vertices.shape[1]))
+            np.linalg.det(distance) / math.factorial(vertices.shape[1])
+        )
 
     def reduction_error(self, db=None, relative=True, eps=1e-12):
         """
         Calculate the reconstruction error between the original snapshots and
         the ones reconstructed by the ROM.
-        
+
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is 
+        :param bool relative: True if the error computed is relative. Default is
             True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
         :return: the vector containing the reconstruction errors.
-        
-        Esempio:    
+
+        Esempio:
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
-        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        >>> db = Database(param, snapshots) # param and snapshots are assumed
         to be declared
         >>> db_train = db[:10] # training database
         >>> db_test = db[10:] # test database
@@ -1135,10 +1178,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         >>> err_train_reduct = rom.reconstruction_error(relative=True)
         >>> err_test_reduct = rom.reconstruction_error(db_test, relative=True)
         """
-        
+
         errs = []
         if db is None:
-            db = self.database   
+            db = self.database
         snap = db.snapshots_matrix
         snap_red = self.reduction.transform(snap.T)
         snap_full = self.reduction.inverse_transform(snap_red).T
@@ -1148,33 +1191,33 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         if relative:
             num = np.linalg.norm(E, axis=1)
             den = np.linalg.norm(snap, axis=1) + eps
-            
-            err = float(np.mean(num/den))        
+
+            err = float(np.mean(num / den))
         else:
             err = float(np.mean(np.linalg.norm(E, axis=1)))
         errs.append(err)
-        
+
         return np.array(errs)
 
     def approximation_error(self, db=None, relative=True, eps=1e-12):
         """
         Calculate the approximation error between the true modal coefficients
         and the approximated ones.
-        
+
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is 
+        :param bool relative: True if the error computed is relative. Default is
             True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
-            
+
         :return: the vector containing the approximation errors.
-        
+
         Esempio:
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
-        >>> db = Database(param, snapshots) # param and snapshots are assumed 
+        >>> db = Database(param, snapshots) # param and snapshots are assumed
         to be declared
         >>> db_train = db[:10] # training database
         >>> db_test = db[10:] # test database
@@ -1203,10 +1246,9 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             num = np.linalg.norm(E, axis=1)
             den = np.linalg.norm(params_true, axis=1) + eps
 
-            err = float(np.mean(num/den))
+            err = float(np.mean(num / den))
         else:
             err = float(np.mean(np.linalg.norm(E, axis=1)))
         errs.append(err)
 
         return np.array(errs)
-

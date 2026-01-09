@@ -1,6 +1,7 @@
 """
 Module for higher order interpolation on regular grids
 """
+
 import logging
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator as RGI
@@ -52,7 +53,7 @@ class RegularGrid(Approximation):
     def __init__(self):
         """
         Initialize a RegularGrid interpolator.
-        
+
         The interpolator will be configured during the fit method.
         """
         self.interpolator = None
@@ -75,15 +76,18 @@ class RegularGrid(Approximation):
         nN = []  # size of dimension N
         dim = pts_scrmbld.shape[1]
         for i in range(dim):
-            xn, unique_inverse_n = np.unique(pts_scrmbld[:, i],
-                                             return_inverse=True)
+            xn, unique_inverse_n = np.unique(
+                pts_scrmbld[:, i], return_inverse=True
+            )
             grid_axes.append(xn)
             nN.append(len(xn))
             iN.append(unique_inverse_n)
         if np.prod(nN) != len(vals_scrmbld):
-            msg = "Values don't match grid. Make sure to pass a list of "\
-                  "points that are on a regular grid! Be aware of floating "\
-                  "point precision."
+            msg = (
+                "Values don't match grid. Make sure to pass a list of "
+                "points that are on a regular grid! Be aware of floating "
+                "point precision."
+            )
             raise ValueError(msg)
         new_row_index = np.ravel_multi_index(iN, nN)
         reverse_scrambling = np.argsort(new_row_index)
@@ -99,14 +103,17 @@ class RegularGrid(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        logger.debug("Fitting RegularGrid with points shape: %s, "
-                     "values shape: %s",
-                     np.asarray(points).shape, np.asarray(values).shape)
+        logger.debug(
+            "Fitting RegularGrid with points shape: %s, " "values shape: %s",
+            np.asarray(points).shape,
+            np.asarray(values).shape,
+        )
         points = np.asarray(points)
         if not np.issubdtype(points.dtype, np.number):
             logger.error("Invalid points format/dimension")
-            raise ValueError('Invalid format or dimension for the argument'
-                             '`points`.')
+            raise ValueError(
+                "Invalid format or dimension for the argument" "`points`."
+            )
         if points.ndim == 1:
             points = points[:, None]
             logger.debug("Expanded points to 2D")
@@ -116,8 +123,7 @@ class RegularGrid(Approximation):
         shape = [len(ax) for ax in grid_axes]
         shape.append(-1)
         logger.debug("Grid shape: %s", shape)
-        self.interpolator = RGI(grid_axes, values_grd.reshape(shape),
-                                **kwargs)
+        self.interpolator = RGI(grid_axes, values_grd.reshape(shape), **kwargs)
         logger.info("RegularGrid fitted successfully")
 
     def predict(self, new_point):

@@ -1,9 +1,18 @@
 """EZyRB package"""
 
 __all__ = [
-    'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
-    'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor', 'AE', 'AE_EDDL',
-    'ReducedOrderModel'
+    "Reduction",
+    "POD",
+    "Approximation",
+    "RBF",
+    "Linear",
+    "GPR",
+    "ANN",
+    "KNeighborsRegressor",
+    "RadiusNeighborsRegressor",
+    "AE",
+    "AE_EDDL",
+    "ReducedOrderModel",
 ]
 
 from .reduction import Reduction

@@ -1,4 +1,3 @@
-
 import logging
 from .plugin import Plugin
 from ..database import Database
@@ -9,18 +8,18 @@ logger = logging.getLogger(__name__)
 class DatabaseSplitter(Plugin):
     """
     Plugin for splitting the database into training, test, validation, and prediction sets.
-    
+
     This plugin automatically splits the database according to specified ratios
     before the fitting process begins.
-    
+
     :param float train: Ratio or number of samples for training set. Default is 0.9.
     :param float test: Ratio or number of samples for test set. Default is 0.1.
     :param float validation: Ratio or number of samples for validation set. Default is 0.0.
     :param float predict: Ratio or number of samples for prediction set. Default is 0.0.
     :param int seed: Random seed for reproducibility. Default is None.
-    
+
     :Example:
-    
+
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
         >>> from ezyrb.plugin import DatabaseSplitter
@@ -35,11 +34,12 @@ class DatabaseSplitter(Plugin):
         >>> rom.fit()
     """
 
-    def __init__(self, train=0.9, test=0.1, validation=0.0, predict=0.0,
-            seed=None):
+    def __init__(
+        self, train=0.9, test=0.1, validation=0.0, predict=0.0, seed=None
+    ):
         """
         Initialize the DatabaseSplitter plugin.
-        
+
         :param float train: Ratio for training set. Default is 0.9.
         :param float test: Ratio for test set. Default is 0.1.
         :param float validation: Ratio for validation set. Default is 0.0.
@@ -47,9 +47,15 @@ class DatabaseSplitter(Plugin):
         :param int seed: Random seed. Default is None.
         """
         super().__init__()
-        logger.debug("Initializing DatabaseSplitter with train=%f, test=%f, "
-                     "validation=%f, predict=%f, seed=%s",
-                     train, test, validation, predict, seed)
+        logger.debug(
+            "Initializing DatabaseSplitter with train=%f, test=%f, "
+            "validation=%f, predict=%f, seed=%s",
+            train,
+            test,
+            validation,
+            predict,
+            seed,
+        )
 
         self.train = train
         self.test = test
@@ -60,7 +66,7 @@ class DatabaseSplitter(Plugin):
     def fit_preprocessing(self, rom):
         """
         Split the database before fitting begins.
-        
+
         :param ReducedOrderModel rom: The ROM instance.
         """
         logger.debug("Splitting database for ROM")
@@ -69,14 +75,14 @@ class DatabaseSplitter(Plugin):
             logger.debug("Splitting single Database")
             train, test, validation, predict = db.split(
                 [self.train, self.test, self.validation, self.predict],
-                seed=self.seed
+                seed=self.seed,
             )
 
         elif isinstance(db, dict):
             logger.debug("Splitting Database dictionary")
             train, test, validation, predict = list(db.values())[0].split(
                 [self.train, self.test, self.validation, self.predict],
-                seed=self.seed
+                seed=self.seed,
             )
             # TODO improve this splitting if needed (now only reading the
             # database of the first ROM)
@@ -85,9 +91,13 @@ class DatabaseSplitter(Plugin):
         rom.test_full_database = test
         rom.validation_full_database = validation
         rom.predict_full_database = predict
-        logger.info("Database split: train=%d, test=%d, validation=%d, "
-                    "predict=%d",
-                    len(train), len(test), len(validation), len(predict))
+        logger.info(
+            "Database split: train=%d, test=%d, validation=%d, " "predict=%d",
+            len(train),
+            len(test),
+            len(validation),
+            len(predict),
+        )
         # print('train', train.snapshots_matrix.shape)
         # print('test', test.snapshots_matrix.shape)
         # print('validation', validation.snapshots_matrix.shape)
@@ -101,9 +111,9 @@ class DatabaseDictionarySplitter(Plugin):
     predict are already database objects stored in a dictionary. Given the desired keys
     of the dictionary as input, the plugin will assign the corresponding database
     objects to the train, test, validation and predict attributes of the ROM.
-    
+
     :Example:
-    
+
         >>> from ezyrb import ReducedOrderModel as ROM
         >>> from ezyrb import POD, RBF, Database
         >>> from ezyrb.plugin import DatabaseDictionarySplitter
@@ -117,12 +127,17 @@ class DatabaseDictionarySplitter(Plugin):
         >>> rom = ROM(db_dict['train'], pod, rbf, plugins=[splitter])
         >>> rom.fit()
     """
-    
-    def __init__(self, train_key=None, test_key=None, validation_key=None,
-                 predict_key=None):
+
+    def __init__(
+        self,
+        train_key=None,
+        test_key=None,
+        validation_key=None,
+        predict_key=None,
+    ):
         """
         Initialize the DatabaseDictionarySplitter plugin.
-        
+
         :param str train_key: Dictionary key for training database. Default is None.
         :param str test_key: Dictionary key for test database. Default is None.
         :param str validation_key: Dictionary key for validation database. Default is None.
@@ -137,7 +152,7 @@ class DatabaseDictionarySplitter(Plugin):
     def fit_preprocessing(self, rom):
         """
         Assign the database splits from the dictionary before fitting.
-        
+
         :param ReducedOrderModel rom: The ROM instance.
         :raises ValueError: If the database is not a dictionary.
         """
@@ -153,4 +168,3 @@ class DatabaseDictionarySplitter(Plugin):
                 rom.predict_full_database = db[self.predict_key]
         else:
             raise ValueError("The database must be a dictionary of databases.")
-           

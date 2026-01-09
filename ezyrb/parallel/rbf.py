@@ -6,6 +6,7 @@ from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .approximation import Approximation
 
+
 class RBF(Approximation):
     """
     Multidimensional interpolator using Radial Basis Function.
@@ -40,12 +41,15 @@ class RBF(Approximation):
          >>> print(np.allclose(y, y_pred))
 
     """
-    def __init__(self,
-                 kernel='thin_plate_spline',
-                 smooth=0,
-                 neighbors=None,
-                 epsilon=None,
-                 degree=None):
+
+    def __init__(
+        self,
+        kernel="thin_plate_spline",
+        smooth=0,
+        neighbors=None,
+        epsilon=None,
+        degree=None,
+    ):
         self.kernel = kernel
         self.smooth = smooth
         self.neighbors = neighbors
@@ -72,8 +76,8 @@ class RBF(Approximation):
             ximin = np.amin(self.xi, axis=0)
             edges = ximax - ximin
             edges = edges[np.nonzero(edges)]
-            self.epsilon = np.power(np.prod(edges)/N, 1.0/edges.size)
-            if self.kernel in ['thin_plate_spline', 'cubic', 'quintic']:
+            self.epsilon = np.power(np.prod(edges) / N, 1.0 / edges.size)
+            if self.kernel in ["thin_plate_spline", "cubic", "quintic"]:
                 self.epsilon = 1
 
         self.interpolator = RBFInterpolator(
@@ -83,7 +87,8 @@ class RBF(Approximation):
             smoothing=self.smooth,
             kernel=self.kernel,
             epsilon=self.epsilon,
-            degree=self.degree)
+            degree=self.degree,
+        )
 
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
@@ -94,10 +99,10 @@ class RBF(Approximation):
         :return: the interpolated values.
         :rtype: numpy.ndarray
         """
-        predicted_red_sol = np.atleast_2d(self.interpolator(
-            np.asarray(new_point)))
+        predicted_red_sol = np.atleast_2d(
+            self.interpolator(np.asarray(new_point))
+        )
         if scaler_red:  # rescale modal coefficients
-            predicted_red_sol = scaler_red.inverse_transform(
-                predicted_red_sol)
+            predicted_red_sol = scaler_red.inverse_transform(predicted_red_sol)
         predicted_red_sol = predicted_red_sol.T
         return predicted_red_sol

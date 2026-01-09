@@ -1,4 +1,4 @@
-""" Module for Scaler plugin """
+"""Module for Scaler plugin"""
 
 import numpy as np
 
@@ -47,11 +47,19 @@ class AutomaticShiftSnapshots(Plugin):
     >>> rom = ROM(db, pod, rbf, plugins=[nnspod])
     >>> rom.fit()
     """
-    def __init__(self, shift_network, interp_network, interpolator,
-                 parameter_index=0, reference_index=0, barycenter_loss=0):
+
+    def __init__(
+        self,
+        shift_network,
+        interp_network,
+        interpolator,
+        parameter_index=0,
+        reference_index=0,
+        barycenter_loss=0,
+    ):
         """
         Initialize the AutomaticShiftSnapshots plugin.
-        
+
         :param shift_network: Neural network for learning the shift function.
         :param interp_network: Neural network for interpolation.
         :param Approximation interpolator: Interpolator for shifted snapshots evaluation.
@@ -74,32 +82,46 @@ class AutomaticShiftSnapshots(Plugin):
         """
         self.interp_network.fit(
             self.reference_snapshot.space.reshape(-1, 1),
-            self.reference_snapshot.values.reshape(-1, 1)
+            self.reference_snapshot.values.reshape(-1, 1),
         )
 
     def _train_shift_network(self, db):
         """
         Train the shift network using the database snapshots.
-        
+
         :param Database db: The database containing snapshots.
         """
-        ref_center = torch.tensor(np.average(
-            self.reference_snapshot.space * self.reference_snapshot.values))
+        ref_center = torch.tensor(
+            np.average(
+                self.reference_snapshot.space * self.reference_snapshot.values
+            )
+        )
 
-        input_ = torch.from_numpy(np.vstack([
-            np.vstack([s.space, np.ones(shape=(s.space.shape[0],))*p.values]).T
-            for p, s in db._pairs 
-        ])).float()
-        output_ = torch.from_numpy(np.vstack([
-            self.reference_snapshot.space.reshape(-1, 1)
-            for _ in db._pairs
-        ]))
+        input_ = torch.from_numpy(
+            np.vstack(
+                [
+                    np.vstack(
+                        [s.space, np.ones(shape=(s.space.shape[0],)) * p.values]
+                    ).T
+                    for p, s in db._pairs
+                ]
+            )
+        ).float()
+        output_ = torch.from_numpy(
+            np.vstack(
+                [
+                    self.reference_snapshot.space.reshape(-1, 1)
+                    for _ in db._pairs
+                ]
+            )
+        )
 
         self.shift_network._build_model(input_, output_)
         optimizer = self.shift_network.optimizer(
             self.shift_network.model.parameters(),
             lr=self.shift_network.lr,
-            weight_decay=self.shift_network.l2_regularization)
+            weight_decay=self.shift_network.l2_regularization,
+        )
 
         n_epoch = 1
         flag = True
@@ -112,16 +134,25 @@ class AutomaticShiftSnapshots(Plugin):
                 tensor_space = torch.from_numpy(snap.space)
                 tensor_values = torch.from_numpy(snap.values)
 
-                translated_space = tensor_space - shift.reshape(snap.space.shape)
+                translated_space = tensor_space - shift.reshape(
+                    snap.space.shape
+                )
                 translated_space = translated_space.float()
-                interpolated_reference_values = self.interp_network.model(translated_space.reshape(-1, 1)).float().flatten()
+                interpolated_reference_values = (
+                    self.interp_network.model(translated_space.reshape(-1, 1))
+                    .float()
+                    .flatten()
+                )
 
                 diff = torch.mean(
-                    (tensor_values - interpolated_reference_values)**2)
+                    (tensor_values - interpolated_reference_values) ** 2
+                )
 
                 if self.barycenter_loss:
                     snap_center = torch.mean(translated_space * tensor_values)
-                    diff += self.barycenter_loss*(ref_center - snap_center)**2
+                    diff += (
+                        self.barycenter_loss * (ref_center - snap_center) ** 2
+                    )
 
                 loss += diff
 
@@ -140,9 +171,12 @@ class AutomaticShiftSnapshots(Plugin):
                     if scalar_loss < criteria:
                         flag = False
 
-            if (flag is False or
-                    n_epoch == 1 or n_epoch % self.shift_network.frequency_print == 0):
-                print(f'[epoch {n_epoch:6d}]\t{scalar_loss:e}')
+            if (
+                flag is False
+                or n_epoch == 1
+                or n_epoch % self.shift_network.frequency_print == 0
+            ):
+                print(f"[epoch {n_epoch:6d}]\t{scalar_loss:e}")
 
             n_epoch += 1
 
@@ -156,35 +190,46 @@ class AutomaticShiftSnapshots(Plugin):
         self._train_shift_network(db)
 
         for param, snap in db._pairs:
-            input_shift = np.hstack([
-                snap.space.reshape(-1, 1),
-                np.ones(shape=(snap.space.shape[0], 1))*param.values])
+            input_shift = np.hstack(
+                [
+                    snap.space.reshape(-1, 1),
+                    np.ones(shape=(snap.space.shape[0], 1)) * param.values,
+                ]
+            )
             shift = self.shift_network.predict(input_shift)
-            
+
             self.interpolator.fit(
-                snap.space.reshape(-1, 1) - shift,
-                snap.values.reshape(-1, 1))
+                snap.space.reshape(-1, 1) - shift, snap.values.reshape(-1, 1)
+            )
 
             snap.values = self.interpolator.predict(
-                reference_snapshot.space.reshape(-1, 1)).flatten()  # reconstructing shifted snapshots in physical space 
+                reference_snapshot.space.reshape(-1, 1)
+            ).flatten()  # reconstructing shifted snapshots in physical space
 
     def predict_postprocessing(self, rom):
-        
+
         ref_space = self.reference_snapshot.space
         db = Database()
 
         for param, snap in rom.predict_full_database._pairs:
-            input_shift = np.hstack([
-                ref_space.reshape(-1, 1),
-                np.ones(shape=(ref_space.shape[0], 1))*param.values])
+            input_shift = np.hstack(
+                [
+                    ref_space.reshape(-1, 1),
+                    np.ones(shape=(ref_space.shape[0], 1)) * param.values,
+                ]
+            )
             shift = self.shift_network.predict(input_shift)
-            snap.space = ref_space + shift.flatten()    # shifted space transports to correct physical frame 
+            snap.space = (
+                ref_space + shift.flatten()
+            )  # shifted space transports to correct physical frame
             snap.space = snap.space.flatten()
 
             self.interpolator.fit(snap.space, snap.values.reshape(-1, 1))
-            snap.values = self.interpolator.predict(ref_space)  # reconstruct snapshot in physical space
+            snap.values = self.interpolator.predict(
+                ref_space
+            )  # reconstruct snapshot in physical space
 
-            snaps = Snapshot(values = snap.values, space = ref_space)
+            snaps = Snapshot(values=snap.values, space=ref_space)
             db.add(Parameter(param.values), snaps)
 
         rom._full_database = db

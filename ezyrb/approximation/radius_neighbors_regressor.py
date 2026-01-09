@@ -11,9 +11,9 @@ class RadiusNeighborsRegressor(NeighborsRegressor):
 
     :param kwargs: arguments passed to the internal instance of
         RadiusNeighborsRegressor.
-    
+
     :Example:
-    
+
         >>> import numpy as np
         >>> from ezyrb import RadiusNeighborsRegressor
         >>> x = np.random.uniform(-1, 1, size=(20, 2))
@@ -23,10 +23,11 @@ class RadiusNeighborsRegressor(NeighborsRegressor):
         >>> new_x = np.array([[0.0, 0.0]])
         >>> y_pred = rnn.predict(new_x)
     """
+
     def __init__(self, **kwargs):
         """
         Initialize a Radius Neighbors Regressor.
-        
+
         :param kwargs: Arguments passed to sklearn's RadiusNeighborsRegressor.
         """
         self.regressor = Regressor(**kwargs)

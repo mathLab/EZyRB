@@ -44,9 +44,9 @@ class AE(Reduction):
         latent_dim,
         layers_encoder,
         layers_decoder,
-        activation='tanh',
+        activation="tanh",
         max_iter=200,
-        solver='adam',
+        solver="adam",
         learning_rate_init=0.001,
         alpha=0,
         frequency_print=10,
@@ -68,7 +68,9 @@ class AE(Reduction):
             raise ValueError("Wrong dimension in encoder and decoder layers")
 
         if not isinstance(latent_dim, int):
-            logger.error("latent_dim should be an integer, got %s", type(latent_dim))
+            logger.error(
+                "latent_dim should be an integer, got %s", type(latent_dim)
+            )
             raise ValueError("latent_dim should be an integer")
 
         self.latent_dim = latent_dim
@@ -82,7 +84,7 @@ class AE(Reduction):
         self.frequency_print = frequency_print
         self.loss_trend = []
         self.extra_kwargs = kwargs
-        
+
         # Models
         self._autoencoder = None  # Full trained model
         self.encoder = None  # For encoding
@@ -96,14 +98,16 @@ class AE(Reduction):
         """
         logger.info("Starting AE training")
         values = values.T
-        
+
         # Combine encoder and decoder layers
-        combined_layers = self.layers_encoder + [self.latent_dim] + self.layers_decoder
-        
+        combined_layers = (
+            self.layers_encoder + [self.latent_dim] + self.layers_decoder
+        )
+
         logger.debug(
             "Training full autoencoder with layers: %s", combined_layers
         )
-        
+
         # Train full autoencoder: input -> latent -> reconstruction
         self._autoencoder = ANN(
             combined_layers,
@@ -114,19 +118,19 @@ class AE(Reduction):
             alpha=self.alpha,
             **self.extra_kwargs,
         )
-        
+
         # Train to reconstruct input
         self._autoencoder.fit(values, values)
         self.loss_trend = self._autoencoder.loss_trend
-        
+
         # Now create encoder and decoder and copy weights
         logger.debug("Creating encoder and decoder from trained autoencoder")
-        
+
         # Create encoder
         self.encoder = ANN(
             self.layers_encoder,
             activation=self.activation,
-            solver='adam',
+            solver="adam",
             max_iter=1,
             learning_rate_init=self.learning_rate_init,
             alpha=self.alpha,
@@ -135,7 +139,7 @@ class AE(Reduction):
         self.decoder = ANN(
             self.layers_decoder,
             activation=self.activation,
-            solver='adam',
+            solver="adam",
             max_iter=1,
             learning_rate_init=self.learning_rate_init,
             alpha=self.alpha,
@@ -145,29 +149,29 @@ class AE(Reduction):
         # Dummy fit to initialize structure
         self.decoder.fit(dummy_latent, values)
         self.encoder.fit(values, dummy_latent)
-        
+
         # Copy encoder weights from autoencoder
         n_encoder_layers = len(self.encoder.model.coefs_)
         for i in range(n_encoder_layers):
-            self.encoder.model.coefs_[i] = (
-                self._autoencoder.model.coefs_[i].copy()
-            )
+            self.encoder.model.coefs_[i] = self._autoencoder.model.coefs_[
+                i
+            ].copy()
             self.encoder.model.intercepts_[i] = (
                 self._autoencoder.model.intercepts_[i].copy()
             )
-        
+
         # Copy decoder weights from autoencoder
         n_decoder_layers = len(self.decoder.model.coefs_)
         for i in range(n_decoder_layers):
             src_idx = len(self.encoder.model.coefs_) + i
-            self.decoder.model.coefs_[i] = (
-                self._autoencoder.model.coefs_[src_idx].copy()
-            )
+            self.decoder.model.coefs_[i] = self._autoencoder.model.coefs_[
+                src_idx
+            ].copy()
             self.decoder.model.intercepts_[i] = (
                 self._autoencoder.model.intercepts_[src_idx].copy()
             )
-        
-        print('dentro fit')
+
+        print("dentro fit")
         print(values.shape)
         print(self._autoencoder.predict(values))
         red = self.encoder.predict(values)
@@ -198,13 +202,13 @@ class AE(Reduction):
         if self.decoder is None:
             raise RuntimeError("Autoencoder not fitted yet")
 
-        if self.activation == 'tanh':
+        if self.activation == "tanh":
             g = np.tanh(g)
-        elif self.activation == 'logistic':
+        elif self.activation == "logistic":
             g = 1 / (1 + np.exp(-g))
-        elif self.activation == 'relu':
+        elif self.activation == "relu":
             g = np.maximum(0, g)
-        elif self.activation == 'identity':
+        elif self.activation == "identity":
             pass
 
         return self.decoder.predict(g.T).T

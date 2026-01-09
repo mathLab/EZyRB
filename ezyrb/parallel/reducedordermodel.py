@@ -8,7 +8,8 @@ from scipy.spatial.qhull import Delaunay
 from sklearn.model_selection import KFold
 from pycompss.api.api import compss_wait_on
 
-class ReducedOrderModel():
+
+class ReducedOrderModel:
     """
     Reduced Order Model class.
 
@@ -45,6 +46,7 @@ class ReducedOrderModel():
          >>> rom.predict(new_param)
 
     """
+
     def __init__(self, database, reduction, approximation, scaler_red=None):
         self.database = database
         self.reduction = reduction
@@ -60,13 +62,12 @@ class ReducedOrderModel():
         """
         self.reduction.fit(self.database.snapshots.T)
         reduced_output = self.reduction.transform(
-            self.database.snapshots.T, self.scaler_red)
+            self.database.snapshots.T, self.scaler_red
+        )
 
         self.approximation.fit(
-            self.database.parameters,
-            reduced_output,
-            *args,
-            **kwargs)
+            self.database.parameters, reduced_output, *args, **kwargs
+        )
 
         return self
 
@@ -75,13 +76,14 @@ class ReducedOrderModel():
         Calculate predicted solution for given mu
         """
         mu = np.atleast_2d(mu)
-        if hasattr(self, 'database') and self.database.scaler_parameters:
+        if hasattr(self, "database") and self.database.scaler_parameters:
             mu = self.database.scaler_parameters.transform(mu)
 
         predicted_red_sol = self.approximation.predict(mu, self.scaler_red)
 
         predicted_sol = self.reduction.inverse_transform(
-            predicted_red_sol, self.database)
+            predicted_red_sol, self.database
+        )
 
         return predicted_sol
 
@@ -113,7 +115,7 @@ class ReducedOrderModel():
         if not save_approx:
             del rom_to_store.approximation
 
-        with open(fname, 'wb') as output:
+        with open(fname, "wb") as output:
             pickle.dump(rom_to_store, output, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
@@ -129,7 +131,7 @@ class ReducedOrderModel():
         >>> rom = ROM.load('ezyrb.rom')
         >>> rom.predict(new_param)
         """
-        with open(fname, 'rb') as output:
+        with open(fname, "rb") as output:
             rom = pickle.load(output)
 
         return rom
@@ -152,14 +154,16 @@ class ReducedOrderModel():
         :rtype: numpy.ndarray
         """
         error = []
-        predicted_test = [] # to save my future objects
-        original_test= []
+        predicted_test = []  # to save my future objects
+        original_test = []
         kf = KFold(n_splits=n_splits)
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
-                                 *args, **kwargs)
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+            ).fit(*args, **kwargs)
 
             test = self.database[test_index]
             predicted_test.append(rom.predict(test.parameters))
@@ -167,9 +171,12 @@ class ReducedOrderModel():
 
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
-            error.append(np.mean(
-                norm(predicted_test[j] - original_test[j], axis=1) /
-                norm(original_test[j], axis=1)))
+            error.append(
+                np.mean(
+                    norm(predicted_test[j] - original_test[j], axis=1)
+                    / norm(original_test[j], axis=1)
+                )
+            )
 
         return np.array(error)
 
@@ -194,8 +201,8 @@ class ReducedOrderModel():
         """
         error = np.zeros(len(self.database))
         db_range = list(range(len(self.database)))
-        predicted_test = [] # to save my future objects
-        original_test= []
+        predicted_test = []  # to save my future objects
+        original_test = []
 
         for j in db_range:
             indeces = np.array([True] * len(self.database))
@@ -203,9 +210,11 @@ class ReducedOrderModel():
 
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
-            rom = type(self)(new_db, copy.deepcopy(self.reduction),
-                             copy.deepcopy(self.approximation)).fit(
-                                 *args, **kwargs)
+            rom = type(self)(
+                new_db,
+                copy.deepcopy(self.reduction),
+                copy.deepcopy(self.approximation),
+            ).fit(*args, **kwargs)
 
             predicted_test.append(rom.predict(test_db.parameters))
             original_test.append(test_db.snapshots)
@@ -213,8 +222,9 @@ class ReducedOrderModel():
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
             error[j] = np.mean(
-                norm(predicted_test[j] - original_test[j],axis=1) /
-                norm(original_test[j], axis=1))
+                norm(predicted_test[j] - original_test[j], axis=1)
+                / norm(original_test[j], axis=1)
+            )
 
         return error
 
@@ -239,10 +249,12 @@ class ReducedOrderModel():
         mu = self.database.parameters
         tria = Delaunay(mu)
 
-        error_on_simplex = np.array([
-            np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
-            for smpx in tria.simplices
-        ])
+        error_on_simplex = np.array(
+            [
+                np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
+                for smpx in tria.simplices
+            ]
+        )
 
         barycentric_point = []
         for index in np.argpartition(error_on_simplex, -k)[-k:]:
@@ -250,7 +262,8 @@ class ReducedOrderModel():
             worst_tria_err = error[tria.simplices[index]]
 
             barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err))
+                np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
+            )
 
         return np.asarray(barycentric_point)
 
@@ -269,4 +282,5 @@ class ReducedOrderModel():
         """
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
-            np.linalg.det(distance) / math.factorial(vertices.shape[1]))
+            np.linalg.det(distance) / math.factorial(vertices.shape[1])
+        )

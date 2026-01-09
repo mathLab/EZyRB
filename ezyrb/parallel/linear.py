@@ -10,6 +10,7 @@ from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .approximation import Approximation
 
+
 class Linear(Approximation):
     """
     Multidimensional linear interpolator.
@@ -18,6 +19,7 @@ class Linear(Approximation):
         of the convex hull of the input points. If not provided, then the
         default is numpy.nan.
     """
+
     def __init__(self, fill_value=np.nan):
         self.fill_value = fill_value
         self.interpolator = None
@@ -35,19 +37,21 @@ class Linear(Approximation):
         # parameters of dimensionality one)
         as_np_array = np.array(points)
         if not np.issubdtype(as_np_array.dtype, np.number):
-            raise ValueError('Invalid format or dimension for the argument'
-                             '`points`.')
+            raise ValueError(
+                "Invalid format or dimension for the argument" "`points`."
+            )
 
         if as_np_array.shape[-1] == 1:
             as_np_array = np.squeeze(as_np_array, axis=-1)
 
-        if as_np_array.ndim == 1 or (as_np_array.ndim == 2
-                                     and as_np_array.shape[1] == 1):
+        if as_np_array.ndim == 1 or (
+            as_np_array.ndim == 2 and as_np_array.shape[1] == 1
+        ):
             self.interpolator = interp1d(as_np_array, values, axis=0)
         else:
-            self.interpolator = LinearNDInterp(points,
-                                               values,
-                                               fill_value=self.fill_value)
+            self.interpolator = LinearNDInterp(
+                points, values, fill_value=self.fill_value
+            )
 
     @task(returns=np.ndarray, target_direction=IN)
     def predict(self, new_point, scaler_red):
@@ -68,8 +72,7 @@ class Linear(Approximation):
         predicted_red_sol = np.atleast_2d(new_red_snap)
 
         if scaler_red:  # rescale modal coefficients
-            predicted_red_sol = scaler_red.inverse_transform(
-                predicted_red_sol)
+            predicted_red_sol = scaler_red.inverse_transform(predicted_red_sol)
         predicted_red_sol = predicted_red_sol.T
 
         return predicted_red_sol

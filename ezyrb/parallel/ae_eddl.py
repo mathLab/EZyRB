@@ -2,14 +2,16 @@
 Module for FNN-Autoencoders.
 """
 
-import sys      # Path to find PyEDDL library in PyCOMPSs container
-sys.path.append('/usr/local/miniconda3/lib/python3.8/site-packages')
+import sys  # Path to find PyEDDL library in PyCOMPSs container
+
+sys.path.append("/usr/local/miniconda3/lib/python3.8/site-packages")
 from pyeddl import eddl
 from pyeddl.tensor import Tensor
 import numpy as np
 from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .reduction import Reduction
+
 
 class AE_EDDL(Reduction):
     """
@@ -61,19 +63,22 @@ class AE_EDDL(Reduction):
         >>> reduced_snapshots = ae.reduce(snapshots)
         >>> expanded_snapshots = ae.expand(reduced_snapshots)
     """
-    def __init__(self,
-                 layers_encoder,
-                 layers_decoder,
-                 function_encoder,
-                 function_decoder,
-                 stop_training,
-                 batch_size,
-                 loss=None,
-                 metric=None,
-                 optimizer=eddl.adam,
-                 lr=0.001,
-                 cs = eddl.CS_CPU,
-                 training_type = 2):
+
+    def __init__(
+        self,
+        layers_encoder,
+        layers_decoder,
+        function_encoder,
+        function_decoder,
+        stop_training,
+        batch_size,
+        loss=None,
+        metric=None,
+        optimizer=eddl.adam,
+        lr=0.001,
+        cs=eddl.CS_CPU,
+        training_type=2,
+    ):
 
         if loss is None:
             loss = "mean_squared_error"
@@ -131,11 +136,11 @@ class AE_EDDL(Reduction):
         state = self.__dict__.copy()
 
         # remove unpicklable entries
-        del state['encoder']
-        del state['decoder']
-        del state['decoder2']
-        del state['model_Autoencoder']
-        del state['model_Decoder']
+        del state["encoder"]
+        del state["decoder"]
+        del state["decoder2"]
+        del state["model_Autoencoder"]
+        del state["model_Decoder"]
         return state
 
     def __setstate__(self, state):
@@ -154,12 +159,12 @@ class AE_EDDL(Reduction):
         self.__dict__.update(state)
 
         # restore unpicklable entries
-        if self.fitted: # inputs for all tasks except the fit() task
+        if self.fitted:  # inputs for all tasks except the fit() task
             self.imported = True
 
             # (n) hidden layers + (n-1) activation layers + (1) input layer
             n = len(self.layers_encoder)
-            encoder_layer_index = 2*n - 1
+            encoder_layer_index = 2 * n - 1
             self.model_Autoencoder = eddl.import_net_from_onnx_file(self.file_1)
             self.encoder = self.model_Autoencoder.layers[encoder_layer_index]
             self.decoder = self.model_Autoencoder.layers[-1]
@@ -167,31 +172,31 @@ class AE_EDDL(Reduction):
             eddl.build(
                 self.model_Autoencoder,
                 self.optimizer(self.lr),
-                [self.loss ],
+                [self.loss],
                 [self.metric],
                 self.cs(mem="low_mem"),
-                False # don't initialize random weights (using trained model)
+                False,  # don't initialize random weights (using trained model)
             )
             # resize manually since we don't use "fit" -->
             # size of each layer = (batch_size, layer_dof)
             self.model_Autoencoder.resize(self.batch_size)
-            #-------------------------------------------------------------------
+            # -------------------------------------------------------------------
             self.model_Decoder = eddl.import_net_from_onnx_file(self.file_2)
             self.decoder2 = self.model_Decoder.layers[-1]
 
             eddl.build(
                 self.model_Decoder,
                 self.optimizer(self.lr),
-                [self.loss ],
+                [self.loss],
                 [self.metric],
                 self.cs(mem="low_mem"),
-                False # don't initialize random weights (using trained model)
+                False,  # don't initialize random weights (using trained model)
             )
             # resize manually since we don't use "fit" -->
             # size of each layer = (batch_size, layer_dof)
             self.model_Decoder.resize(self.batch_size)
 
-        else: # inputs for the fit() method
+        else:  # inputs for the fit() method
             self.encoder = None
             self.decoder = None
             self.decoder2 = None
@@ -217,19 +222,22 @@ class AE_EDDL(Reduction):
         layers_decoder.append(values.shape[1])
 
         def EncoderBlock(layer):
-            for i in range(1, len(layers_encoder)-1):
+            for i in range(1, len(layers_encoder) - 1):
                 layer = self.function_encoder[i](
-                    eddl.Dense(layer, layers_encoder[i]))
+                    eddl.Dense(layer, layers_encoder[i])
+                )
             layer = eddl.Dense(layer, layers_encoder[-1])
             return layer
 
         def DecoderBlock(layer):
-            for i in range(1, len(layers_decoder)-1):
+            for i in range(1, len(layers_decoder) - 1):
                 layer = self.function_encoder[i](
-                    eddl.Dense(layer, layers_decoder[i]))
+                    eddl.Dense(layer, layers_decoder[i])
+                )
             layer = eddl.Dense(layer, layers_decoder[-1])
-            return layer    
-        #-----------------------------------------------------------------------
+            return layer
+
+        # -----------------------------------------------------------------------
         # Define network1
         in1 = eddl.Input([layers_encoder[0]])
         self.encoder = EncoderBlock(in1)
@@ -239,31 +247,31 @@ class AE_EDDL(Reduction):
         eddl.build(
             self.model_Autoencoder,
             self.optimizer(self.lr),
-            [self.loss ],
+            [self.loss],
             [self.metric],
             self.cs(mem="low_mem"),
-            True # initialize weights to random values
+            True,  # initialize weights to random values
         )
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         # Define network2
         in2 = eddl.Input([layers_decoder[0]])
         self.decoder2 = DecoderBlock(in2)
         self.model_Decoder = eddl.Model([in2], [self.decoder2])
-    
+
         eddl.build(
             self.model_Decoder,
             self.optimizer(self.lr),
-            [self.loss ],
+            [self.loss],
             [self.metric],
             self.cs(mem="low_mem"),
-            True # initialize weights to random values
+            True,  # initialize weights to random values
         )
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         eddl.summary(self.model_Autoencoder)
         eddl.plot(self.model_Autoencoder, "Autoencoder.pdf")
         eddl.summary(self.model_Decoder)
         eddl.plot(self.model_Decoder, "Decoder.pdf")
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
 
     @task(target_direction=INOUT)
     def fit(self, values):
@@ -285,17 +293,22 @@ class AE_EDDL(Reduction):
         :param numpy.ndarray values: the (training) values in the points.
         """
         values = values.T
-        values = Tensor.fromarray(values) # Numpy array to EDDL.Tensor
+        values = Tensor.fromarray(values)  # Numpy array to EDDL.Tensor
         self._build_model(values)
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         if self.training_type == 1:
-            print('Coarse training:')
-            n_epoch =1
+            print("Coarse training:")
+            n_epoch = 1
             flag = True
             while flag:
-                print('Iteration number: ',n_epoch)
-                eddl.fit(self.model_Autoencoder, [values], [values],
-                    self.batch_size, 1)
+                print("Iteration number: ", n_epoch)
+                eddl.fit(
+                    self.model_Autoencoder,
+                    [values],
+                    [values],
+                    self.batch_size,
+                    1,
+                )
                 losses = eddl.get_losses(self.model_Autoencoder)
                 metrics = eddl.get_metrics(self.model_Autoencoder)
                 self.loss_trend.append(losses)
@@ -311,13 +324,13 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         elif self.training_type == 2:
-            print('Fine training_1:')
+            print("Fine training_1:")
             s = values.shape
             num_batches = s[0] // self.batch_size
             xbatch = Tensor([self.batch_size, 3067])
-            n_epoch =1
+            n_epoch = 1
             flag = True
             while flag:
                 eddl.reset_loss(self.model_Autoencoder)
@@ -335,7 +348,7 @@ class AE_EDDL(Reduction):
                 # print("Epoch %d (%d batches)" % (n_epoch, num_batches))
                 # for l, m in zip(losses, metrics):
                 #     print("Loss: %.6f\tMetric: %.6f" % (l, m))
-                
+
                 for criteria in self.stop_training:
                     if isinstance(criteria, int):
                         # stop criteria is an integer
@@ -346,20 +359,21 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         elif self.training_type == 3:
-            print('Fine training_2:')
+            print("Fine training_2:")
             s = values.shape
             num_batches = s[0] // self.batch_size
-            n_epoch =1
+            n_epoch = 1
             flag = True
             while flag:
                 eddl.reset_loss(self.model_Autoencoder)
                 for j in range(num_batches):
                     # 2) using samples indices
                     indices = np.random.randint(0, s[0], self.batch_size)
-                    eddl.train_batch(self.model_Autoencoder, [values], [values],
-                        indices)
+                    eddl.train_batch(
+                        self.model_Autoencoder, [values], [values], indices
+                    )
 
                 losses = eddl.get_losses(self.model_Autoencoder)
                 metrics = eddl.get_metrics(self.model_Autoencoder)
@@ -370,7 +384,7 @@ class AE_EDDL(Reduction):
                 # print("Epoch {} ({} batches)".format(n_epoch, num_batches))
                 # for l, m in zip(losses, metrics):
                 #     print("Loss: %.6f\tMetric: %.6f" % (l, m))
-                
+
                 for criteria in self.stop_training:
                     if isinstance(criteria, int):
                         # stop criteria is an integer
@@ -381,20 +395,21 @@ class AE_EDDL(Reduction):
                         if losses[0] < criteria:
                             flag = False
                 n_epoch += 1
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         # Copy parameters from model_Autoencoder to model_Decoder
         # munber of Decoder layers = (n) hidden layers + (n-1) activation layers
         n = len(self.layers_encoder)
-        num_lay_decoder = 2*n - 1
-        decoder_parameters = eddl.get_parameters(self.model_Autoencoder,
-            True)[-num_lay_decoder:]
+        num_lay_decoder = 2 * n - 1
+        decoder_parameters = eddl.get_parameters(self.model_Autoencoder, True)[
+            -num_lay_decoder:
+        ]
         # Insert empty parameter for the new input layer of decoder
-        decoder_parameters.insert(0,[])
+        decoder_parameters.insert(0, [])
         eddl.set_parameters(self.model_Decoder, decoder_parameters)
         ## For debugging
         # for i in decoder_parameters:
         #     print(len(i))
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         # For PyCOMPSs: objects used as task parameters must be automatically
         # serializable/picklable so we save the trained model and delete all
         # unpicklables at the time of serialization
@@ -409,19 +424,19 @@ class AE_EDDL(Reduction):
 
         :param numpy.ndarray X: the input snapshots matrix (stored by column).
         """
-        #-----------------------------------------------------------------------
-        if self.imported: # Means PyCOMPSs is used.
+        # -----------------------------------------------------------------------
+        if self.imported:  # Means PyCOMPSs is used.
             # # For debugging
             # print("Encoder layer {} --> {}".format(
             #     self.encoder.input.shape, self.encoder.output.shape))
             print(f"Trained model imported from ({self.file_1})")
             eddl.summary(self.model_Autoencoder)
-        #-----------------------------------------------------------------------
-        X = Tensor.fromarray(X.T) # Numpy array to EDDL.Tensor
+        # -----------------------------------------------------------------------
+        X = Tensor.fromarray(X.T)  # Numpy array to EDDL.Tensor
         # One prediction for the fitted model(1 forward pass after training)
         eddl.predict(self.model_Autoencoder, [X])
         g = eddl.getOutput(self.encoder)
-        reduced_output = (Tensor.getdata(g).T).T # EDDL.Tensor to Numpy array
+        reduced_output = (Tensor.getdata(g).T).T  # EDDL.Tensor to Numpy array
         if scaler_red:
             reduced_output = scaler_red.fit_transform(reduced_output)
 
@@ -441,12 +456,12 @@ class AE_EDDL(Reduction):
 
         :param: numpy.ndarray g the latent variables.
         """
-        #-----------------------------------------------------------------------
-        if self.imported: # Means PyCOMPSs is used.
+        # -----------------------------------------------------------------------
+        if self.imported:  # Means PyCOMPSs is used.
             print(f"Trained model imported from ({self.file_2})")
             eddl.summary(self.model_Decoder)
-        #-----------------------------------------------------------------------
-        g = Tensor.fromarray(g.T) # Numpy array to EDDL.Tensor
+        # -----------------------------------------------------------------------
+        g = Tensor.fromarray(g.T)  # Numpy array to EDDL.Tensor
         # One forward pass for the new decoder (without training, parameters
         # copied from the trained autoencoder)
         eddl.forward(self.model_Decoder, [g])
@@ -456,17 +471,18 @@ class AE_EDDL(Reduction):
         # print('Before expansion', g.shape)
         # print('Before expansion', u.shape)
 
-        predicted_sol = Tensor.getdata(u).T # EDDL.Tensor to Numpy array
-        
+        predicted_sol = Tensor.getdata(u).T  # EDDL.Tensor to Numpy array
+
         if database and database.scaler_snapshots:
             predicted_sol = database.scaler_snapshots.inverse_transform(
-                    predicted_sol.T).T
+                predicted_sol.T
+            ).T
 
         if 1 in predicted_sol.shape:
             predicted_sol = predicted_sol.ravel()
         else:
             predicted_sol = predicted_sol.T
-        
+
         return predicted_sol
 
     def reduce(self, X, scaler_red):

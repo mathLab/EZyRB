@@ -1,9 +1,14 @@
 """EZyRB package"""
 
 __all__ = [
-    'Approximation', 'RBF', 'Linear', 'GPR',
-    'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor',
-    'SklearnApproximation'
+    "Approximation",
+    "RBF",
+    "Linear",
+    "GPR",
+    "ANN",
+    "KNeighborsRegressor",
+    "RadiusNeighborsRegressor",
+    "SklearnApproximation",
 ]
 
 from .approximation import Approximation

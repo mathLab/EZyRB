@@ -42,15 +42,24 @@ class RBF(Approximation):
          >>> print(np.allclose(y, y_pred))
 
     """
-    def __init__(self,
-                 kernel='thin_plate_spline',
-                 smooth=0,
-                 neighbors=None,
-                 epsilon=None,
-                 degree=None):
-        logger.debug("Initializing RBF with kernel=%s, smooth=%s, "
-                     "neighbors=%s, epsilon=%s, degree=%s",
-                     kernel, smooth, neighbors, epsilon, degree)
+
+    def __init__(
+        self,
+        kernel="thin_plate_spline",
+        smooth=0,
+        neighbors=None,
+        epsilon=None,
+        degree=None,
+    ):
+        logger.debug(
+            "Initializing RBF with kernel=%s, smooth=%s, "
+            "neighbors=%s, epsilon=%s, degree=%s",
+            kernel,
+            smooth,
+            neighbors,
+            epsilon,
+            degree,
+        )
         self.kernel = kernel
         self.smooth = smooth
         self.neighbors = neighbors
@@ -66,8 +75,11 @@ class RBF(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        logger.debug("Fitting RBF with points shape: %s, values shape: %s",
-                     np.asarray(points).shape, np.asarray(values).shape)
+        logger.debug(
+            "Fitting RBF with points shape: %s, values shape: %s",
+            np.asarray(points).shape,
+            np.asarray(values).shape,
+        )
         self.xi = np.asarray(points)
 
         if self.epsilon is None:
@@ -78,8 +90,8 @@ class RBF(Approximation):
             ximin = np.amin(self.xi, axis=0)
             edges = ximax - ximin
             edges = edges[np.nonzero(edges)]
-            self.epsilon = np.power(np.prod(edges)/N, 1.0/edges.size)
-            if self.kernel in ['thin_plate_spline', 'cubic', 'quintic']:
+            self.epsilon = np.power(np.prod(edges) / N, 1.0 / edges.size)
+            if self.kernel in ["thin_plate_spline", "cubic", "quintic"]:
                 self.epsilon = 1
             logger.debug("Auto-computed epsilon: %f", self.epsilon)
 
@@ -91,7 +103,8 @@ class RBF(Approximation):
             smoothing=self.smooth,
             kernel=self.kernel,
             epsilon=self.epsilon,
-            degree=self.degree)
+            degree=self.degree,
+        )
         logger.info("RBF fitted successfully")
 
     def predict(self, new_point):

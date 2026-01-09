@@ -10,6 +10,7 @@ class Reduction(ABC):
     All the classes that implement dimensionality reduction should be inherited
     from this class.
     """
+
     @abstractmethod
     def fit(self):
         """Abstract `fit`"""

@@ -9,6 +9,7 @@ from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .approximation import Approximation
 
+
 class ANN(Approximation):
     """
     Feed-Forward Artifical Neural Network class (ANN).
@@ -39,6 +40,7 @@ class ANN(Approximation):
         >>> print(len(ann.loss_trend))
         >>> print(ann.loss_trend[-1])
     """
+
     def __init__(self, layers, function, stop_training, loss=None):
 
         if loss is None:
@@ -162,7 +164,6 @@ class ANN(Approximation):
         y_new = self.model(new_point)
         predicted_red_sol = np.atleast_2d(self._convert_torch_to_numpy(y_new))
         if scaler_red:  # rescale modal coefficients
-            predicted_red_sol = scaler_red.inverse_transform(
-                predicted_red_sol)
+            predicted_red_sol = scaler_red.inverse_transform(predicted_red_sol)
         predicted_red_sol = predicted_red_sol.T
         return predicted_red_sol

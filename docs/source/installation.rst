@@ -11,7 +11,6 @@ EZyRB requires:
 - scipy
 - matplotlib
 - scikit-learn
-- torch (for neural network-based methods)
 
 Install via pip
 ---------------

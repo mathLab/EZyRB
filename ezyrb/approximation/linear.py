@@ -20,10 +20,11 @@ class Linear(Approximation):
         of the convex hull of the input points. If not provided, then the
         default is numpy.nan.
     """
+
     def __init__(self, fill_value=np.nan):
         """
         Initialize a Linear interpolator.
-        
+
         :param float fill_value: Value for points outside the convex hull.
             Default is numpy.nan.
         """
@@ -38,33 +39,41 @@ class Linear(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        logger.debug("Fitting Linear with points shape: %s, "
-                     "values shape: %s",
-                     np.array(points).shape, np.array(values).shape)
+        logger.debug(
+            "Fitting Linear with points shape: %s, " "values shape: %s",
+            np.array(points).shape,
+            np.array(values).shape,
+        )
         # the first dimension is the list of parameters, the second one is
         # the dimensionality of each tuple of parameters (we look for
         # parameters of dimensionality one)
         as_np_array = np.array(points)
         if not np.issubdtype(as_np_array.dtype, np.number):
             logger.error("Invalid points format/dimension")
-            raise ValueError('Invalid format or dimension for the argument'
-                             '`points`.')
+            raise ValueError(
+                "Invalid format or dimension for the argument" "`points`."
+            )
 
         if as_np_array.shape[-1] == 1:
             as_np_array = np.squeeze(as_np_array, axis=-1)
             logger.debug("Squeezed points array")
 
-        if as_np_array.ndim == 1 or (as_np_array.ndim == 2
-                                     and as_np_array.shape[1] == 1):
+        if as_np_array.ndim == 1 or (
+            as_np_array.ndim == 2 and as_np_array.shape[1] == 1
+        ):
             logger.debug("Using 1D interpolation")
-            self.interpolator = interp1d(as_np_array, values, axis=0,
-                                         bounds_error=False,
-                                         fill_value=self.fill_value)
+            self.interpolator = interp1d(
+                as_np_array,
+                values,
+                axis=0,
+                bounds_error=False,
+                fill_value=self.fill_value,
+            )
         else:
             logger.debug("Using ND interpolation")
-            self.interpolator = LinearNDInterp(points,
-                                               values,
-                                               fill_value=self.fill_value)
+            self.interpolator = LinearNDInterp(
+                points, values, fill_value=self.fill_value
+            )
         logger.info("Linear fitted successfully")
 
     def predict(self, new_point):

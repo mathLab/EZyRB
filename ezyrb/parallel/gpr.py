@@ -1,6 +1,7 @@
 """
 Module wrapper exploiting `GPy` for Gaussian Process Regression
 """
+
 import numpy as np
 from scipy.optimize import minimize
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -8,6 +9,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .approximation import Approximation
+
 
 class GPR(Approximation):
     """
@@ -31,18 +33,21 @@ class GPR(Approximation):
         >>> print(np.allclose(y, y_pred))
 
     """
+
     def __init__(self):
         self.X_sample = None
         self.Y_sample = None
         self.model = None
 
     @task(target_direction=INOUT)
-    def fit(self,
-            points,
-            values,
-            kern=None,
-            normalizer=True,
-            optimization_restart=20):
+    def fit(
+        self,
+        points,
+        values,
+        kern=None,
+        normalizer=True,
+        optimization_restart=20,
+    ):
         """
         Construct the regression given `points` and `values`.
 
@@ -63,8 +68,10 @@ class GPR(Approximation):
             self.Y_sample = self.Y_sample.reshape(-1, 1)
 
         self.model = GaussianProcessRegressor(
-            kernel=kern, n_restarts_optimizer=optimization_restart,
-            normalize_y=normalizer)
+            kernel=kern,
+            n_restarts_optimizer=optimization_restart,
+            normalize_y=normalizer,
+        )
         self.model.fit(self.X_sample, self.Y_sample)
 
     @task(returns=np.ndarray, target_direction=IN)
@@ -80,11 +87,11 @@ class GPR(Approximation):
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
         new_points = np.atleast_2d(new_points)
-        predicted_red_sol = np.atleast_2d(self.model.predict(new_points,
-            return_std=return_variance))
+        predicted_red_sol = np.atleast_2d(
+            self.model.predict(new_points, return_std=return_variance)
+        )
         if scaler_red:  # rescale modal coefficients
-            predicted_red_sol = scaler_red.inverse_transform(
-                predicted_red_sol)
+            predicted_red_sol = scaler_red.inverse_transform(predicted_red_sol)
         predicted_red_sol = predicted_red_sol.T
         return predicted_red_sol
 
@@ -107,14 +114,14 @@ class GPR(Approximation):
         def min_obj(X):
             return -1 * np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
 
-        initial_starts = np.random.uniform(bounds[:, 0],
-                                           bounds[:, 1],
-                                           size=(optimization_restart, dim))
+        initial_starts = np.random.uniform(
+            bounds[:, 0], bounds[:, 1], size=(optimization_restart, dim)
+        )
 
         # Find the best optimum by starting from n_restart different random
         # points.
         for x0 in initial_starts:
-            res = minimize(min_obj, x0, bounds=bounds, method='L-BFGS-B')
+            res = minimize(min_obj, x0, bounds=bounds, method="L-BFGS-B")
 
             if res.fun < min_val:
                 min_val = res.fun

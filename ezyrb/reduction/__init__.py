@@ -1,12 +1,6 @@
-""" Reduction submodule """
+"""Reduction submodule"""
 
-__all__ = [
-    'Reduction',
-    'POD',
-    'AE',
-    'PODAE',
-    'SklearnReduction'
-]
+__all__ = ["Reduction", "POD", "AE", "PODAE", "SklearnReduction"]
 
 from .reduction import Reduction
 from .pod import POD

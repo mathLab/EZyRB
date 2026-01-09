@@ -46,8 +46,9 @@ class DatabaseScaler(Plugin):
         :param str target: 'parameters' or 'snapshots' - what to scale.
         """
         super().__init__()
-        logger.debug("Initializing DatabaseScaler with mode=%s, target=%s",
-                     mode, target)
+        logger.debug(
+            "Initializing DatabaseScaler with mode=%s, target=%s", mode, target
+        )
 
         self.scaler = scaler
         self.mode = mode

@@ -1,13 +1,13 @@
-""" Plugins submodule """
+"""Plugins submodule"""
 
 __all__ = [
-    'Plugin',
-    'DatabaseScaler',
-    'ShiftSnapshots',
-    'AutomaticShiftSnapshots',
-    'Aggregation',
-    'DatabaseSplitter',
-    'DatabaseDictionarySplitter'
+    "Plugin",
+    "DatabaseScaler",
+    "ShiftSnapshots",
+    "AutomaticShiftSnapshots",
+    "Aggregation",
+    "DatabaseSplitter",
+    "DatabaseDictionarySplitter",
 ]
 
 from .scaler import DatabaseScaler

@@ -49,17 +49,13 @@ class SklearnApproximation(Approximation):
         """
         logger.debug(
             "Initializing SklearnApproximation with model: %s",
-            type(sklearn_model).__name__
+            type(sklearn_model).__name__,
         )
 
-        if not hasattr(sklearn_model, 'fit'):
-            raise ValueError(
-                "sklearn_model must have a 'fit' method"
-            )
-        if not hasattr(sklearn_model, 'predict'):
-            raise ValueError(
-                "sklearn_model must have a 'predict' method"
-            )
+        if not hasattr(sklearn_model, "fit"):
+            raise ValueError("sklearn_model must have a 'fit' method")
+        if not hasattr(sklearn_model, "predict"):
+            raise ValueError("sklearn_model must have a 'predict' method")
 
         self.model = sklearn_model
         self.fit_params = fit_params if fit_params is not None else {}
@@ -75,12 +71,10 @@ class SklearnApproximation(Approximation):
         logger.info(
             "Fitting %s with %d samples",
             type(self.model).__name__,
-            points.shape[0]
+            points.shape[0],
         )
         logger.debug(
-            "Input shape: %s, Output shape: %s",
-            points.shape,
-            values.shape
+            "Input shape: %s, Output shape: %s", points.shape, values.shape
         )
 
         # Ensure 2D arrays
@@ -103,13 +97,11 @@ class SklearnApproximation(Approximation):
         :rtype: numpy.ndarray
         """
         if not self._fitted:
-            raise RuntimeError(
-                "Model must be fitted before calling predict()"
-            )
+            raise RuntimeError("Model must be fitted before calling predict()")
 
         logger.debug(
             "Predicting for %d new points",
-            new_points.shape[0] if new_points.ndim > 1 else 1
+            new_points.shape[0] if new_points.ndim > 1 else 1,
         )
 
         # Ensure 2D array
@@ -118,7 +110,8 @@ class SklearnApproximation(Approximation):
 
         predictions = self.model.predict(new_points)
 
-        logger.debug("Prediction completed, output shape: %s",
-                     predictions.shape)
+        logger.debug(
+            "Prediction completed, output shape: %s", predictions.shape
+        )
 
         return predictions

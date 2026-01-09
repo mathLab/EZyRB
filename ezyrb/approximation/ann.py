@@ -46,7 +46,16 @@ class ANN(Approximation):
         >>> print(y_pred)
         >>> print(len(ann.loss_trend))
         >>> print(ann.loss_trend[-1])
+
+    .. note::
+        This module provides a wrapper around sklearn's MLPRegressor for
+        multidimensional function approximation using feed-forward neural
+        networks. It is not intended for deep learning tasks, but rather for
+        approximating functions based on given data points. For more advanced
+        deep learning applications, consider using dedicated libraries such as
+        :ref:`PINA`.
     """
+
     def __init__(
         self,
         layers,

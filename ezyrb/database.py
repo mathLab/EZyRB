@@ -9,7 +9,7 @@ from .snapshot import Snapshot
 logger = logging.getLogger(__name__)
 
 
-class Database():
+class Database:
     """
     Database class for storing parameter-snapshot pairs.
 
@@ -20,9 +20,9 @@ class Database():
     :param Scale scaler_snapshots: the scaler for the snapshots. Default is
         None meaning no scaling.
     :param array_like space: the input spatial data
-    
+
     :Example:
-    
+
         >>> import numpy as np
         >>> from ezyrb import Database, Parameter, Snapshot
         >>> params = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
@@ -35,10 +35,15 @@ class Database():
         >>> print(db.snapshots_matrix.shape)
         (3, 100)
     """
+
     def __init__(self, parameters=None, snapshots=None, space=None):
-        logger.debug("Initializing Database with parameters=%s, "
-                     "snapshots=%s, space=%s",
-                     type(parameters), type(snapshots), type(space))
+        logger.debug(
+            "Initializing Database with parameters=%s, "
+            "snapshots=%s, space=%s",
+            type(parameters),
+            type(snapshots),
+            type(space),
+        )
         self._pairs = []
 
         if parameters is None and snapshots is None:
@@ -48,19 +53,25 @@ class Database():
         if parameters is None:
             n_snaps = len(snapshots) if snapshots is not None else 0
             parameters = [None] * n_snaps
-            logger.debug("Parameters were None, created %d None parameters",
-                         n_snaps)
+            logger.debug(
+                "Parameters were None, created %d None parameters", n_snaps
+            )
         elif snapshots is None:
             n_params = len(parameters) if parameters is not None else 0
             snapshots = [None] * n_params
-            logger.debug("Snapshots were None, created %d None snapshots",
-                         n_params)
+            logger.debug(
+                "Snapshots were None, created %d None snapshots", n_params
+            )
 
         if len(parameters) != len(snapshots):
-            logger.error("Mismatch: %d parameters vs %d snapshots",
-                         len(parameters), len(snapshots))
-            raise ValueError('parameters and snapshots must have the same '
-                             'length')
+            logger.error(
+                "Mismatch: %d parameters vs %d snapshots",
+                len(parameters),
+                len(snapshots),
+            )
+            raise ValueError(
+                "parameters and snapshots must have the same " "length"
+            )
 
         logger.debug("Adding %d parameter-snapshot pairs", len(parameters))
         for param, snap in zip(parameters, snapshots):
@@ -122,9 +133,10 @@ class Database():
         return len(self._pairs)
 
     def __str__(self):
-        """ Print minimal info about the Database """
-        s = 'Database with {} snapshots and {} parameters'.format(
-            self.snapshots_matrix.shape[1], self.parameters_matrix.shape[1])
+        """Print minimal info about the Database"""
+        s = "Database with {} snapshots and {} parameters".format(
+            self.snapshots_matrix.shape[1], self.parameters_matrix.shape[1]
+        )
         return s
 
     def add(self, parameter, snapshot):
@@ -144,8 +156,9 @@ class Database():
             raise ValueError
 
         self._pairs.append((parameter, snapshot))
-        logger.debug("Added parameter-snapshot pair. Total pairs: %d",
-                     len(self._pairs))
+        logger.debug(
+            "Added parameter-snapshot pair. Total pairs: %d", len(self._pairs)
+        )
 
         return self
 
@@ -157,8 +170,7 @@ class Database():
         >>> train, test = db.split([80, 20])   # n snapshots
 
         """
-        logger.debug("Splitting database with chunks=%s, seed=%s",
-                     chunks, seed)
+        logger.debug("Splitting database with chunks=%s, seed=%s", chunks, seed)
 
         if seed is not None:
             np.random.seed(seed)
@@ -166,30 +178,31 @@ class Database():
 
         if all(isinstance(n, int) for n in chunks):
             if sum(chunks) != len(self):
-                logger.error("Sum of chunks %d != database size %d",
-                             sum(chunks), len(self))
-                raise ValueError('chunk elements are inconsistent')
+                logger.error(
+                    "Sum of chunks %d != database size %d",
+                    sum(chunks),
+                    len(self),
+                )
+                raise ValueError("chunk elements are inconsistent")
 
             logger.debug("Splitting by absolute numbers: %s", chunks)
-            ids = [
-                j for j, chunk in enumerate(chunks)
-                for i in range(chunk)
-            ]
+            ids = [j for j, chunk in enumerate(chunks) for i in range(chunk)]
             np.random.shuffle(ids)
 
         elif all(isinstance(n, float) for n in chunks):
-            if not np.isclose(sum(chunks), 1.):
+            if not np.isclose(sum(chunks), 1.0):
                 logger.error("Sum of chunk ratios %f != 1.0", sum(chunks))
-                raise ValueError('chunk elements are inconsistent')
+                raise ValueError("chunk elements are inconsistent")
 
             logger.debug("Splitting by ratios: %s", chunks)
             cum_chunks = np.cumsum(chunks)
             cum_chunks = np.insert(cum_chunks, 0, 0.0)
-            ids = np.ones(len(self)) * -1.
+            ids = np.ones(len(self)) * -1.0
             tmp = np.random.uniform(0, 1, size=len(self))
-            for i in range(len(cum_chunks)-1):
+            for i in range(len(cum_chunks) - 1):
                 is_between = np.logical_and(
-                    tmp >= cum_chunks[i], tmp < cum_chunks[i+1])
+                    tmp >= cum_chunks[i], tmp < cum_chunks[i + 1]
+                )
                 ids[is_between] = i
 
         else:
@@ -202,12 +215,14 @@ class Database():
             for p, s in np.asarray(self._pairs)[chunk_ids]:
                 new_database[i].add(p, s)
 
-        logger.info("Database split into %d parts with sizes: %s",
-                    len(new_database),
-                    [len(db) for db in new_database])
+        logger.info(
+            "Database split into %d parts with sizes: %s",
+            len(new_database),
+            [len(db) for db in new_database],
+        )
 
         return new_database
-    
+
     def get_snapshot_space(self, index):
         """
         Get the space coordinates of a snapshot by its index.

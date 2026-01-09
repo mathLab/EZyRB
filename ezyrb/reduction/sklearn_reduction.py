@@ -57,28 +57,24 @@ class SklearnReduction(Reduction):
         """
         logger.debug(
             "Initializing SklearnReduction with model: %s",
-            type(sklearn_model).__name__
+            type(sklearn_model).__name__,
         )
 
-        if not hasattr(sklearn_model, 'fit'):
-            raise ValueError(
-                "sklearn_model must have a 'fit' method"
-            )
-        if not hasattr(sklearn_model, 'transform'):
-            raise ValueError(
-                "sklearn_model must have a 'transform' method"
-            )
+        if not hasattr(sklearn_model, "fit"):
+            raise ValueError("sklearn_model must have a 'fit' method")
+        if not hasattr(sklearn_model, "transform"):
+            raise ValueError("sklearn_model must have a 'transform' method")
 
         self.model = sklearn_model
         self.fit_params = fit_params if fit_params is not None else {}
         self._fitted = False
-        self._has_inverse = hasattr(sklearn_model, 'inverse_transform')
+        self._has_inverse = hasattr(sklearn_model, "inverse_transform")
 
         if not self._has_inverse:
             logger.warning(
                 "%s does not have inverse_transform method. "
                 "inverse_transform() will raise an error.",
-                type(sklearn_model).__name__
+                type(sklearn_model).__name__,
             )
 
     def fit(self, values):
@@ -90,7 +86,7 @@ class SklearnReduction(Reduction):
         logger.info(
             "Fitting %s with %d snapshots",
             type(self.model).__name__,
-            values.shape[0]
+            values.shape[0],
         )
         logger.debug("Input shape: %s", values.shape)
 
@@ -104,12 +100,9 @@ class SklearnReduction(Reduction):
         logger.debug("Model fitting completed")
 
         # Log explained variance if available (e.g., PCA)
-        if hasattr(self.model, 'explained_variance_ratio_'):
+        if hasattr(self.model, "explained_variance_ratio_"):
             total_var = self.model.explained_variance_ratio_.sum()
-            logger.info(
-                "Explained variance ratio: %.4f",
-                total_var
-            )
+            logger.info("Explained variance ratio: %.4f", total_var)
 
     def transform(self, values):
         """
@@ -124,10 +117,7 @@ class SklearnReduction(Reduction):
                 "Model must be fitted before calling transform()"
             )
 
-        logger.debug(
-            "Transforming %d snapshots",
-            values.shape[0]
-        )
+        logger.debug("Transforming %d snapshots", values.shape[0])
 
         # Transpose for scikit-learn
         values_T = values.T
@@ -137,8 +127,7 @@ class SklearnReduction(Reduction):
         reduced = reduced_T.T
 
         logger.debug(
-            "Transformation completed, output shape: %s",
-            reduced.shape
+            "Transformation completed, output shape: %s", reduced.shape
         )
 
         return reduced
@@ -163,8 +152,7 @@ class SklearnReduction(Reduction):
             )
 
         logger.debug(
-            "Inverse transforming %d reduced vectors",
-            reduced_values.shape[0]
+            "Inverse transforming %d reduced vectors", reduced_values.shape[0]
         )
 
         # Transpose for scikit-learn
@@ -176,7 +164,7 @@ class SklearnReduction(Reduction):
 
         logger.debug(
             "Inverse transformation completed, output shape: %s",
-            reconstructed.shape
+            reconstructed.shape,
         )
 
         return reconstructed

@@ -1,6 +1,7 @@
 """
 Module wrapper exploiting `GPy` for Gaussian Process Regression
 """
+
 import logging
 import numpy as np
 from scipy.optimize import minimize
@@ -40,19 +41,24 @@ class GPR(Approximation):
         >>> print(np.allclose(y, y_pred))
 
     """
+
     def __init__(self, kern=None, normalizer=True, optimization_restart=20):
         """
         Initialize a Gaussian Process Regressor.
-        
+
         :param kern: Kernel object from sklearn. Default is None.
         :param bool normalizer: Whether to normalize values. Default is True.
         :param int optimization_restart: Number of restarts for optimization.
             Default is 20.
         """
 
-        logger.debug("Initializing GPR with kernel=%s, normalizer=%s, "
-                     "optimization_restart=%d",
-                     kern, normalizer, optimization_restart)
+        logger.debug(
+            "Initializing GPR with kernel=%s, normalizer=%s, "
+            "optimization_restart=%d",
+            kern,
+            normalizer,
+            optimization_restart,
+        )
         self.X_sample = None
         self.Y_sample = None
         self.kern = kern
@@ -67,8 +73,11 @@ class GPR(Approximation):
         :param array_like points: the coordinates of the points.
         :param array_like values: the values in the points.
         """
-        logger.debug("Fitting GPR with points shape: %s, values shape: %s",
-                     np.array(points).shape, np.array(values).shape)
+        logger.debug(
+            "Fitting GPR with points shape: %s, values shape: %s",
+            np.array(points).shape,
+            np.array(values).shape,
+        )
         self.X_sample = np.array(points)
         self.Y_sample = np.array(values)
         if self.X_sample.ndim == 1:
@@ -80,8 +89,10 @@ class GPR(Approximation):
 
         logger.debug("Creating GaussianProcessRegressor")
         self.model = GaussianProcessRegressor(
-            kernel=self.kern, n_restarts_optimizer=self.optimization_restart,
-            normalize_y=self.normalizer)
+            kernel=self.kern,
+            n_restarts_optimizer=self.optimization_restart,
+            normalize_y=self.normalizer,
+        )
         self.model.fit(self.X_sample, self.Y_sample)
         logger.info("GPR fitted successfully")
 
@@ -118,14 +129,14 @@ class GPR(Approximation):
         def min_obj(X):
             return -1 * np.linalg.norm(self.predict(X.reshape(1, -1), True)[1])
 
-        initial_starts = np.random.uniform(bounds[:, 0],
-                                           bounds[:, 1],
-                                           size=(optimization_restart, dim))
+        initial_starts = np.random.uniform(
+            bounds[:, 0], bounds[:, 1], size=(optimization_restart, dim)
+        )
 
         # Find the best optimum by starting from n_restart different random
         # points.
         for x0 in initial_starts:
-            res = minimize(min_obj, x0, bounds=bounds, method='L-BFGS-B')
+            res = minimize(min_obj, x0, bounds=bounds, method="L-BFGS-B")
 
             if res.fun < min_val:
                 min_val = res.fun

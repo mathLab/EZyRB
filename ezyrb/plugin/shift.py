@@ -1,4 +1,4 @@
-""" Module for Scaler plugin """
+"""Module for Scaler plugin"""
 
 import logging
 from .plugin import Plugin
@@ -47,19 +47,25 @@ class ShiftSnapshots(Plugin):
     >>> rom.fit()
 
     """
-    def __init__(self, shift_function, interpolator, parameter_index=0,
-                 reference_index=0):
+
+    def __init__(
+        self, shift_function, interpolator, parameter_index=0, reference_index=0
+    ):
         """
         Initialize the ShiftSnapshots plugin.
-        
+
         :param callable shift_function: Function that returns the shift for a parameter.
         :param Approximation interpolator: Interpolator for evaluating shifted snapshots.
         :param int parameter_index: Index of parameter component for shift. Default is 0.
         :param int reference_index: Index of reference snapshot. Default is 0.
         """
         super().__init__()
-        logger.debug("Initializing ShiftSnapshots with parameter_index=%d, "
-                     "reference_index=%d", parameter_index, reference_index)
+        logger.debug(
+            "Initializing ShiftSnapshots with parameter_index=%d, "
+            "reference_index=%d",
+            parameter_index,
+            reference_index,
+        )
 
         self.__shift_function = shift_function
         self.interpolator = interpolator
@@ -69,27 +75,30 @@ class ShiftSnapshots(Plugin):
     def fit_preprocessing(self, rom):
         """
         Shift snapshots to a reference space during fit preprocessing.
-        
+
         :param ReducedOrderModel rom: The ROM instance.
         """
         logger.debug("Applying shift preprocessing")
         db = rom.database
 
         reference_snapshot = db._pairs[self.reference_index][1]
-        logger.debug("Using reference snapshot at index %d",
-                     self.reference_index)
+        logger.debug(
+            "Using reference snapshot at index %d", self.reference_index
+        )
 
         for param, snap in db._pairs:
             snap.space = reference_snapshot.space
             shift = self.__shift_function(param.values[self.parameter_index])
-            logger.debug("Computed shift: %f for param: %s",
-                         shift, param.values)
+            logger.debug(
+                "Computed shift: %f for param: %s", shift, param.values
+            )
             self.interpolator.fit(
-                snap.space.reshape(-1, 1) - shift,
-                snap.values.reshape(-1, 1))
+                snap.space.reshape(-1, 1) - shift, snap.values.reshape(-1, 1)
+            )
 
             snap.values = self.interpolator.predict(
-                reference_snapshot.space.reshape(-1, 1)).flatten()
+                reference_snapshot.space.reshape(-1, 1)
+            ).flatten()
 
         rom.database = db
         logger.info("Shift preprocessing completed")
@@ -97,11 +106,10 @@ class ShiftSnapshots(Plugin):
     def predict_postprocessing(self, rom):
         """
         Shift predicted snapshots back to their original space.
-        
+
         :param ReducedOrderModel rom: The ROM instance.
         """
         for param, snap in rom.predicted_full_database._pairs:
-            snap.space = (
-                rom.database._pairs[self.reference_index][1].space +
-                self.__shift_function(param.values)
-            )
+            snap.space = rom.database._pairs[self.reference_index][
+                1
+            ].space + self.__shift_function(param.values)

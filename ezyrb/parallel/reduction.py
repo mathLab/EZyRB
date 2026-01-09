@@ -10,6 +10,7 @@ class Reduction(ABC):
     All the classes that implement the input-output mapping should be inherited
     from this class.
     """
+
     @abstractmethod
     def fit(self):
         """Abstract `fit`"""

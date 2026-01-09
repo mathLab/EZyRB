@@ -61,8 +61,7 @@ class POD(Reduction):
             >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
         logger.debug("Initializing POD with method=%s, rank=%s", method, rank)
-        self.available_methods = ["svd", "randomized_svd",
-                                   "correlation_matrix"]
+        self.available_methods = ["svd", "randomized_svd", "correlation_matrix"]
         self.rank = rank
         if method == "svd":
             self._method = self._svd
@@ -104,9 +103,9 @@ class POD(Reduction):
     def fit(self, X):
         """
         Create the reduced space for the given snapshots using POD.
-        
+
         Computes the POD modes and singular values using the specified method.
-        
+
         :param numpy.ndarray X: The input snapshots matrix (stored by column).
         :return: self
         """
@@ -120,9 +119,11 @@ class POD(Reduction):
             )
         self._modes, self._singular_values = self._method(X)
         logger.info("POD fitted: %d modes extracted", self._modes.shape[1])
-        logger.debug("Singular values range: [%f, %f]",
-                     self._singular_values.min(),
-                     self._singular_values.max())
+        logger.debug(
+            "Singular values range: [%f, %f]",
+            self._singular_values.min(),
+            self._singular_values.max(),
+        )
         return self
 
     def transform(self, X):
@@ -216,13 +217,13 @@ class POD(Reduction):
     def _rsvd(self, X):
         """
         Truncated randomized Singular Value Decomposition.
-        
+
         Computes an approximate SVD using randomized algorithms for efficiency.
-        
+
         :param numpy.ndarray X: The matrix to decompose.
         :return: Tuple of (truncated left-singular vectors, truncated singular values).
         :rtype: tuple(numpy.ndarray, numpy.ndarray)
-        
+
         References:
             Finding structure with randomness: probabilistic algorithms for
             constructing approximate matrix decompositions. N. Halko, P. G.

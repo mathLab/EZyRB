@@ -5,6 +5,7 @@ from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN
 from .approximation import Approximation
 
+
 class NeighborsRegressor(Approximation):
     """
     A generic superclass for wrappers of *NeighborsRegressor from sklearn.
@@ -12,6 +13,7 @@ class NeighborsRegressor(Approximation):
     :param kwargs: arguments passed to the internal instance of
         *NeighborsRegressor.
     """
+
     @task(target_direction=INOUT)
     def fit(self, points, values):
         """
@@ -41,7 +43,6 @@ class NeighborsRegressor(Approximation):
 
         predicted_red_sol = np.atleast_2d(self.regressor.predict(new_point))
         if scaler_red:  # rescale modal coefficients
-            predicted_red_sol = scaler_red.inverse_transform(
-                predicted_red_sol)
+            predicted_red_sol = scaler_red.inverse_transform(predicted_red_sol)
         predicted_red_sol = predicted_red_sol.T
         return predicted_red_sol
