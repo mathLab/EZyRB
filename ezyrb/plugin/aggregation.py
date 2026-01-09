@@ -124,7 +124,10 @@ class Aggregation(Plugin):
 
         # minimization procedure
         res = minimize(
-            obj_func, x0=sigma_range[0], method="L-BFGS-B", bounds=[sigma_range]
+            obj_func,
+            x0=sigma_range[0],
+            method="L-BFGS-B",
+            bounds=[sigma_range],
         )
         print("Optimal sigma value in weights: ", res.x)
         return res.x

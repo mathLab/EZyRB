@@ -12,7 +12,7 @@ from .reduction import Reduction
 from .approximation import Approximation
 
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +154,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         if not isinstance(value, (Database, dict)):
             raise TypeError(
-                "The database has to be an instance of the Database class, or a dictionary of Database."
+                "The database has to be an instance of the Database class, or "
+                "a dictionary of Database."
             )
 
         self._database = value
@@ -171,7 +172,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def reduction(self, value):
         if not isinstance(value, Reduction):
             raise TypeError(
-                "The reduction has to be an instance of the Reduction class, or a dict of Reduction."
+                "The reduction has to be an instance of the Reduction class, "
+                "or a dict of Reduction."
             )
 
         self._reduction = value
@@ -188,7 +190,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     def approximation(self, value):
         if not isinstance(value, Approximation):
             raise TypeError(
-                "The approximation has to be an instance of the Approximation class, or a dict of Approximation."
+                "The approximation has to be an instance of the Approximation "
+                "class, or a dict of Approximation."
             )
 
         self._approximation = value
@@ -249,7 +252,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         This method trains the approximation technique on the reduced space
         representation of the snapshots.
 
-        :raises RuntimeError: If the reduced training database has not been created.
+        :raises RuntimeError: If the reduced training database has not been
+            created.
         """
 
         if not hasattr(self, "train_reduced_database"):
@@ -259,30 +263,6 @@ class ReducedOrderModel(ReducedOrderModelInterface):
             self.train_reduced_database.parameters_matrix,
             self.train_reduced_database.snapshots_matrix,
         )
-
-        # if self.n_database == 1 and self.n_reduction == 1:
-        #     self.train_full_database = self.database
-        #     self.reduction.fit(self.database.snapshots_matrix.T)
-
-        # elif self.n_database == 1 and self.n_reduction > 1:
-        #     self.train_full_database = self.database
-        #     for reduction in self.reduction:
-        #         reduction.fit(self.database.snapshots_matrix.T)
-
-        # elif self.n_database > 1 and self.n_reduction == 1:
-        #     self.train_full_database = self.database
-        #     self.reduction = [
-        #         (k, copy.deepcopy(self.reduction))
-        #         for k in self.train_full_database
-        #     ]
-        #     print(self.reduction)
-        #     for reduction, database in zip(self.reduction, self.train_full_database):
-        #         self.reduction[reduction].fit(self.train_full_database[database].snapshots_matrix.T)
-
-        # elif self.n_database > 1 and self.n_reduction > 1:
-        #     raise NotImplementedError
-        # else:
-        #     raise RuntimeError
 
     def fit(self):
         r"""
@@ -471,7 +451,9 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                 / norm(test.snapshots_matrix, axis=1)
             )
         else:
-            return np.mean(norm(predicted_test - test.snapshots_matrix, axis=1))
+            return np.mean(
+                norm(predicted_test - test.snapshots_matrix, axis=1)
+            )
 
     def kfold_cv_error(
         self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
@@ -615,8 +597,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is
-            True.
+        :param bool relative: True if the error computed is relative. Default
+            is True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
         :return: the vector containing the reconstruction errors.
@@ -664,8 +646,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is
-            True.
+        :param bool relative: True if the error computed is relative. Default
+            is True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
 
@@ -758,7 +740,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         :param args: Variable arguments for different initialization modes.
         :param list plugins: Global plugins for the Multi-ROM. Default is None.
-        :param rom_plugin: Plugin to add to each individual ROM. Default is None.
+        :param rom_plugin: Plugin to add to each individual ROM. Default is
+            None.
         """
 
         if len(args) == 3:
@@ -814,7 +797,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         if not isinstance(value, (Database, dict)):
             raise TypeError(
-                "The database has to be an instance of the Database class, or a dictionary of Database."
+                "The database has to be an instance of the Database class, "
+                "or a dictionary of Database."
             )
 
         if isinstance(value, Database):
@@ -834,7 +818,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def reduction(self, value):
         if not isinstance(value, (Reduction, dict)):
             raise TypeError(
-                "The reduction has to be an instance of the Reduction class, or a dict of Reduction."
+                "The reduction has to be an instance of the Reduction class"
+                " or a dict of Reduction."
             )
 
         if isinstance(value, Reduction):
@@ -854,7 +839,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     def approximation(self, value):
         if not isinstance(value, (Approximation, dict)):
             raise TypeError(
-                "The approximation has to be an instance of the Approximation class, or a dict of Approximation."
+                "The approximation has to be an instance of the Approximation"
+                " class, or a dict of Approximation."
             )
 
         if isinstance(value, Approximation):
@@ -884,7 +870,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         self._execute_plugins("fit_preprocessing")
 
         for rom_ in self.roms.values():
-            if rom_.train_reduced_database == None:
+            if rom_.train_reduced_database is None:
                 rom_.fit()
 
         self._execute_plugins("fit_postprocessing")
@@ -892,9 +878,9 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
     def predict(self, parameters=None):
         """
-        Calculate predicted solution for given mu
-        If gaussians is True, the standard aggregation technique (gaussians) is used,
-        otherwise the ANNs are used.
+        Calculate predicted solution for given mu.
+        If gaussians is True, the standard aggregation technique (gaussians) is
+        used, otherwise the ANNs are used.
 
         :return: the database containing all the predicted solution (with
             corresponding parameters).
@@ -1008,13 +994,13 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
                 )
                 / norm(test.snapshots_matrix, axis=1)
             )
-        else:
-            return np.mean(
-                norm(
-                    predicted_test.snapshots_matrix - test.snapshots_matrix,
-                    axis=1,
-                )
+
+        return np.mean(
+            norm(
+                predicted_test.snapshots_matrix - test.snapshots_matrix,
+                axis=1,
             )
+        )
 
     def kfold_cv_error(
         self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
@@ -1041,7 +1027,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         kf = KFold(n_splits=n_splits)
         for train_index, test_index in kf.split(self.database):
             new_db = self.database[train_index]
-            # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
+            # TODO: Fix plugins handling - should pass:
+            # plugins=[copy.deepcopy(p) for p in self.plugins]
             rom = type(self)(
                 new_db,
                 copy.deepcopy(self.reduction),
@@ -1082,14 +1069,15 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
             new_db = self.database[indeces]
             test_db = self.database[~indeces]
-            # TODO: Fix plugins handling - should pass: plugins=[copy.deepcopy(p) for p in self.plugins]
+            # TODO: Fix plugins handling - should pass:
+            # plugins=[copy.deepcopy(p) for p in self.plugins]
             rom = type(self)(
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
             ).fit()
 
-            error[j] = rom.test_error(test_db)
+            error[j] = rom.test_error(test_db, norm=norm)
 
         return error
 
@@ -1158,8 +1146,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is
-            True.
+        :param bool relative: True if the error computed is relative. Default
+            is True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
         :return: the vector containing the reconstruction errors.
@@ -1207,8 +1195,8 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :param database.Database db: the database to use to compute the error.
             If None, the error is computed on the training database.
             Default is None.
-        :param bool relative: True if the error computed is relative. Default is
-            True.
+        :param bool relative: True if the error computed is relative. Default
+            is True.
         :param float eps: small number to avoid division by zero in relative
             error computation. Default is 1e-12.
 

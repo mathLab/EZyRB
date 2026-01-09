@@ -61,7 +61,11 @@ class POD(Reduction):
             >>> pod = POD('correlation_matrix', rank=10, save_memory=False)
         """
         logger.debug("Initializing POD with method=%s, rank=%s", method, rank)
-        self.available_methods = ["svd", "randomized_svd", "correlation_matrix"]
+        self.available_methods = [
+            "svd",
+            "randomized_svd",
+            "correlation_matrix",
+        ]
         self.rank = rank
         if method == "svd":
             self._method = self._svd

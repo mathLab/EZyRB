@@ -49,7 +49,11 @@ class ShiftSnapshots(Plugin):
     """
 
     def __init__(
-        self, shift_function, interpolator, parameter_index=0, reference_index=0
+        self,
+        shift_function,
+        interpolator,
+        parameter_index=0,
+        reference_index=0,
     ):
         """
         Initialize the ShiftSnapshots plugin.

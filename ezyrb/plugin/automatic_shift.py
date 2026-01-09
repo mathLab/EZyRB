@@ -101,7 +101,10 @@ class AutomaticShiftSnapshots(Plugin):
             np.vstack(
                 [
                     np.vstack(
-                        [s.space, np.ones(shape=(s.space.shape[0],)) * p.values]
+                        [
+                            s.space,
+                            np.ones(shape=(s.space.shape[0],)) * p.values,
+                        ]
                     ).T
                     for p, s in db._pairs
                 ]

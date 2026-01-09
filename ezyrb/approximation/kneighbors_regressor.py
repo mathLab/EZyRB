@@ -33,5 +33,7 @@ class KNeighborsRegressor(NeighborsRegressor):
 
         :param kwargs: Arguments passed to sklearn's KNeighborsRegressor.
         """
-        logger.debug("Initializing KNeighborsRegressor with kwargs: %s", kwargs)
+        logger.debug(
+            "Initializing KNeighborsRegressor with kwargs: %s", kwargs
+        )
         self.regressor = Regressor(**kwargs)
