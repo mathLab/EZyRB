@@ -1,10 +1,11 @@
 """EZyRB package"""
 
 __all__ = [
-    'Database', 'Snapshot', 'Reduction', 'POD', 'Approximation', 'RBF', 'Linear', 'GPR',
-    'ANN', 'KNeighborsRegressor', 'RadiusNeighborsRegressor', 'AE',
-    'ReducedOrderModel', 'PODAE', 'RegularGrid',
-    'MultiReducedOrderModel'
+    'Database', 'Snapshot', 'Reduction', 'POD', 'Approximation', 'RBF',
+    'Linear', 'GPR', 'ANN', 'KNeighborsRegressor',
+    'RadiusNeighborsRegressor', 'AE', 'ReducedOrderModel', 'PODAE',
+    'RegularGrid', 'MultiReducedOrderModel', 'SklearnApproximation',
+    'SklearnReduction'
 ]
 
 from .database import Database
