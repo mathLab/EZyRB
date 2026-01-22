@@ -28,7 +28,7 @@ class POD(Reduction):
         the method uses the argument for the truncation; if float between 0
         and 1, the rank is the number of the biggest singular values that
         are needed to reach the 'energy' specified by `svd_rank`; if -1,
-        the method does not compute truncation. Default is 0. The `rank`
+        the method does not compute truncation. Default is -1. The `rank`
         parameter is available using all the available methods.
     :type rank: int or float
     :param int subspace_iteration: the number of subspace iteration in the
