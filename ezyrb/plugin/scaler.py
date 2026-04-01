@@ -10,13 +10,12 @@ class DatabaseScaler(Plugin):
     """
     The plugin to rescale the database of the reduced order model. It uses a
     user defined `scaler`, which has to have implemented the `fit`, `transform`
-    and  `inverse_trasform` methods (i.e. `sklearn` interface), to rescale
+    and  `inverse_transform` methods (i.e. `sklearn` interface), to rescale
     the parameters and/or the snapshots. It can be applied at the full order
-    (`mode='full'`), at the reduced one (`mode='reduced'`) or both of them
-    (`mode='both'`).
+    (`mode='full'`) or at the reduced one (`mode='reduced'`).
 
     :param obj scaler: a generic object which has to have implemented the
-        `fit`, `transform` and  `inverse_trasform` methods (i.e. `sklearn`
+        `fit`, `transform` and  `inverse_transform` methods (i.e. `sklearn`
         interface).
     :param {'full', 'reduced'} mode: define if the rescaling has to be
         applied at the full order ('full') or at the reduced one ('reduced').
@@ -62,11 +61,14 @@ class DatabaseScaler(Plugin):
         rtype: str
         """
         return self._target
+    
 
     @target.setter
     def target(self, new_target):
         if new_target not in ["snapshots", "parameters"]:
-            raise ValueError
+            error_msg = f"Invalid target: '{new_target}' must be 'snapshots' or 'parameters'."
+            logger.error(error_msg)
+            raise ValueError(error_msg)
 
         self._target = new_target
 
@@ -82,9 +84,12 @@ class DatabaseScaler(Plugin):
     @mode.setter
     def mode(self, new_mode):
         if new_mode not in ["full", "reduced"]:
-            raise ValueError
+            error_msg = f"Invalid mode: '{new_mode}' must be 'full' or 'reduced'."
+            logger.error(error_msg)
+            raise ValueError(error_msg)
 
         self._mode = new_mode
+
 
     def _select_matrix(self, db):
         """
