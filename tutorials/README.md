@@ -11,7 +11,7 @@ In this folder you can find a collection of useful tutorials in order to underst
 
 [Tutorial 4](tutorial-4.ipynb) shows the potential of aggregation strategies for ROMs, namely combining different ROM predictions in a multiROM.
 
-
+* [Tutorial 5](tutorial-5.ipynb): Comparing ANN and RBF Reduced Order Models on a thermal dataset.
 #### More to come...
 We plan to add more tutorials but the time is often against us. If you want to contribute with a notebook on a feature not covered yet we will be very happy and give you support on editing!
 
