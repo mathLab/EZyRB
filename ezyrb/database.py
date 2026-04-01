@@ -15,10 +15,6 @@ class Database:
 
     :param array_like parameters: the input parameters
     :param array_like snapshots: the input snapshots
-    :param Scale scaler_parameters: the scaler for the parameters. Default
-        is None meaning no scaling.
-    :param Scale scaler_snapshots: the scaler for the snapshots. Default is
-        None meaning no scaling.
     :param array_like space: the input spatial data
 
     :Example:
@@ -45,6 +41,9 @@ class Database:
             type(space),
         )
         self._pairs = []
+
+        self.scaler_parameters = None
+        self.scaler_snapshots = None
 
         if parameters is None and snapshots is None:
             logger.debug("Empty database created")
@@ -149,17 +148,65 @@ class Database:
         """
         if not isinstance(parameter, Parameter):
             logger.error("Invalid parameter type: %s", type(parameter))
-            raise ValueError
+            raise TypeError(f"Expected a Parameter object, got {type(parameter)}")
 
         if not isinstance(snapshot, Snapshot):
             logger.error("Invalid snapshot type: %s", type(snapshot))
-            raise ValueError
+            raise TypeError(f"Expected a Snapshot object, got {type(snapshot)}")
 
         self._pairs.append((parameter, snapshot))
         logger.debug(
             "Added parameter-snapshot pair. Total pairs: %d", len(self._pairs)
         )
 
+        return self
+    
+    def normalize_parameters(self, scaler=None):
+        """
+        Normalize the parameters in the database.
+        
+        :param scaler: A scaling object (e.g., from sklearn.preprocessing). 
+                       If None, it defaults to a MinMaxScaler.
+        """
+        if len(self._pairs) == 0:
+            return self
+
+        from sklearn.preprocessing import MinMaxScaler
+        if scaler is None:
+            scaler = MinMaxScaler()
+            
+        params = self.parameters_matrix
+        normalized_params = scaler.fit_transform(params)
+        
+        for i, pair in enumerate(self._pairs):
+            pair[0].values = normalized_params[i]
+            
+        self.scaler_parameters = scaler
+        return self
+    
+
+    def normalize_snapshots(self, scaler=None):
+        """
+        Normalize the snapshots in the database.
+        
+        :param scaler: A scaling object (e.g., from sklearn.preprocessing). 
+                       If None, it defaults to a MinMaxScaler.
+        """
+        if len(self._pairs) == 0:
+            return self
+
+        from sklearn.preprocessing import MinMaxScaler
+        if scaler is None:
+            scaler = MinMaxScaler()
+            
+        snaps = self.snapshots_matrix
+        normalized_snaps = scaler.fit_transform(snaps)
+        
+        for i, pair in enumerate(self._pairs):
+            # reshape the flat array back to its original multidimensional shape
+            pair[1].values = normalized_snaps[i].reshape(pair[1].values.shape)
+            
+        self.scaler_snapshots = scaler
         return self
 
     def split(self, chunks, seed=None):
@@ -209,7 +256,7 @@ class Database:
 
         else:
             logger.error("Invalid chunk type")
-            ValueError
+            raise TypeError(f"Invalid chunk type. Expected a list of integers or floats, but got {type(chunks)}.")
 
         new_database = [Database() for _ in range(len(chunks))]
         for i, chunk in enumerate(chunks):
