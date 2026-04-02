@@ -16,6 +16,7 @@ __all__ = [
     "ReducedOrderModel",
     "PODAE",
     "RegularGrid",
+    "Nearest",
     "MultiReducedOrderModel",
     "SklearnApproximation",
     "SklearnReduction",

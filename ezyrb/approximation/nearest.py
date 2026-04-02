@@ -14,9 +14,10 @@ class Nearest(Approximation):
     :param kwargs: arguments passed to the internal instance of 
         scipy.interpolate.NearestNDInterpolator or scipy.interpolate.interp1d.
     """
-    def __init__(self, **kwargs):
-        logger.debug("Initializing Nearest with kwargs: %s", kwargs)
+    def __init__(self, rescale=True, **kwargs):
+        logger.debug("Initializing Nearest with rescale=%s, kwargs: %s", rescale, kwargs)
         super().__init__()
+        self.rescale = rescale
         self.kwargs = kwargs
         self.interpolator = None
 
@@ -30,8 +31,9 @@ class Nearest(Approximation):
                 axis=0, bounds_error=False, fill_value="extrapolate"
             )
         else:
-            logger.debug("Using ND nearest interpolation")
-            self.interpolator = NearestND(as_np_array, values, **self.kwargs)
+            logger.debug("Using ND nearest interpolation with rescale=%s", self.rescale)
+            # Pass the rescale flag specifically here
+            self.interpolator = NearestND(as_np_array, values, rescale=self.rescale, **self.kwargs)
         
         logger.info("Nearest fitted successfully")
 
