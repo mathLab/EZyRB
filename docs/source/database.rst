@@ -1,4 +1,4 @@
-Database
+
 =====================
 
 .. currentmodule:: ezyrb.database
@@ -9,7 +9,17 @@ Database
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: Database
+    
+    .parameters_matrix
+    .snapshots_matrix
+    .__getitem__
+    .__len__
+    .__str__
+    .add
+    .split
+    .get_snapshot_space
+
+.. autoclass:: 
     :members:
     :private-members:
     :undoc-members:

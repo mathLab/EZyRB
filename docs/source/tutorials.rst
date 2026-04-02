@@ -20,3 +20,8 @@ Tutorials
    :maxdepth: 1
 
    _tutorials/tutorial-4
+
+.. toctree::
+   :maxdepth: 1
+
+   _tutorials/tutorial-5

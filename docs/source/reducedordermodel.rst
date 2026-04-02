@@ -1,4 +1,6 @@
+ReducedOrderModelInterface
 ReducedOrderModel
+MultiReducedOrderModel
 =====================
 
 .. currentmodule:: ezyrb.reducedordermodel
@@ -9,7 +11,157 @@ ReducedOrderModel
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: ReducedOrderModel
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel._execute_plugins
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.clean
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.fit_reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel._reduce_database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.fit_approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.fit
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.predict
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.save
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.load
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.test_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.loo_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.optimal_mu
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel._simplex_volume
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_database
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_reduction
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.n_approximation
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.fit
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.predict
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.save
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.load
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.test_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.loo_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.optimal_mu
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel._simplex_volume
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.reduction_error
+    ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel.approximation_error
+
+.. autoclass:: ReducedOrderModelInterface
+ReducedOrderModel
+MultiReducedOrderModel
     :members:
     :private-members:
     :undoc-members:

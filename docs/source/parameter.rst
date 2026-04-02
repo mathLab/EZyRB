@@ -1,4 +1,4 @@
-Parameter
+
 =====================
 
 .. currentmodule:: ezyrb.parameter
@@ -9,7 +9,11 @@ Parameter
     :toctree: _summaries
     :nosignatures:
 
-.. autoclass:: Parameter
+    
+    .values
+    .values
+
+.. autoclass:: 
     :members:
     :private-members:
     :undoc-members:
