@@ -5,7 +5,6 @@ on:
     branches:
       - "master"
 
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -14,21 +13,47 @@ jobs:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    env:
+      CFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
+      CXXFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
         
     steps:
     - uses: actions/checkout@v4
-
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-serialization-dev libprotobuf-dev protobuf-compiler libopenblas-dev liblapack-dev
+
+    - name: Set up Java for PyCOMPSs
+      if: runner.os == 'Linux'
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
     - name: Install Python dependencies
+      shell: bash
       run: |
         python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          python3 -m pip install pycompss --no-build-isolation
+        fi
         python3 -m pip install .[test]
 
     - name: Test with pytest
+      shell: bash
       run: |
-        python3 -m pytest
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          python3 -m pytest
+        else 
+          python3 -m pytest --ignore=tests/test_parallel/
+        fi

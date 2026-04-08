@@ -462,7 +462,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         Split the database into k consecutive folds (no shuffling by default).
         Each fold is used once as a validation while the k - 1 remaining folds
         form the training set. If `n_splits` is equal to the number of
-        snapshots this function is the same as `loo_error`.
+        snapshots this function is the same as `loo_error` but the error here
+        is relative and not absolute.
 
         :param int n_splits: number of folds. Must be at least 2.
         :param function norm: function to apply to compute the relative error

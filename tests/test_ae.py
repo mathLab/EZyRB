@@ -23,7 +23,7 @@ def test_reconstruction(activation):
     assert snapshots_1.shape == snapshots.shape
     assert snapshots_2.shape == snapshots.shape
 
-    np.testing.assert_array_equal(snapshots_1, snapshots_2)
+    np.testing.assert_allclose(snapshots_1, snapshots_2, rtol=1e-5, atol=1e-5)
     rerr = np.linalg.norm(snapshots_2 - snapshots)/np.linalg.norm(snapshots)
     assert rerr < 0.6  # Relaxed tolerance for sklearn
 

@@ -11,8 +11,17 @@ except ImportError:
     from numpy.linalg import eigh
 import numpy as np
 
-from pycompss.api.task import task
-from pycompss.api.parameter import INOUT, IN
+try:
+    from pycompss.api.task import task
+    from pycompss.api.parameter import INOUT, IN
+except ImportError:
+    # Fallback: Define a 'do-nothing' decorator and dummy constants
+    def task(*args, **kwargs):
+        return lambda f: f
+    
+    INOUT = None
+    IN = None
+
 from .reduction import Reduction
 
 

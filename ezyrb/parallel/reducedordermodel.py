@@ -4,12 +4,15 @@ import math
 import copy
 import pickle
 import numpy as np
-from scipy.spatial.qhull import Delaunay
+from scipy.spatial import Delaunay
 from sklearn.model_selection import KFold
 from pycompss.api.api import compss_wait_on
 
+from ..database import Database
+from ..reducedordermodel import ReducedOrderModelInterface
 
-class ReducedOrderModel:
+
+class ReducedOrderModel(ReducedOrderModelInterface):
     """
     Reduced Order Model class.
 
@@ -22,36 +25,14 @@ class ReducedOrderModel:
         order model.
     :param ezyrb.Approximation approximation: the approximation method to use in
         reduced order model.
-    :param object scaler_red: the scaler for the reduced variables (eg. modal
-        coefficients). Default is None.
-
-    :cvar ezyrb.Database database: the database used for training the reduced
-        order model.
-    :cvar ezyrb.Reduction reduction: the reduction method used in reduced order
-        model.
-    :cvar ezyrb.Approximation approximation: the approximation method used in
-        reduced order model.
-    :cvar object scaler_red: the scaler for the reduced variables (eg. modal
-        coefficients).
-
-    :Example:
-
-         >>> from ezyrb import ReducedOrderModel as ROM
-         >>> from ezyrb import POD, RBF, Database
-         >>> pod = POD()
-         >>> rbf = RBF()
-         >>> # param, snapshots and new_param are assumed to be declared
-         >>> db = Database(param, snapshots)
-         >>> rom = ROM(db, pod, rbf).fit()
-         >>> rom.predict(new_param)
-
+    :param list plugins: list of plugins to use in the reduced order model.
     """
 
-    def __init__(self, database, reduction, approximation, scaler_red=None):
+    def __init__(self, database, reduction, approximation, plugins=None):
         self.database = database
         self.reduction = reduction
         self.approximation = approximation
-        self.scaler_red = scaler_red
+        self.plugins = plugins if plugins is not None else []
 
     def fit(self, *args, **kwargs):
         r"""
@@ -60,52 +41,115 @@ class ReducedOrderModel:
         :param \*args: additional parameters to pass to the `fit` method.
         :param \**kwargs: additional parameters to pass to the `fit` method.
         """
-        self.reduction.fit(self.database.snapshots.T)
+        # Assign the initial training database
+        self.train_full_database = self.database
+        
+        self._execute_plugins("fit_preprocessing")
+        self._execute_plugins("fit_before_reduction")
+        
+        # Fit reduction and transform
+        self.reduction.fit(self.train_full_database.snapshots_matrix.T)
         reduced_output = self.reduction.transform(
-            self.database.snapshots.T, self.scaler_red
+            self.train_full_database.snapshots_matrix.T
+        ).T
+
+        # Store the reduced database for plugins
+        self.train_reduced_database = Database(
+            self.train_full_database.parameters_matrix, reduced_output
         )
 
+        self._execute_plugins("fit_after_reduction")
+        self._execute_plugins("fit_before_approximation")
+
+        # Fit approximation on the reduced database
         self.approximation.fit(
-            self.database.parameters, reduced_output, *args, **kwargs
+            self.train_reduced_database.parameters_matrix, 
+            self.train_reduced_database.snapshots_matrix, 
+            *args, **kwargs
         )
 
+        self._execute_plugins("fit_after_approximation")
+        self._execute_plugins("fit_postprocessing")
+        
         return self
 
-    def predict(self, mu):
+    def predict(self, parameters):
+        r"""
+        Predict the solution for given parameters mu.
+        
+        This method distributes the evaluation tasks across the 
+        available computational nodes using the PyCOMPSs framework.
         """
-        Calculate predicted solution for given mu
-        """
-        mu = np.atleast_2d(mu)
-        if hasattr(self, "database") and self.database.scaler_parameters:
-            mu = self.database.scaler_parameters.transform(mu)
+        is_db = hasattr(parameters, 'parameters_matrix')
+        mu = parameters.parameters_matrix if is_db else np.atleast_2d(parameters)
+        
+        # Setup dummy test_full_database required by some preprocessing plugins
+        dummy_snaps = np.zeros((len(mu), self.train_full_database.snapshots_matrix.shape[1]))
+        self.test_full_database = Database(mu, dummy_snaps)
 
-        predicted_red_sol = self.approximation.predict(mu, self.scaler_red)
+        # The scaler plugin modifies parameters here BEFORE approximation, 
+        # so we must initialize this object early with dummy snapshots.
+        dummy_red_snaps = np.zeros((len(mu), self.train_reduced_database.snapshots_matrix.shape[1]))
+        self.predict_reduced_database = Database(mu, dummy_red_snaps)
 
-        predicted_sol = self.reduction.inverse_transform(
-            predicted_red_sol, self.database
+        self._execute_plugins("predict_preprocessing")
+        self._execute_plugins("predict_before_approximation")
+
+        # Predict the reduced solution (using potentially scaled parameters)
+        predicted_red_sol = self.approximation.predict(
+            self.predict_reduced_database.parameters_matrix
+        )
+        
+        # Update by creating a NEW database, as snapshots_matrix is read-only
+        self.predict_reduced_database = Database(
+            self.predict_reduced_database.parameters_matrix, 
+            predicted_red_sol
         )
 
-        return predicted_sol
+        self._execute_plugins("predict_after_approximation")
+        self._execute_plugins("predict_before_expansion")
+
+        # Expand back to full space
+        predicted_sol = self.reduction.inverse_transform(
+            self.predict_reduced_database.snapshots_matrix.T
+        ).T
+
+        # Store the final result for plugins
+        self.predicted_full_database = Database(
+            self.predict_reduced_database.parameters_matrix, predicted_sol
+        )
+
+        self._execute_plugins("predict_after_expansion")
+        self._execute_plugins("predict_postprocessing")
+
+        if is_db:
+            return self.predicted_full_database
+        return self.predicted_full_database.snapshots_matrix
+
+    def test_error(self, test, norm=np.linalg.norm, relative=True):
+        """
+        Compute the mean norm of the relative error vectors of predicted
+        test snapshots.
+        """
+        predicted_test = self.predict(test.parameters_matrix)
+        
+        if hasattr(predicted_test, 'snapshots_matrix'):
+            pred_snaps = predicted_test.snapshots_matrix
+        else:
+            pred_snaps = predicted_test
+
+        if relative:
+            return np.mean(
+                norm(pred_snaps - test.snapshots_matrix, axis=1)
+                / norm(test.snapshots_matrix, axis=1)
+            )
+        else:
+            return np.mean(
+                norm(pred_snaps - test.snapshots_matrix, axis=1)
+            )
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
-        """
-        Save the object to `fname` using the pickle module.
-
-        :param str fname: the name of file where the reduced order model will
-            be saved.
-        :param bool save_db: Flag to select if the `Database` will be saved.
-        :param bool save_reduction: Flag to select if the `Reduction` will be
-            saved.
-        :param bool save_approx: Flag to select if the `Approximation` will be
-            saved.
-
-        Example:
-
-        >>> from ezyrb import ReducedOrderModel as ROM
-        >>> rom = ROM(...) #  Construct here the rom
-        >>> rom.fit()
-        >>> rom.save('ezyrb.rom')
-        """
+        """Save the object to `fname` using the pickle module."""
         rom_to_store = copy.copy(self)
 
         if not save_db:
@@ -120,39 +164,13 @@ class ReducedOrderModel:
 
     @staticmethod
     def load(fname):
-        """
-        Load the object from `fname` using the pickle module.
-
-        :return: The `ReducedOrderModel` loaded
-
-        Example:
-
-        >>> from ezyrb import ReducedOrderModel as ROM
-        >>> rom = ROM.load('ezyrb.rom')
-        >>> rom.predict(new_param)
-        """
+        """Load the object from `fname` using the pickle module."""
         with open(fname, "rb") as output:
             rom = pickle.load(output)
-
         return rom
 
     def kfold_cv_error(self, n_splits, *args, norm=np.linalg.norm, **kwargs):
-        r"""
-        Split the database into k consecutive folds (no shuffling by default).
-        Each fold is used once as a validation while the k - 1 remaining folds
-        form the training set. If `n_splits` is equal to the number of
-        snapshots this function is the same as `loo_error` but the error here
-        is relative and not absolute.
-
-        :param int n_splits: number of folds. Must be at least 2.
-        :param function norm: function to apply to compute the relative error
-            between the true snapshot and the predicted one.
-            Default value is the L2 norm.
-        :param \*args: additional parameters to pass to the `fit` method.
-        :param \**kwargs: additional parameters to pass to the `fit` method.
-        :return: the vector containing the errors corresponding to each fold.
-        :rtype: numpy.ndarray
-        """
+        """Split the database into k consecutive folds."""
         error = []
         predicted_test = []  # to save my future objects
         original_test = []
@@ -163,11 +181,15 @@ class ReducedOrderModel:
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
+                plugins=[copy.deepcopy(p) for p in self.plugins]
             ).fit(*args, **kwargs)
 
             test = self.database[test_index]
-            predicted_test.append(rom.predict(test.parameters))
-            original_test.append(test.snapshots)
+            pred = rom.predict(test.parameters_matrix)
+            if hasattr(pred, 'snapshots_matrix'):
+                pred = pred.snapshots_matrix
+            predicted_test.append(pred)
+            original_test.append(test.snapshots_matrix)
 
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
@@ -181,24 +203,7 @@ class ReducedOrderModel:
         return np.array(error)
 
     def loo_error(self, *args, norm=np.linalg.norm, **kwargs):
-        r"""
-        Estimate the approximation error using *leave-one-out* strategy. The
-        main idea is to create several reduced spaces by combining all the
-        snapshots except one. The error vector is computed as the difference
-        between the removed snapshot and the projection onto the properly
-        reduced space. The procedure repeats for each snapshot in the database.
-        The `norm` is applied on each vector of error to obtained a float
-        number.
-
-        :param function norm: the function used to assign at each vector of
-            error a float number. It has to take as input a 'numpy.ndarray` and
-            returns a float. Default value is the L2 norm.
-        :param \*args: additional parameters to pass to the `fit` method.
-        :param \**kwargs: additional parameters to pass to the `fit` method.
-        :return: the vector that contains the errors estimated for all
-            parametric points.
-        :rtype: numpy.ndarray
-        """
+        """Estimate the approximation error using *leave-one-out* strategy."""
         error = np.zeros(len(self.database))
         db_range = list(range(len(self.database)))
         predicted_test = []  # to save my future objects
@@ -214,10 +219,14 @@ class ReducedOrderModel:
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
+                plugins=[copy.deepcopy(p) for p in self.plugins]
             ).fit(*args, **kwargs)
 
-            predicted_test.append(rom.predict(test_db.parameters))
-            original_test.append(test_db.snapshots)
+            pred = rom.predict(test_db.parameters_matrix)
+            if hasattr(pred, 'snapshots_matrix'):
+                pred = pred.snapshots_matrix
+            predicted_test.append(pred)
+            original_test.append(test_db.snapshots_matrix)
 
         predicted_test = compss_wait_on(predicted_test)
         for j in range(len(predicted_test)):
@@ -229,24 +238,11 @@ class ReducedOrderModel:
         return error
 
     def optimal_mu(self, error=None, k=1):
-        """
-        Return the parametric points where new high-fidelity solutions have to
-        be computed in order to globally reduce the estimated error. These
-        points are the barycentric center of the region (simplex) with higher
-        error.
-
-        :param numpy.ndarray error: the estimated error evaluated for each
-            snapshot; if error array is not passed, it is computed using
-            :func:`loo_error` with the default function. Default value is None.
-        :param int k: the number of optimal points to return. Default value is
-            1.
-        :return: the optimal points
-        :rtype: numpy.ndarray
-        """
+        """Return the parametric points where new high-fidelity solutions have to be computed."""
         if error is None:
             error = self.loo_error()
 
-        mu = self.database.parameters
+        mu = self.database.parameters_matrix
         tria = Delaunay(mu)
 
         error_on_simplex = np.array(
@@ -268,18 +264,7 @@ class ReducedOrderModel:
         return np.asarray(barycentric_point)
 
     def _simplex_volume(self, vertices):
-        """
-        Method implementing the computation of the volume of a N dimensional
-        simplex.
-        Source from: `wikipedia.org/wiki/Simplex
-        <https://en.wikipedia.org/wiki/Simplex>`_.
-
-        :param numpy.ndarray simplex_vertices: Nx3 array containing the
-            parameter values representing the vertices of a simplex. N is the
-            dimensionality of the parameters.
-        :return: N dimensional volume of the simplex.
-        :rtype: float
-        """
+        """Method implementing the computation of the volume of a N dimensional simplex."""
         distance = np.transpose([vertices[0] - vi for vi in vertices[1:]])
         return np.abs(
             np.linalg.det(distance) / math.factorial(vertices.shape[1])

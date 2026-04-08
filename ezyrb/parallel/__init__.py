@@ -18,7 +18,10 @@ __all__ = [
 from .reduction import Reduction
 from .pod import POD
 from .ae import AE
-from .ae_eddl import AE_EDDL
+try:
+    from .ae_eddl import AE_EDDL
+except ImportError:
+    pass
 from .approximation import Approximation
 from .rbf import RBF
 from .linear import Linear
