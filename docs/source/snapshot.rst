@@ -1,4 +1,4 @@
-
+Snapshot
 =====================
 
 .. currentmodule:: ezyrb.snapshot
@@ -9,15 +9,7 @@
     :toctree: _summaries
     :nosignatures:
 
-    
-    .values
-    .values
-    .space
-    .space
-    .flattened
-    .plot
-
-.. autoclass:: 
+.. autoclass:: Snapshot
     :members:
     :private-members:
     :undoc-members:
