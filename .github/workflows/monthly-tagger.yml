@@ -1,0 +1,46 @@
+name: "Monthly Tagger"
+
+on:
+  schedule:
+    - cron: '20 2 1 * *'
+
+jobs:
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13'] 
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Python dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install .[test]
+    - name: Test with pytest
+      run: |
+        python3 -m pytest
+        
+  monthly_tag:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_EZYRB_PUSH }}
+
+      - name: Create and push the tag
+        run: |
+          python utils/mathlab_versioning.py set --only-date "post$(date +%y%m)"
+          VERS=$(python utils/mathlab_versioning.py get)
+          git config --global user.name 'Monthly Tag bot'
+          git config --global user.email 'mtbot@noreply.github.com'
+          git add pyproject.toml
+          git commit -m "monthly version $VERS"
+          git tag -a "v$VERS" -m "Monthly version $VERS"
+          git push origin "v$VERS"
