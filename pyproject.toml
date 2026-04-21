@@ -40,6 +40,10 @@ dev = [
 parallel = [
     "pycompss"
 ]
+tutorial = [
+    "jupyter",
+    "smithers"
+]
 
 [project.urls]
 Homepage = "https://github.com/mathLab/EZyRB"
