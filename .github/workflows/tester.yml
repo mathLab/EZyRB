@@ -1,0 +1,113 @@
+name: "Testing Pull Request"
+
+on:
+  pull_request:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    env:
+      CFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
+      CXXFLAGS: "-Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
+        
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-serialization-dev libprotobuf-dev protobuf-compiler libopenblas-dev liblapack-dev
+
+    - name: Set up Java for PyCOMPSs
+      if: runner.os == 'Linux'
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          python3 -m pip install pycompss --no-build-isolation
+        fi
+        python3 -m pip install .[test]
+
+    - name: Test with pytest
+      shell: bash
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          python3 -m pytest
+        else 
+          python3 -m pytest --ignore=tests/test_parallel/
+        fi
+
+  linter: ####################################################################
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Black formatter (check mode)
+        uses: psf/black@stable
+        with:
+          src: "./ezyrb"
+
+  testdocs: ##################################################################
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Python dependencies
+      run: python3 -m pip install .[docs]
+
+    - name: Build Documentation
+      run: |
+        make html SPHINXOPTS+='-W'
+      working-directory: docs/
+
+  coverage: ##################################################################
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies (Linux)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-serialization-dev libprotobuf-dev protobuf-compiler libopenblas-dev liblapack-dev
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install setuptools wheel
+          python3 -m pip install pycompss --no-build-isolation
+          python3 -m pip install .[test]
+        
+      - name: Generate coverage report
+        run: |
+            python3 -m pytest --cov-report term --cov-report xml:cobertura.xml --cov=ezyrb
+
+      - name: Produce the coverage report
+        uses: insightsengineering/coverage-action@v2
+        with:
+          path: ./cobertura.xml
+          threshold: 80.00
+          fail: true
+          publish: true
+          coverage-summary-title: "Code Coverage Summary"
