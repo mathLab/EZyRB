@@ -42,8 +42,6 @@ class Database:
         )
         self._pairs = []
 
-        self.scaler_parameters = None
-        self.scaler_snapshots = None
 
         if parameters is None and snapshots is None:
             logger.debug("Empty database created")
@@ -161,54 +159,6 @@ class Database:
 
         return self
     
-    def normalize_parameters(self, scaler=None):
-        """
-        Normalize the parameters in the database.
-        
-        :param scaler: A scaling object (e.g., from sklearn.preprocessing). 
-                       If None, it defaults to a MinMaxScaler.
-        """
-        if len(self._pairs) == 0:
-            return self
-
-        from sklearn.preprocessing import MinMaxScaler
-        if scaler is None:
-            scaler = MinMaxScaler()
-            
-        params = self.parameters_matrix
-        normalized_params = scaler.fit_transform(params)
-        
-        for i, pair in enumerate(self._pairs):
-            pair[0].values = normalized_params[i]
-            
-        self.scaler_parameters = scaler
-        return self
-    
-
-    def normalize_snapshots(self, scaler=None):
-        """
-        Normalize the snapshots in the database.
-        
-        :param scaler: A scaling object (e.g., from sklearn.preprocessing). 
-                       If None, it defaults to a MinMaxScaler.
-        """
-        if len(self._pairs) == 0:
-            return self
-
-        from sklearn.preprocessing import MinMaxScaler
-        if scaler is None:
-            scaler = MinMaxScaler()
-            
-        snaps = self.snapshots_matrix
-        normalized_snaps = scaler.fit_transform(snaps)
-        
-        for i, pair in enumerate(self._pairs):
-            # reshape the flat array back to its original multidimensional shape
-            pair[1].values = normalized_snaps[i].reshape(pair[1].values.shape)
-            
-        self.scaler_snapshots = scaler
-        return self
-
     def split(self, chunks, seed=None):
         """
 
