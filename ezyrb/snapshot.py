@@ -84,9 +84,7 @@ class Snapshot:
 
         self._values = new_values
         if new_values is not None:
-            logger.debug(
-                "Snapshot values set with length: %d", len(new_values)
-            )
+            logger.debug("Snapshot values set with length: %d", len(new_values))
         else:
             logger.debug("Snapshot values set to None")
 

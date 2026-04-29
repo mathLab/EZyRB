@@ -165,9 +165,7 @@ class AE_EDDL(Reduction):
             # (n) hidden layers + (n-1) activation layers + (1) input layer
             n = len(self.layers_encoder)
             encoder_layer_index = 2 * n - 1
-            self.model_Autoencoder = eddl.import_net_from_onnx_file(
-                self.file_1
-            )
+            self.model_Autoencoder = eddl.import_net_from_onnx_file(self.file_1)
             self.encoder = self.model_Autoencoder.layers[encoder_layer_index]
             self.decoder = self.model_Autoencoder.layers[-1]
 
@@ -339,9 +337,7 @@ class AE_EDDL(Reduction):
                 for j in range(num_batches):
                     # 1) using next_batch
                     eddl.next_batch([values], [xbatch])
-                    eddl.train_batch(
-                        self.model_Autoencoder, [xbatch], [xbatch]
-                    )
+                    eddl.train_batch(self.model_Autoencoder, [xbatch], [xbatch])
 
                 losses = eddl.get_losses(self.model_Autoencoder)
                 metrics = eddl.get_metrics(self.model_Autoencoder)

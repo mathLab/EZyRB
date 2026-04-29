@@ -18,6 +18,7 @@ __all__ = [
 from .reduction import Reduction
 from .pod import POD
 from .ae import AE
+
 try:
     from .ae_eddl import AE_EDDL
 except ImportError:

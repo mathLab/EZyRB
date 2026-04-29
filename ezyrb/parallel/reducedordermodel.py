@@ -43,10 +43,10 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         """
         # Assign the initial training database
         self.train_full_database = self.database
-        
+
         self._execute_plugins("fit_preprocessing")
         self._execute_plugins("fit_before_reduction")
-        
+
         # Fit reduction and transform
         self.reduction.fit(self.train_full_database.snapshots_matrix.T)
         reduced_output = self.reduction.transform(
@@ -63,33 +63,40 @@ class ReducedOrderModel(ReducedOrderModelInterface):
 
         # Fit approximation on the reduced database
         self.approximation.fit(
-            self.train_reduced_database.parameters_matrix, 
-            self.train_reduced_database.snapshots_matrix, 
-            *args, **kwargs
+            self.train_reduced_database.parameters_matrix,
+            self.train_reduced_database.snapshots_matrix,
+            *args,
+            **kwargs,
         )
 
         self._execute_plugins("fit_after_approximation")
         self._execute_plugins("fit_postprocessing")
-        
+
         return self
 
     def predict(self, parameters):
         r"""
         Predict the solution for given parameters mu.
-        
-        This method distributes the evaluation tasks across the 
+
+        This method distributes the evaluation tasks across the
         available computational nodes using the PyCOMPSs framework.
         """
-        is_db = hasattr(parameters, 'parameters_matrix')
-        mu = parameters.parameters_matrix if is_db else np.atleast_2d(parameters)
-        
+        is_db = hasattr(parameters, "parameters_matrix")
+        mu = (
+            parameters.parameters_matrix if is_db else np.atleast_2d(parameters)
+        )
+
         # Setup dummy test_full_database required by some preprocessing plugins
-        dummy_snaps = np.zeros((len(mu), self.train_full_database.snapshots_matrix.shape[1]))
+        dummy_snaps = np.zeros(
+            (len(mu), self.train_full_database.snapshots_matrix.shape[1])
+        )
         self.test_full_database = Database(mu, dummy_snaps)
 
-        # The scaler plugin modifies parameters here BEFORE approximation, 
+        # The scaler plugin modifies parameters here BEFORE approximation,
         # so we must initialize this object early with dummy snapshots.
-        dummy_red_snaps = np.zeros((len(mu), self.train_reduced_database.snapshots_matrix.shape[1]))
+        dummy_red_snaps = np.zeros(
+            (len(mu), self.train_reduced_database.snapshots_matrix.shape[1])
+        )
         self.predict_reduced_database = Database(mu, dummy_red_snaps)
 
         self._execute_plugins("predict_preprocessing")
@@ -99,11 +106,10 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         predicted_red_sol = self.approximation.predict(
             self.predict_reduced_database.parameters_matrix
         )
-        
+
         # Update by creating a NEW database, as snapshots_matrix is read-only
         self.predict_reduced_database = Database(
-            self.predict_reduced_database.parameters_matrix, 
-            predicted_red_sol
+            self.predict_reduced_database.parameters_matrix, predicted_red_sol
         )
 
         self._execute_plugins("predict_after_approximation")
@@ -132,8 +138,8 @@ class ReducedOrderModel(ReducedOrderModelInterface):
         test snapshots.
         """
         predicted_test = self.predict(test.parameters_matrix)
-        
-        if hasattr(predicted_test, 'snapshots_matrix'):
+
+        if hasattr(predicted_test, "snapshots_matrix"):
             pred_snaps = predicted_test.snapshots_matrix
         else:
             pred_snaps = predicted_test
@@ -144,9 +150,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                 / norm(test.snapshots_matrix, axis=1)
             )
         else:
-            return np.mean(
-                norm(pred_snaps - test.snapshots_matrix, axis=1)
-            )
+            return np.mean(norm(pred_snaps - test.snapshots_matrix, axis=1))
 
     def save(self, fname, save_db=True, save_reduction=True, save_approx=True):
         """Save the object to `fname` using the pickle module."""
@@ -181,12 +185,12 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
-                plugins=[copy.deepcopy(p) for p in self.plugins]
+                plugins=[copy.deepcopy(p) for p in self.plugins],
             ).fit(*args, **kwargs)
 
             test = self.database[test_index]
             pred = rom.predict(test.parameters_matrix)
-            if hasattr(pred, 'snapshots_matrix'):
+            if hasattr(pred, "snapshots_matrix"):
                 pred = pred.snapshots_matrix
             predicted_test.append(pred)
             original_test.append(test.snapshots_matrix)
@@ -219,11 +223,11 @@ class ReducedOrderModel(ReducedOrderModelInterface):
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
-                plugins=[copy.deepcopy(p) for p in self.plugins]
+                plugins=[copy.deepcopy(p) for p in self.plugins],
             ).fit(*args, **kwargs)
 
             pred = rom.predict(test_db.parameters_matrix)
-            if hasattr(pred, 'snapshots_matrix'):
+            if hasattr(pred, "snapshots_matrix"):
                 pred = pred.snapshots_matrix
             predicted_test.append(pred)
             original_test.append(test_db.snapshots_matrix)

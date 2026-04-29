@@ -18,7 +18,7 @@ except ImportError:
     # Fallback: Define a 'do-nothing' decorator and dummy constants
     def task(*args, **kwargs):
         return lambda f: f
-    
+
     INOUT = None
     IN = None
 
