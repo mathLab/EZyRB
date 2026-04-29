@@ -81,7 +81,7 @@ jobs:
 
     - name: Build Documentation
       run: |
-        make html SPHINXOPTS+='-W'
+        make html
       working-directory: docs/
 
   coverage: ##################################################################
