@@ -114,8 +114,7 @@ jobs:
         uses: insightsengineering/coverage-action@v2
         with:
           path: ./cobertura.xml
-          # ADJUSTED: Lowered to 55.00 to match current EZyRB state (57%)
-          threshold: 55.00
+          threshold: 80.00
           fail: true
           publish: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
           coverage-summary-title: "Code Coverage Summary"

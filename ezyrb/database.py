@@ -170,7 +170,9 @@ class Database:
         >>> train, test = db.split([80, 20])   # n snapshots
 
         """
-        logger.debug("Splitting database with chunks=%s, seed=%s", chunks, seed)
+        logger.debug(
+            "Splitting database with chunks=%s, seed=%s", chunks, seed
+        )
 
         if seed is not None:
             np.random.seed(seed)
