@@ -42,7 +42,6 @@ class Database:
         )
         self._pairs = []
 
-
         if parameters is None and snapshots is None:
             logger.debug("Empty database created")
             return
@@ -146,7 +145,9 @@ class Database:
         """
         if not isinstance(parameter, Parameter):
             logger.error("Invalid parameter type: %s", type(parameter))
-            raise TypeError(f"Expected a Parameter object, got {type(parameter)}")
+            raise TypeError(
+                f"Expected a Parameter object, got {type(parameter)}"
+            )
 
         if not isinstance(snapshot, Snapshot):
             logger.error("Invalid snapshot type: %s", type(snapshot))
@@ -158,7 +159,7 @@ class Database:
         )
 
         return self
-    
+
     def split(self, chunks, seed=None):
         """
 
@@ -167,9 +168,7 @@ class Database:
         >>> train, test = db.split([80, 20])   # n snapshots
 
         """
-        logger.debug(
-            "Splitting database with chunks=%s, seed=%s", chunks, seed
-        )
+        logger.debug("Splitting database with chunks=%s, seed=%s", chunks, seed)
 
         if seed is not None:
             np.random.seed(seed)
@@ -206,7 +205,9 @@ class Database:
 
         else:
             logger.error("Invalid chunk type")
-            raise TypeError(f"Invalid chunk type. Expected a list of integers or floats, but got {type(chunks)}.")
+            raise TypeError(
+                f"Invalid chunk type. Expected a list of integers or floats, but got {type(chunks)}."
+            )
 
         new_database = [Database() for _ in range(len(chunks))]
         for i, chunk in enumerate(chunks):

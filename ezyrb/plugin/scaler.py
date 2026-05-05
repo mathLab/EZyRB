@@ -61,7 +61,6 @@ class DatabaseScaler(Plugin):
         rtype: str
         """
         return self._target
-    
 
     @target.setter
     def target(self, new_target):
@@ -84,12 +83,13 @@ class DatabaseScaler(Plugin):
     @mode.setter
     def mode(self, new_mode):
         if new_mode not in ["full", "reduced"]:
-            error_msg = f"Invalid mode: '{new_mode}' must be 'full' or 'reduced'."
+            error_msg = (
+                f"Invalid mode: '{new_mode}' must be 'full' or 'reduced'."
+            )
             logger.error(error_msg)
             raise ValueError(error_msg)
 
         self._mode = new_mode
-
 
     def _select_matrix(self, db):
         """
