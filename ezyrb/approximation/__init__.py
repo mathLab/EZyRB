@@ -9,6 +9,7 @@ __all__ = [
     "KNeighborsRegressor",
     "RadiusNeighborsRegressor",
     "SklearnApproximation",
+    "CloughTocher",
 ]
 
 from .approximation import Approximation
@@ -19,3 +20,4 @@ from .ann import ANN
 from .kneighbors_regressor import KNeighborsRegressor
 from .radius_neighbors_regressor import RadiusNeighborsRegressor
 from .sklearn_approximation import SklearnApproximation
+from .clough_tocher import CloughTocher
