@@ -983,23 +983,25 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters_matrix)
-        if relative:
-            return np.mean(
-                norm(
-                    predicted_test.snapshots_matrix - test.snapshots_matrix,
-                    axis=1,
-                )
-                / norm(test.snapshots_matrix, axis=1)
-            )
+        errors = {}
+        is_dict = isinstance(test,dict)
+        sample_key = list(test.keys())[0] if is_dict else None
+        params = test[sample_key].parameters_matrix if is_dict else test.parameters_matrix
+        predicted_test = self.predict(params)
 
-        return np.mean(
-            norm(
-                predicted_test.snapshots_matrix - test.snapshots_matrix,
-                axis=1,
-            )
-        )
+        for key in predicted_test:
+            test_snaps = test[key].snapshots_matrix if is_dict else test.snapshots_matrix
 
+            diff = predicted_test[key] - test_snaps
+
+            if relative:
+                errors[key] = np.mean(norm(diff, axis=1)/norm(test_snaps, axis=1))
+            else:
+                errors[key] = np.mean(norm(diff, axis=1))
+        
+
+        return errors
+    
     def kfold_cv_error(
         self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
     ):
