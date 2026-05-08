@@ -1232,26 +1232,18 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         >>> err_test_approx = rom.approximation_error(db_test, relative=True)
 
         """
-        errs = []
-        if db is None:
-            db = self.database
 
-        snap = db.snapshots_matrix
-        params_true = self.reduction.transform(snap.T).T
+        errors = {}
 
-        params = db.parameters_matrix
+        for key, rom in self.roms.items():
+            if db is None:
+                db_k = None
+            elif isinstance(db, dict):
+                db_key = key if key in db else (key[0] if isinstance(key, tuple) and key[0] in db else list(db.keys())[0])
+                db_k = db[db_key]
+            else:
+                db_k = db
 
-        params_approx = self.approximation.predict(params)
+            errors[key] = rom.approximation_error(db=db_k, relative=relative, eps=eps)
 
-        E = params_true - params_approx
-
-        if relative:
-            num = np.linalg.norm(E, axis=1)
-            den = np.linalg.norm(params_true, axis=1) + eps
-
-            err = float(np.mean(num / den))
-        else:
-            err = float(np.mean(np.linalg.norm(E, axis=1)))
-        errs.append(err)
-
-        return np.array(errs)
+        return errors
