@@ -1114,26 +1114,32 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         if error is None:
             error = self.loo_error()
 
-        mu = self.database.parameters_matrix
+        first_db = list(self.database.values())[0]
+        mu = first_db.parameters_matrix
         tria = Delaunay(mu)
 
-        error_on_simplex = np.array(
-            [
-                np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
-                for smpx in tria.simplices
-            ]
-        )
+        opt_mu_dict = {}
 
-        barycentric_point = []
-        for index in np.argpartition(error_on_simplex, -k)[-k:]:
-            worst_tria_pts = mu[tria.simplices[index]]
-            worst_tria_err = error[tria.simplices[index]]
-
-            barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
+        for key, err in error.items():
+            error_on_simplex = np.array(
+                [
+                    np.sum(err[smpx]) * self._simplex_volume(mu[smpx]) # Use 'err', not 'error'
+                    for smpx in tria.simplices
+                ]
             )
 
-        return np.asarray(barycentric_point)
+            barycentric_point = []
+            for index in np.argpartition(error_on_simplex, -k)[-k:]:
+                worst_tria_pts = mu[tria.simplices[index]]
+                worst_tria_err = err[tria.simplices[index]] # Use 'err', not 'error'
+
+                barycentric_point.append(
+                    np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
+                )
+
+            opt_mu_dict[key] = np.asarray(barycentric_point)
+
+        return opt_mu_dict
 
     def _simplex_volume(self, vertices):
         """
