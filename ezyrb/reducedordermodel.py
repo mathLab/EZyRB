@@ -1073,26 +1073,28 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             parametric points.
         :rtype: numpy.ndarray
         """
-        error = np.zeros(len(self.database))
-        db_range = list(range(len(self.database)))
+        db_len = len(list(self.database.values())[0])
+        errors = {k: np.zeros(db_len) for k in self.roms.keys()}
 
-        for j in db_range:
-            indeces = np.array([True] * len(self.database))
+        for j in range(db_len):
+            indeces = np.array([True] * db_len)
             indeces[j] = False
 
-            new_db = self.database[indeces]
-            test_db = self.database[~indeces]
-            # TODO: Fix plugins handling - should pass:
-            # plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(
+            new_db = {k: v[indeces] for k, v in self.database.items()}
+            test_db = {k: v[~indeces] for k, v in self.database.items()}
+
+            mrom = type(self)(
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
-            ).fit()
+            ).fit(*args, **kwargs)
 
-            error[j] = rom.test_error(test_db, norm=norm)
+            loo_errors = mrom.test_error(test_db, norm=norm, **kwargs)
 
-        return error
+            for k in errors:
+                errors[k][j] = loo_errors[k]
+        
+        return errors
 
     def optimal_mu(self, error=None, k=1):
         """
