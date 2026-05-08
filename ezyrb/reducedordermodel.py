@@ -990,7 +990,16 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         predicted_test = self.predict(params)
 
         for key in predicted_test:
-            test_snaps = test[key].snapshots_matrix if is_dict else test.snapshots_matrix
+            if is_dict:
+                if key in test:
+                    db_key = key
+                elif isinstance(key, tuple) and key[0] in test:
+                    db_key = key[0]
+                else:
+                    db_key = sample_key
+                test_snaps = test[db_key].snapshots_matrix
+            else:
+                test_snaps = test.snapshots_matrix
 
             diff = predicted_test[key] - test_snaps
 
@@ -1023,23 +1032,27 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :return: the vector containing the errors corresponding to each fold.
         :rtype: numpy.ndarray
         """
-        error = []
+        errors = {k: [] for k in self.roms.keys()}
         kf = KFold(n_splits=n_splits)
-        for train_index, test_index in kf.split(self.database):
-            new_db = self.database[train_index]
+        db_len = len(list(self.database.values())[0])
+
+        for train_index, test_index in kf.split(range(db_len)):
+            new_db = {k: v[train_index] for k, v in self.database.items()}
+            test_db = {k: v[test_index] for k, v in self.database.items()}
             # TODO: Fix plugins handling - should pass:
             # plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(
+            mrom = type(self)(
                 new_db,
                 copy.deepcopy(self.reduction),
                 copy.deepcopy(self.approximation),
             ).fit(*args, **kwargs)
 
-            error.append(
-                rom.test_error(self.database[test_index], norm, relative)
-            )
+            fold_errors = mrom.test_error(test_db, norm, relative)
+            
+            for k in errors:
+                errors[k].append(fold_errors[k])
 
-        return np.array(error)
+        return {k: np.array(v) for k, v in errors.items()}
 
     def loo_error(self, *args, norm=np.linalg.norm, **kwargs):
         r"""
