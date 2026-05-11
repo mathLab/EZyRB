@@ -131,7 +131,7 @@ class Database:
     def __str__(self):
         """Print minimal info about the Database"""
         s = "Database with {} snapshots and {} parameters".format(
-            self.snapshots_matrix.shape[1], self.parameters_matrix.shape[1]
+            self.snapshots_matrix.shape[0], self.parameters_matrix.shape[1]
         )
         return s
 
