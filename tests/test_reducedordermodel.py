@@ -23,6 +23,7 @@ def _make_mrom():
     """Minimal fitted MROM: one db, one POD, one RBF."""
     return MROM({"p": _make_db()}, {"pod": POD()}, {"rbf": RBF()}).fit()
 
+
 class TestReducedOrderModel(TestCase):
     def test_constructor(self):
         pod = POD()
@@ -213,9 +214,9 @@ class TestReducedOrderModel(TestCase):
         assert isinstance(pred, dict)
         assert len(pred) == 2
 
+
 def test_invariant_pod():
     pod = POD()
-
     rbf = RBF()
     gpr = GPR()
     rnr = RadiusNeighborsRegressor()
@@ -325,7 +326,6 @@ class TestROMCountProperties(TestCase):
     def test_n_reduction_is_one(self):
         self.assertEqual(_make_rom().n_reduction, 1)
 
-
     def test_n_approximation_count(self):
         self.assertEqual(_make_rom().n_approximation, 1)
 
@@ -390,19 +390,19 @@ class TestROMSavePartialFlags(TestCase):
 
     def test_save_without_reduction(self):
         rom = _make_rom()
-        rom.save("/tmp/rom_no_reduction.pkl", save_reduction=False)
-        self.assertFalse(hasattr(ROM.load("/tmp/rom_no_reduction.pkl"), "_reduction"))
+        rom.save("rom_no_reduction.pkl", save_reduction=False)
+        self.assertFalse(hasattr(ROM.load("rom_no_reduction.pkl"), "_reduction"))
 
     def test_save_without_approx(self):
         rom = _make_rom()
-        rom.save("/tmp/rom_no_approx.pkl", save_approx=False)
-        self.assertFalse(hasattr(ROM.load("/tmp/rom_no_approx.pkl"), "_approximation"))
+        rom.save("rom_no_approx.pkl", save_approx=False)
+        self.assertFalse(hasattr(ROM.load("rom_no_approx.pkl"), "_approximation"))
 
     def test_save_all_flags_false(self):
         rom = _make_rom()
-        rom.save("/tmp/rom_skeleton.pkl",
+        rom.save("rom_skeleton.pkl",
                  save_db=False, save_reduction=False, save_approx=False)
-        loaded = ROM.load("/tmp/rom_skeleton.pkl")
+        loaded = ROM.load("rom_skeleton.pkl")
         for attr in ("_database", "_reduction", "_approximation"):
             self.assertFalse(hasattr(loaded, attr))
 
@@ -583,6 +583,11 @@ class TestMROMPropertyDeleters(TestCase):
         del mrom.reduction
         self.assertFalse(hasattr(mrom, "_reduction"))
 
+    def test_approximation_deleter(self):
+        mrom = _make_mrom()
+        del mrom.approximation
+        self.assertFalse(hasattr(mrom, "_approximation"))
+
 
 class TestMROMCountProperties(TestCase):
 
@@ -624,7 +629,6 @@ class TestMROMPredict(TestCase):
             mrom.predict(None)
 
 
-
 class TestMROMFitIdempotent(TestCase):
 
     def test_second_fit_is_no_op_for_fitted_roms(self):
@@ -635,13 +639,12 @@ class TestMROMFitIdempotent(TestCase):
         self.assertIs(mrom.roms[key].train_reduced_database, existing)
 
 
-
 class TestMROMSaveLoad(TestCase):
 
     def test_roundtrip_predictions_match(self):
         mrom = _make_mrom()
-        mrom.save("/tmp/mrom_roundtrip.pkl")
-        loaded = MROM.load("/tmp/mrom_roundtrip.pkl")
+        mrom.save("mrom_roundtrip.pkl")
+        loaded = MROM.load("mrom_roundtrip.pkl")
         p = [-.3, -.3]
         for k in mrom.predict(p):
             np.testing.assert_allclose(
@@ -649,49 +652,60 @@ class TestMROMSaveLoad(TestCase):
 
     def test_save_without_db(self):
         mrom = _make_mrom()
-        mrom.save("/tmp/mrom_no_db.pkl", save_db=False)
-        self.assertFalse(hasattr(MROM.load("/tmp/mrom_no_db.pkl"), "_database"))
+        mrom.save("mrom_no_db.pkl", save_db=False)
+        self.assertFalse(hasattr(MROM.load("mrom_no_db.pkl"), "_database"))
 
     def test_save_without_reduction(self):
         mrom = _make_mrom()
-        mrom.save("/tmp/mrom_no_red.pkl", save_reduction=False)
-        self.assertFalse(hasattr(MROM.load("/tmp/mrom_no_red.pkl"), "_reduction"))
+        mrom.save("mrom_no_red.pkl", save_reduction=False)
+        self.assertFalse(hasattr(MROM.load("mrom_no_red.pkl"), "_reduction"))
 
     def test_save_without_approx(self):
-        _make_mrom().save("/tmp/mrom_no_approx.pkl", save_approx=False)
+        """Tests saving an MROM without the approximation model."""
+        mrom = _make_mrom()
+        mrom.save("mrom_no_approx.pkl", save_approx=False)
+        loaded = MROM.load("mrom_no_approx.pkl")
+        self.assertFalse(hasattr(loaded, "_approximation"))
 
 
 class TestMROMTestError(TestCase):
 
     def test_relative(self):
-        _make_mrom().test_error(_make_db(), relative=True)
+        err = _make_mrom().test_error(_make_db(), relative=True)
+        self.assertIsInstance(err, dict)
 
     def test_absolute(self):
-        _make_mrom().test_error(_make_db(), relative=False)
+        err = _make_mrom().test_error(_make_db(), relative=False)
+        self.assertIsInstance(err, dict)
 
 
 class TestMROMKfoldCvError(TestCase):
 
     def test_kfold_cv_error(self):
-        MROM({"p": _make_db()}, {"pod": POD()}, {"gpr": GPR()}).kfold_cv_error(
+        err = MROM({"p": _make_db()}, {"pod": POD()}, {"gpr": GPR()}).kfold_cv_error(
             n_splits=2)
+        self.assertIsInstance(err, dict)
 
     def test_kfold_cv_error_absolute(self):
-        MROM({"p": _make_db()}, {"pod": POD()}, {"gpr": GPR()}).kfold_cv_error(
+        err = MROM({"p": _make_db()}, {"pod": POD()}, {"gpr": GPR()}).kfold_cv_error(
             n_splits=2, relative=False)
+        self.assertIsInstance(err, dict)
 
 
 class TestMROMLooError(TestCase):
     def test_loo_error(self):
-        MROM({"p": _make_db()}, {"pod": POD()}, {"rbf": RBF()}).loo_error()
+        err = MROM({"p": _make_db()}, {"pod": POD()}, {"rbf": RBF()}).loo_error()
+        self.assertIsInstance(err, dict)
 
 
 class TestMROMOptimalMu(TestCase):
     def test_optimal_mu_no_error(self):
-        _make_mrom().optimal_mu(k=1)
+        opt = _make_mrom().optimal_mu(k=1)
+        self.assertIsInstance(opt, dict)
 
     def test_optimal_mu_precomputed_error(self):
-        _make_mrom().optimal_mu(error={('p', 'pod', 'rbf'):np.array([0.1, 0.5, 0.2, 0.8])}, k=1)
+        opt = _make_mrom().optimal_mu(error={('p', 'pod', 'rbf'):np.array([0.1, 0.5, 0.2, 0.8])}, k=1)
+        self.assertIsInstance(opt, dict)
 
     def test_simplex_volume_positive(self):
         self.assertGreater(_make_mrom()._simplex_volume(param[:3]), 0.0)
@@ -700,25 +714,31 @@ class TestMROMOptimalMu(TestCase):
 class TestMROMReductionError(TestCase):
 
     def test_default(self):
-        _make_mrom().reduction_error()
+        err = _make_mrom().reduction_error()
+        self.assertIsInstance(err, dict)
 
     def test_absolute(self):
-        _make_mrom().reduction_error(relative=False)
+        err = _make_mrom().reduction_error(relative=False)
+        self.assertIsInstance(err, dict)
 
     def test_explicit_db(self):
-        _make_mrom().reduction_error(db=_make_db())
+        err = _make_mrom().reduction_error(db=_make_db())
+        self.assertIsInstance(err, dict)
 
 
 class TestMROMApproximationError(TestCase):
 
     def test_default(self):
-        _make_mrom().approximation_error()
+        err = _make_mrom().approximation_error()
+        self.assertIsInstance(err, dict)
 
     def test_absolute(self):
-        _make_mrom().approximation_error(relative=False)
+        err = _make_mrom().approximation_error(relative=False)
+        self.assertIsInstance(err, dict)
         
     def test_explicit_db(self):
-        _make_mrom().approximation_error(db=_make_db())
+        err = _make_mrom().approximation_error(db=_make_db())
+        self.assertIsInstance(err, dict)
 
 if __name__ == "__main__":
     import unittest
