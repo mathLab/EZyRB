@@ -863,7 +863,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     @property
     def n_approximation(self):
         value_, class_ = self.approximation, Approximation
-        return len(value_) if isinstance(value_, class_) else 1
+        return len(value_) if not isinstance(value_, class_) else 1
 
     def fit(self):
         r"""
