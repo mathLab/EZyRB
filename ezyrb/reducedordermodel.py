@@ -988,31 +988,13 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :rtype: numpy.ndarray
         """
         errors = {}
-        is_dict = isinstance(test,dict)
-        sample_key = list(test.keys())[0] if is_dict else None
-        params = test[sample_key].parameters_matrix if is_dict else test.parameters_matrix
-        predicted_test = self.predict(params)
-
-        for key in predicted_test:
-            if is_dict:
-                if key in test:
-                    db_key = key
-                elif isinstance(key, tuple) and key[0] in test:
-                    db_key = key[0]
-                else:
-                    db_key = sample_key
-                test_snaps = test[db_key].snapshots_matrix
+        for key, rom in self.roms.items():
+            if isinstance(test, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
+                test_db = test[db_key]
             else:
-                test_snaps = test.snapshots_matrix
-
-            diff = predicted_test[key] - test_snaps
-
-            if relative:
-                errors[key] = np.mean(norm(diff, axis=1)/norm(test_snaps, axis=1))
-            else:
-                errors[key] = np.mean(norm(diff, axis=1))
-        
-
+                test_db = test
+            errors[key] = rom.test_error(test_db, norm=norm, relative=relative)
         return errors
     
     def kfold_cv_error(
@@ -1036,27 +1018,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :return: the vector containing the errors corresponding to each fold.
         :rtype: numpy.ndarray
         """
-        errors = {k: [] for k in self.roms.keys()}
-        kf = KFold(n_splits=n_splits)
-        db_len = len(list(self.database.values())[0])
-
-        for train_index, test_index in kf.split(range(db_len)):
-            new_db = {k: v[train_index] for k, v in self.database.items()}
-            test_db = {k: v[test_index] for k, v in self.database.items()}
-            # TODO: Fix plugins handling - should pass:
-            # plugins=[copy.deepcopy(p) for p in self.plugins]
-            mrom = type(self)(
-                new_db,
-                copy.deepcopy(self.reduction),
-                copy.deepcopy(self.approximation),
-            ).fit(*args, **kwargs)
-
-            fold_errors = mrom.test_error(test_db, norm, relative)
-            
-            for k in errors:
-                errors[k].append(fold_errors[k])
-
-        return {k: np.array(v) for k, v in errors.items()}
+        return {
+            key: rom.kfold_cv_error(n_splits, *args, norm=norm, relative=relative, **kwargs)
+            for key, rom in self.roms.items()
+        }
 
     def loo_error(self, *args, norm=np.linalg.norm, **kwargs):
         r"""
@@ -1077,28 +1042,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             parametric points.
         :rtype: numpy.ndarray
         """
-        db_len = len(list(self.database.values())[0])
-        errors = {k: np.zeros(db_len) for k in self.roms.keys()}
-
-        for j in range(db_len):
-            indeces = np.array([True] * db_len)
-            indeces[j] = False
-
-            new_db = {k: v[indeces] for k, v in self.database.items()}
-            test_db = {k: v[~indeces] for k, v in self.database.items()}
-
-            mrom = type(self)(
-                new_db,
-                copy.deepcopy(self.reduction),
-                copy.deepcopy(self.approximation),
-            ).fit(*args, **kwargs)
-
-            loo_errors = mrom.test_error(test_db, norm=norm, **kwargs)
-
-            for k in errors:
-                errors[k][j] = loo_errors[k]
-        
-        return errors
+        return {
+            key: rom.loo_error(*args, norm=norm, **kwargs)
+            for key, rom in self.roms.items()
+        }
 
     def optimal_mu(self, error=None, k=1):
         """
@@ -1117,33 +1064,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         """
         if error is None:
             error = self.loo_error()
-
-        first_db = list(self.database.values())[0]
-        mu = first_db.parameters_matrix
-        tria = Delaunay(mu)
-
-        opt_mu_dict = {}
-
-        for key, err in error.items():
-            error_on_simplex = np.array(
-                [
-                    np.sum(err[smpx]) * self._simplex_volume(mu[smpx]) # Use 'err', not 'error'
-                    for smpx in tria.simplices
-                ]
-            )
-
-            barycentric_point = []
-            for index in np.argpartition(error_on_simplex, -k)[-k:]:
-                worst_tria_pts = mu[tria.simplices[index]]
-                worst_tria_err = err[tria.simplices[index]] # Use 'err', not 'error'
-
-                barycentric_point.append(
-                    np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
-                )
-
-            opt_mu_dict[key] = np.asarray(barycentric_point)
-
-        return opt_mu_dict
+        return {
+            key: rom.optimal_mu(error=error[key], k=k)
+            for key, rom in self.roms.items()
+        }
 
     def _simplex_volume(self, vertices):
         """
@@ -1194,16 +1118,12 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
 
         errors = {}
         for key, rom in self.roms.items():
-            if db is None:
-                db_k = None
-            elif isinstance(db, dict):
-                db_key = key if key in db else (key[0] if isinstance(key, tuple) and key[0] in db else list(db.keys())[0])
+            if isinstance(db, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
                 db_k = db[db_key]
             else:
                 db_k = db
-
-            errors[key] = rom.reduction_error(db=db_k, relative=relative, eps=  eps)
-
+            errors[key] = rom.reduction_error(db=db_k, relative=relative, eps=eps)
         return errors
 
     def approximation_error(self, db=None, relative=True, eps=1e-12):
@@ -1238,16 +1158,11 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         """
 
         errors = {}
-
         for key, rom in self.roms.items():
-            if db is None:
-                db_k = None
-            elif isinstance(db, dict):
-                db_key = key if key in db else (key[0] if isinstance(key, tuple) and key[0] in db else list(db.keys())[0])
+            if isinstance(db, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
                 db_k = db[db_key]
             else:
                 db_k = db
-
             errors[key] = rom.approximation_error(db=db_k, relative=relative, eps=eps)
-
         return errors
