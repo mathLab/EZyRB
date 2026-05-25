@@ -1,7 +1,7 @@
 """Module for Scaler plugin"""
 
 import numpy as np
-
+import torch
 from ezyrb import Database, Snapshot, Parameter
 from .plugin import Plugin
 
