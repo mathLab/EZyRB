@@ -142,8 +142,8 @@ class TestAggregation(TestCase):
         mrom = MockMROM(self.db, n_roms=2)
         agg = Aggregation()
         sigma = agg._optimize_sigma(mrom)
-        self.assertGreaterEqual(float(sigma), 1e-5)
-        self.assertLessEqual(float(sigma), 1e-2)
+        self.assertGreaterEqual(float(np.squeeze(sigma)), 1e-5)
+        self.assertLessEqual(float(np.squeeze(sigma)), 1e-2)
 
     def test_aggregation_no_fit_function(self):
         mrom = MockMROM(self.db, n_roms=2)
