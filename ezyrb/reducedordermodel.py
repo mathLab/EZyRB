@@ -213,7 +213,7 @@ class ReducedOrderModel(ReducedOrderModelInterface):
     @property
     def n_approximation(self):
         value_, class_ = self.approximation, Approximation
-        return len(value_) if isinstance(value_, class_) else 1
+        return len(value_) if not isinstance(value_, class_) else 1
 
     def fit_reduction(self):
         """
@@ -846,6 +846,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         else:
             self._approximation = value
 
+    @approximation.deleter
+    def approximation(self):
+        del self._approximation
+
     @property
     def n_database(self):
         value_, class_ = self.database, Database
@@ -859,7 +863,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
     @property
     def n_approximation(self):
         value_, class_ = self.approximation, Approximation
-        return len(value_) if isinstance(value_, class_) else 1
+        return len(value_) if not isinstance(value_, class_) else 1
 
     def fit(self):
         r"""
@@ -983,23 +987,16 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             test snapshots.
         :rtype: numpy.ndarray
         """
-        predicted_test = self.predict(test.parameters_matrix)
-        if relative:
-            return np.mean(
-                norm(
-                    predicted_test.snapshots_matrix - test.snapshots_matrix,
-                    axis=1,
-                )
-                / norm(test.snapshots_matrix, axis=1)
-            )
-
-        return np.mean(
-            norm(
-                predicted_test.snapshots_matrix - test.snapshots_matrix,
-                axis=1,
-            )
-        )
-
+        errors = {}
+        for key, rom in self.roms.items():
+            if isinstance(test, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
+                test_db = test[db_key]
+            else:
+                test_db = test
+            errors[key] = rom.test_error(test_db, norm=norm, relative=relative)
+        return errors
+    
     def kfold_cv_error(
         self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
     ):
@@ -1021,23 +1018,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :return: the vector containing the errors corresponding to each fold.
         :rtype: numpy.ndarray
         """
-        error = []
-        kf = KFold(n_splits=n_splits)
-        for train_index, test_index in kf.split(self.database):
-            new_db = self.database[train_index]
-            # TODO: Fix plugins handling - should pass:
-            # plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(
-                new_db,
-                copy.deepcopy(self.reduction),
-                copy.deepcopy(self.approximation),
-            ).fit(*args, **kwargs)
-
-            error.append(
-                rom.test_error(self.database[test_index], norm, relative)
-            )
-
-        return np.array(error)
+        return {
+            key: rom.kfold_cv_error(n_splits, *args, norm=norm, relative=relative, **kwargs)
+            for key, rom in self.roms.items()
+        }
 
     def loo_error(self, *args, norm=np.linalg.norm, **kwargs):
         r"""
@@ -1058,26 +1042,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
             parametric points.
         :rtype: numpy.ndarray
         """
-        error = np.zeros(len(self.database))
-        db_range = list(range(len(self.database)))
-
-        for j in db_range:
-            indeces = np.array([True] * len(self.database))
-            indeces[j] = False
-
-            new_db = self.database[indeces]
-            test_db = self.database[~indeces]
-            # TODO: Fix plugins handling - should pass:
-            # plugins=[copy.deepcopy(p) for p in self.plugins]
-            rom = type(self)(
-                new_db,
-                copy.deepcopy(self.reduction),
-                copy.deepcopy(self.approximation),
-            ).fit()
-
-            error[j] = rom.test_error(test_db, norm=norm)
-
-        return error
+        return {
+            key: rom.loo_error(*args, norm=norm, **kwargs)
+            for key, rom in self.roms.items()
+        }
 
     def optimal_mu(self, error=None, k=1):
         """
@@ -1096,27 +1064,10 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         """
         if error is None:
             error = self.loo_error()
-
-        mu = self.database.parameters_matrix
-        tria = Delaunay(mu)
-
-        error_on_simplex = np.array(
-            [
-                np.sum(error[smpx]) * self._simplex_volume(mu[smpx])
-                for smpx in tria.simplices
-            ]
-        )
-
-        barycentric_point = []
-        for index in np.argpartition(error_on_simplex, -k)[-k:]:
-            worst_tria_pts = mu[tria.simplices[index]]
-            worst_tria_err = error[tria.simplices[index]]
-
-            barycentric_point.append(
-                np.average(worst_tria_pts, axis=0, weights=worst_tria_err)
-            )
-
-        return np.asarray(barycentric_point)
+        return {
+            key: rom.optimal_mu(error=error[key], k=k)
+            for key, rom in self.roms.items()
+        }
 
     def _simplex_volume(self, vertices):
         """
@@ -1165,25 +1116,15 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         >>> err_test_reduct = rom.reconstruction_error(db_test, relative=True)
         """
 
-        errs = []
-        if db is None:
-            db = self.database
-        snap = db.snapshots_matrix
-        snap_red = self.reduction.transform(snap.T)
-        snap_full = self.reduction.inverse_transform(snap_red).T
-
-        E = snap - snap_full
-
-        if relative:
-            num = np.linalg.norm(E, axis=1)
-            den = np.linalg.norm(snap, axis=1) + eps
-
-            err = float(np.mean(num / den))
-        else:
-            err = float(np.mean(np.linalg.norm(E, axis=1)))
-        errs.append(err)
-
-        return np.array(errs)
+        errors = {}
+        for key, rom in self.roms.items():
+            if isinstance(db, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
+                db_k = db[db_key]
+            else:
+                db_k = db
+            errors[key] = rom.reduction_error(db=db_k, relative=relative, eps=eps)
+        return errors
 
     def approximation_error(self, db=None, relative=True, eps=1e-12):
         """
@@ -1215,26 +1156,13 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         >>> err_test_approx = rom.approximation_error(db_test, relative=True)
 
         """
-        errs = []
-        if db is None:
-            db = self.database
 
-        snap = db.snapshots_matrix
-        params_true = self.reduction.transform(snap.T).T
-
-        params = db.parameters_matrix
-
-        params_approx = self.approximation.predict(params)
-
-        E = params_true - params_approx
-
-        if relative:
-            num = np.linalg.norm(E, axis=1)
-            den = np.linalg.norm(params_true, axis=1) + eps
-
-            err = float(np.mean(num / den))
-        else:
-            err = float(np.mean(np.linalg.norm(E, axis=1)))
-        errs.append(err)
-
-        return np.array(errs)
+        errors = {}
+        for key, rom in self.roms.items():
+            if isinstance(db, dict):
+                db_key = key[0] if isinstance(key, tuple) else key
+                db_k = db[db_key]
+            else:
+                db_k = db
+            errors[key] = rom.approximation_error(db=db_k, relative=relative, eps=eps)
+        return errors
