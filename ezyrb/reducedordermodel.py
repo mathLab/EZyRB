@@ -996,7 +996,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
                 test_db = test
             errors[key] = rom.test_error(test_db, norm=norm, relative=relative)
         return errors
-    
+
     def kfold_cv_error(
         self, n_splits, *args, norm=np.linalg.norm, relative=True, **kwargs
     ):
@@ -1019,7 +1019,9 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
         :rtype: numpy.ndarray
         """
         return {
-            key: rom.kfold_cv_error(n_splits, *args, norm=norm, relative=relative, **kwargs)
+            key: rom.kfold_cv_error(
+                n_splits, *args, norm=norm, relative=relative, **kwargs
+            )
             for key, rom in self.roms.items()
         }
 
@@ -1123,7 +1125,9 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
                 db_k = db[db_key]
             else:
                 db_k = db
-            errors[key] = rom.reduction_error(db=db_k, relative=relative, eps=eps)
+            errors[key] = rom.reduction_error(
+                db=db_k, relative=relative, eps=eps
+            )
         return errors
 
     def approximation_error(self, db=None, relative=True, eps=1e-12):
@@ -1164,5 +1168,7 @@ class MultiReducedOrderModel(ReducedOrderModelInterface):
                 db_k = db[db_key]
             else:
                 db_k = db
-            errors[key] = rom.approximation_error(db=db_k, relative=relative, eps=eps)
+            errors[key] = rom.approximation_error(
+                db=db_k, relative=relative, eps=eps
+            )
         return errors

@@ -2,6 +2,9 @@ import numpy as np
 import pytest
 from unittest import TestCase
 
+from sklearn.gaussian_process.kernels import ConstantKernel
+from sklearn.gaussian_process.kernels import RBF as RBFKernel
+
 from ezyrb import POD, GPR, RBF, Database
 from ezyrb import KNeighborsRegressor, RadiusNeighborsRegressor, Linear
 from ezyrb.reducedordermodel import ReducedOrderModel as ROM
@@ -11,6 +14,13 @@ snapshots = np.load('tests/test_datasets/p_snapshots.npy').T
 pred_sol_tst = np.load('tests/test_datasets/p_predsol.npy').T
 pred_sol_gpr = np.load('tests/test_datasets/p_predsol_gpr.npy').T
 param = np.array([[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]])
+
+
+def _fixed_kernel():
+    # Reference values were generated with sklearn's historical default
+    # kernel (fixed hyperparameters); sklearn >= 1.9 optimizes it instead.
+    return ConstantKernel(1.0, constant_value_bounds="fixed") * RBFKernel(
+        1.0, length_scale_bounds="fixed")
 
 def _make_db():
     return Database(param, snapshots.T)
@@ -89,7 +99,7 @@ class TestReducedOrderModel(TestCase):
     def test_predict_02(self):
         np.random.seed(117)
         pod = POD(method='svd', rank=4)
-        gpr = GPR()
+        gpr = GPR(kern=_fixed_kernel())
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr).fit()
         pred_sol = rom.predict([-.45, -.45])
@@ -186,7 +196,7 @@ class TestReducedOrderModel(TestCase):
 
     def test_loo_error_02(self):
         pod = POD()
-        gpr = GPR()
+        gpr = GPR(kern=_fixed_kernel())
         db = Database(param, snapshots.T)
         rom = ROM(db, pod, gpr)
         err = rom.loo_error()
